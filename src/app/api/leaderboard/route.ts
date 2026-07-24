@@ -36,8 +36,8 @@ function generatePlaceholderAccounts() {
     const fn = firstNames[i % firstNames.length];
     const ln = lastNames[(i * 7) % lastNames.length];
     const name = `${fn} ${ln}`;
-    // Generate smooth descending XP between 1620 and 15
-    const xp = Math.max(15, Math.floor(1620 - (i * 1.61) + ((i % 5) * 3)));
+    // Generate smooth descending XP between 1200 and 15
+    const xp = Math.max(15, Math.floor(1200 - (i * 1.18) + ((i % 5) * 2)));
     const level = getLevelForXp(xp);
 
     list.push({
@@ -60,114 +60,138 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const currentUid = searchParams.get("uid");
 
-    // Top 10 global scholars
+    // Default bots with realistic XP thresholds
     const topBots = [
       {
         uid: "bot-1",
         displayName: "Tyler Davis",
         photoURL: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=100&auto=format&fit=crop&q=80",
-        xp: 12450,
-        level: 32,
+        xp: 3450,
+        level: getLevelForXp(3450),
       },
       {
         uid: "bot-2",
         displayName: "Sofia Rodriguez",
         photoURL: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=100&auto=format&fit=crop&q=80",
-        xp: 10420,
-        level: 29,
+        xp: 2920,
+        level: getLevelForXp(2920),
       },
       {
         uid: "bot-3",
         displayName: "Alex Mercer",
         photoURL: "https://images.unsplash.com/photo-1604871000636-074fa5117945?w=100&auto=format&fit=crop&q=80",
-        xp: 8980,
-        level: 27,
+        xp: 2480,
+        level: getLevelForXp(2480),
       },
       {
         uid: "bot-4",
         displayName: "Maya Lin",
         photoURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80",
-        xp: 8550,
-        level: 26,
+        xp: 2150,
+        level: getLevelForXp(2150),
       },
       {
         uid: "bot-5",
         displayName: "Marcus Vance",
         photoURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80",
-        xp: 7980,
-        level: 25,
+        xp: 1880,
+        level: getLevelForXp(1880),
       },
       {
         uid: "bot-6",
         displayName: "Elena Rostova",
         photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80",
-        xp: 7935,
-        level: 25,
+        xp: 1620,
+        level: getLevelForXp(1620),
       },
       {
         uid: "bot-7",
         displayName: "Kenji Sato",
         photoURL: "https://images.unsplash.com/photo-1506318137071-a8e063b4bec0?w=100&auto=format&fit=crop&q=80",
-        xp: 4890,
-        level: 18,
+        xp: 1390,
+        level: getLevelForXp(1390),
       },
       {
         uid: "bot-8",
         displayName: "Nisha Patel",
         photoURL: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&auto=format&fit=crop&q=80",
-        xp: 3270,
-        level: 15,
+        xp: 1120,
+        level: getLevelForXp(1120),
       },
       {
         uid: "bot-9",
         displayName: "Liam Gallagher",
         photoURL: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=100&auto=format&fit=crop&q=80",
-        xp: 1950,
-        level: 11,
+        xp: 950,
+        level: getLevelForXp(950),
       },
       {
         uid: "bot-10",
         displayName: "Chloe Zhang",
         photoURL: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=100&auto=format&fit=crop&q=80",
-        xp: 1650,
-        level: 10,
+        xp: 750,
+        level: getLevelForXp(750),
       },
     ];
 
-    const leaderList = [...topBots, ...PLACEHOLDER_ACCOUNTS];
+    const leaderMap = new Map<string, any>();
+    
+    // Seed placeholder bots first
+    [...topBots, ...PLACEHOLDER_ACCOUNTS].forEach(acct => {
+      leaderMap.set(acct.uid, acct);
+    });
 
-    // Create a 4-second timeout promise
+    // Create a 4-second timeout promise for DB operations
     const timeoutPromise = new Promise<never>((_, reject) =>
       setTimeout(() => reject(new Error("Database connection timeout")), 4000)
     );
 
-    // Fetch the active logged-in user from Firestore (if uid is provided)
-    if (currentUid && currentUid.trim() !== "") {
+    // Fetch ALL real active users from Firestore userProgress collection
+    try {
+      const snapshotPromise = adminDb.collection("userProgress").orderBy("xp", "desc").limit(100).get();
+      const snapshot = (await Promise.race([snapshotPromise, timeoutPromise])) as any;
+      
+      if (snapshot && snapshot.docs) {
+        snapshot.docs.forEach((doc: any) => {
+          const data = doc.data();
+          if (data && doc.id) {
+            leaderMap.set(doc.id, {
+              uid: doc.id,
+              displayName: data.displayName || "AP Scholar",
+              photoURL: data.photoURL || "",
+              xp: data.xp || 0,
+              level: data.level || getLevelForXp(data.xp || 0),
+            });
+          }
+        });
+      }
+    } catch (dbError) {
+      console.error("Firestore userProgress query error:", dbError);
+    }
+
+    // Fallback: Ensure active requesting user is present if provided
+    if (currentUid && currentUid.trim() !== "" && !leaderMap.has(currentUid)) {
       try {
         const fetchDocPromise = adminDb.collection("userProgress").doc(currentUid).get();
         const userDoc = (await Promise.race([fetchDocPromise, timeoutPromise])) as any;
-        
-        if (userDoc.exists) {
+        if (userDoc && userDoc.exists) {
           const data = userDoc.data();
-          // Remove duplicate if placeholder exists
-          const existingIdx = leaderList.findIndex((b) => b.uid === currentUid);
-          if (existingIdx !== -1) {
-            leaderList.splice(existingIdx, 1);
-          }
-          leaderList.push({
+          leaderMap.set(currentUid, {
             uid: currentUid,
             displayName: data.displayName || "AP Scholar",
             photoURL: data.photoURL || "",
             xp: data.xp || 0,
-            level: data.level || 1,
+            level: data.level || getLevelForXp(data.xp || 0),
           });
         }
-      } catch (dbError) {
-        console.error("Firestore user fetch error, falling back to bots only:", dbError);
+      } catch (err) {
+        // ignore fallback error
       }
     }
 
-    // Sort by XP desc
+    const leaderList = Array.from(leaderMap.values());
+
+    // Sort all scholars by XP desc
     leaderList.sort((a, b) => (b.xp || 0) - (a.xp || 0));
 
     return new NextResponse(JSON.stringify(leaderList), {
