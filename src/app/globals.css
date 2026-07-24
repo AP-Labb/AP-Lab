@@ -90,6 +90,51 @@ html.light-theme .course-page-container .liquid-glass-strong {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
 }
 
+/* Markdown Tables Styling in Light Mode */
+html.light-theme .course-page-container table,
+html.light-theme .article-content-container table,
+html.light-theme .prose table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: 1.5rem 0 !important;
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light-theme .course-page-container th,
+html.light-theme .article-content-container th,
+html.light-theme .prose th {
+  background-color: #f1f5f9 !important;
+  color: #0f172a !important;
+  font-weight: 700 !important;
+  padding: 12px 16px !important;
+  border: 1px solid #cbd5e1 !important;
+  text-align: left !important;
+}
+
+html.light-theme .course-page-container td,
+html.light-theme .article-content-container td,
+html.light-theme .prose td {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  padding: 12px 16px !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+html.light-theme .course-page-container tr:nth-child(even) td,
+html.light-theme .article-content-container tr:nth-child(even) td,
+html.light-theme .prose tr:nth-child(even) td {
+  background-color: #f8fafc !important;
+}
+
+/* Vocab term button text color override in Light Mode */
+html.light-theme .vocab-term-btn {
+  color: var(--theme-accent, #22c55e) !important;
+}
+
 html {
   scroll-behavior: smooth;
 }

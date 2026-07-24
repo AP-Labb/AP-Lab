@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { cn } from "@/lib/utils";
 
@@ -73,14 +72,13 @@ export function SelectionAIPopover({ onAsk }: { onAsk: (text: string) => void })
               window.getSelection()?.removeAllRanges();
             }}
             className={cn(
-              "px-3.5 py-2 rounded-xl border shadow-2xl transition-all cursor-pointer font-medium flex items-center gap-1.5 active:scale-95",
+              "px-3.5 py-1.5 rounded-full transition-all cursor-pointer font-medium flex items-center justify-center active:scale-95",
               isLightMode 
-                ? "bg-slate-900 border-slate-700 text-white shadow-slate-900/30 hover:bg-slate-800" 
-                : "liquid-glass-strong border-white/20 text-white hover:bg-white/10"
+                ? "bg-white border border-black text-black shadow-md hover:bg-neutral-100 font-sans text-xs font-semibold" 
+                : "liquid-glass-strong border border-white/10 text-white shadow-xl hover:bg-white/10 text-xs font-sans"
             )}
           >
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
-            <span className="text-xs font-manrope font-bold text-white tracking-wide">Ask AI</span>
+            <span className={cn("text-xs font-sans font-medium tracking-wide", isLightMode ? "text-black" : "text-white")}>Ask AI</span>
           </button>
         </motion.div>
       )}
