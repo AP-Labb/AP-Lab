@@ -2,6 +2,7 @@
 
 import React from "react";
 import { PixelCourseBackground } from "@/components/PixelCourseBackground";
+import { useProgress } from "@/context/ProgressContext";
 
 interface CourseThemeBackgroundProps {
   themeId?: string;
@@ -12,12 +13,12 @@ export const PHOTO_THEME_URLS: Record<string, { name: string; url: string; desc:
   "toronto-skyline": {
     name: "Toronto Night Skyline 4K",
     desc: "Vibrant CN Tower & waterfront reflections",
-    url: "/images/toronto-skyline-night.png"
+    url: "/images/toronto-skyline-night.jpg"
   },
   "nyc-skyline": {
     name: "New York City Skyline 4K",
     desc: "One World Trade Center & Manhattan night harbor",
-    url: "/images/nyc-skyline-night.png"
+    url: "/images/nyc-skyline-night.jpg"
   },
   "shanghai-night": {
     name: "Shanghai Waterfront 4K",
@@ -42,6 +43,14 @@ export const PHOTO_THEME_URLS: Record<string, { name: string; url: string; desc:
 };
 
 export function CourseThemeBackground({ themeId = "dark-matrix" }: CourseThemeBackgroundProps) {
+  const { progress } = useProgress();
+  const isLightMode = progress?.theme === "light";
+
+  // In Light Mode, course background is pure white with black dots!
+  if (isLightMode) {
+    return <PixelCourseBackground />;
+  }
+
   // 1. Default Dot Grid Matrix
   if (themeId === "dark-matrix" || !PHOTO_THEME_URLS[themeId]) {
     return <PixelCourseBackground />;

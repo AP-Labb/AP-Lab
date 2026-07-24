@@ -32,7 +32,7 @@ export const COURSE_BG_THEMES = [
     desc: "Vibrant CN Tower & waterfront reflections",
     miniPreviewClass: "relative overflow-hidden border border-white/20",
     renderMini: () => (
-      <img src="/images/toronto-skyline-night.png" alt="Toronto" className="w-full h-full object-cover" />
+      <img src="/images/toronto-skyline-night.jpg" alt="Toronto" className="w-full h-full object-cover" />
     )
   },
   {
@@ -41,7 +41,7 @@ export const COURSE_BG_THEMES = [
     desc: "One World Trade Center & Manhattan night harbor",
     miniPreviewClass: "relative overflow-hidden border border-white/20",
     renderMini: () => (
-      <img src="/images/nyc-skyline-night.png" alt="New York" className="w-full h-full object-cover" />
+      <img src="/images/nyc-skyline-night.jpg" alt="New York" className="w-full h-full object-cover" />
     )
   },
   {

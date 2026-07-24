@@ -1737,16 +1737,17 @@ export default function APDynamicCoursePage() {
         <button
           onClick={() => setIsAssistantOpen(true)}
           className={cn(
-            "w-16 h-16 rounded-full flex items-center justify-center border shadow-xl hover:scale-105 transition-all group cursor-pointer",
+            "w-16 h-16 rounded-full flex items-center justify-center transition-all hover:scale-105 group cursor-pointer shadow-xl",
             isLightMode 
-              ? "bg-slate-900 border-slate-700 text-white shadow-[0_10px_30px_rgba(15,23,42,0.3)]" 
-              : "liquid-glass border-white/20 text-white shadow-[0_10px_40px_rgba(255,255,255,0.15)]"
+              ? "bg-white border-2 border-black text-black shadow-[0_10px_30px_rgba(0,0,0,0.15)] hover:bg-slate-100" 
+              : "liquid-glass border border-white/20 text-white shadow-[0_10px_40px_rgba(255,255,255,0.15)]"
           )}
           style={{
             boxShadow: isLightMode ? undefined : `0 10px 40px ${course.accentColor}33`
           }}
+          title="Open AP Lab AI Assistant"
         >
-          <Activity className={cn("w-8 h-8 transition-colors", isLightMode ? "text-white" : "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]")} />
+          <Activity className={cn("w-8 h-8 transition-colors", isLightMode ? "text-black stroke-[2.5px]" : "text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.8)]")} />
         </button>
       </div>
       
