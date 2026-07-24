@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
-import GradientBlinds from "./GradientBlinds";
+import GridDistortion from "./GridDistortion";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -313,29 +313,22 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Interactive WebGL Gradient Blinds Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        <GradientBlinds
-          gradientColors={['#7e22ce', '#a855f7', '#4f46e5', '#1e1b4b']}
-          angle={-22}
-          noise={0.25}
-          blindCount={14}
-          blindMinWidth={50}
-          spotlightRadius={0.6}
-          spotlightSoftness={1}
-          spotlightOpacity={0.8}
-          mouseDampening={0.15}
-          distortAmount={0}
-          shineDirection="left"
-          mixBlendMode="lighten"
+      {/* Interactive 4K WebGL Grid Distortion Background */}
+      <div className="absolute inset-0 z-0 opacity-45 pointer-events-none overflow-hidden mix-blend-screen">
+        <GridDistortion
+          imageSrc="/images/Hero.png"
+          grid={12}
+          mouse={0.18}
+          strength={0.2}
+          relaxation={0.92}
         />
       </div>
 
-      {/* Subtle Vignette for 100% Crisp Text Contrast */}
+      {/* Dark Vignette Overlay for 100% Crisp Headline Contrast */}
       <div 
         className="absolute inset-0 pointer-events-none z-[1] select-none"
         style={{
-          background: "radial-gradient(ellipse 65% 65% at 50% 45%, rgba(3, 4, 10, 0.45) 0%, rgba(3, 4, 10, 0.15) 60%, transparent 100%)"
+          background: "radial-gradient(ellipse 70% 70% at 50% 45%, rgba(3, 4, 10, 0.65) 0%, rgba(3, 4, 10, 0.35) 60%, transparent 100%)"
         }}
       />
 
