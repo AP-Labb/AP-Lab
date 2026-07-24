@@ -27,7 +27,7 @@ interface CoursePreview {
 const COURSE_PREVIEWS: CoursePreview[] = [
   {
     id: "biology",
-    name: "AP Biology",
+    name: "AP® Biology",
     badge: "25 Articles • 25 Videos",
     category: "STEM & Sciences",
     description: "Explore the fundamental principles of life. Decode the cellular matrix, delve into evolutionary models, and unravel gene replication mechanics with deep-dive visual modules, laboratory guides, and interactive simulations.",
@@ -56,7 +56,7 @@ const COURSE_PREVIEWS: CoursePreview[] = [
   },
   {
     id: "calculus",
-    name: "AP Calculus",
+    name: "AP® Calculus",
     badge: "28 Articles • 14 Videos",
     category: "Mathematical Logic",
     description: "Conquer the foundations of limits, derivatives, and integrals. Build intuitive geometric understanding through interactive coordinate models, dynamic slope visualizations, and step-by-step calculus proofs.",
@@ -84,7 +84,7 @@ const COURSE_PREVIEWS: CoursePreview[] = [
   },
   {
     id: "physics",
-    name: "AP Physics",
+    name: "AP® Physics",
     badge: "36 Articles • 36 Videos",
     category: "STEM & Sciences",
     description: "Master the laws governing the universe. Investigate particle dynamics, electromagnetism, and energy conservation models with precision vector setups, force diagrams, and physical system sandboxes.",
@@ -113,7 +113,7 @@ const COURSE_PREVIEWS: CoursePreview[] = [
   },
   {
     id: "chemistry",
-    name: "AP Chemistry",
+    name: "AP® Chemistry",
     badge: "27 Articles • 27 Videos",
     category: "STEM & Sciences",
     description: "Deconstruct the micro-world. Analyze thermodynamic systems, equilibrium math, kinetics, and molecular orbital structures using fully interactive chemical reaction simulations and molecular models.",

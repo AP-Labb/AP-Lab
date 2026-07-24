@@ -21,18 +21,18 @@ import { useUI } from "@/context/UIContext";
 import { useRouter } from "next/navigation";
 
 const apClasses = [
-  { name: "AP Chemistry", icon: Beaker, hex: "#00f2ff", slug: "ap-chemistry" },
-  { name: "AP Biology", icon: Dna, hex: "#10b981", slug: "ap-biology" },
-  { name: "AP Physics 1", icon: Atom, hex: "#7b39fc", slug: "ap-physics-1", upcoming: true },
-  { name: "AP Calculus BC", icon: Calculator, hex: "#f59e0b", slug: "ap-calculus-bc" },
-  { name: "AP Statistics", icon: BarChart3, hex: "#ec4899", slug: "ap-statistics" },
-  { name: "AP Computer Science", icon: Code, hex: "#3b82f6", slug: "ap-computer-science-a" },
-  { name: "AP World History", icon: Globe, hex: "#f59e0b", slug: "ap-world-history", upcoming: true },
-  { name: "AP US History", icon: History, hex: "#ef4444", slug: "ap-us-history" },
-  { name: "AP Psychology", icon: Brain, hex: "#a855f7", slug: "ap-psychology" },
-  { name: "AP Lang", icon: BookOpen, hex: "#ec4899", slug: "ap-eng-lang" },
-  { name: "AP Macroeconomics", icon: TrendingUp, hex: "#10b981", slug: "ap-macroeconomics", upcoming: true },
-  { name: "AP Environmental", icon: Leaf, hex: "#10b981", slug: "ap-environmental-science", upcoming: true },
+  { name: "AP® Chemistry", icon: Beaker, hex: "#00f2ff", slug: "ap-chemistry" },
+  { name: "AP® Biology", icon: Dna, hex: "#10b981", slug: "ap-biology" },
+  { name: "AP® Physics 1", icon: Atom, hex: "#7b39fc", slug: "ap-physics-1", upcoming: true },
+  { name: "AP® Calculus BC", icon: Calculator, hex: "#f59e0b", slug: "ap-calculus-bc" },
+  { name: "AP® Statistics", icon: BarChart3, hex: "#ec4899", slug: "ap-statistics" },
+  { name: "AP® Computer Science", icon: Code, hex: "#3b82f6", slug: "ap-computer-science-a" },
+  { name: "AP® World History", icon: Globe, hex: "#f59e0b", slug: "ap-world-history", upcoming: true },
+  { name: "AP® US History", icon: History, hex: "#ef4444", slug: "ap-us-history" },
+  { name: "AP® Psychology", icon: Brain, hex: "#a855f7", slug: "ap-psychology" },
+  { name: "AP® Lang", icon: BookOpen, hex: "#ec4899", slug: "ap-eng-lang" },
+  { name: "AP® Macroeconomics", icon: TrendingUp, hex: "#10b981", slug: "ap-macroeconomics", upcoming: true },
+  { name: "AP® Environmental", icon: Leaf, hex: "#10b981", slug: "ap-environmental-science", upcoming: true },
 ];
 
 export function APClassesPills() {
