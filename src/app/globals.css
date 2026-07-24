@@ -7,11 +7,13 @@
   --foreground: #ededed;
 }
 
+html.light-theme,
+html.light-theme body,
 html.light-theme .course-page-container,
 html.light-theme .course-page-container main {
-  --background: transparent;
+  --background: #ffffff;
   --foreground: #0f172a;
-  background-color: transparent !important;
+  background-color: #ffffff !important;
   color: #0f172a !important;
 }
 

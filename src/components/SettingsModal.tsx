@@ -22,7 +22,6 @@ export const COURSE_BG_THEMES = [
     renderMini: () => (
       <div className="absolute inset-0 bg-[#03040a]">
         <div className="absolute inset-0 opacity-40" style={{ backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.4) 1px, transparent 1px)", backgroundSize: "6px 6px" }} />
-        <div className="absolute top-1 right-1 w-2 h-2 rounded-full bg-emerald-400 blur-[1px]" />
       </div>
     )
   },

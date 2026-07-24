@@ -1641,7 +1641,7 @@ export default function APDynamicCoursePage() {
     <div 
       className={cn(
         "min-h-screen flex flex-col relative z-0 selection:bg-cyan-500 selection:text-white transition-colors duration-300 course-page-container",
-        isLightMode ? "bg-transparent text-slate-900" : "bg-deep-navy text-white"
+        isLightMode ? "bg-white text-slate-900" : "bg-deep-navy text-white"
       )}
       style={{
         // @ts-ignore
