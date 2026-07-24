@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
 import GridDistortion from "./GridDistortion";
+import Dither from "./Dither";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -321,6 +322,21 @@ export function HeroSection() {
           mouse={0.18}
           strength={0.2}
           relaxation={0.92}
+        />
+      </div>
+
+      {/* Semi-Transparent Dither Overlay (Revealing 4K background image below) */}
+      <div className="absolute inset-0 z-[1] opacity-35 pointer-events-none overflow-hidden mix-blend-screen">
+        <Dither
+          waveColor={[0.6, 0.4, 0.95]}
+          disableAnimation={false}
+          enableMouseInteraction={true}
+          mouseRadius={0.4}
+          colorNum={4}
+          pixelSize={2}
+          waveAmplitude={0.25}
+          waveFrequency={2.5}
+          waveSpeed={0.04}
         />
       </div>
 
