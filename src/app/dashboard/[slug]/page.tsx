@@ -1572,7 +1572,7 @@ export default function APDynamicCoursePage() {
   
   const [activeUnit, setActiveUnit] = useState<number>(1);
   const [activeTopic, setActiveTopic] = useState<CourseTopic | null>(null);
-  const [activeTab, setActiveTab] = useState<"video" | "article" | "practice">("video");
+  const [activeTab, setActiveTab] = useState<"video" | "article" | "practice">("article");
   const [expandedUnits, setExpandedUnits] = useState<number[]>([1]);
   const [expandedImage, setExpandedImage] = useState<{ src: string; isSvg?: boolean } | null>(null);
   const [isMobileSyllabusOpen, setIsMobileSyllabusOpen] = useState(false);
