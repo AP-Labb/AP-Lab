@@ -98,12 +98,11 @@ vec3 applyDither(vec2 fragCoord, vec3 color) {
   vec2 scaledCoord = floor(fragCoord / pixelSize);
   int x = int(mod(scaledCoord.x, 8.0));
   int y = int(mod(scaledCoord.y, 8.0));
-  float threshold = bayerMatrix8x8[y * 8 + x] - 0.25;
-  float step = 1.0 / (colorNum - 1.0);
-  color += threshold * step;
-  float bias = 0.2;
-  color = clamp(color - bias, 0.0, 1.0);
-  return floor(color * (colorNum - 1.0) + 0.5) / (colorNum - 1.0);
+  float threshold = bayerMatrix8x8[y * 8 + x] - 0.5;
+  float step = 1.0 / max(colorNum - 1.0, 1.0);
+  color += threshold * step * 1.5;
+  color = clamp(color, 0.0, 1.0);
+  return floor(color * (colorNum - 1.0) + 0.5) / max(colorNum - 1.0, 1.0);
 }
 
 void main() {

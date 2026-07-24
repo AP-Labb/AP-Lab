@@ -326,17 +326,17 @@ export function HeroSection() {
       </div>
 
       {/* Semi-Transparent Dither Overlay (Revealing 4K background image below) */}
-      <div className="absolute inset-0 z-[1] opacity-35 pointer-events-none overflow-hidden mix-blend-screen">
+      <div className="absolute inset-0 z-[1] opacity-80 pointer-events-none overflow-hidden mix-blend-screen">
         <Dither
-          waveColor={[0.6, 0.4, 0.95]}
+          waveColor={[0.85, 0.55, 1.0]}
           disableAnimation={false}
           enableMouseInteraction={true}
-          mouseRadius={0.4}
-          colorNum={4}
-          pixelSize={2}
-          waveAmplitude={0.25}
-          waveFrequency={2.5}
-          waveSpeed={0.04}
+          mouseRadius={0.5}
+          colorNum={5}
+          pixelSize={3}
+          waveAmplitude={0.4}
+          waveFrequency={3.5}
+          waveSpeed={0.06}
         />
       </div>
 
