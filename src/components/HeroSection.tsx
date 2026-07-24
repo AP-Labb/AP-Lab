@@ -314,16 +314,16 @@ export function HeroSection() {
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
       {/* Interactive WebGL Gradient Blinds Background */}
-      <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <GradientBlinds
-          gradientColors={['#050814', '#1e1b4b', '#0369a1', '#6366f1']}
+          gradientColors={['#FF9FFC', '#5227FF']}
           angle={0}
-          noise={0.2}
-          blindCount={16}
+          noise={0.3}
+          blindCount={12}
           blindMinWidth={50}
-          spotlightRadius={0.6}
+          spotlightRadius={0.5}
           spotlightSoftness={1}
-          spotlightOpacity={0.9}
+          spotlightOpacity={1}
           mouseDampening={0.15}
           distortAmount={0}
           shineDirection="left"
