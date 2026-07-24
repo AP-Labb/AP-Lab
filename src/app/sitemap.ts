@@ -1,37 +1,63 @@
 import { MetadataRoute } from 'next';
-import { courseRegistry } from '@/lib/courses/course-registry';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://theaplab.org';
+  const lastModified = new Date();
 
-  // Base routes
-  const routes = [
-    '',
-    '/about',
-    '/impact',
-    '/blog',
-    '/contact',
-    '/join',
-    '/login',
-    '/privacy',
-    '/terms',
-    '/live-analytics',
-    '/dashboard'
-  ].map((route) => ({
-    url: `${baseUrl}${route}`,
-    lastModified: new Date(),
-    changeFrequency: 'daily' as const,
-    priority: route === '' ? 1.0 : 0.8
-  }));
-
-  // Dynamic course dashboard routes
-  const courseSlugs = Object.keys(courseRegistry);
-  const courseRoutes = courseSlugs.map((slug) => ({
-    url: `${baseUrl}/dashboard/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: 'weekly' as const,
-    priority: 0.7
-  }));
-
-  return [...routes, ...courseRoutes];
+  return [
+    {
+      url: baseUrl,
+      lastModified,
+      changeFrequency: 'daily',
+      priority: 1,
+    },
+    {
+      url: `${baseUrl}/dashboard`,
+      lastModified,
+      changeFrequency: 'daily',
+      priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/dashboard/ap-biology`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/ap-chemistry`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/ap-calculus-bc`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/ap-physics-c`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/ap-us-history`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/ap-psychology`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/dashboard/progress`,
+      lastModified,
+      changeFrequency: 'weekly',
+      priority: 0.7,
+    },
+  ];
 }

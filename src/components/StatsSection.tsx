@@ -100,7 +100,7 @@ export function StatsSection() {
           transition={{ duration: 0.6 }}
         >
           <SpotlightCard 
-            spotlightColor="rgba(0, 0, 0, 0.07)"
+            spotlightColor="rgba(0, 0, 0, 0.16)"
             className="w-full bg-gradient-to-r from-white via-slate-100 to-slate-200 rounded-3xl p-8 md:p-12 text-center text-slate-900 border border-white/60 shadow-[0_20px_50px_rgba(255,255,255,0.12)] transition-all duration-300 hover:scale-[1.005]"
           >
             {/* Background subtle dark dot pattern */}
