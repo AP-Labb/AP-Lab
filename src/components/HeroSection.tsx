@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
-import { CursorLinesBackground } from "./CursorLinesBackground";
+import GradientBlinds from "./GradientBlinds";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -313,138 +313,22 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Animated Cursor Reactive Lines Background */}
-      <CursorLinesBackground isPaused={isPaused} />
-
-      {/* Background Floating Study Assets */}
-      <div
-        className="absolute inset-0 pointer-events-none z-[1] select-none"
-        style={{
-          mixBlendMode: "difference",
-          opacity: 0.65,
-          WebkitMaskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, transparent 0%, transparent 35%, rgba(0,0,0,0.3) 60%, black 85%)",
-          maskImage: "radial-gradient(ellipse 60% 60% at 50% 50%, transparent 0%, transparent 35%, rgba(0,0,0,0.3) 60%, black 85%)",
-        }}
-      >
-        {/* DNA: top-left */}
-        <MousePushedWrapper 
-          className="absolute top-[12%] left-[4%] lg:left-[6%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -12, 0], rotate: [0, 8, -8, 0] }}
-          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <DNAIcon />
-        </MousePushedWrapper>
-
-        {/* Molecule: top-right */}
-        <MousePushedWrapper 
-          className="absolute top-[12%] right-[4%] lg:right-[6%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -15, 0], rotate: [0, -12, 12, 0] }}
-          transition={{ duration: 9.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        >
-          <MoleculeIcon />
-        </MousePushedWrapper>
-
-        {/* Flask: top-center-left */}
-        <MousePushedWrapper 
-          className="absolute top-[10%] left-[18%] lg:left-[22%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -10, 0], rotate: [0, -6, 6, 0] }}
-          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-        >
-          <FlaskIcon />
-        </MousePushedWrapper>
-
-        {/* Sigma: top-center-right */}
-        <MousePushedWrapper 
-          className="absolute top-[10%] right-[18%] lg:right-[22%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -8, 0], rotate: [0, 10, -10, 0] }}
-          transition={{ duration: 7.2, repeat: Infinity, ease: "easeInOut", delay: 3 }}
-        >
-          <SigmaIcon />
-        </MousePushedWrapper>
-
-        {/* Stacked Books: mid-left */}
-        <MousePushedWrapper 
-          className="absolute top-[34%] left-[3%] lg:left-[5%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -11, 0], rotate: [0, 5, -5, 0] }}
-          transition={{ duration: 7.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-        >
-          <BooksIcon />
-        </MousePushedWrapper>
-
-        {/* Graduation Cap: mid-right */}
-        <MousePushedWrapper 
-          className="absolute top-[34%] right-[3%] lg:right-[5%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -13, 0], rotate: [0, 7, -7, 0] }}
-          transition={{ duration: 8.2, repeat: Infinity, ease: "easeInOut", delay: 0.8 }}
-        >
-          <CapIcon />
-        </MousePushedWrapper>
-
-        {/* Brain: lower-mid-left */}
-        <MousePushedWrapper 
-          className="absolute top-[56%] left-[3%] lg:left-[5%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -12, 0], rotate: [0, -5, 5, 0] }}
-          transition={{ duration: 8.0, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-        >
-          <BrainIcon />
-        </MousePushedWrapper>
-
-        {/* Atom: lower-mid-right */}
-        <MousePushedWrapper 
-          className="absolute top-[56%] right-[3%] lg:right-[5%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -9, 0], rotate: [0, 15, -15, 0] }}
-          transition={{ duration: 6.8, repeat: Infinity, ease: "easeInOut", delay: 2.2 }}
-        >
-          <AtomIcon />
-        </MousePushedWrapper>
-
-        {/* Math Graph: bottom-left */}
-        <MousePushedWrapper 
-          className="absolute bottom-[12%] left-[6%] lg:left-[10%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -10, 0], rotate: [0, 6, -6, 0] }}
-          transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-        >
-          <MathGraphIcon />
-        </MousePushedWrapper>
-
-        {/* Microscope: bottom-right */}
-        <MousePushedWrapper 
-          className="absolute bottom-[12%] right-[6%] lg:right-[10%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -14, 0], rotate: [0, -8, 8, 0] }}
-          transition={{ duration: 8.8, repeat: Infinity, ease: "easeInOut", delay: 1.2 }}
-        >
-          <MicroscopeIcon />
-        </MousePushedWrapper>
-
-        {/* Ruler: bottom-center-left */}
-        <MousePushedWrapper 
-          className="hidden lg:block absolute bottom-[8%] left-[20%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -11, 0], rotate: [0, 4, -4, 0] }}
-          transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut", delay: 1.8 }}
-        >
-          <RulerIcon />
-        </MousePushedWrapper>
-
-        {/* Periodic Table: bottom-center-right */}
-        <MousePushedWrapper 
-          className="hidden lg:block absolute bottom-[8%] right-[20%] text-white"
-          style={{ mixBlendMode: "difference" }}
-          animate={{ y: [0, -9, 0], rotate: [0, -7, 7, 0] }}
-          transition={{ duration: 9.2, repeat: Infinity, ease: "easeInOut", delay: 2.5 }}
-        >
-          <PeriodicIcon />
-        </MousePushedWrapper>
+      {/* Interactive WebGL Gradient Blinds Background */}
+      <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden">
+        <GradientBlinds
+          gradientColors={['#050814', '#1e1b4b', '#0369a1', '#6366f1']}
+          angle={0}
+          noise={0.2}
+          blindCount={16}
+          blindMinWidth={50}
+          spotlightRadius={0.6}
+          spotlightSoftness={1}
+          spotlightOpacity={0.9}
+          mouseDampening={0.15}
+          distortAmount={0}
+          shineDirection="left"
+          mixBlendMode="lighten"
+        />
       </div>
 
       {/* Seamless Fade Transition at bottom */}
