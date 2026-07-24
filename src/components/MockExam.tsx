@@ -160,12 +160,12 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
         {gameState === "exam" && (
           <motion.div
             key="exam"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="w-full max-w-6xl flex flex-col space-y-4 max-h-[92vh] overflow-y-auto pr-2 custom-scrollbar overscroll-contain"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="w-full max-w-6xl flex flex-col space-y-4 max-h-[95vh] overflow-y-auto p-2"
           >
             {/* Exam Header */}
-            <div className={cn("flex items-center justify-between p-6 rounded-[32px] border backdrop-blur-md transition-colors shrink-0", isLightMode ? "bg-white border-slate-300 text-slate-900 shadow-md" : "bg-black/20 border-white/5 text-white")}>
+            <div className={cn("flex items-center justify-between p-5 md:p-6 rounded-[28px] border backdrop-blur-md transition-colors shrink-0", isLightMode ? "bg-white border-slate-300 text-slate-900 shadow-md" : "bg-black/30 border-white/10 text-white")}>
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <span className={cn("text-xs font-manrope font-black uppercase tracking-widest", isLightMode ? "text-slate-500 font-bold" : "text-white/40")}>Question</span>
@@ -194,7 +194,7 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                 )}
                 <button 
                   onClick={handleFinish}
-                  className={cn("px-8 py-3 rounded-xl border font-bold transition-all cursor-pointer", isLightMode ? "bg-slate-900 text-white hover:bg-slate-800 border-slate-900 shadow-sm" : "bg-white/5 hover:bg-white/10 border-white/10 text-white")}
+                  className={cn("px-8 py-3 rounded-xl border font-bold transition-all cursor-pointer", isLightMode ? "bg-slate-900 text-white hover:bg-slate-800 border-slate-900 shadow-sm" : "bg-white/10 hover:bg-white/20 border-white/15 text-white")}
                 >
                   Submit Exam
                 </button>
@@ -204,20 +204,24 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
             <DesmosCalculatorModal isOpen={isCalcOpen} onClose={() => setIsCalcOpen(false)} />
 
             {/* Question Body */}
-            <div className="flex-1 grid lg:grid-cols-12 gap-6 overflow-hidden">
-              {/* Main Column */}
-              <div className="lg:col-span-8 flex flex-col space-y-4 overflow-y-auto max-h-[calc(92vh-120px)] pr-2 overscroll-contain custom-scrollbar">
-                <div className={cn("p-6 md:p-8 rounded-[32px] border transition-colors shadow-md overflow-y-auto max-h-[calc(92vh-220px)] pr-3 overscroll-contain custom-scrollbar", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
-                  <div className="text-[10px] font-manrope font-black exam-accent-text uppercase tracking-[0.3em] mb-4">
+            <div className="flex-1 grid lg:grid-cols-12 gap-6 items-start">
+              {/* Main Question Column */}
+              <div className="lg:col-span-8 flex flex-col space-y-4">
+                {/* Single Scrollable Question Card Box */}
+                <div className={cn(
+                  "p-6 md:p-8 rounded-[32px] border transition-colors shadow-md overflow-y-auto h-[480px] md:h-[530px] pr-4 space-y-6",
+                  isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white"
+                )}>
+                  <div className="text-[10px] font-manrope font-black exam-accent-text uppercase tracking-[0.3em]">
                     {units.find(u => u.id === questions[currentIndex]?.unitId)?.title || "General Question"}
                   </div>
-                  <p className={cn("text-xl md:text-2xl leading-relaxed font-inter mb-8", isLightMode ? "text-slate-900 font-medium" : "text-white/90")}>
+                  <p className={cn("text-xl md:text-2xl leading-relaxed font-inter", isLightMode ? "text-slate-900 font-medium" : "text-white/90")}>
                     {questions[currentIndex]?.text.split('$').map((part, i) => (
                       i % 2 === 0 ? part : <InlineMath key={i}>{part}</InlineMath>
                     ))}
                   </p>
                   
-                  <div className="grid gap-3">
+                  <div className="grid gap-3 pt-2">
                     {questions[currentIndex]?.options.map((option, idx) => (
                       <button
                         key={idx}
@@ -258,8 +262,8 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                   </div>
                 </div>
 
-                {/* Navigation */}
-                <div className="flex items-center justify-between pb-4 shrink-0">
+                {/* Navigation Bar */}
+                <div className="flex items-center justify-between pt-2">
                   <button 
                     disabled={currentIndex === 0}
                     onClick={() => setCurrentIndex(prev => prev - 1)}
@@ -298,18 +302,18 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                 </div>
               </div>
 
-              {/* Status Sidebar */}
+              {/* Question Map Sidebar */}
               <div className="lg:col-span-4 hidden lg:block">
-                <div className={cn("h-full max-h-[calc(92vh-120px)] rounded-[32px] border p-6 flex flex-col justify-between transition-colors shadow-md overflow-hidden", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
-                  <div>
-                    <h3 className={cn("font-instrument text-2xl mb-4", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Question Map</h3>
-                    <div className="grid grid-cols-6 gap-2 overflow-y-auto max-h-[calc(92vh-260px)] pr-1 overscroll-contain custom-scrollbar">
+                <div className={cn("h-[480px] md:h-[530px] rounded-[32px] border p-6 flex flex-col justify-between transition-colors shadow-md overflow-hidden", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
+                  <div className="flex-1 flex flex-col overflow-hidden">
+                    <h3 className={cn("font-instrument text-2xl mb-4 shrink-0", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Question Map</h3>
+                    <div className="grid grid-cols-6 gap-2 overflow-y-auto flex-1 pr-2">
                       {questions.map((_, idx) => (
                         <button
                           key={idx}
                           onClick={() => setCurrentIndex(idx)}
                           className={cn(
-                            "aspect-square rounded-xl flex items-center justify-center text-sm font-bold border transition-all cursor-pointer",
+                            "aspect-square rounded-xl flex items-center justify-center text-sm font-bold border transition-all cursor-pointer shrink-0",
                             idx === currentIndex 
                               ? "exam-accent-bg border-white/40 text-black ring-2 ring-slate-400" 
                               : (userAnswers[idx] !== undefined 

@@ -684,8 +684,9 @@ export default function Dashboard() {
           {/* Header Section */}
           <div className="text-center mb-10 flex flex-col items-center justify-center relative z-10">
             <motion.div 
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3 mb-3 w-fit mx-auto"
             >
               <span className="text-sm md:text-base uppercase tracking-[0.3em] font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
@@ -696,7 +697,7 @@ export default function Dashboard() {
             <motion.p 
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.15 }}
+              transition={{ duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
               className="font-inter text-white/50 text-sm md:text-base max-w-lg mx-auto leading-relaxed mt-1"
             >
               Navigate your folders or search for a course below.
@@ -704,13 +705,23 @@ export default function Dashboard() {
           </div>
 
           {/* Search Bar */}
-          <div className="w-full flex justify-center relative z-10 mb-4">
+          <motion.div 
+            initial={{ opacity: 0, y: 25, scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="w-full flex justify-center relative z-10 mb-4"
+          >
             <SearchBar onSelect={handleSearchSelect} />
-          </div>
+          </motion.div>
         </div>
 
         {/* SEPARATION LINE PASSING DIRECTLY THROUGH THE VERTICAL MIDDLE OF THE SELECTION MENU */}
-        <div className="relative w-full flex justify-center z-30 my-0">
+        <motion.div 
+          initial={{ opacity: 0, y: 20, scale: 0.94 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full flex justify-center z-30 my-0"
+        >
           {/* Horizontal Separation Line intersecting the middle */}
           <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-white/20 -translate-y-1/2 z-0 pointer-events-none" />
 
@@ -746,7 +757,7 @@ export default function Dashboard() {
               );
             })}
           </div>
-        </div>
+        </motion.div>
 
         {/* LOWER REGION: Folders Grid / Previews Grid / Leaderboard with Grid Background Pattern */}
         <div 
@@ -759,17 +770,23 @@ export default function Dashboard() {
           {/* Tab 1: Universal Wings Bento Grid - 3D Folders Grid */}
           {dashboardTab === "courses" && (
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.4 }}
               className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-6xl mt-10 sm:mt-16 mb-8 sm:mb-12"
             >
-              {folders.map((folder) => (
-                <FolderCard 
-                  key={folder.title} 
-                  {...folder} 
-                  progressData={classProgressMap}
-                />
+              {folders.map((folder, idx) => (
+                <motion.div
+                  key={folder.title}
+                  initial={{ opacity: 0, y: 40, scale: 0.94 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.6, delay: 0.38 + (idx * 0.12), ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <FolderCard 
+                    {...folder} 
+                    progressData={classProgressMap}
+                  />
+                </motion.div>
               ))}
             </motion.div>
           )}
