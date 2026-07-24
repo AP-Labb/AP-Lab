@@ -13,7 +13,6 @@
     "@mux/mux-player-react": "^3.12.0",
     "@react-three/drei": "^9.122.0",
     "@react-three/fiber": "^8.18.0",
-    "@react-three/postprocessing": "^3.0.4",
     "canvas-confetti": "^1.9.4",
     "clsx": "^2.1.1",
     "d3-geo": "^3.1.1",
@@ -26,7 +25,6 @@
     "next": "14.2.35",
     "nodemailer": "^9.0.3",
     "ogl": "^1.0.11",
-    "postprocessing": "^6.39.3",
     "react": "^18",
     "react-dom": "^18",
     "react-katex": "^3.1.0",
@@ -59,8 +57,5 @@
   },
   "optionalDependencies": {
     "@next/swc-darwin-arm64": "^16.2.10"
-  },
-  "overrides": {
-    "jose": "4.15.9"
   }
 }
