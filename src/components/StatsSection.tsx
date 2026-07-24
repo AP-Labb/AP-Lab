@@ -75,7 +75,7 @@ function SpotlightCard({
       }}
       className={`relative overflow-hidden ${className}`}
     >
-      {/* Reduced size & intensity subtle spotlight */}
+      {/* Subtle spotlight overlay */}
       <div 
         className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-10"
         style={{
@@ -92,7 +92,7 @@ export function StatsSection() {
   return (
     <section className="py-8 md:py-12 px-6 md:px-[120px] relative z-20">
       <div className="max-w-6xl mx-auto space-y-4">
-        {/* Top Hero Banner Stat Card */}
+        {/* Top White Gradient Hero Banner Stat Card */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -100,23 +100,23 @@ export function StatsSection() {
           transition={{ duration: 0.6 }}
         >
           <SpotlightCard 
-            spotlightColor="rgba(255, 255, 255, 0.15)"
-            className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 text-center text-white border border-white/20 shadow-[0_20px_50px_rgba(79,70,229,0.3)] transition-all duration-300 hover:scale-[1.005]"
+            spotlightColor="rgba(0, 0, 0, 0.07)"
+            className="w-full bg-gradient-to-r from-white via-slate-100 to-slate-200 rounded-3xl p-8 md:p-12 text-center text-slate-900 border border-white/60 shadow-[0_20px_50px_rgba(255,255,255,0.12)] transition-all duration-300 hover:scale-[1.005]"
           >
-            {/* Background subtle dot pattern */}
+            {/* Background subtle dark dot pattern */}
             <div 
-              className="absolute inset-0 pointer-events-none opacity-20"
+              className="absolute inset-0 pointer-events-none opacity-25"
               style={{
-                backgroundImage: "radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px)",
+                backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.25) 1px, transparent 1px)",
                 backgroundSize: "16px 16px"
               }}
             />
 
             <div className="relative z-20 space-y-2">
-              <div className="font-inter font-black text-5xl sm:text-6xl md:text-7xl tracking-tight text-white drop-shadow-md">
+              <div className="font-inter font-black text-5xl sm:text-6xl md:text-7xl tracking-tight text-slate-950">
                 <CountUpNumber endValue={1250} suffix="+" />
               </div>
-              <div className="text-sm md:text-base font-medium text-white/85 tracking-wide">
+              <div className="text-sm md:text-base font-bold text-slate-700 tracking-wide">
                 Active AP® Scholars
               </div>
             </div>
@@ -135,10 +135,10 @@ export function StatsSection() {
           <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
             <div className="relative z-20 space-y-2">
               <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
-                <CountUpNumber endValue={4.96} decimals={2} suffix="/5 Stars" />
+                <CountUpNumber endValue={4.96} decimals={2} />
               </div>
               <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
-                Rated by Users
+                Stars Rated by Users
               </div>
             </div>
           </SpotlightCard>
