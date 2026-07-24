@@ -52,7 +52,7 @@ const SOCIAL_TASKS: Task[] = [
   {
     id: "discord",
     name: "Join Discord Server",
-    xp: 500,
+    xp: 100,
     url: "https://discord.com/invite/dUSaevPETd",
     actionText: "Join Server",
     icon: DiscordIcon,
@@ -62,7 +62,7 @@ const SOCIAL_TASKS: Task[] = [
   {
     id: "youtube",
     name: "Subscribe on YouTube",
-    xp: 500,
+    xp: 100,
     url: "https://www.youtube.com/@AP_Labss",
     actionText: "Subscribe",
     icon: YoutubeIcon,
@@ -72,7 +72,7 @@ const SOCIAL_TASKS: Task[] = [
   {
     id: "instagram",
     name: "Follow on Instagram",
-    xp: 500,
+    xp: 100,
     url: "https://www.instagram.com/ap.labb/",
     actionText: "Follow",
     icon: InstagramIcon,
@@ -82,7 +82,7 @@ const SOCIAL_TASKS: Task[] = [
   {
     id: "linkedin",
     name: "Connect on LinkedIn",
-    xp: 500,
+    xp: 100,
     url: "https://www.linkedin.com/company/ap-labb",
     actionText: "Connect",
     icon: LinkedinIcon,
