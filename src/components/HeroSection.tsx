@@ -316,7 +316,7 @@ export function HeroSection() {
       {/* Interactive 4K WebGL Grid Distortion Background (Full 4K Brightness & Saturation) */}
       <div className="absolute inset-0 z-0 opacity-100 pointer-events-none overflow-hidden">
         <GridDistortion
-          imageSrc="/images/Hero.png"
+          imageSrc="/images/RealHero.png"
           grid={12}
           mouse={0.18}
           strength={0.2}
