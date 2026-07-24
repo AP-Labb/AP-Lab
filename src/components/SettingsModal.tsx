@@ -27,21 +27,30 @@ export const COURSE_BG_THEMES = [
     )
   },
   {
+    id: "toronto-skyline",
+    name: "Toronto Night Skyline 4K",
+    desc: "Vibrant CN Tower & waterfront reflections",
+    miniPreviewClass: "relative overflow-hidden border border-white/20",
+    renderMini: () => (
+      <img src="/images/toronto-skyline-night.png" alt="Toronto" className="w-full h-full object-cover" />
+    )
+  },
+  {
+    id: "nyc-skyline",
+    name: "New York City Skyline 4K",
+    desc: "One World Trade Center & Manhattan night harbor",
+    miniPreviewClass: "relative overflow-hidden border border-white/20",
+    renderMini: () => (
+      <img src="/images/nyc-skyline-night.png" alt="New York" className="w-full h-full object-cover" />
+    )
+  },
+  {
     id: "shanghai-night",
     name: "Shanghai Waterfront 4K",
     desc: "Illuminated 4K Shanghai Pudong towers & river reflection",
     miniPreviewClass: "relative overflow-hidden border border-white/20",
     renderMini: () => (
       <img src="https://images.unsplash.com/photo-1506158669146-619067262a00?q=80&w=300&auto=format&fit=crop" alt="Shanghai" className="w-full h-full object-cover" />
-    )
-  },
-  {
-    id: "toronto-skyline",
-    name: "Toronto Night Waterfront 4K",
-    desc: "Clean 4K Toronto CN tower skyline over calm night water",
-    miniPreviewClass: "relative overflow-hidden border border-white/20",
-    renderMini: () => (
-      <img src="https://images.unsplash.com/photo-1517935706615-2717063c2225?q=80&w=300&auto=format&fit=crop" alt="Toronto" className="w-full h-full object-cover" />
     )
   },
   {
@@ -69,15 +78,6 @@ export const COURSE_BG_THEMES = [
     miniPreviewClass: "relative overflow-hidden border border-white/20",
     renderMini: () => (
       <img src="https://images.unsplash.com/photo-1533105079780-92b9be482077?q=80&w=300&auto=format&fit=crop" alt="Amalfi" className="w-full h-full object-cover" />
-    )
-  },
-  {
-    id: "great-wall",
-    name: "Great Wall Sunset Peaks 4K",
-    desc: "Scenic mountain peaks along the Great Wall of China",
-    miniPreviewClass: "relative overflow-hidden border border-white/20",
-    renderMini: () => (
-      <img src="https://images.unsplash.com/photo-1508804185872-d7badad00f7d?q=80&w=300&auto=format&fit=crop" alt="Great Wall" className="w-full h-full object-cover" />
     )
   }
 ];

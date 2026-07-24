@@ -9,9 +9,9 @@
 
 html.light-theme .course-page-container,
 html.light-theme .course-page-container main {
-  --background: #f8fafc;
+  --background: transparent;
   --foreground: #0f172a;
-  background-color: #f8fafc !important;
+  background-color: transparent !important;
   color: #0f172a !important;
 }
 

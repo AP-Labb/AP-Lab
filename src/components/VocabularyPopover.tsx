@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Info } from "lucide-react";
+import { useProgress } from "@/context/ProgressContext";
 import { cn } from "@/lib/utils";
 
 interface VocabProps {
@@ -15,6 +16,8 @@ interface VocabProps {
 
 export function VocabularyPopover({ term, definition, children, accentColor, accentColorBorder }: VocabProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const { progress } = useProgress();
+  const isLightMode = progress?.theme === "light";
 
   return (
     <span className="relative inline-block">
@@ -37,16 +40,19 @@ export function VocabularyPopover({ term, definition, children, accentColor, acc
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            className="absolute bottom-full left-1/2 -translate-x-1/2 mb-4 z-[100] w-64 p-4 rounded-2xl bg-[#0a0a14] backdrop-blur-xl border border-white/10 shadow-2xl pointer-events-none"
+            className={cn(
+              "absolute bottom-full left-1/2 -translate-x-1/2 mb-4 z-[100] w-64 p-4 rounded-2xl border shadow-2xl pointer-events-none backdrop-blur-xl transition-colors",
+              isLightMode ? "bg-white border-slate-300 text-slate-900 shadow-slate-900/10" : "bg-[#0a0a14] border-white/10 text-white"
+            )}
           >
             <div className="space-y-1.5">
               <h5 className="font-manrope font-black text-[10px] uppercase tracking-widest" style={{ color: accentColor || "var(--theme-accent, #22c55e)" }}>{term}</h5>
-              <p className="text-white/80 text-xs leading-relaxed font-inter">
+              <p className={cn("text-xs leading-relaxed font-inter", isLightMode ? "text-slate-800 font-medium" : "text-white/80")}>
                 {definition}
               </p>
             </div>
             {/* Arrow */}
-            <div className="absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent border-t-[#0a0a14]" />
+            <div className={cn("absolute top-full left-1/2 -translate-x-1/2 border-8 border-transparent", isLightMode ? "border-t-white" : "border-t-[#0a0a14]")} />
           </motion.div>
         )}
       </AnimatePresence>
