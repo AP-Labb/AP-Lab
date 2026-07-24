@@ -1,53 +1,42 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
-import { Users, Trophy, Target, BookOpen, Sparkles } from "lucide-react";
 
 interface StatItem {
-  icon: any;
   endValue: number;
   suffix: string;
   prefix?: string;
   decimals?: number;
   label: string;
-  description: string;
   glowColor: string;
 }
 
 const STATS_DATA: StatItem[] = [
   {
-    icon: Users,
     endValue: 1250,
     suffix: "+",
     label: "Active Scholars",
-    description: "Registered high-achieving high school students across North America",
-    glowColor: "#00f2ff"
+    glowColor: "rgba(0, 242, 255, 0.15)"
   },
   {
-    icon: Trophy,
-    endValue: 98.4,
-    suffix: "%",
-    decimals: 1,
-    label: "5-Score Pass Rate",
-    description: "Students using AP® Lab modules scoring 4 or 5 on official exams",
-    glowColor: "#10b981"
+    endValue: 4.96,
+    suffix: "/5 Stars",
+    decimals: 2,
+    label: "Rated by Users",
+    glowColor: "rgba(16, 185, 129, 0.15)"
   },
   {
-    icon: Target,
     endValue: 15,
     suffix: "k+",
     label: "Practice Questions",
-    description: "College Board standard multiple-choice & FRQ practice drills",
-    glowColor: "#818cf8"
+    glowColor: "rgba(129, 140, 248, 0.15)"
   },
   {
-    icon: BookOpen,
     endValue: 100,
     suffix: "%",
     label: "Free & Open Access",
-    description: "Zero paywalls for comprehensive AP® curriculum study guides",
-    glowColor: "#f59e0b"
+    glowColor: "rgba(245, 158, 11, 0.15)"
   }
 ];
 
@@ -90,60 +79,69 @@ function CountUpNumber({ endValue, duration = 2, decimals = 0, prefix = "", suff
   );
 }
 
+function StatCard({ stat, idx }: { stat: StatItem; idx: number }) {
+  const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
+  const [isHovered, setIsHovered] = useState(false);
+  const cardRef = useRef<HTMLDivElement>(null);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!cardRef.current) return;
+    const rect = cardRef.current.getBoundingClientRect();
+    setMousePos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
+  return (
+    <motion.div
+      ref={cardRef}
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: idx * 0.08 }}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => {
+        setIsHovered(false);
+        setMousePos({ x: -1000, y: -1000 });
+      }}
+      className="relative liquid-glass border border-white/10 rounded-2xl py-5 px-6 backdrop-blur-xl shadow-xl hover:border-white/25 transition-all duration-300 group overflow-hidden flex flex-col justify-center items-center text-center"
+    >
+      {/* Diffused Large Flashlight Cursor Spotlight Effect */}
+      <div 
+        className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+        style={{
+          opacity: isHovered ? 1 : 0,
+          background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.14), transparent 75%)`
+        }}
+      />
+
+      <div className="relative z-10 space-y-1">
+        <div className="font-instrument text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
+          <CountUpNumber 
+            endValue={stat.endValue} 
+            decimals={stat.decimals || 0} 
+            prefix={stat.prefix || ""} 
+            suffix={stat.suffix} 
+          />
+        </div>
+        <div className="text-[11px] font-manrope font-extrabold uppercase tracking-widest text-white/60">
+          {stat.label}
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
 export function StatsSection() {
   return (
-    <section className="py-10 md:py-16 px-6 md:px-[120px] relative z-20">
+    <section className="py-6 md:py-8 px-6 md:px-[120px] relative z-20">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {STATS_DATA.map((stat, idx) => {
-            const Icon = stat.icon;
-            return (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                className="liquid-glass border border-white/10 rounded-3xl p-6 md:p-8 backdrop-blur-xl shadow-2xl hover:border-white/20 transition-all duration-300 group relative overflow-hidden flex flex-col justify-between"
-              >
-                {/* Accent glow corner */}
-                <div 
-                  className="absolute -top-12 -right-12 w-28 h-28 rounded-full blur-[40px] opacity-20 group-hover:opacity-40 transition-opacity pointer-events-none"
-                  style={{ backgroundColor: stat.glowColor }}
-                />
-
-                <div className="space-y-4 relative z-10">
-                  <div className="flex items-center justify-between">
-                    <div 
-                      className="w-12 h-12 rounded-2xl flex items-center justify-center border border-white/10 bg-white/5 transition-transform duration-300 group-hover:scale-110"
-                      style={{ color: stat.glowColor }}
-                    >
-                      <Icon className="w-6 h-6" />
-                    </div>
-                    <Sparkles className="w-4 h-4 text-white/20 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </div>
-
-                  <div>
-                    <div className="font-instrument text-4xl md:text-5xl font-bold tracking-tight text-white">
-                      <CountUpNumber 
-                        endValue={stat.endValue} 
-                        decimals={stat.decimals || 0} 
-                        prefix={stat.prefix || ""} 
-                        suffix={stat.suffix} 
-                      />
-                    </div>
-                    <div className="text-xs font-manrope font-extrabold uppercase tracking-widest text-white/90 mt-2">
-                      {stat.label}
-                    </div>
-                  </div>
-                </div>
-
-                <p className="text-xs text-white/50 leading-relaxed font-inter mt-4 pt-4 border-t border-white/5 relative z-10">
-                  {stat.description}
-                </p>
-              </motion.div>
-            );
-          })}
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {STATS_DATA.map((stat, idx) => (
+            <StatCard key={idx} stat={stat} idx={idx} />
+          ))}
         </div>
       </div>
     </section>
