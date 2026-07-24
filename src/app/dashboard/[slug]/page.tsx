@@ -2558,7 +2558,8 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
     );
   }
 
-  const { recordQuestionAttempt } = useProgress();
+  const { recordQuestionAttempt, progress } = useProgress();
+  const isLightMode = progress?.theme === "light";
   const question = activeQuestions[currentIdx];
 
   const handleCheck = () => {
@@ -2593,39 +2594,39 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
 
   if (!question) {
     return (
-      <div className="liquid-glass-strong rounded-[32px] p-12 text-center border border-white/10">
-        <Brain className="w-12 h-12 text-white/20 mx-auto mb-4" />
-        <p className="text-white/40">Loading practice questions...</p>
+      <div className={cn("rounded-[32px] p-12 text-center border", isLightMode ? "bg-white border-slate-200 text-slate-900 shadow-sm" : "liquid-glass-strong border-white/10")}>
+        <Brain className={cn("w-12 h-12 mx-auto mb-4", isLightMode ? "text-slate-400" : "text-white/20")} />
+        <p className={isLightMode ? "text-slate-500" : "text-white/40"}>Loading practice questions...</p>
       </div>
     );
   }
 
   return (
-    <div className="liquid-glass-strong rounded-[32px] p-8 md:p-12 border border-white/10 space-y-8 relative">
+    <div className={cn("rounded-[32px] p-8 md:p-12 border space-y-8 relative transition-colors duration-300", isLightMode ? "bg-white border-slate-200 shadow-md text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
       <DesmosCalculatorModal isOpen={isCalcOpen} onClose={() => setIsCalcOpen(false)} />
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h3 className="font-instrument text-3xl text-white">Check Understanding</h3>
+          <h3 className={cn("font-instrument text-3xl", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Check Understanding</h3>
           <p className="text-xs font-manrope font-bold uppercase tracking-[0.2em] subject-accent-text">Question {currentIdx + 1} of {activeQuestions.length}</p>
         </div>
         <div className="flex items-center space-x-3">
           {(!courseSlug || /biology|chemistry|physics|calc|stats|csa/i.test(courseSlug)) && (
             <button
               onClick={() => setIsCalcOpen(!isCalcOpen)}
-              className="w-10 h-10 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-emerald-400 flex items-center justify-center transition-all shadow-md active:scale-95 group"
+              className="w-10 h-10 rounded-xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/35 text-emerald-400 flex items-center justify-center transition-all shadow-md active:scale-95 group cursor-pointer"
               title="Open Desmos Graphing Calculator"
             >
               <Calculator className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </button>
           )}
-          <div className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center">
-            <span className="text-xs font-bold text-white/40">{Math.round(((currentIdx) / activeQuestions.length) * 100)}%</span>
+          <div className={cn("h-12 w-12 rounded-full border flex items-center justify-center", isLightMode ? "border-slate-300 bg-slate-100" : "border-white/10")}>
+            <span className={cn("text-xs font-bold", isLightMode ? "text-slate-700 font-bold" : "text-white/40")}>{Math.round(((currentIdx) / activeQuestions.length) * 100)}%</span>
           </div>
         </div>
       </div>
 
       <div className="space-y-6">
-        <div className="text-xl text-white/90 leading-relaxed font-inter">
+        <div className={cn("text-xl leading-relaxed font-inter", isLightMode ? "text-slate-900 font-medium" : "text-white/90")}>
           {question.text.split('$').map((part: string, i: number) => (
             i % 2 === 0 ? part : <InlineMath key={i}>{part}</InlineMath>
           ))}
@@ -2637,23 +2638,23 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
               key={idx}
               onClick={() => !showFeedback && setSelectedOption(idx)}
               className={cn(
-                "w-full text-left p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden",
+                "w-full text-left p-4 rounded-2xl border transition-all duration-300 relative overflow-hidden cursor-pointer",
                 selectedOption === idx 
-                  ? "text-white" 
-                  : "bg-white/5 border-white/5 text-white/60 hover:border-white/20 hover:bg-white/10",
-                showFeedback && idx === question.correctIndex && "border-green-500 bg-green-500/20 text-white",
-                showFeedback && selectedOption === idx && idx !== question.correctIndex && "border-red-500 bg-red-500/20 text-white"
+                  ? (isLightMode ? "bg-slate-100 text-slate-900 font-bold border-slate-400 shadow-sm" : "text-white") 
+                  : (isLightMode ? "bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100 hover:border-slate-300" : "bg-white/5 border-white/5 text-white/60 hover:border-white/20 hover:bg-white/10"),
+                showFeedback && idx === question.correctIndex && (isLightMode ? "border-green-500 bg-green-50 text-green-900 font-bold" : "border-green-500 bg-green-500/20 text-white"),
+                showFeedback && selectedOption === idx && idx !== question.correctIndex && (isLightMode ? "border-red-500 bg-red-50 text-red-900 font-bold" : "border-red-500 bg-red-500/20 text-white")
               )}
               style={{
                 borderColor: selectedOption === idx && !showFeedback ? accentColor : undefined,
-                backgroundColor: selectedOption === idx && !showFeedback ? `${accentColor}15` : undefined
+                backgroundColor: selectedOption === idx && !showFeedback ? (isLightMode ? `${accentColor}18` : `${accentColor}15`) : undefined
               }}
             >
               <div className="flex items-center space-x-4">
                 <div 
                   className={cn(
                     "w-6 h-6 rounded-lg flex items-center justify-center text-[10px] font-bold border transition-colors",
-                    selectedOption === idx ? "text-black border-transparent" : "border-white/10 text-white/40"
+                    selectedOption === idx ? "text-black border-transparent" : (isLightMode ? "border-slate-300 text-slate-700 bg-slate-100 font-bold" : "border-white/10 text-white/40")
                   )}
                   style={{
                     backgroundColor: selectedOption === idx && !showFeedback ? accentColor : undefined
@@ -2661,7 +2662,7 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
                 >
                   {String.fromCharCode(65 + idx)}
                 </div>
-                <span>
+                <span className={isLightMode ? (selectedOption === idx ? "text-slate-900 font-bold" : "text-slate-800 font-medium") : "text-white"}>
                   {option.split('$').map((part, i) => (
                     i % 2 === 0 ? part : <InlineMath key={i}>{part}</InlineMath>
                   ))}
@@ -2678,7 +2679,7 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
               animate={{ opacity: 1, y: 0 }}
               className={cn(
                 "p-6 rounded-2xl border",
-                isCorrect ? "bg-green-500/10 border-green-500/30" : "bg-red-500/10 border-red-500/30"
+                isCorrect ? (isLightMode ? "bg-green-50 border-green-300 text-green-950" : "bg-green-500/10 border-green-500/30 text-white") : (isLightMode ? "bg-red-50 border-red-300 text-red-950" : "bg-red-500/10 border-red-500/30 text-white")
               )}
             >
               <div className="flex items-start space-x-4">
@@ -2686,13 +2687,13 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
                   "p-2 rounded-xl shrink-0",
                   isCorrect ? "bg-green-500/20" : "bg-red-500/20"
                 )}>
-                  {isCorrect ? <CheckCircle2 className="w-5 h-5 text-green-400" /> : <XCircle className="w-5 h-5 text-red-400" />}
+                  {isCorrect ? <CheckCircle2 className="w-5 h-5 text-green-600" /> : <XCircle className="w-5 h-5 text-red-600" />}
                 </div>
                 <div className="space-y-1">
-                  <h4 className={cn("font-bold text-sm", isCorrect ? "text-green-400" : "text-red-400")}>
+                  <h4 className={cn("font-bold text-sm", isCorrect ? (isLightMode ? "text-green-800" : "text-green-400") : (isLightMode ? "text-red-800" : "text-red-400"))}>
                     {isCorrect ? "Excellent!" : "Not quite right"}
                   </h4>
-                  <div className="text-sm text-white/60 leading-relaxed font-inter">
+                  <div className={cn("text-sm leading-relaxed font-inter", isLightMode ? "text-slate-800 font-medium" : "text-white/60")}>
                     {question.explanation.split('$').map((part: string, i: number) => (
                       i % 2 === 0 ? part : <InlineMath key={i}>{part}</InlineMath>
                     ))}
@@ -2706,17 +2707,17 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="p-6 rounded-2xl bg-white/5 border text-white"
+              className={cn("p-6 rounded-2xl border", isLightMode ? "bg-slate-50 border-slate-300 text-slate-900" : "bg-white/5 border-white/10 text-white")}
               style={{
-                borderColor: `${accentColor}33`,
-                backgroundColor: `${accentColor}08`
+                borderColor: `${accentColor}44`,
+                backgroundColor: isLightMode ? `${accentColor}10` : `${accentColor}08`
               }}
             >
               <div className="flex items-center space-x-3 mb-2">
                 <AlertCircle className="w-4 h-4" style={{ color: accentColor }} />
                 <span className="font-bold text-sm uppercase tracking-widest" style={{ color: accentColor }}>Mastery Hint</span>
               </div>
-              <p className="text-sm text-white/70">{question.hint || "Recall key properties discussed in the article tab."}</p>
+              <p className={cn("text-sm", isLightMode ? "text-slate-800 font-medium" : "text-white/70")}>{question.hint || "Recall key properties discussed in the article tab."}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -2724,7 +2725,7 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
         <div className="flex justify-between items-center pt-4">
           <button 
             onClick={() => setShowHint(!showHint)}
-            className="text-xs font-manrope font-black text-white/40 hover:text-white uppercase tracking-widest transition-colors"
+            className={cn("text-xs font-manrope font-black uppercase tracking-widest transition-colors cursor-pointer", isLightMode ? "text-slate-600 hover:text-slate-900 font-bold" : "text-white/40 hover:text-white")}
           >
             {showHint ? "Hide Hint" : "Show Hint"}
           </button>
@@ -2832,11 +2833,11 @@ function AccountStatsModal({ course, progress, currentUser, onClose }: AccountSt
             <img
               src={progress?.photoURL || currentUser?.photoURL || ""}
               alt={progress?.displayName || currentUser?.displayName || "Avatar"}
-              className="w-14 h-14 rounded-2xl object-cover border border-white/15"
+              className="w-14 h-14 rounded-full object-cover border border-white/15"
             />
           ) : (
             <div 
-              className="w-14 h-14 rounded-2xl flex items-center justify-center font-instrument text-2xl font-bold text-black shadow-lg"
+              className="w-14 h-14 rounded-full flex items-center justify-center font-instrument text-2xl font-bold text-black shadow-lg"
               style={{
                 background: `linear-gradient(135deg, ${course.accentColor}, #ffffff)`,
               }}

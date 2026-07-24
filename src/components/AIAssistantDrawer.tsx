@@ -215,11 +215,11 @@ export function AIAssistantDrawer({
                     <div className="max-w-[82%] flex flex-col items-start">
                       <div className={cn(
                         "rounded-[20px] rounded-bl-[4px] px-5 py-2.5 text-sm font-inter leading-relaxed w-full overflow-hidden break-words whitespace-normal border shadow-sm",
-                        isLightMode ? "bg-slate-100 border-slate-200 text-slate-900" : "bg-[#242429] border-transparent text-white/95"
+                        isLightMode ? "bg-slate-100 border-slate-300 text-slate-900 font-medium" : "bg-[#242429] border-transparent text-white/95"
                       )}>
                         <div className={cn(
-                          "max-w-none leading-relaxed select-text break-words whitespace-normal",
-                          isLightMode ? "prose prose-slate text-slate-900 prose-p:text-slate-800 prose-headings:text-slate-900" : "prose prose-invert prose-sm text-white"
+                          "max-w-none leading-relaxed select-text break-words whitespace-normal text-sm",
+                          isLightMode ? "text-slate-900 prose prose-slate prose-p:text-slate-900 prose-p:font-medium prose-headings:text-slate-900 prose-strong:text-slate-900" : "prose prose-invert prose-sm text-white"
                         )}>
                           <ReactMarkdown remarkPlugins={[remarkMath]} rehypePlugins={[rehypeKatex]}>
                             {msg.content}

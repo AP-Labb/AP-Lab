@@ -16,8 +16,8 @@ interface SettingsModalProps {
 export const COURSE_BG_THEMES = [
   {
     id: "dark-matrix",
-    name: "Dark Matrix Academic (Default)",
-    desc: "Crisp dot matrix overlay with static 8-bit school supply icons",
+    name: "Dark Matrix Grid (Default)",
+    desc: "Pure high-contrast dot matrix grid overlay",
     miniPreviewClass: "bg-[#03040a] relative overflow-hidden border border-white/20",
     renderMini: () => (
       <div className="absolute inset-0 bg-[#03040a]">
@@ -205,10 +205,24 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
 
             {/* 1. Theme Selector (Apple-Style Minimal Toggle Switch) */}
             <div className="space-y-2.5">
-              <label className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
-                <Sun className="w-3.5 h-3.5 text-white/60" />
-                <span>Color Theme Mode</span>
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
+                  <Sun className="w-3.5 h-3.5 text-white/60" />
+                  <span>Color Theme Mode</span>
+                </label>
+
+                {/* Indicator Mark with Hover Tooltip */}
+                <div className="relative flex items-center group/tooltip cursor-pointer">
+                  <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-mono">
+                    <Info className="w-3 h-3" />
+                    <span>Info</span>
+                  </div>
+                  {/* Tooltip Popup */}
+                  <div className="absolute right-0 top-full mt-1.5 hidden group-hover/tooltip:block w-52 p-2.5 rounded-xl bg-[#0f111a] border border-white/20 text-[11px] text-white/90 shadow-2xl z-50 font-inter pointer-events-none leading-tight">
+                    Light mode is only applied to course pages.
+                  </div>
+                </div>
+              </div>
 
               <div className="flex items-center justify-between p-3.5 rounded-xl bg-white/[0.04] border border-white/10">
                 <div className="flex items-center space-x-3">

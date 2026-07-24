@@ -49,10 +49,10 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
               <img
                 src={photoURL}
                 alt={displayName}
-                className={cn("w-7 h-7 sm:w-8 sm:h-8 rounded-xl object-cover border transition-colors", isLightMode ? "border-slate-300 group-hover:border-slate-400" : "border-white/20 group-hover:border-white/40")}
+                className={cn("w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border transition-colors", isLightMode ? "border-slate-300 group-hover:border-slate-400" : "border-white/20 group-hover:border-white/40")}
               />
             ) : (
-              <div className={cn("w-7 h-7 sm:w-8 sm:h-8 rounded-xl border flex items-center justify-center font-manrope font-bold text-xs", isLightMode ? "bg-slate-100 border-slate-300 text-slate-900" : "bg-white/10 border-white/15 text-white/90")}>
+              <div className={cn("w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center font-manrope font-bold text-xs", isLightMode ? "bg-slate-100 border-slate-300 text-slate-900" : "bg-white/10 border-white/15 text-white/90")}>
                 {initials}
               </div>
             )}
