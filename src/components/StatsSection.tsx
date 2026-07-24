@@ -3,43 +3,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
-interface StatItem {
-  endValue: number;
-  suffix: string;
-  prefix?: string;
-  decimals?: number;
-  label: string;
-  glowColor: string;
-}
-
-const STATS_DATA: StatItem[] = [
-  {
-    endValue: 1250,
-    suffix: "+",
-    label: "Active Scholars",
-    glowColor: "rgba(0, 242, 255, 0.15)"
-  },
-  {
-    endValue: 4.96,
-    suffix: "/5 Stars",
-    decimals: 2,
-    label: "Rated by Users",
-    glowColor: "rgba(16, 185, 129, 0.15)"
-  },
-  {
-    endValue: 15,
-    suffix: "k+",
-    label: "Practice Questions",
-    glowColor: "rgba(129, 140, 248, 0.15)"
-  },
-  {
-    endValue: 100,
-    suffix: "%",
-    label: "Free & Open Access",
-    glowColor: "rgba(245, 158, 11, 0.15)"
-  }
-];
-
 function CountUpNumber({ endValue, duration = 2, decimals = 0, prefix = "", suffix = "" }: { endValue: number; duration?: number; decimals?: number; prefix?: string; suffix?: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
@@ -79,7 +42,15 @@ function CountUpNumber({ endValue, duration = 2, decimals = 0, prefix = "", suff
   );
 }
 
-function StatCard({ stat, idx }: { stat: StatItem; idx: number }) {
+function SpotlightCard({ 
+  children, 
+  className = "",
+  spotlightColor = "rgba(255, 255, 255, 0.07)"
+}: { 
+  children: React.ReactNode; 
+  className?: string;
+  spotlightColor?: string;
+}) {
   const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef<HTMLDivElement>(null);
@@ -94,55 +65,108 @@ function StatCard({ stat, idx }: { stat: StatItem; idx: number }) {
   };
 
   return (
-    <motion.div
+    <div
       ref={cardRef}
-      initial={{ opacity: 0, y: 15 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5, delay: idx * 0.08 }}
       onMouseMove={handleMouseMove}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => {
         setIsHovered(false);
         setMousePos({ x: -1000, y: -1000 });
       }}
-      className="relative liquid-glass border border-white/10 rounded-2xl py-5 px-6 backdrop-blur-xl shadow-xl hover:border-white/25 transition-all duration-300 group overflow-hidden flex flex-col justify-center items-center text-center"
+      className={`relative overflow-hidden ${className}`}
     >
-      {/* Diffused Large Flashlight Cursor Spotlight Effect */}
+      {/* Reduced size & intensity subtle spotlight */}
       <div 
-        className="pointer-events-none absolute -inset-px transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px transition-opacity duration-300 z-10"
         style={{
           opacity: isHovered ? 1 : 0,
-          background: `radial-gradient(450px circle at ${mousePos.x}px ${mousePos.y}px, rgba(255, 255, 255, 0.14), transparent 75%)`
+          background: `radial-gradient(260px circle at ${mousePos.x}px ${mousePos.y}px, ${spotlightColor}, transparent 80%)`
         }}
       />
-
-      <div className="relative z-10 space-y-1">
-        <div className="font-instrument text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white">
-          <CountUpNumber 
-            endValue={stat.endValue} 
-            decimals={stat.decimals || 0} 
-            prefix={stat.prefix || ""} 
-            suffix={stat.suffix} 
-          />
-        </div>
-        <div className="text-[11px] font-manrope font-extrabold uppercase tracking-widest text-white/60">
-          {stat.label}
-        </div>
-      </div>
-    </motion.div>
+      {children}
+    </div>
   );
 }
 
 export function StatsSection() {
   return (
-    <section className="py-6 md:py-8 px-6 md:px-[120px] relative z-20">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {STATS_DATA.map((stat, idx) => (
-            <StatCard key={idx} stat={stat} idx={idx} />
-          ))}
-        </div>
+    <section className="py-8 md:py-12 px-6 md:px-[120px] relative z-20">
+      <div className="max-w-6xl mx-auto space-y-4">
+        {/* Top Hero Banner Stat Card */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <SpotlightCard 
+            spotlightColor="rgba(255, 255, 255, 0.15)"
+            className="w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 rounded-3xl p-8 md:p-12 text-center text-white border border-white/20 shadow-[0_20px_50px_rgba(79,70,229,0.3)] transition-all duration-300 hover:scale-[1.005]"
+          >
+            {/* Background subtle dot pattern */}
+            <div 
+              className="absolute inset-0 pointer-events-none opacity-20"
+              style={{
+                backgroundImage: "radial-gradient(circle, rgba(255, 255, 255, 0.4) 1px, transparent 1px)",
+                backgroundSize: "16px 16px"
+              }}
+            />
+
+            <div className="relative z-20 space-y-2">
+              <div className="font-inter font-black text-5xl sm:text-6xl md:text-7xl tracking-tight text-white drop-shadow-md">
+                <CountUpNumber endValue={1250} suffix="+" />
+              </div>
+              <div className="text-sm md:text-base font-medium text-white/85 tracking-wide">
+                Active AP® Scholars
+              </div>
+            </div>
+          </SpotlightCard>
+        </motion.div>
+
+        {/* Bottom Row - 3 Dark Cards */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-4"
+        >
+          {/* Card 1 */}
+          <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
+            <div className="relative z-20 space-y-2">
+              <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
+                <CountUpNumber endValue={4.96} decimals={2} suffix="/5 Stars" />
+              </div>
+              <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
+                Rated by Users
+              </div>
+            </div>
+          </SpotlightCard>
+
+          {/* Card 2 */}
+          <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
+            <div className="relative z-20 space-y-2">
+              <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
+                <CountUpNumber endValue={15} suffix="k+" />
+              </div>
+              <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
+                Practice Questions
+              </div>
+            </div>
+          </SpotlightCard>
+
+          {/* Card 3 */}
+          <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
+            <div className="relative z-20 space-y-2">
+              <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
+                <CountUpNumber endValue={100} suffix="%" />
+              </div>
+              <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
+                Free & Open Access
+              </div>
+            </div>
+          </SpotlightCard>
+        </motion.div>
       </div>
     </section>
   );
