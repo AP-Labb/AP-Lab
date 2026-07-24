@@ -59,7 +59,7 @@ const GridDistortion = ({ grid = 15, mouse = 0.1, strength = 0.15, relaxation = 
       alpha: true,
       powerPreference: 'high-performance'
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setPixelRatio(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1);
     renderer.setClearColor(0x000000, 0);
     rendererRef.current = renderer;
 

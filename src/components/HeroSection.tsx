@@ -313,8 +313,8 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Interactive 4K WebGL Grid Distortion Background */}
-      <div className="absolute inset-0 z-0 opacity-45 pointer-events-none overflow-hidden mix-blend-screen">
+      {/* Interactive 4K WebGL Grid Distortion Background (Full 4K Brightness & Saturation) */}
+      <div className="absolute inset-0 z-0 opacity-100 pointer-events-none overflow-hidden">
         <GridDistortion
           imageSrc="/images/Hero.png"
           grid={12}
@@ -324,16 +324,8 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Dark Vignette Overlay for 100% Crisp Headline Contrast */}
-      <div 
-        className="absolute inset-0 pointer-events-none z-[1] select-none"
-        style={{
-          background: "radial-gradient(ellipse 70% 70% at 50% 45%, rgba(3, 4, 10, 0.65) 0%, rgba(3, 4, 10, 0.35) 60%, transparent 100%)"
-        }}
-      />
-
       {/* Seamless Fade Transition at bottom */}
-      <div className="absolute bottom-0 left-0 right-0 h-[250px] bg-gradient-to-t from-deep-navy via-deep-navy/60 to-transparent z-10 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />
 
       {/* Hero Content Container */}
       <motion.div 
