@@ -1572,7 +1572,7 @@ export default function APDynamicCoursePage() {
   
   const [activeUnit, setActiveUnit] = useState<number>(1);
   const [activeTopic, setActiveTopic] = useState<CourseTopic | null>(null);
-  const [activeTab, setActiveTab] = useState<"video" | "article" | "practice">("article");
+  const [activeTab, setActiveTab] = useState<"video" | "article" | "practice">("video");
   const [expandedUnits, setExpandedUnits] = useState<number[]>([1]);
   const [expandedImage, setExpandedImage] = useState<{ src: string; isSvg?: boolean } | null>(null);
   const [isMobileSyllabusOpen, setIsMobileSyllabusOpen] = useState(false);
@@ -1904,20 +1904,21 @@ export default function APDynamicCoursePage() {
               </div>
             )})}
           </div>
-          
-          <div className="p-4 border-t border-white/5">
+                 <div className={cn("p-4 border-t transition-colors", isLightMode ? "border-slate-200 bg-white" : "border-white/5 bg-transparent")}>
             <button 
               onClick={() => setShowExam(true)}
-              className="w-full flex items-center justify-between p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all group"
-              style={{
-                borderColor: `${course.accentColor}33`
-              }}
+              className={cn(
+                "w-full flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer group shadow-sm",
+                isLightMode 
+                  ? "bg-slate-100 border-slate-300 text-slate-900 hover:bg-slate-200" 
+                  : "bg-white/5 border-white/10 text-white hover:bg-white/10"
+              )}
             >
               <div className="flex items-center space-x-3">
                 <Trophy className="w-5 h-5 subject-accent-text" />
-                <span className="text-sm font-bold text-white uppercase tracking-widest">Mock Exam</span>
+                <span className={cn("text-sm font-bold uppercase tracking-widest", isLightMode ? "text-slate-900 font-extrabold" : "text-white")}>Mock Exam</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-white/40 group-hover:text-white" />
+              <ChevronRight className={cn("w-4 h-4 transition-colors", isLightMode ? "text-slate-700 group-hover:text-slate-900" : "text-white/40 group-hover:text-white")} />
             </button>
           </div>
         </aside>
@@ -1925,10 +1926,10 @@ export default function APDynamicCoursePage() {
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto scroll-smooth">
           {activeTopic ? (
-            <div className="max-w-5xl mx-auto p-6 md:p-12 space-y-8">
+            <div className="max-w-5xl mx-auto p-4 md:p-6 space-y-6">
               {/* Unit Header Banner Card */}
               <div className={cn(
-                "relative w-full rounded-[24px] overflow-hidden p-6 md:p-8 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 transition-colors duration-300",
+                "relative w-full rounded-[24px] overflow-hidden p-5 md:p-6 flex flex-col md:flex-row justify-between items-start md:items-end gap-6 z-10 transition-colors duration-300",
                 isLightMode ? "bg-white border border-slate-200 text-slate-900 shadow-md" : "border border-white/10 bg-black/40 text-white shadow-[0_12px_40px_rgba(0,0,0,0.5)]"
               )}>
                 {/* Pixel Background Banner (Only in Dark Mode) */}

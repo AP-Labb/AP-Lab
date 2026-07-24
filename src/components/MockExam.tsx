@@ -206,7 +206,7 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
             {/* Question Body */}
             <div className="flex-1 grid lg:grid-cols-12 gap-8 overflow-hidden">
               {/* Main Column */}
-              <div className="lg:col-span-8 flex flex-col space-y-6 overflow-y-auto pr-2 scrollbar-hide">
+              <div className="lg:col-span-8 flex flex-col space-y-6 overflow-y-auto max-h-[calc(100vh-200px)] pr-3 overscroll-contain custom-scrollbar">
                 <div className={cn("p-8 md:p-12 rounded-[40px] border transition-colors shadow-md", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
                   <div className="text-[10px] font-manrope font-black exam-accent-text uppercase tracking-[0.3em] mb-6">
                     {units.find(u => u.id === questions[currentIndex]?.unitId)?.title || "General Question"}
@@ -300,9 +300,9 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
 
               {/* Status Sidebar */}
               <div className="lg:col-span-4 hidden lg:block">
-                <div className={cn("h-full rounded-[40px] border p-8 flex flex-col transition-colors shadow-md", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
-                  <h3 className={cn("font-instrument text-2xl mb-6", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Question Map</h3>
-                  <div className="grid grid-cols-6 gap-2 no-scrollbar">
+                <div className={cn("h-full max-h-[calc(100vh-200px)] rounded-[40px] border p-6 flex flex-col transition-colors shadow-md overflow-hidden", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
+                  <h3 className={cn("font-instrument text-2xl mb-4", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Question Map</h3>
+                  <div className="grid grid-cols-6 gap-2 overflow-y-auto max-h-[420px] pr-1 overscroll-contain custom-scrollbar">
                     {questions.map((_, idx) => (
                       <button
                         key={idx}
@@ -320,7 +320,7 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                       </button>
                     ))}
                   </div>
-                  <div className="mt-auto pt-6 space-y-4">
+                  <div className="mt-auto pt-4 space-y-4 border-t border-white/5">
                     <div className={cn("flex items-center space-x-2 text-xs", isLightMode ? "text-slate-600 font-medium" : "text-white/40")}>
                       <AlertCircle className="w-4 h-4" />
                       <span>Unanswered questions scored as 0.</span>
