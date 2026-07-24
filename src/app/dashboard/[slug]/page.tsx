@@ -1844,9 +1844,9 @@ export default function APDynamicCoursePage() {
                     <div 
                       className={cn(
                         "absolute right-4 bottom-0 text-5xl font-mono font-black transition-opacity duration-300 pointer-events-none select-none z-0 tracking-tighter leading-none",
-                        isLightMode ? "opacity-30 text-slate-700 font-extrabold" : "opacity-[0.07] group-hover:opacity-[0.14]"
+                        isLightMode ? "opacity-45 font-extrabold" : "opacity-[0.08] group-hover:opacity-[0.16]"
                       )}
-                      style={{ color: isLightMode ? "#334155" : course.accentColor }}
+                      style={{ color: course.accentColor }}
                     >
                       {getRomanNumeral(unit.id)}
                     </div>
@@ -2859,7 +2859,7 @@ function AccountStatsModal({ course, progress, currentUser, onClose }: AccountSt
               </div>
               <div className="flex items-center space-x-2 text-emerald-400 font-manrope font-bold text-xs mt-0.5">
                 <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
-                <span>Class of {progress?.graduationYear || progress?.gradYear || "2026"}</span>
+                <span>Class of {progress?.graduationYear || "2026"}</span>
               </div>
             </div>
           </div>

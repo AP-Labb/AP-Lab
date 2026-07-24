@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   LogOut, Microscope, Library, Calculator, 
   Search, Dna, Beaker, Atom, History, Brain, BookOpen, Sigma, BarChart3, Binary,
-  ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload,
+  ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap,
   Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf
 } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
@@ -966,17 +966,17 @@ export default function Dashboard() {
                     <img
                       src={progress?.photoURL || currentUser?.photoURL || ""}
                       alt={progress?.displayName || currentUser?.displayName || "Avatar"}
-                      className="w-14 h-14 rounded-2xl object-cover border border-white/15 group-hover:opacity-75 transition-opacity"
+                      className="w-14 h-14 rounded-full object-cover border border-white/15 group-hover:opacity-75 transition-opacity"
                     />
                   ) : (
                     <div 
-                      className="w-14 h-14 rounded-2xl flex items-center justify-center font-instrument text-2xl font-bold text-black shadow-lg bg-gradient-to-br from-cyan-400 to-white group-hover:opacity-75 transition-opacity"
+                      className="w-14 h-14 rounded-full flex items-center justify-center font-instrument text-2xl font-bold text-black shadow-lg bg-gradient-to-br from-cyan-400 to-white group-hover:opacity-75 transition-opacity"
                     >
                       {firstName.charAt(0).toUpperCase()}
                     </div>
                   )}
                   {/* Hover upload icon overlay */}
-                  <div className="absolute inset-0 bg-black/40 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Upload className="w-4 h-4 text-white" />
                   </div>
                   {/* Hidden input element */}
@@ -995,9 +995,15 @@ export default function Dashboard() {
                     </h3>
                     <LevelBadge level={level} />
                   </div>
-                  <div className="flex items-center space-x-2 text-white/50 text-xs">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>{currentUser?.email || "anonymous@theaplab.org"}</span>
+                  <div className="flex flex-col gap-1 text-white/50 text-xs">
+                    <div className="flex items-center space-x-2">
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>{currentUser?.email || "student@theaplab.org"}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-emerald-400 font-manrope font-bold text-xs mt-0.5">
+                      <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Class of {progress?.graduationYear || "2026"}</span>
+                    </div>
                   </div>
                 </div>
               </div>

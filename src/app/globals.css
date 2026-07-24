@@ -31,55 +31,63 @@ html.light-theme .course-page-container aside {
   border-right-color: rgba(226, 232, 240, 0.9) !important;
   color: #0f172a !important;
 }
-html.light-theme .course-page-container aside span,
-html.light-theme .course-page-container aside p {
-  color: #334155 !important;
-}
 
-html.light-theme .settings-modal-card,
-html.light-theme .ai-drawer-card,
-html.light-theme .profile-modal-card {
-  background-color: #ffffff !important;
-  border-color: rgba(226, 232, 240, 0.9) !important;
+/* Article, Practice Questions, & Markdown Prose text in Light Mode */
+html.light-theme .course-page-container p,
+html.light-theme .course-page-container h1,
+html.light-theme .course-page-container h2,
+html.light-theme .course-page-container h3,
+html.light-theme .course-page-container h4,
+html.light-theme .course-page-container h5,
+html.light-theme .course-page-container h6,
+html.light-theme .course-page-container li,
+html.light-theme .course-page-container strong,
+html.light-theme .course-page-container button:not([class*="bg-"]):not([class*="accent"]),
+html.light-theme .article-content-container,
+html.light-theme .article-content-container p,
+html.light-theme .article-content-container h1,
+html.light-theme .article-content-container h2,
+html.light-theme .article-content-container h3,
+html.light-theme .article-content-container h4,
+html.light-theme .article-content-container li,
+html.light-theme .article-content-container span,
+html.light-theme .article-content-container strong,
+html.light-theme .prose,
+html.light-theme .prose p,
+html.light-theme .prose h1,
+html.light-theme .prose h2,
+html.light-theme .prose h3,
+html.light-theme .prose h4,
+html.light-theme .prose li,
+html.light-theme .prose span,
+html.light-theme .prose strong,
+html.light-theme .katex,
+html.light-theme .katex *,
+html.light-theme .katex-html,
+html.light-theme .katex-html * {
   color: #0f172a !important;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12) !important;
 }
 
+/* AI Assistant Drawer text in Light Mode */
+html.light-theme [class*="fixed"][class*="max-w-md"],
+html.light-theme [class*="fixed"][class*="max-w-md"] p,
+html.light-theme [class*="fixed"][class*="max-w-md"] span,
+html.light-theme [class*="fixed"][class*="max-w-md"] h3,
+html.light-theme [class*="fixed"][class*="max-w-md"] h4,
+html.light-theme [class*="fixed"][class*="max-w-md"] div,
+html.light-theme [class*="fixed"][class*="max-w-md"] li,
+html.light-theme [class*="fixed"][class*="max-w-md"] .katex,
+html.light-theme [class*="fixed"][class*="max-w-md"] .katex * {
+  color: #0f172a !important;
+}
+
+/* Glass cards in Light Mode */
 html.light-theme .course-page-container .liquid-glass,
 html.light-theme .course-page-container .liquid-glass-strong {
   background-color: #ffffff !important;
   border-color: rgba(226, 232, 240, 0.9) !important;
   color: #0f172a !important;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-}
-
-html.light-theme .course-page-container .prose,
-html.light-theme .course-page-container .prose p,
-html.light-theme .course-page-container .prose li,
-html.light-theme .course-page-container .prose h1,
-html.light-theme .course-page-container .prose h2,
-html.light-theme .course-page-container .prose h3,
-html.light-theme .course-page-container .prose h4,
-html.light-theme .course-page-container .prose strong,
-html.light-theme .course-page-container h1,
-html.light-theme .course-page-container h2,
-html.light-theme .course-page-container h3,
-html.light-theme .course-page-container p {
-  color: #0f172a !important;
-}
-
-html.light-theme .course-page-container .text-white,
-html.light-theme .course-page-container .text-white\/90,
-html.light-theme .course-page-container .text-white\/80,
-html.light-theme .course-page-container .text-white\/70,
-html.light-theme .course-page-container .text-white\/60 {
-  color: #1e293b !important;
-}
-
-html.light-theme .course-page-container .text-white\/50,
-html.light-theme .course-page-container .text-white\/40,
-html.light-theme .course-page-container .text-white\/30 {
-  color: #64748b !important;
 }
 
 html {

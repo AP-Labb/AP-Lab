@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ArrowLeft, Flame, Calendar, Trophy, Mail, User, X,
+  ArrowLeft, Flame, Calendar, Trophy, Mail, User, X, GraduationCap,
   Clock, Target, CheckCircle2, ChevronLeft, ChevronRight, Activity,
   BookOpen, MessageSquare, Sparkles, LogOut
 } from "lucide-react";
@@ -799,10 +799,10 @@ export default function ProgressPage() {
                   <img
                     src={progress?.photoURL || currentUser?.photoURL || ""}
                     alt={progress?.displayName || currentUser?.displayName || "Avatar"}
-                    className="w-14 h-14 rounded-xl object-cover border border-white/15"
+                    className="w-14 h-14 rounded-full object-cover border border-white/15"
                   />
                 ) : (
-                  <div className="w-14 h-14 rounded-xl flex items-center justify-center font-instrument text-2xl font-bold text-black bg-gradient-to-br from-neutral-200 to-white">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center font-instrument text-2xl font-bold text-black bg-gradient-to-br from-neutral-200 to-white">
                     {firstName.charAt(0).toUpperCase()}
                   </div>
                 )}
@@ -813,9 +813,15 @@ export default function ProgressPage() {
                     </h3>
                     <LevelBadge level={level} />
                   </div>
-                  <div className="flex items-center space-x-2 text-white/50 text-xs">
-                    <Mail className="w-3.5 h-3.5" />
-                    <span>{currentUser?.email || "anonymous@theaplab.org"}</span>
+                  <div className="flex flex-col gap-1 text-white/50 text-xs">
+                    <div className="flex items-center space-x-2">
+                      <Mail className="w-3.5 h-3.5" />
+                      <span>{currentUser?.email || "student@theaplab.org"}</span>
+                    </div>
+                    <div className="flex items-center space-x-2 text-emerald-400 font-manrope font-bold text-xs mt-0.5">
+                      <GraduationCap className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>Class of {progress?.graduationYear || "2026"}</span>
+                    </div>
                   </div>
                 </div>
               </div>
