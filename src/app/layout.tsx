@@ -32,8 +32,8 @@ const instrumentSerif = Instrument_Serif({
 import { SeoSchema } from "@/components/SeoSchema";
 
 export const metadata: Metadata = {
-  title: "AP® Lab | Free Online AP® Courses, Study Guides & AI Practice",
-  description: "Master AP® Biology, AP® Chemistry, AP® Calculus, AP® Physics C, AP® US History and more for 100% free. Deep-dive reading articles, video tutorials, full mock exams & AI tutoring.",
+  title: "AP Lab | Free Online AP Courses, Study Guides & AI Practice",
+  description: "Master AP Biology, AP Chemistry, AP Calculus, AP Physics C, AP US History and more for 100% free. Deep-dive reading articles, video tutorials, full mock exams & AI tutoring.",
   metadataBase: new URL("https://theaplab.org"),
   alternates: {
     canonical: "/",
@@ -63,10 +63,10 @@ export const metadata: Metadata = {
     ]
   },
   openGraph: {
-    title: "AP® Lab | Free Online AP® Courses & AI-Powered Practice",
-    description: "Over 10 subjects, always free. Master AP® Biology, AP® Chemistry, AP® Calculus, AP® Physics C with video tutorials, interactive study guides, and full-length mock exams.",
+    title: "AP Lab | Free Online AP Courses & AI-Powered Practice",
+    description: "Over 10 subjects, always free. Master AP Biology, AP Chemistry, AP Calculus, AP Physics C with video tutorials, interactive study guides, and full-length mock exams.",
     url: "https://theaplab.org",
-    siteName: "AP® Lab",
+    siteName: "AP Lab",
     images: [
       {
         url: "https://theaplab.org/images/embed-preview.png",

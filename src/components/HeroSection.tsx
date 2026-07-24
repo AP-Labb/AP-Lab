@@ -316,20 +316,28 @@ export function HeroSection() {
       {/* Interactive WebGL Gradient Blinds Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <GradientBlinds
-          gradientColors={['#FF9FFC', '#5227FF']}
-          angle={0}
-          noise={0.3}
-          blindCount={12}
+          gradientColors={['#7e22ce', '#a855f7', '#4f46e5', '#1e1b4b']}
+          angle={-22}
+          noise={0.25}
+          blindCount={14}
           blindMinWidth={50}
-          spotlightRadius={0.5}
+          spotlightRadius={0.6}
           spotlightSoftness={1}
-          spotlightOpacity={1}
+          spotlightOpacity={0.8}
           mouseDampening={0.15}
           distortAmount={0}
           shineDirection="left"
           mixBlendMode="lighten"
         />
       </div>
+
+      {/* Subtle Vignette for 100% Crisp Text Contrast */}
+      <div 
+        className="absolute inset-0 pointer-events-none z-[1] select-none"
+        style={{
+          background: "radial-gradient(ellipse 65% 65% at 50% 45%, rgba(3, 4, 10, 0.45) 0%, rgba(3, 4, 10, 0.15) 60%, transparent 100%)"
+        }}
+      />
 
       {/* Seamless Fade Transition at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-[250px] bg-gradient-to-t from-deep-navy via-deep-navy/60 to-transparent z-10 pointer-events-none" />
@@ -358,7 +366,7 @@ export function HeroSection() {
         </div>
 
         {/* Massive Headline (Fully responsive sizing for laptop & mobile screens) */}
-        <h1 className="font-inter font-bold text-white text-4xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[96px] leading-[1.08] mb-6 sm:mb-8 tracking-tight max-w-5xl text-center select-none mix-blend-difference">
+        <h1 className="font-inter font-bold text-white text-4xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[96px] leading-[1.08] mb-6 sm:mb-8 tracking-tight max-w-5xl text-center select-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.95)]">
           For the love <br />
           <motion.span 
             layout="position" 
@@ -401,7 +409,7 @@ export function HeroSection() {
         </h1>
 
         {/* Subtitle */}
-        <p className="font-inter font-medium text-sm sm:text-base md:text-lg lg:text-[20px] text-white/80 max-w-3xl mb-8 sm:mb-12 text-center leading-relaxed text-balance px-4 select-none">
+        <p className="font-inter font-medium text-sm sm:text-base md:text-lg lg:text-[20px] text-white/90 max-w-3xl mb-8 sm:mb-12 text-center leading-relaxed text-balance px-4 select-none drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
           Over 10 subjects, always free. The highest prep quality with comprehensive practice questions and mock exams. Track your progress with dynamic analytics and study smarter with our AI assistant. This is everything learning was meant to be.{" "}
           <span className="whitespace-nowrap">
             <strong className="font-extrabold text-medical-teal animate-free-badge">100% Free</strong>
