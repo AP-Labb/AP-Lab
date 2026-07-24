@@ -277,7 +277,7 @@ export function SubjectLabs() {
                   25 Articles &bull; 25 Videos
                 </div>
                 <h3 className="font-manrope font-bold text-3xl md:text-4xl text-white mb-4 tracking-tight">
-                  AP Biology
+                  AP® Biology
                 </h3>
                 <p className="font-inter text-white/50 text-sm md:text-base leading-relaxed max-w-sm">
                   Decode the cellular matrix, evolutionary models, and gene replication mechanics with deep-dive visual modules.
@@ -366,7 +366,7 @@ export function SubjectLabs() {
                 28 Articles &bull; 14 Videos
               </div>
               <h3 className="font-manrope font-bold text-3xl text-white mb-4 tracking-tight">
-                AP Calculus
+                AP® Calculus
               </h3>
               <p className="font-inter text-white/50 text-sm leading-relaxed max-w-[260px]">
                 Conquer limit proofs, derivatives, and integral calculus structures through interactive coordinate models.
@@ -406,7 +406,7 @@ export function SubjectLabs() {
                 36 Articles &bull; 36 Videos
               </div>
               <h3 className="font-manrope font-bold text-3xl text-white mb-4 tracking-tight">
-                AP Physics
+                AP® Physics
               </h3>
               <p className="font-inter text-white/50 text-sm leading-relaxed max-w-[260px]">
                 Master particle dynamics, electromagnetism, and energy conservation models with precision vector setups.
@@ -442,7 +442,7 @@ export function SubjectLabs() {
                   27 Articles &bull; 27 Videos
                 </div>
                 <h3 className="font-manrope font-bold text-3xl md:text-4xl text-white mb-4 tracking-tight">
-                  AP Chemistry
+                  AP® Chemistry
                 </h3>
                 <p className="font-inter text-white/50 text-sm md:text-base leading-relaxed max-w-sm">
                   Deconstruct thermodynamic systems, equilibrium math, and molecular orbital structures.

@@ -162,10 +162,10 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
             key="exam"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full h-full max-w-6xl flex flex-col space-y-6"
+            className="w-full max-w-6xl flex flex-col space-y-4 max-h-[92vh] overflow-y-auto pr-2 custom-scrollbar overscroll-contain"
           >
             {/* Exam Header */}
-            <div className={cn("flex items-center justify-between p-6 rounded-[32px] border backdrop-blur-md transition-colors", isLightMode ? "bg-white border-slate-300 text-slate-900 shadow-md" : "bg-black/20 border-white/5 text-white")}>
+            <div className={cn("flex items-center justify-between p-6 rounded-[32px] border backdrop-blur-md transition-colors shrink-0", isLightMode ? "bg-white border-slate-300 text-slate-900 shadow-md" : "bg-black/20 border-white/5 text-white")}>
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2">
                   <span className={cn("text-xs font-manrope font-black uppercase tracking-widest", isLightMode ? "text-slate-500 font-bold" : "text-white/40")}>Question</span>
@@ -204,26 +204,26 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
             <DesmosCalculatorModal isOpen={isCalcOpen} onClose={() => setIsCalcOpen(false)} />
 
             {/* Question Body */}
-            <div className="flex-1 grid lg:grid-cols-12 gap-8 overflow-hidden">
+            <div className="flex-1 grid lg:grid-cols-12 gap-6 overflow-hidden">
               {/* Main Column */}
-              <div className="lg:col-span-8 flex flex-col space-y-6 overflow-y-auto max-h-[calc(100vh-200px)] pr-3 overscroll-contain custom-scrollbar">
-                <div className={cn("p-8 md:p-12 rounded-[40px] border transition-colors shadow-md", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
-                  <div className="text-[10px] font-manrope font-black exam-accent-text uppercase tracking-[0.3em] mb-6">
+              <div className="lg:col-span-8 flex flex-col space-y-4 overflow-y-auto max-h-[calc(92vh-120px)] pr-2 overscroll-contain custom-scrollbar">
+                <div className={cn("p-6 md:p-8 rounded-[32px] border transition-colors shadow-md overflow-y-auto max-h-[calc(92vh-220px)] pr-3 overscroll-contain custom-scrollbar", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
+                  <div className="text-[10px] font-manrope font-black exam-accent-text uppercase tracking-[0.3em] mb-4">
                     {units.find(u => u.id === questions[currentIndex]?.unitId)?.title || "General Question"}
                   </div>
-                  <p className={cn("text-2xl leading-relaxed font-inter mb-12", isLightMode ? "text-slate-900 font-medium" : "text-white/90")}>
+                  <p className={cn("text-xl md:text-2xl leading-relaxed font-inter mb-8", isLightMode ? "text-slate-900 font-medium" : "text-white/90")}>
                     {questions[currentIndex]?.text.split('$').map((part, i) => (
                       i % 2 === 0 ? part : <InlineMath key={i}>{part}</InlineMath>
                     ))}
                   </p>
                   
-                  <div className="grid gap-4">
+                  <div className="grid gap-3">
                     {questions[currentIndex]?.options.map((option, idx) => (
                       <button
                         key={idx}
                         onClick={() => setUserAnswers(prev => ({ ...prev, [currentIndex]: idx }))}
                         className={cn(
-                          "w-full text-left p-6 rounded-2xl border transition-all duration-300 group cursor-pointer",
+                          "w-full text-left p-5 rounded-2xl border transition-all duration-300 group cursor-pointer",
                           userAnswers[currentIndex] === idx 
                             ? (isLightMode ? "bg-slate-100 border-slate-400 text-slate-900 font-bold shadow-sm" : "exam-accent-bg-glow exam-accent-border text-white") 
                             : (isLightMode ? "bg-slate-50 border-slate-200 text-slate-800 hover:bg-slate-100 hover:border-slate-300" : "bg-white/5 border-white/5 text-white/60 hover:bg-white/10 hover:border-white/20")
@@ -233,10 +233,10 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                           backgroundColor: isLightMode ? `${accentColor}18` : undefined
                         } : undefined}
                       >
-                        <div className="flex items-center space-x-6">
+                        <div className="flex items-center space-x-5">
                           <div 
                             className={cn(
-                              "w-8 h-8 rounded-lg flex items-center justify-center font-bold border transition-colors",
+                              "w-8 h-8 rounded-lg flex items-center justify-center font-bold border transition-colors shrink-0",
                               userAnswers[currentIndex] === idx 
                                 ? "text-black border-transparent" 
                                 : (isLightMode ? "border-slate-300 text-slate-700 bg-slate-100 font-bold" : "border-white/10 text-white/40 group-hover:border-white/20")
@@ -247,7 +247,7 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                           >
                             {String.fromCharCode(65 + idx)}
                           </div>
-                          <span className={cn("text-lg", isLightMode ? (userAnswers[currentIndex] === idx ? "text-slate-900 font-bold" : "text-slate-800 font-medium") : "text-white")}>
+                          <span className={cn("text-base md:text-lg", isLightMode ? (userAnswers[currentIndex] === idx ? "text-slate-900 font-bold" : "text-slate-800 font-medium") : "text-white")}>
                             {option.split('$').map((part, i) => (
                               i % 2 === 0 ? part : <InlineMath key={i}>{part}</InlineMath>
                             ))}
@@ -259,15 +259,15 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                 </div>
 
                 {/* Navigation */}
-                <div className="flex items-center justify-between pb-8">
+                <div className="flex items-center justify-between pb-4 shrink-0">
                   <button 
                     disabled={currentIndex === 0}
                     onClick={() => setCurrentIndex(prev => prev - 1)}
-                    className={cn("p-4 rounded-2xl border disabled:opacity-20 transition-all cursor-pointer", isLightMode ? "bg-white border-slate-300 text-slate-900 hover:bg-slate-100 shadow-sm" : "bg-white/5 border-white/5 text-white hover:bg-white/10")}
+                    className={cn("p-3.5 rounded-2xl border disabled:opacity-20 transition-all cursor-pointer", isLightMode ? "bg-white border-slate-300 text-slate-900 hover:bg-slate-100 shadow-sm" : "bg-white/5 border-white/5 text-white hover:bg-white/10")}
                   >
-                    <ChevronRight className="w-6 h-6 rotate-180" />
+                    <ChevronRight className="w-5 h-5 rotate-180" />
                   </button>
-                  <div className="flex flex-col items-center space-y-1.5 min-w-[240px]">
+                  <div className="flex flex-col items-center space-y-1.5 min-w-[200px]">
                     <div className={cn("h-1.5 w-full rounded-full overflow-hidden", isLightMode ? "bg-slate-200" : "bg-white/10")}>
                       <motion.div 
                         className="h-full exam-accent-bg"
@@ -283,16 +283,16 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
                   {currentIndex === questions.length - 1 ? (
                     <button 
                       onClick={handleFinish} 
-                      className="exam-accent-bg px-8 py-4 rounded-2xl text-black font-bold exam-accent-glow cursor-pointer"
+                      className="exam-accent-bg px-8 py-3.5 rounded-2xl text-black font-bold exam-accent-glow cursor-pointer"
                     >
                       Finish
                     </button>
                   ) : (
                     <button 
                       onClick={() => setCurrentIndex(prev => prev + 1)}
-                      className="p-4 rounded-2xl exam-accent-bg text-black transition-all exam-accent-glow hover:scale-105 active:scale-95 cursor-pointer"
+                      className="p-3.5 rounded-2xl exam-accent-bg text-black transition-all exam-accent-glow hover:scale-105 active:scale-95 cursor-pointer"
                     >
-                      <ChevronRight className="w-6 h-6" />
+                      <ChevronRight className="w-5 h-5" />
                     </button>
                   )}
                 </div>
@@ -300,27 +300,29 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
 
               {/* Status Sidebar */}
               <div className="lg:col-span-4 hidden lg:block">
-                <div className={cn("h-full max-h-[calc(100vh-200px)] rounded-[40px] border p-6 flex flex-col transition-colors shadow-md overflow-hidden", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
-                  <h3 className={cn("font-instrument text-2xl mb-4", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Question Map</h3>
-                  <div className="grid grid-cols-6 gap-2 overflow-y-auto max-h-[420px] pr-1 overscroll-contain custom-scrollbar">
-                    {questions.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => setCurrentIndex(idx)}
-                        className={cn(
-                          "aspect-square rounded-xl flex items-center justify-center text-sm font-bold border transition-all cursor-pointer",
-                          idx === currentIndex 
-                            ? "exam-accent-bg border-white/40 text-black ring-2 ring-slate-400" 
-                            : (userAnswers[idx] !== undefined 
-                                ? (isLightMode ? "bg-slate-200 border-slate-400 text-slate-900 font-bold" : "bg-white/20 border-white/20 text-white") 
-                                : (isLightMode ? "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-400" : "bg-white/5 border-white/5 text-white/20 hover:border-white/20"))
-                        )}
-                      >
-                        {idx + 1}
-                      </button>
-                    ))}
+                <div className={cn("h-full max-h-[calc(92vh-120px)] rounded-[32px] border p-6 flex flex-col justify-between transition-colors shadow-md overflow-hidden", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}>
+                  <div>
+                    <h3 className={cn("font-instrument text-2xl mb-4", isLightMode ? "text-slate-900 font-bold" : "text-white")}>Question Map</h3>
+                    <div className="grid grid-cols-6 gap-2 overflow-y-auto max-h-[calc(92vh-260px)] pr-1 overscroll-contain custom-scrollbar">
+                      {questions.map((_, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => setCurrentIndex(idx)}
+                          className={cn(
+                            "aspect-square rounded-xl flex items-center justify-center text-sm font-bold border transition-all cursor-pointer",
+                            idx === currentIndex 
+                              ? "exam-accent-bg border-white/40 text-black ring-2 ring-slate-400" 
+                              : (userAnswers[idx] !== undefined 
+                                  ? (isLightMode ? "bg-slate-200 border-slate-400 text-slate-900 font-bold" : "bg-white/20 border-white/20 text-white") 
+                                  : (isLightMode ? "bg-slate-50 border-slate-200 text-slate-400 hover:border-slate-400" : "bg-white/5 border-white/5 text-white/20 hover:border-white/20"))
+                          )}
+                        >
+                          {idx + 1}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="mt-auto pt-4 space-y-4 border-t border-white/5">
+                  <div className="pt-4 space-y-4 border-t border-white/5 shrink-0">
                     <div className={cn("flex items-center space-x-2 text-xs", isLightMode ? "text-slate-600 font-medium" : "text-white/40")}>
                       <AlertCircle className="w-4 h-4" />
                       <span>Unanswered questions scored as 0.</span>

@@ -15,12 +15,15 @@ import { ScrollVideoSection } from "@/components/ScrollVideoSection";
 import { FAQSection } from "@/components/FAQSection";
 import { CollegesLogoWheel } from "@/components/CollegesLogoWheel";
 
+import { StatsSection } from "@/components/StatsSection";
+
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-deep-navy selection:bg-medical-teal selection:text-white">
       <Navbar />
       <div className="flex flex-col">
         <HeroSection />
+        <StatsSection />
         <div className="relative z-20">
           <APClassesPills />
         </div>
