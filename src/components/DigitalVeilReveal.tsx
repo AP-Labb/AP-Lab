@@ -22,6 +22,7 @@ uniform float uAspect;
 uniform float uTime;
 varying vec2 vUv;
 
+// Simplex 2D noise generator for organic trail warping
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
@@ -74,16 +75,16 @@ void main() {
   m.x *= uAspect;
   pm.x *= uAspect;
 
-  // Warp brush coordinates using multi-frequency noise (100% NO CIRCLES!)
+  // Warp brush coordinates with multi-frequency noise (100% NO CIRCLES!)
   vec2 noiseOffset = vec2(
-    cnoise(st * 8.0 + vec2(uTime * 0.6, uTime * 0.4)),
-    cnoise(st * 8.0 - vec2(uTime * 0.5, uTime * 0.7))
+    cnoise(st * 7.5 + vec2(uTime * 0.6, uTime * 0.4)),
+    cnoise(st * 7.5 - vec2(uTime * 0.5, uTime * 0.7))
   ) * 0.12;
 
   float d = distToSegment(st + noiseOffset, pm, m);
   
-  // Large generous organic reveal brush
-  float noiseShape = cnoise(st * 12.0 + vec2(uTime * 0.3));
+  // Large, generous organic focus lens brush
+  float noiseShape = cnoise(st * 11.0 + vec2(uTime * 0.3));
   float dynamicRadius = uRadius * (0.85 + 0.45 * noiseShape);
   float rawBrush = clamp(1.0 - (d / max(dynamicRadius, 0.01)), 0.0, 1.0);
   float brush = pow(rawBrush, 1.2) * (0.75 + 0.5 * noiseShape);
@@ -151,7 +152,24 @@ float rand(vec2 co) {
   return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-// Bayer 8x8 Dither Matrix for digital pixel breakup at edge boundary
+// Multi-tap Gaussian Blur for smooth 6-8px out-of-focus background effect
+vec4 sampleBlurredImage(sampler2D tex, vec2 uv, float blurAmount) {
+  if (blurAmount < 0.005) return texture2D(tex, uv);
+  vec4 col = vec4(0.0);
+  vec2 off = vec2(blurAmount * 2.5) / iResolution.xy;
+  col += texture2D(tex, uv + vec2(-off.x, -off.y)) * 0.0625;
+  col += texture2D(tex, uv + vec2( 0.0,   -off.y)) * 0.125;
+  col += texture2D(tex, uv + vec2( off.x,  -off.y)) * 0.0625;
+  col += texture2D(tex, uv + vec2(-off.x,   0.0))   * 0.125;
+  col += texture2D(tex, uv)                         * 0.25;
+  col += texture2D(tex, uv + vec2( off.x,   0.0))   * 0.125;
+  col += texture2D(tex, uv + vec2(-off.x,   off.y)) * 0.0625;
+  col += texture2D(tex, uv + vec2( 0.0,    off.y)) * 0.125;
+  col += texture2D(tex, uv + vec2( off.x,   off.y)) * 0.0625;
+  return col;
+}
+
+// Bayer 8x8 Dither Matrix for digital edge breakup
 const float bayer8[64] = float[64](
   0.0/64.0, 48.0/64.0, 12.0/64.0, 60.0/64.0,  3.0/64.0, 51.0/64.0, 15.0/64.0, 63.0/64.0,
   32.0/64.0,16.0/64.0, 44.0/64.0, 28.0/64.0, 35.0/64.0,19.0/64.0, 47.0/64.0, 31.0/64.0,
@@ -169,66 +187,72 @@ void main() {
   vec2 uv = vUv + mouseParallax;
   vec2 st = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
 
-  // 1. Sample raw 4K product interface image
-  vec4 rawImg = texture2D(uImageTexture, uv);
+  // 1. Organic Noise-Based Cursor Focus Mask (NO CIRCLES!)
+  float trailVal = texture2D(uTrailMap, uv).r;
 
-  // 2. Translucent Digital Veil Layer (Apple / Linear / Vercel dark atmosphere)
-  // Product image is visible at ~28% baseline clarity across entire hero out of the box
-  vec3 baselineImage = rawImg.rgb * 0.28;
+  float timeSpeed = uReducedMotion > 0.5 ? 0.002 : 0.012;
+  float t = iTime * timeSpeed;
 
-  // Slow ambient drift (30-60 second subtle breathing)
-  float t = iTime * (uReducedMotion > 0.5 ? 0.002 : 0.012);
-  
-  // Layered Gradients (Deep Navy, Near-Black with indigo/purple tones)
+  float n1 = cnoise(st * 4.0 + vec2(t * 0.6, t * 0.4));
+  float n2 = cnoise(st * 8.0 - vec2(t * 0.4, t * 0.5)) * 0.5;
+  float organicNoise = n1 + n2;
+
+  float revealMask = clamp(trailVal + organicNoise * 0.22 * smoothstep(0.03, 0.6, trailVal), 0.0, 1.0);
+
+  // Bayer dither breakup at focus edge boundary
+  int px = int(mod(gl_FragCoord.x / 2.0, 8.0));
+  int py = int(mod(gl_FragCoord.y / 2.0, 8.0));
+  float ditherVal = bayer8[py * 8 + px] - 0.5;
+  float ditherFactor = smoothstep(0.04, 0.82, revealMask + ditherVal * 0.12);
+
+  // 2. Lens Focus Blur Transition: Out-of-focus background has 7.5px soft blur; Focus spotlight has 0px blur
+  float focusFactor = clamp(ditherFactor * 1.15, 0.0, 1.0);
+  float blurAmount = mix(7.5, 0.0, focusFactor);
+  vec4 blurredImg = sampleBlurredImage(uImageTexture, uv, blurAmount);
+
+  // 3. Translucent Digital Veil Layer (Apple / Linear / Vercel style)
+  // Baseline image is visible at ~28% opacity, clearer in the hero center
+  float centerClarity = smoothstep(0.9, 0.15, length(st));
+  vec3 baselineImage = blurredImg.rgb * mix(0.24, 0.38, centerClarity);
+
+  // Atmospheric Gradients (Deep Navy & Dark Indigo)
   float dist = length(st);
   vec3 deepNavy = vec3(0.015, 0.025, 0.055);
   vec3 darkIndigo = vec3(0.05, 0.04, 0.12);
   vec3 veilGradient = mix(darkIndigo, deepNavy, smoothstep(0.1, 0.85, dist));
 
-  // Soft Vignette around screen edges
-  float vignette = smoothstep(0.9, 0.35, dist);
-  vec3 dimmedBackground = (baselineImage + veilGradient * 0.6) * vignette;
+  // Soft Vignette: Atmosphere gradually increases toward corners
+  float vignette = smoothstep(0.95, 0.3, dist);
+  vec3 dimmedBackground = (baselineImage + veilGradient * 0.55) * vignette;
 
   // 3% Animated Fine Digital Film Grain
   float grain = (rand(gl_FragCoord.xy + t * 4.0) - 0.5) * 0.03;
   dimmedBackground += vec3(grain);
 
-  // 3. Organic Noise-Based Cursor Clarity Mask (NO CIRCLES!)
-  float trailVal = texture2D(uTrailMap, uv).r;
+  // Floating Micro-Dust Sparks (Layer 3)
+  float sparkNoise = rand(gl_FragCoord.xy * 0.08 + vec2(t * 0.5, t * 0.3));
+  if (sparkNoise > 0.994) {
+    dimmedBackground += vec3(0.18, 0.22, 0.42);
+  }
 
-  // Multi-scale noise distortion so the reveal area breathes and has organic undulating edges
-  float n1 = cnoise(st * 4.0 + vec2(t * 0.6, t * 0.4));
-  float n2 = cnoise(st * 8.0 - vec2(t * 0.4, t * 0.5)) * 0.5;
-  float organicNoise = n1 + n2;
-
-  // Organic, undulating reveal contour that breathes over time
-  float revealMask = clamp(trailVal + organicNoise * 0.22 * smoothstep(0.03, 0.6, trailVal), 0.0, 1.0);
-
-  // 4. Enhanced Clarity, Contrast & Brightness in Revealed Area
-  // Subtle chromatic aberration at edge boundary (The Magic detail!)
+  // 4. Focused In-Focus Spotlight (Pin-Sharp 4K, 12% Brighter, Vivid Contrast)
+  // Subtle Chromatic Refraction at the lens focus boundary
   float edgeDistortion = smoothstep(0.1, 0.4, revealMask) * (1.0 - smoothstep(0.4, 0.8, revealMask));
-  vec2 caOffset = vec2(edgeDistortion * 0.003, 0.0);
+  vec2 caOffset = vec2(edgeDistortion * 0.0028, 0.0);
   float rCh = texture2D(uImageTexture, uv + caOffset).r;
   float gCh = texture2D(uImageTexture, uv).g;
   float bCh = texture2D(uImageTexture, uv - caOffset).b;
-  vec3 vividImg = vec3(rCh, gCh, bCh);
+  vec3 focusedImg = vec3(rCh, gCh, bCh);
 
-  // Enhance contrast & brightness for revealed spotlight (95% sharp)
-  vividImg = pow(vividImg, vec3(0.90)) * 1.10;
+  // Brighten revealed interface by 12% and enhance contrast
+  focusedImg = pow(focusedImg, vec3(0.90)) * 1.12;
 
-  // Subtle Bayer dither breakup at dissolving boundary
-  int px = int(mod(gl_FragCoord.x / 2.0, 8.0));
-  int py = int(mod(gl_FragCoord.y / 2.0, 8.0));
-  float ditherVal = bayer8[py * 8 + px] - 0.5;
-
-  float ditherFactor = smoothstep(0.04, 0.82, revealMask + ditherVal * 0.12);
-
-  // Faint cyan-purple bloom at reveal boundary
-  float rimBloom = edgeDistortion * 0.25;
+  // Faint cyan-purple bloom at focus rim
+  float rimBloom = edgeDistortion * 0.22;
   vec3 bloomColor = vec3(0.35, 0.45, 0.95) * rimBloom;
 
-  // 5. Final Composite (Smooth transition from 28% baseline to 95% high-clarity vivid product interface)
-  vec3 finalColor = mix(dimmedBackground + bloomColor, vividImg, clamp(ditherFactor * 1.15, 0.0, 1.0));
+  // 5. Final Composite (Lens Focus Reveal: Soft 7.5px blur -> Pin-sharp 100% vivid product interface)
+  vec3 finalColor = mix(dimmedBackground + bloomColor, focusedImg, focusFactor);
 
   gl_FragColor = vec4(finalColor, 1.0);
 }
@@ -262,7 +286,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Ping-Pong FBO RenderTargets for 1.5-2.5s Persistent Cursor Trail
+    // Ping-Pong FBO RenderTargets for 1.5-2.5s Persistent Lens Focus Trail
     const width = 512;
     const height = 512;
     const renderTargetOptions = {
@@ -281,8 +305,8 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       uPrevTrail: { value: null as THREE.Texture | null },
       uMouse: { value: new THREE.Vector2(-10, -10) },
       uPrevMouse: { value: new THREE.Vector2(-10, -10) },
-      uRadius: { value: 0.35 }, // Generous reveal radius (parts smoke effectively!)
-      uDecay: { value: 0.965 }, // Fades back over 1.5 - 2.5 seconds
+      uRadius: { value: 0.35 }, // Large generous focus spotlight
+      uDecay: { value: 0.965 }, // Smooth 1.5 - 2.5s trail recovery
       uAspect: { value: 1.0 },
       uTime: { value: 0 }
     };
@@ -295,7 +319,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
     const trailQuad = new THREE.Mesh(quadGeo, trailMaterial);
     trailScene.add(trailQuad);
 
-    // Main Digital Veil Reveal Shader Scene
+    // Main Digital Focus Veil Shader Scene
     const veilUniforms = {
       iResolution: { value: new THREE.Vector2() },
       iTime: { value: 0 },
@@ -378,7 +402,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       rtA = rtB;
       rtB = temp;
 
-      // 2. Render Main Digital Veil Pass
+      // 2. Render Main Digital Focus Veil Pass
       veilUniforms.iTime.value = elapsedTime;
       veilUniforms.uTrailMap.value = rtA.texture;
 

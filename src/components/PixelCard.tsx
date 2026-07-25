@@ -38,15 +38,15 @@ class Pixel {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.speed = this.getRandomValue(0.2, 1.2) * speed * 2.5; // Fast responsive speed
+    this.speed = this.getRandomValue(0.15, 0.6) * speed * 1.35; // ~300% of original speed
     this.size = 0;
-    this.sizeStep = Math.random() * 0.8 + 0.4;
+    this.sizeStep = Math.random() * 0.4 + 0.25;
     this.minSize = 0.5;
     this.maxSizeInteger = 2;
     this.maxSize = this.getRandomValue(this.minSize, this.maxSizeInteger);
-    this.delay = delay * 0.3; // Minimal delay for fast trigger
+    this.delay = delay * 0.5; // Smooth refined delay
     this.counter = 0;
-    this.counterStep = Math.random() * 12 + (this.width + this.height) * 0.05;
+    this.counterStep = Math.random() * 6 + (this.width + this.height) * 0.02;
     this.isIdle = false;
     this.isReverse = false;
     this.isShimmer = false;
@@ -86,7 +86,7 @@ class Pixel {
       this.isIdle = true;
       return;
     } else {
-      this.size -= 0.25;
+      this.size -= 0.15;
     }
     this.draw();
   }
@@ -108,7 +108,7 @@ class Pixel {
 function getEffectiveSpeed(value: number | string, reducedMotion: boolean) {
   const min = 0;
   const max = 100;
-  const throttle = 0.003;
+  const throttle = 0.0015;
   const parsed = parseInt(value as string, 10);
 
   if (parsed <= min || reducedMotion) {
@@ -132,28 +132,28 @@ const VARIANTS: Record<string, VariantConfig> = {
   default: {
     activeColor: null,
     gap: 5,
-    speed: 85,
+    speed: 55,
     colors: '#ffffff,#f8fafc,#f1f5f9,#e2e8f0',
     noFocus: false
   },
   blue: {
     activeColor: '#e0f2fe',
     gap: 8,
-    speed: 85,
+    speed: 55,
     colors: '#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1',
     noFocus: false
   },
   yellow: {
     activeColor: '#fef08a',
     gap: 3,
-    speed: 50,
+    speed: 35,
     colors: '#fef08a,#fde047,#eab308',
     noFocus: false
   },
   pink: {
     activeColor: '#fecdd3',
     gap: 6,
-    speed: 80,
+    speed: 60,
     colors: '#fecdd3,#fda4af,#e11d48',
     noFocus: true
   }

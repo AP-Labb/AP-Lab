@@ -100,7 +100,7 @@ export function StatsSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <PixelCard colors="#0f172a,#1e293b,#334155,#475569" speed={90} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-3xl">
+          <PixelCard colors="#0f172a,#1e293b,#334155,#475569" speed={55} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-3xl">
             <SpotlightCard 
               spotlightColor="rgba(0, 0, 0, 0.16)"
               className="w-full bg-gradient-to-r from-white via-slate-100 to-slate-200 rounded-3xl p-8 md:p-12 text-center text-slate-900 border border-white/60 shadow-[0_20px_50px_rgba(255,255,255,0.12)] transition-all duration-300 hover:scale-[1.005]"
@@ -135,7 +135,7 @@ export function StatsSection() {
           className="grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           {/* Card 1 */}
-          <PixelCard colors="#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" gap={8} speed={90} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
+          <PixelCard colors="#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" gap={8} speed={55} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
             <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group w-full">
               <div className="relative z-20 space-y-2">
                 <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
@@ -149,7 +149,7 @@ export function StatsSection() {
           </PixelCard>
 
           {/* Card 2 */}
-          <PixelCard colors="#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" gap={8} speed={90} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
+          <PixelCard colors="#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" gap={8} speed={55} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
             <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group w-full">
               <div className="relative z-20 space-y-2">
                 <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
@@ -163,7 +163,7 @@ export function StatsSection() {
           </PixelCard>
 
           {/* Card 3 */}
-          <PixelCard colors="#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" gap={8} speed={90} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
+          <PixelCard colors="#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1" gap={8} speed={55} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
             <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group w-full">
               <div className="relative z-20 space-y-2">
                 <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
