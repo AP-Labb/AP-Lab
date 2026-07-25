@@ -27,6 +27,7 @@ import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { getLevelForXp, getXpThresholdForLevel } from "@/lib/xpProgression";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
+import FolderComponent from "@/components/Folder";
 
 
 const folders = [
@@ -234,106 +235,58 @@ function SearchBar({ onSelect }: { onSelect: (slug: string) => void }) {
 }
 
 function FolderCard({ title, icon: Icon, color, bgGlow, classes, accent, progressData, bgGradient }: typeof folders[0] & { progressData: Record<string, number> }) {
-  const [isHovered, setIsHovered] = useState(false);
+  const paperItems = classes.map((subject) => {
+    const progressPercent = Math.round(progressData[subject.slug] || 0);
+    const isCompleted = progressPercent === 100;
+    const itemAccent = subject.accent || accent;
 
-  return (
-    <div 
-      className="relative w-full mt-6 select-none group transition-all duration-300 hover:-translate-y-1.5"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* 3D Physical Folder Tab Badge Header */}
-      <div className="relative w-full">
-        <div 
-          className="inline-flex items-center space-x-3 px-6 py-2.5 rounded-t-2xl border-t border-x transition-all duration-300 relative z-10"
-          style={{ 
-            backgroundColor: isHovered ? "#121424" : "#0a0c16",
-            borderColor: isHovered ? `${accent}60` : "rgba(255, 255, 255, 0.18)",
-            boxShadow: isHovered ? `0 -6px 20px ${accent}20` : "none"
-          }}
-        >
+    return (
+      <Link
+        key={subject.slug}
+        href={`/dashboard/${subject.slug}`}
+        className="paper-content-link w-full h-full p-3 sm:p-4 flex flex-col justify-between bg-[#080b14] border border-white/15 rounded-xl hover:border-white/40 hover:bg-[#0d1222] transition-all duration-200 group/paper overflow-hidden select-none"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between w-full">
           <div 
-            className="w-6 h-6 rounded-lg bg-white/10 flex items-center justify-center shrink-0 border border-white/10 shadow-inner"
-            style={{ color: accent }}
+            className="w-7 h-7 rounded-lg bg-white/10 flex items-center justify-center shrink-0 border border-white/10"
+            style={{ color: isCompleted ? "#fbbf24" : itemAccent }}
           >
-            <Icon className="w-3.5 h-3.5" />
+            <subject.icon className="w-3.5 h-3.5" />
           </div>
-          <span className="font-manrope font-extrabold text-sm sm:text-base text-white tracking-tight whitespace-nowrap">
-            {title}
+          <span className="font-mono text-[11px] font-bold text-white/70">
+            {progressPercent}%
           </span>
         </div>
-      </div>
 
-      {/* Main Folder Front Body & Pocket Base */}
-      <div 
-        className="relative w-full rounded-b-[24px] rounded-tr-[24px] rounded-tl-none border bg-[#090b14]/95 backdrop-blur-2xl p-5 sm:p-6 flex flex-col justify-center shadow-[0_20px_50px_rgba(0,0,0,0.6)] overflow-hidden z-20 transition-all duration-300"
-        style={{
-          borderColor: isHovered ? `${accent}50` : "rgba(255, 255, 255, 0.16)",
-          boxShadow: isHovered ? `0 25px 60px ${accent}20` : "0 20px 50px rgba(0,0,0,0.6)"
-        }}
-      >
-        {/* Top Folder Rim Highlight Line */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-[2px] opacity-80 transition-opacity duration-300"
-          style={{ backgroundColor: accent }}
-        />
-
-        {/* Inside Folder Glow */}
-        <div 
-          className="absolute inset-0 opacity-10 blur-3xl pointer-events-none -z-10 transition-opacity duration-300"
-          style={{ backgroundColor: accent, opacity: isHovered ? 0.22 : 0.08 }}
-        />
-
-        {/* Clickable Course Subject Cards */}
-        <div className="flex flex-col space-y-2.5 z-10 p-1">
-          {classes.map((subject) => {
-            const progressPercent = Math.round(progressData[subject.slug] || 0);
-            const isCompleted = progressPercent === 100;
-            const itemAccent = subject.accent || accent;
-            return (
-              <Link 
-                key={subject.name}
-                href={`/dashboard/${subject.slug}`}
-                className={cn(
-                  "flex items-center justify-between p-3 rounded-xl bg-white/[0.04] border border-white/5 hover:bg-white/[0.1] hover:border-white/15 transition-all duration-200 group/item w-full relative overflow-hidden",
-                  isCompleted && "border-amber-500/35 bg-amber-500/[0.03]"
-                )}
-              >
-                <div className="flex items-center flex-1 mr-3 overflow-hidden relative z-10">
-                  <subject.icon 
-                    className="w-4 h-4 text-white/70 group-hover/item:text-white transition-colors shrink-0" 
-                    style={{ color: isCompleted ? "#fbbf24" : itemAccent }} 
-                  />
-                  <div className="flex-1 flex flex-col items-start ml-3 min-w-0">
-                    <span className={cn(
-                      "text-xs sm:text-sm font-manrope font-bold text-white/90 group-hover/item:text-white transition-colors truncate w-full text-left",
-                      isCompleted && "text-yellow-400 font-extrabold"
-                    )}>
-                      {subject.name}
-                    </span>
-                    <div className="w-full h-1 bg-white/10 rounded-full mt-1.5 overflow-hidden">
-                      <div 
-                        className="h-full rounded-full transition-all duration-500"
-                        style={{ 
-                          width: `${progressPercent}%`,
-                          backgroundColor: isCompleted ? "#fbbf24" : itemAccent 
-                        }}
-                      />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="flex items-center space-x-2 shrink-0 relative z-10">
-                  <span className="text-[10px] font-mono font-bold text-white/50 group-hover/item:text-white transition-colors">
-                    {progressPercent}%
-                  </span>
-                  <ChevronRight className="w-3.5 h-3.5 text-white/30 group-hover/item:text-white transition-colors" />
-                </div>
-              </Link>
-            );
-          })}
+        <div className="my-1.5 w-full">
+          <div className="font-manrope font-bold text-xs text-white line-clamp-2 leading-snug text-left">
+            {subject.name}
+          </div>
         </div>
-      </div>
+
+        <div className="w-full h-1.5 bg-white/10 rounded-full overflow-hidden">
+          <div 
+            className="h-full rounded-full transition-all duration-500"
+            style={{ 
+              width: `${progressPercent}%`,
+              backgroundColor: isCompleted ? "#fbbf24" : itemAccent 
+            }}
+          />
+        </div>
+      </Link>
+    );
+  });
+
+  return (
+    <div className="flex flex-col items-center justify-center w-full py-4">
+      <FolderComponent 
+        color={accent} 
+        size={1.05} 
+        items={paperItems} 
+        title={title} 
+        icon={Icon} 
+      />
     </div>
   );
 }
