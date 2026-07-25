@@ -314,24 +314,22 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Interactive 4K WebGL Grid Distortion Background (Full 4K Brightness & Saturation) */}
-      <div className="absolute inset-0 z-0 opacity-100 pointer-events-none overflow-hidden">
-        <GridDistortion
-          imageSrc="/images/RealHero.png"
-          grid={12}
-          mouse={0.18}
-          strength={0.2}
-          relaxation={0.92}
+      {/* 4K Background Image (Full 4K Brightness & Saturation, Unwarped) */}
+      <div className="absolute inset-0 z-0 opacity-100 pointer-events-none overflow-hidden select-none">
+        <img 
+          src="/images/RealHero.png" 
+          alt="AP Lab Hero Background" 
+          className="w-full h-full object-cover object-center scale-[1.01]"
         />
       </div>
 
-      {/* Semi-Transparent Dither Overlay (Revealing 4K background image below) */}
+      {/* Semi-Transparent Dither Overlay (Parts open wherever mouse cursor moves) */}
       <div className="absolute inset-0 z-[1] opacity-80 pointer-events-none overflow-hidden mix-blend-screen">
         <Dither
           waveColor={[0.85, 0.55, 1.0]}
           disableAnimation={false}
-          enableMouseInteraction={false}
-          mouseRadius={0.5}
+          enableMouseInteraction={true}
+          mouseRadius={0.55}
           colorNum={5}
           pixelSize={3}
           waveAmplitude={0.4}
