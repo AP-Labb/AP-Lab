@@ -42,7 +42,7 @@ interface ProfileCardProps {
 
 const ProfileCardComponent: React.FC<ProfileCardProps> = ({
   avatarUrl = '/images/yash-patil.png',
-  iconUrl = '',
+  iconUrl = '/images/iconpattern.png',
   grainUrl = '',
   innerGradient,
   behindGlowEnabled = true,

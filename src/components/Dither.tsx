@@ -124,7 +124,8 @@ void main() {
     samplePos += pushVector;
     
     f = pattern(samplePos) + holeMask * 0.35;
-    alpha = clamp(0.92 - holeMask * 0.78, 0.15, 0.92);
+    // Parting transparency: clears dither layer inside cursor holeMask so image shines through cleanly
+    alpha = clamp(0.92 - holeMask * 0.92, 0.0, 0.92);
   } else {
     f = pattern(samplePos);
   }

@@ -303,6 +303,15 @@ export function HeroSection() {
   const [isHoveredDashboard, setIsHoveredDashboard] = useState(false);
   const [isHoveredSignIn, setIsHoveredSignIn] = useState(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: -999, y: -999 });
+
+  useEffect(() => {
+    const handlePointerMove = (e: PointerEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+    };
+    window.addEventListener("pointermove", handlePointerMove, { passive: true });
+    return () => window.removeEventListener("pointermove", handlePointerMove);
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -321,6 +330,15 @@ export function HeroSection() {
           className="w-full h-full object-cover opacity-95 brightness-110 contrast-105"
         />
       </div>
+
+      {/* Layer 1.5: Interactive Cursor Bloom Spotlight Glow (Makes image underneath glow, pop, sharp & vibrant!) */}
+      <div 
+        className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge"
+        style={{
+          background: `radial-gradient(420px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.65) 0%, rgba(129, 140, 248, 0.38) 35%, rgba(168, 85, 247, 0.2) 65%, transparent 85%)`,
+          opacity: cursorPos.x > -100 ? 1 : 0
+        }}
+      />
 
       {/* Layer 2: Rich Glowing Electric Blue & Indigo Smoke Plumes (Matching reference image) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-70 mix-blend-screen">

@@ -96,10 +96,10 @@ export default function ImpactPage() {
         </div>
       </section>
 
-      {/* Bento Grid Command Center with BorderGlow & Animated Background Graphs */}
+      {/* Bento Grid Command Center with BorderGlow & Continuous Animated Background Graphs */}
       <section className="px-6 md:px-[120px] pb-24 z-10 relative">
         <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-          {/* Card 1: Active Scholars */}
+          {/* Card 1: Active Scholars (Centered & Larger) */}
           <motion.div 
             initial={{ opacity: 0, scale: 0.96 }}
             whileInView={{ opacity: 1, scale: 1 }}
@@ -115,53 +115,52 @@ export default function ImpactPage() {
               colors={['#20c997', '#38bdf8', '#4fd1c5']}
               className="h-full"
             >
-              <div className="p-8 sm:p-10 flex flex-col justify-between h-full relative overflow-hidden group min-h-[320px]">
-                {/* Smooth Animated Teal Background Wave Graph */}
-                <div className="absolute inset-x-0 bottom-0 top-[25%] opacity-35 pointer-events-none z-0">
+              <div className="p-8 sm:p-12 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[340px]">
+                {/* Continuous Detailed Animated Teal Background Wave Graph */}
+                <div className="absolute inset-x-0 bottom-0 top-[15%] opacity-35 pointer-events-none z-0">
                   <svg viewBox="0 0 1000 400" className="w-full h-full" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="tealGraphGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#20c997" stopOpacity="0.75" />
+                        <stop offset="0%" stopColor="#20c997" stopOpacity="0.8" />
                         <stop offset="100%" stopColor="#20c997" stopOpacity="0.0" />
                       </linearGradient>
                     </defs>
                     <motion.path
-                      d="M0,400 L0,260 Q180,140 360,220 T720,120 T1000,40 L1000,400 Z"
                       fill="url(#tealGraphGrad)"
-                      initial={{ y: 150, opacity: 0 }}
-                      whileInView={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      animate={{ 
+                        d: [
+                          "M0,400 L0,260 Q250,140 500,240 T750,140 T1000,40 L1000,400 Z",
+                          "M0,400 L0,240 Q250,260 500,160 T750,220 T1000,100 L1000,400 Z",
+                          "M0,400 L0,260 Q250,140 500,240 T750,140 T1000,40 L1000,400 Z"
+                        ]
+                      }}
+                      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
                     />
                     <motion.path
-                      d="M0,260 Q180,140 360,220 T720,120 T1000,40"
                       fill="none"
                       stroke="#20c997"
                       strokeWidth="3.5"
-                      initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      transition={{ duration: 2, ease: "easeInOut" }}
+                      animate={{ 
+                        d: [
+                          "M0,260 Q250,140 500,240 T750,140 T1000,40",
+                          "M0,240 Q250,260 500,160 T750,220 T1000,100",
+                          "M0,260 Q250,140 500,240 T750,140 T1000,40"
+                        ]
+                      }}
+                      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
                     />
                   </svg>
                 </div>
 
-                <div className="relative z-10 mb-12">
-                  <span className="font-mono text-xs font-bold text-medical-teal uppercase tracking-widest px-3 py-1.5 rounded-full bg-medical-teal/10 border border-medical-teal/20">
-                    Infrastructure
-                  </span>
-                </div>
-
-                <div className="relative z-10">
-                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-3 tracking-tight text-white">1,024</div>
-                  <div className="flex items-center space-x-3">
-                    <div className="h-[2px] w-8 bg-medical-teal/60 rounded-full" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">Verified Concurrent Scholars</span>
-                  </div>
+                <div className="relative z-10 flex flex-col items-center justify-center">
+                  <div className="text-7xl sm:text-8xl md:text-[104px] font-inter font-bold mb-3 tracking-tight text-white leading-none">1,024</div>
+                  <span className="font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-white/60 font-semibold">Verified Concurrent Scholars</span>
                 </div>
               </div>
             </BorderGlow>
           </motion.div>
 
-          {/* Card 2: Average Study Session */}
+          {/* Card 2: Average Study Session (Centered & Larger) */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -177,49 +176,52 @@ export default function ImpactPage() {
               colors={['#f59e0b', '#fbbf24', '#fef08a']}
               className="h-full"
             >
-              <div className="p-7 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden group min-h-[220px]">
-                {/* Smooth Animated Amber Mountain Background Graph */}
-                <div className="absolute inset-x-0 bottom-0 top-[20%] opacity-30 pointer-events-none z-0">
+              <div className="p-8 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[260px]">
+                {/* Continuous Detailed Animated Amber Mountain Background Graph */}
+                <div className="absolute inset-x-0 bottom-0 top-[15%] opacity-35 pointer-events-none z-0">
                   <svg viewBox="0 0 400 200" className="w-full h-full" preserveAspectRatio="none">
                     <defs>
                       <linearGradient id="amberGraphGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.8" />
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.85" />
                         <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
                       </linearGradient>
                     </defs>
                     <motion.path
-                      d="M0,200 L0,140 Q100,50 200,110 T400,20 L400,200 Z"
                       fill="url(#amberGraphGrad)"
-                      initial={{ y: 100, opacity: 0 }}
-                      whileInView={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
+                      animate={{
+                        d: [
+                          "M0,200 L0,140 Q100,40 200,100 T400,20 L400,200 Z",
+                          "M0,200 L0,110 Q100,90 200,50 T400,70 L400,200 Z",
+                          "M0,200 L0,140 Q100,40 200,100 T400,20 L400,200 Z"
+                        ]
+                      }}
+                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                     />
                     <motion.path
-                      d="M0,140 Q100,50 200,110 T400,20"
                       fill="none"
                       stroke="#f59e0b"
                       strokeWidth="3"
-                      initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      transition={{ duration: 2, ease: "easeInOut" }}
+                      animate={{
+                        d: [
+                          "M0,140 Q100,40 200,100 T400,20",
+                          "M0,110 Q100,90 200,50 T400,70",
+                          "M0,140 Q100,40 200,100 T400,20"
+                        ]
+                      }}
+                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                     />
                   </svg>
                 </div>
 
-                <div className="relative z-10 mb-6">
-                  <span className="font-mono text-[10px] font-bold text-amber-400 uppercase tracking-widest px-2.5 py-1 rounded-full bg-amber-400/10 border border-amber-400/20">
-                    Engagement
-                  </span>
-                </div>
-                <div className="relative z-10">
-                  <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">56m</div>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Avg. Study Session</span>
+                <div className="relative z-10 flex flex-col items-center justify-center">
+                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-2 text-white tracking-tight leading-none">56m</div>
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 font-semibold">Avg. Study Session</span>
                 </div>
               </div>
             </BorderGlow>
           </motion.div>
 
-          {/* Card 3: Pass Rate Matrix */}
+          {/* Card 3: Pass Rate Matrix (Centered & Larger) */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -235,34 +237,32 @@ export default function ImpactPage() {
               colors={['#a484d7', '#c084fc', '#e879f9']}
               className="h-full"
             >
-              <div className="p-7 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden group min-h-[220px]">
-                {/* Smooth Animated Purple Arc Progress Graph Background */}
-                <div className="absolute right-[-20%] bottom-[-20%] w-[120%] aspect-square opacity-20 pointer-events-none z-0">
-                  <svg viewBox="0 0 200 200" className="w-full h-full transform -rotate-90">
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="#a484d7" strokeWidth="24" opacity="0.2" />
-                    <motion.circle 
+              <div className="p-8 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[260px]">
+                {/* Continuous Rotating Purple Multi-Ring Graph Background */}
+                <div className="absolute right-[-15%] bottom-[-15%] w-[130%] aspect-square opacity-25 pointer-events-none z-0 flex items-center justify-center">
+                  <motion.svg 
+                    viewBox="0 0 200 200" 
+                    className="w-full h-full"
+                    animate={{ rotate: 360 }}
+                    transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
+                  >
+                    <circle cx="100" cy="100" r="75" fill="none" stroke="#a484d7" strokeWidth="18" opacity="0.25" />
+                    <circle 
                       cx="100" cy="100" r="75" 
                       fill="none" 
-                      stroke="#a484d7" 
-                      strokeWidth="24" 
+                      stroke="#c084fc" 
+                      strokeWidth="18" 
                       strokeDasharray="471" 
-                      strokeDashoffset="471"
-                      initial={{ strokeDashoffset: 471 }}
-                      whileInView={{ strokeDashoffset: 55 }}
-                      transition={{ duration: 2, ease: "easeInOut" }}
+                      strokeDashoffset="120"
                       strokeLinecap="round"
                     />
-                  </svg>
+                    <circle cx="100" cy="100" r="50" fill="none" stroke="#e879f9" strokeWidth="8" strokeDasharray="314" strokeDashoffset="80" opacity="0.6" />
+                  </motion.svg>
                 </div>
 
-                <div className="relative z-10 mb-6">
-                  <span className="font-mono text-[10px] font-bold text-primary-purple uppercase tracking-widest px-2.5 py-1 rounded-full bg-primary-purple/10 border border-primary-purple/20">
-                    Mastery Rate
-                  </span>
-                </div>
-                <div className="relative z-10">
-                  <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">88.4%</div>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Questions Correct</span>
+                <div className="relative z-10 flex flex-col items-center justify-center">
+                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-2 text-white tracking-tight leading-none">88.4%</div>
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 font-semibold">Questions Correct</span>
                 </div>
               </div>
             </BorderGlow>
@@ -285,23 +285,19 @@ export default function ImpactPage() {
               colors={['#22d3ee', '#38bdf8', '#818cf8']}
               className="h-full"
             >
-              <div className="p-7 sm:p-8 flex items-center justify-between h-full relative overflow-hidden group min-h-[160px]">
+              <div className="p-8 flex items-center justify-between h-full relative overflow-hidden group min-h-[170px]">
                 <div className="relative z-10">
-                  <div className="mb-4">
-                    <span className="font-mono text-[10px] font-bold text-cyan-400 uppercase tracking-widest px-2.5 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/20">
-                      Total Network Visits
-                    </span>
-                  </div>
-                  <div className="text-5xl sm:text-6xl font-inter font-bold text-white tracking-tight">22.4K</div>
+                  <div className="text-5xl sm:text-6xl md:text-7xl font-inter font-bold text-white tracking-tight mb-1">22.4K</div>
+                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 font-semibold">Total Network Visits</span>
                 </div>
-                {/* Smooth Animated Cyan Frequency Bar Graph Background */}
-                <div className="absolute right-6 bottom-0 top-0 w-1/2 opacity-30 flex items-end justify-between px-2 pb-6 pointer-events-none">
-                  {[35, 65, 45, 85, 55, 95, 75, 110].map((h, i) => (
+                {/* Continuous Smooth Animated Cyan Equalizer Frequency Bar Graph Background */}
+                <div className="absolute right-6 bottom-0 top-0 w-1/2 opacity-35 flex items-end justify-between px-2 pb-6 pointer-events-none">
+                  {[35, 65, 45, 85, 55, 95, 75, 110, 50, 90, 60, 100].map((h, i) => (
                     <motion.div 
                       key={i}
-                      animate={{ height: [h * 0.35, h * 0.85, h * 0.35] }}
-                      transition={{ repeat: Infinity, duration: 1.8 + (i * 0.25), ease: "easeInOut" }}
-                      className="w-2.5 bg-gradient-to-t from-cyan-500 to-cyan-300 rounded-t-full shadow-[0_0_12px_rgba(34,211,238,0.5)]" 
+                      animate={{ height: [h * 0.3, h * 0.9, h * 0.3] }}
+                      transition={{ repeat: Infinity, duration: 1.5 + (i * 0.18), ease: "easeInOut" }}
+                      className="w-2 bg-gradient-to-t from-cyan-500 to-cyan-300 rounded-t-full shadow-[0_0_12px_rgba(34,211,238,0.6)]" 
                     />
                   ))}
                 </div>
@@ -316,10 +312,6 @@ export default function ImpactPage() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(164,132,215,0.05)_0%,transparent_70%)] pointer-events-none" />
         <div className="max-w-7xl mx-auto flex flex-col xl:flex-row items-center justify-between gap-16 relative z-10">
           <div className="max-w-xl">
-            <div className="inline-flex items-center space-x-2 bg-white/[0.03] border border-white/10 px-4 py-2 rounded-full mb-8">
-              <MapPin className="w-4 h-4 text-white" />
-              <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white">National Infrastructure</span>
-            </div>
             <h2 className="font-inter font-bold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight mb-8 leading-[0.95]">
               Reach across <br /><span className="italic text-white/50">state lines.</span>
             </h2>
