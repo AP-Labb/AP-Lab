@@ -38,15 +38,15 @@ class Pixel {
     this.x = x;
     this.y = y;
     this.color = color;
-    this.speed = this.getRandomValue(0.1, 0.9) * speed;
+    this.speed = this.getRandomValue(0.2, 1.2) * speed * 2.5; // Fast responsive speed
     this.size = 0;
-    this.sizeStep = Math.random() * 0.4;
+    this.sizeStep = Math.random() * 0.8 + 0.4;
     this.minSize = 0.5;
     this.maxSizeInteger = 2;
     this.maxSize = this.getRandomValue(this.minSize, this.maxSizeInteger);
-    this.delay = delay;
+    this.delay = delay * 0.3; // Minimal delay for fast trigger
     this.counter = 0;
-    this.counterStep = Math.random() * 4 + (this.width + this.height) * 0.01;
+    this.counterStep = Math.random() * 12 + (this.width + this.height) * 0.05;
     this.isIdle = false;
     this.isReverse = false;
     this.isShimmer = false;
@@ -86,7 +86,7 @@ class Pixel {
       this.isIdle = true;
       return;
     } else {
-      this.size -= 0.1;
+      this.size -= 0.25;
     }
     this.draw();
   }
@@ -108,7 +108,7 @@ class Pixel {
 function getEffectiveSpeed(value: number | string, reducedMotion: boolean) {
   const min = 0;
   const max = 100;
-  const throttle = 0.001;
+  const throttle = 0.003;
   const parsed = parseInt(value as string, 10);
 
   if (parsed <= min || reducedMotion) {
@@ -132,21 +132,21 @@ const VARIANTS: Record<string, VariantConfig> = {
   default: {
     activeColor: null,
     gap: 5,
-    speed: 35,
-    colors: '#f8fafc,#f1f5f9,#cbd5e1',
+    speed: 85,
+    colors: '#ffffff,#f8fafc,#f1f5f9,#e2e8f0',
     noFocus: false
   },
   blue: {
     activeColor: '#e0f2fe',
-    gap: 10,
-    speed: 25,
-    colors: '#e0f2fe,#7dd3fc,#0ea5e9',
+    gap: 8,
+    speed: 85,
+    colors: '#ffffff,#f8fafc,#f1f5f9,#e2e8f0,#cbd5e1',
     noFocus: false
   },
   yellow: {
     activeColor: '#fef08a',
     gap: 3,
-    speed: 20,
+    speed: 50,
     colors: '#fef08a,#fde047,#eab308',
     noFocus: false
   },

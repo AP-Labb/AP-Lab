@@ -19,54 +19,9 @@ uniform vec2 uPrevMouse;
 uniform float uRadius;
 uniform float uDecay;
 uniform float uAspect;
+uniform float uTime;
 varying vec2 vUv;
 
-float distToSegment(vec2 p, vec2 a, vec2 b) {
-  vec2 pa = p - a;
-  vec2 ba = b - a;
-  float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-5), 0.0, 1.0);
-  return length(pa - ba * h);
-}
-
-void main() {
-  vec4 prev = texture2D(uPrevTrail, vUv);
-  float prevVal = prev.r * uDecay;
-
-  vec2 st = vUv;
-  vec2 m = uMouse;
-  vec2 pm = uPrevMouse;
-  
-  st.x *= uAspect;
-  m.x *= uAspect;
-  pm.x *= uAspect;
-
-  float d = distToSegment(st, pm, m);
-  float brush = 1.0 - smoothstep(0.0, uRadius, d);
-
-  float finalVal = max(prevVal, brush);
-  gl_FragColor = vec4(vec3(finalVal), 1.0);
-}
-`;
-
-const veilVertexShader = `
-varying vec2 vUv;
-void main() {
-  vUv = uv;
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}
-`;
-
-const veilFragmentShader = `
-precision highp float;
-
-uniform vec2 iResolution;
-uniform float iTime;
-uniform sampler2D uTrailMap;
-uniform sampler2D uImageTexture;
-uniform float uReducedMotion;
-varying vec2 vUv;
-
-// Simplex 2D noise for organic, irregular reveal shape (NO harsh circles)
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
@@ -100,12 +55,103 @@ float cnoise(vec2 P) {
   return 2.3 * mix(n_x.x, n_x.y, fade_xy.y);
 }
 
-// 2.5% Fine digital film grain
+float distToSegment(vec2 p, vec2 a, vec2 b) {
+  vec2 pa = p - a;
+  vec2 ba = b - a;
+  float h = clamp(dot(pa, ba) / max(dot(ba, ba), 1e-5), 0.0, 1.0);
+  return length(pa - ba * h);
+}
+
+void main() {
+  vec4 prev = texture2D(uPrevTrail, vUv);
+  float prevVal = prev.r * uDecay;
+
+  vec2 st = vUv;
+  vec2 m = uMouse;
+  vec2 pm = uPrevMouse;
+  
+  st.x *= uAspect;
+  m.x *= uAspect;
+  pm.x *= uAspect;
+
+  // Warp brush coordinates using multi-frequency noise (100% NO CIRCLES!)
+  vec2 noiseOffset = vec2(
+    cnoise(st * 8.0 + vec2(uTime * 0.6, uTime * 0.4)),
+    cnoise(st * 8.0 - vec2(uTime * 0.5, uTime * 0.7))
+  ) * 0.12;
+
+  float d = distToSegment(st + noiseOffset, pm, m);
+  
+  // Large generous organic reveal brush
+  float noiseShape = cnoise(st * 12.0 + vec2(uTime * 0.3));
+  float dynamicRadius = uRadius * (0.85 + 0.45 * noiseShape);
+  float rawBrush = clamp(1.0 - (d / max(dynamicRadius, 0.01)), 0.0, 1.0);
+  float brush = pow(rawBrush, 1.2) * (0.75 + 0.5 * noiseShape);
+
+  float finalVal = max(prevVal, brush);
+  gl_FragColor = vec4(vec3(finalVal), 1.0);
+}
+`;
+
+const veilVertexShader = `
+varying vec2 vUv;
+void main() {
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+
+const veilFragmentShader = `
+precision highp float;
+
+uniform vec2 iResolution;
+uniform float iTime;
+uniform vec2 iMouse;
+uniform sampler2D uTrailMap;
+uniform sampler2D uImageTexture;
+uniform float uReducedMotion;
+varying vec2 vUv;
+
+// Simplex 2D noise generator for organic reveal mask
+vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
+vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
+vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+vec2 fade(vec2 t) { return t*t*t*(t*(t*6.0-15.0)+10.0); }
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0,0.0,1.0,1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0,0.0,1.0,1.0);
+  Pi = mod289(Pi);
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+  vec4 gx = fract(i * (1.0/41.0)) * 2.0 - 1.0;
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+  vec4 norm = taylorInvSqrt(vec4(dot(g00,g00), dot(g01,g01), dot(g10,g10), dot(g11,g11)));
+  g00 *= norm.x; g01 *= norm.y; g10 *= norm.z; g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  return 2.3 * mix(n_x.x, n_x.y, fade_xy.y);
+}
+
+// 2.5% Animated Fine Digital Film Grain
 float rand(vec2 co) {
   return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
 }
 
-// Bayer 8x8 matrix for subtle digital dissolve transition
+// Bayer 8x8 Dither Matrix for digital pixel breakup at edge boundary
 const float bayer8[64] = float[64](
   0.0/64.0, 48.0/64.0, 12.0/64.0, 60.0/64.0,  3.0/64.0, 51.0/64.0, 15.0/64.0, 63.0/64.0,
   32.0/64.0,16.0/64.0, 44.0/64.0, 28.0/64.0, 35.0/64.0,19.0/64.0, 47.0/64.0, 31.0/64.0,
@@ -118,60 +164,71 @@ const float bayer8[64] = float[64](
 );
 
 void main() {
-  vec2 uv = vUv;
+  // Parallax UV offset based on mouse position (1-3px)
+  vec2 mouseParallax = (iMouse - 0.5) * 0.003;
+  vec2 uv = vUv + mouseParallax;
   vec2 st = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
 
-  // 1. Raw 4K product interface image
+  // 1. Sample raw 4K product interface image
   vec4 rawImg = texture2D(uImageTexture, uv);
 
-  // 2. Translucent Digital Veil Layer (Apple / Linear / Vercel style)
+  // 2. Translucent Digital Veil Layer (Apple / Linear / Vercel dark atmosphere)
   // Product image is visible at ~28% baseline clarity across entire hero out of the box
   vec3 baselineImage = rawImg.rgb * 0.28;
 
-  // Slow ambient drift (30-60 second subtle breathing cycle)
+  // Slow ambient drift (30-60 second subtle breathing)
   float t = iTime * (uReducedMotion > 0.5 ? 0.002 : 0.012);
   
-  // Ambient Soft Gradients (Deep Indigo, Dark Blue Haze, Pitch Navy)
-  float gradDist = length(st);
-  vec3 pitchNavy = vec3(0.015, 0.025, 0.055);
-  vec3 deepIndigo = vec3(0.06, 0.05, 0.15);
-  vec3 ambientGlow = mix(deepIndigo, pitchNavy, smoothstep(0.1, 0.85, gradDist));
+  // Layered Gradients (Deep Navy, Near-Black with indigo/purple tones)
+  float dist = length(st);
+  vec3 deepNavy = vec3(0.015, 0.025, 0.055);
+  vec3 darkIndigo = vec3(0.05, 0.04, 0.12);
+  vec3 veilGradient = mix(darkIndigo, deepNavy, smoothstep(0.1, 0.85, dist));
 
-  // Combine baseline image + soft translucent digital veil
-  vec3 dimmedBackground = baselineImage + ambientGlow * 0.65;
+  // Soft Vignette around screen edges
+  float vignette = smoothstep(0.9, 0.35, dist);
+  vec3 dimmedBackground = (baselineImage + veilGradient * 0.6) * vignette;
 
   // 3% Animated Fine Digital Film Grain
-  float grain = (rand(gl_FragCoord.xy + t * 5.0) - 0.5) * 0.035;
+  float grain = (rand(gl_FragCoord.xy + t * 4.0) - 0.5) * 0.03;
   dimmedBackground += vec3(grain);
 
-  // 3. Organic Noise-Based Cursor Clarity Mask (NO CIRCLES)
+  // 3. Organic Noise-Based Cursor Clarity Mask (NO CIRCLES!)
   float trailVal = texture2D(uTrailMap, uv).r;
 
-  // Multi-octave organic noise distortion along reveal boundary
-  float n1 = cnoise(st * 4.5 + vec2(t * 0.8, t * 0.6));
-  float n2 = cnoise(st * 9.0 - vec2(t * 0.5, t * 0.7)) * 0.5;
-  float organicEdge = n1 + n2;
+  // Multi-scale noise distortion so the reveal area breathes and has organic undulating edges
+  float n1 = cnoise(st * 4.0 + vec2(t * 0.6, t * 0.4));
+  float n2 = cnoise(st * 8.0 - vec2(t * 0.4, t * 0.5)) * 0.5;
+  float organicNoise = n1 + n2;
 
-  // Organic, undulating reveal shape that evolves over time
-  float revealMask = clamp(trailVal + organicEdge * 0.2 * smoothstep(0.04, 0.65, trailVal), 0.0, 1.0);
+  // Organic, undulating reveal contour that breathes over time
+  float revealMask = clamp(trailVal + organicNoise * 0.22 * smoothstep(0.03, 0.6, trailVal), 0.0, 1.0);
 
-  // 4. Enhanced Clarity, Contrast & Brightness in Revealed Area (up to 95% sharpness)
-  vec3 clearImg = rawImg.rgb;
-  clearImg = pow(clearImg, vec3(0.92)) * 1.08;
+  // 4. Enhanced Clarity, Contrast & Brightness in Revealed Area
+  // Subtle chromatic aberration at edge boundary (The Magic detail!)
+  float edgeDistortion = smoothstep(0.1, 0.4, revealMask) * (1.0 - smoothstep(0.4, 0.8, revealMask));
+  vec2 caOffset = vec2(edgeDistortion * 0.003, 0.0);
+  float rCh = texture2D(uImageTexture, uv + caOffset).r;
+  float gCh = texture2D(uImageTexture, uv).g;
+  float bCh = texture2D(uImageTexture, uv - caOffset).b;
+  vec3 vividImg = vec3(rCh, gCh, bCh);
+
+  // Enhance contrast & brightness for revealed spotlight (95% sharp)
+  vividImg = pow(vividImg, vec3(0.90)) * 1.10;
 
   // Subtle Bayer dither breakup at dissolving boundary
   int px = int(mod(gl_FragCoord.x / 2.0, 8.0));
   int py = int(mod(gl_FragCoord.y / 2.0, 8.0));
   float ditherVal = bayer8[py * 8 + px] - 0.5;
 
-  float ditherFactor = smoothstep(0.05, 0.85, revealMask + ditherVal * 0.12);
+  float ditherFactor = smoothstep(0.04, 0.82, revealMask + ditherVal * 0.12);
 
-  // Faint indigo-blue edge bloom where clarity transitions
-  float rimMask = smoothstep(0.1, 0.35, revealMask) * (1.0 - smoothstep(0.35, 0.75, revealMask));
-  vec3 rimBloom = vec3(0.38, 0.45, 0.95) * rimMask * 0.28;
+  // Faint cyan-purple bloom at reveal boundary
+  float rimBloom = edgeDistortion * 0.25;
+  vec3 bloomColor = vec3(0.35, 0.45, 0.95) * rimBloom;
 
-  // Final Blend: Smoothly transition from 28% baseline to 95% high-clarity image
-  vec3 finalColor = mix(dimmedBackground + rimBloom, clearImg, clamp(ditherFactor * 1.1, 0.0, 1.0));
+  // 5. Final Composite (Smooth transition from 28% baseline to 95% high-clarity vivid product interface)
+  vec3 finalColor = mix(dimmedBackground + bloomColor, vividImg, clamp(ditherFactor * 1.15, 0.0, 1.0));
 
   gl_FragColor = vec4(finalColor, 1.0);
 }
@@ -205,7 +262,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Ping-Pong FBO RenderTargets for 1.5s Persistent Cursor Trail
+    // Ping-Pong FBO RenderTargets for 1.5-2.5s Persistent Cursor Trail
     const width = 512;
     const height = 512;
     const renderTargetOptions = {
@@ -224,9 +281,10 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       uPrevTrail: { value: null as THREE.Texture | null },
       uMouse: { value: new THREE.Vector2(-10, -10) },
       uPrevMouse: { value: new THREE.Vector2(-10, -10) },
-      uRadius: { value: 0.15 },
-      uDecay: { value: 0.965 }, // Trail persists ~1.5 - 2 seconds
-      uAspect: { value: 1.0 }
+      uRadius: { value: 0.35 }, // Generous reveal radius (parts smoke effectively!)
+      uDecay: { value: 0.965 }, // Fades back over 1.5 - 2.5 seconds
+      uAspect: { value: 1.0 },
+      uTime: { value: 0 }
     };
     const trailMaterial = new THREE.ShaderMaterial({
       vertexShader: trailVertexShader,
@@ -241,6 +299,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
     const veilUniforms = {
       iResolution: { value: new THREE.Vector2() },
       iTime: { value: 0 },
+      iMouse: { value: new THREE.Vector2(0.5, 0.5) },
       uTrailMap: { value: null as THREE.Texture | null },
       uImageTexture: { value: null as THREE.Texture | null },
       uReducedMotion: { value: checkReducedMotion() ? 1.0 : 0.0 }
@@ -296,6 +355,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
 
       // Smooth damp mouse position
       prevMousePos.copy(mousePos);
@@ -304,19 +364,22 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       trailUniforms.uMouse.value.copy(mousePos);
       trailUniforms.uPrevMouse.value.copy(prevMousePos);
       trailUniforms.uPrevTrail.value = rtA.texture;
+      trailUniforms.uTime.value = elapsedTime;
 
-      // 1. Render Ping-Pong Trail Map Pass
+      veilUniforms.iMouse.value.copy(mousePos);
+
+      // 1. Render Ping-Pong Trail Pass
       renderer.setRenderTarget(rtB);
       renderer.render(trailScene, camera);
       renderer.setRenderTarget(null);
 
-      // Swap ping-pong render targets
+      // Swap targets
       const temp = rtA;
       rtA = rtB;
       rtB = temp;
 
-      // 2. Render Main Digital Veil Shader Pass
-      veilUniforms.iTime.value = clock.getElapsedTime();
+      // 2. Render Main Digital Veil Pass
+      veilUniforms.iTime.value = elapsedTime;
       veilUniforms.uTrailMap.value = rtA.texture;
 
       renderer.render(scene, camera);

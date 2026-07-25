@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
-import VolumetricSmokeReveal from "./VolumetricSmokeReveal";
+import DigitalVeilReveal from "./DigitalVeilReveal";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -313,9 +313,9 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Volumetric Smoke Reveal WebGL Background */}
+      {/* Translucent Digital Veil Reveal WebGL Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <VolumetricSmokeReveal imageSrc="/images/Hero2.png" />
+        <DigitalVeilReveal imageSrc="/images/Hero2.png" />
       </div>
 
       {/* Seamless Fade Transition at bottom */}
