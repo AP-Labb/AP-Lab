@@ -347,36 +347,42 @@ export function HeroSection() {
         }}
       />
 
-      {/* Layer 2: Subtle Ambient Slate & Blue Smoke Plumes */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-50 mix-blend-screen">
-        {/* Left Soft Blue Smoke Plume */}
-        <div className="absolute top-[10%] -left-[15%] w-[65vw] h-[75vh] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.22)_0%,rgba(37,99,235,0.10)_40%,transparent_75%)] blur-3xl animate-pulse duration-[7000ms]" />
-        {/* Top-Right Soft Purple Fog */}
-        <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.18)_0%,rgba(147,51,234,0.08)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
-      </div>
+      {/* Storm Roll-in Overlay Container: Starts with pristine image, then storm clouds & dither roll in smoothly! */}
+      <motion.div 
+        initial={{ opacity: 0, scale: 1.12, y: -40, filter: "blur(16px)" }}
+        animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
+        transition={{ duration: 2.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none"
+      >
+        {/* Layer 2: Subtle Ambient Slate & Blue Smoke Plumes */}
+        <div className="absolute inset-0 opacity-60 mix-blend-screen">
+          {/* Left Electric Blue Smoke Plume */}
+          <div className="absolute top-[10%] -left-[15%] w-[65vw] h-[75vh] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.32)_0%,rgba(37,99,235,0.15)_40%,transparent_75%)] blur-3xl animate-pulse duration-[7000ms]" />
+          {/* Top-Right Purple Fog */}
+          <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.25)_0%,rgba(147,51,234,0.12)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
+        </div>
 
-      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Crisp & Visible) */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <Dither
-          waveColor={[0.18, 0.28, 0.52]}
-          disableAnimation={false}
-          enableMouseInteraction={true}
-          mouseRadius={0.30}
-          colorNum={6}
-          pixelSize={3}
-          waveAmplitude={0.35}
-          waveFrequency={3.5}
-          waveSpeed={0.04}
-        />
-      </div>
+        {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Crisp & Visible) */}
+        <div className="absolute inset-0">
+          <Dither
+            waveColor={[0.20, 0.32, 0.60]}
+            disableAnimation={false}
+            enableMouseInteraction={true}
+            mouseRadius={0.32}
+            colorNum={7}
+            pixelSize={2.5}
+            waveAmplitude={0.38}
+            waveFrequency={3.5}
+            waveSpeed={0.045}
+          />
+        </div>
 
-      {/* Layer 4: Dark Center Radial Backdrop Vignette for Text Legibility & Over-Dither Fog */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        {/* Center Text Dark Vignette Focus */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.78)_0%,rgba(5,7,15,0.45)_55%,transparent_100%)]" />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-deep-navy" />
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent" />
-      </div>
+        {/* Layer 4: Dark Center Radial Backdrop Vignette for Text Legibility & Over-Dither Fog */}
+        <div className="absolute inset-0">
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.78)_0%,rgba(5,7,15,0.45)_55%,transparent_100%)]" />
+          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent" />
+        </div>
+      </motion.div>
 
       {/* Seamless Fade Transition at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />

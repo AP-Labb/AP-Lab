@@ -92,57 +92,43 @@ PIXEL_ICONS = {
     ]
 }
 
+# Metallic Chroma duotone color themes: Icy Titanium, Electric Indigo, Chrome Cyan, Violet Cobalt
 cards_data = [
-    {"num": "1,340", "label": "Active Scholars", "filename": "card1.png", "icon": "cap", "hue_shift": 0},
-    {"num": "56m", "label": "Avg Study Session", "filename": "card2.png", "icon": "clock", "hue_shift": 60},
-    {"num": "88.4%", "label": "Accuracy Rate", "filename": "card3.png", "icon": "target", "hue_shift": 120},
-    {"num": "22.4K", "label": "Network Visits", "filename": "card4.png", "icon": "eye", "hue_shift": 180},
-    {"num": "50", "label": "US States Active", "filename": "card5.png", "icon": "pin", "hue_shift": 240},
-    {"num": "100%", "label": "Free & Open Access", "filename": "card6.png", "icon": "lock", "hue_shift": 300}
+    {"num": "1,340", "label": "Active Scholars", "filename": "card1.png", "icon": "cap", "c1": (56, 189, 248), "c2": (168, 85, 247)},
+    {"num": "56m", "label": "Avg Study Session", "filename": "card2.png", "icon": "clock", "c1": (192, 132, 252), "c2": (56, 189, 248)},
+    {"num": "88.4%", "label": "Accuracy Rate", "filename": "card3.png", "icon": "target", "c1": (232, 121, 249), "c2": (129, 140, 248)},
+    {"num": "22.4K", "label": "Network Visits", "filename": "card4.png", "icon": "eye", "c1": (34, 211, 238), "c2": (99, 102, 241)},
+    {"num": "50", "label": "US States Active", "filename": "card5.png", "icon": "pin", "c1": (147, 197, 253), "c2": (192, 132, 252)},
+    {"num": "100%", "label": "Free & Open Access", "filename": "card6.png", "icon": "lock", "c1": (52, 211, 153), "c2": (56, 189, 248)}
 ]
 
-def hsl_to_rgb(h, s, l):
-    c = (1 - abs(2 * l - 1)) * s
-    x = c * (1 - abs((h / 60.0) % 2 - 1))
-    m = l - c / 2.0
-    if 0 <= h < 60:
-        r, g, b = c, x, 0
-    elif 60 <= h < 120:
-        r, g, b = x, c, 0
-    elif 120 <= h < 180:
-        r, g, b = 0, c, x
-    elif 180 <= h < 240:
-        r, g, b = 0, x, c
-    elif 240 <= h < 300:
-        r, g, b = x, 0, c
-    else:
-        r, g, b = c, 0, x
-    return (int((r + m) * 255), int((g + m) * 255), int((b + m) * 255))
-
 for data in cards_data:
-    # Deep obsidian navy/purple base background matching profile card
-    img = Image.new("RGBA", (width, height), (11, 10, 24, 255))
+    # Sleek dark graphite/obsidian background
+    img = Image.new("RGBA", (width, height), (7, 8, 18, 255))
     draw = ImageDraw.Draw(img)
     
-    hue_offset = data["hue_shift"]
+    c1, c2 = data["c1"], data["c2"]
     
-    # Outer Rainbow Chroma Glass Border
+    # Outer Metallic Chrome Glass Border
     for i in range(width):
-        border_hue = (hue_offset + (i / float(width)) * 360) % 360
-        r_b, g_b, b_b = hsl_to_rgb(border_hue, 0.8, 0.65)
-        # Top and bottom borders
+        t = i / float(width)
+        r = int(c1[0] * (1 - t) + c2[0] * t)
+        g = int(c1[1] * (1 - t) + c2[1] * t)
+        b = int(c1[2] * (1 - t) + c2[2] * t)
         for bw in range(2):
-            img.putpixel((i, 15 + bw), (r_b, g_b, b_b, 180))
-            img.putpixel((i, height - 16 - bw), (r_b, g_b, b_b, 180))
+            img.putpixel((i, 15 + bw), (r, g, b, 190))
+            img.putpixel((i, height - 16 - bw), (r, g, b, 190))
             
     for j in range(height):
-        border_hue = (hue_offset + (j / float(height)) * 360) % 360
-        r_b, g_b, b_b = hsl_to_rgb(border_hue, 0.8, 0.65)
+        t = j / float(height)
+        r = int(c1[0] * (1 - t) + c2[0] * t)
+        g = int(c1[1] * (1 - t) + c2[1] * t)
+        b = int(c1[2] * (1 - t) + c2[2] * t)
         for bw in range(2):
-            img.putpixel((15 + bw, j), (r_b, g_b, b_b, 180))
-            img.putpixel((width - 16 - bw, j), (r_b, g_b, b_b, 180))
+            img.putpixel((15 + bw, j), (r, g, b, 190))
+            img.putpixel((width - 16 - bw, j), (r, g, b, 190))
             
-    # Draw Holographic Rainbow Chroma Pixel-Art Icon
+    # Draw Sleek Metallic Chroma Pixel-Art Icon
     icon_matrix = PIXEL_ICONS[data["icon"]]
     scale = 14
     icon_w = len(icon_matrix[0]) * scale
@@ -156,20 +142,22 @@ for data in cards_data:
                 px = start_x + c_idx * scale
                 py = start_y + r_idx * scale
                 
-                # Dynamic multi-tonal rainbow chroma color per pixel position
-                px_hue = (hue_offset + c_idx * 18 + r_idx * 22) % 360
-                r_pix, g_pix, b_pix = hsl_to_rgb(px_hue, 0.85, 0.72)
+                # Smooth metallic chroma transition across icon matrix
+                t_pixel = (c_idx + r_idx * 0.8) / 16.0
+                r_pix = int(c1[0] * (1 - t_pixel) + c2[0] * t_pixel)
+                g_pix = int(c1[1] * (1 - t_pixel) + c2[1] * t_pixel)
+                b_pix = int(c1[2] * (1 - t_pixel) + c2[2] * t_pixel)
                 
                 for bx in range(scale):
                     for by in range(scale):
-                        noise = random.uniform(0.78, 1.0)
+                        noise = random.uniform(0.82, 1.0)
                         red = int(min(255, r_pix * noise))
                         green = int(min(255, g_pix * noise))
                         blue = int(min(255, b_pix * noise))
-                        alpha = int(random.uniform(0.8, 1.0) * 255)
+                        alpha = int(random.uniform(0.82, 1.0) * 255)
                         img.putpixel((px + bx, py + by), (red, green, blue, alpha))
 
-    # Render Fonts
+    # Render Typography
     try:
         font_num = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 100)
         font_label = ImageFont.truetype("/System/Library/Fonts/Helvetica.ttc", 32)
@@ -186,15 +174,13 @@ for data in cards_data:
     bbox_lbl = draw.textbbox((0, 0), label_text, font=font_label)
     w_lbl = bbox_lbl[2] - bbox_lbl[0]
     
-    # Text Placement
     draw.text(((width - w_num) // 2, 330), num_text, font=font_num, fill=(255, 255, 255, 255))
     
-    # Label in Chroma accent color
-    lbl_r, lbl_g, lbl_b = hsl_to_rgb((hue_offset + 120) % 360, 0.9, 0.75)
-    draw.text(((width - w_lbl) // 2, 455), label_text, font=font_label, fill=(lbl_r, lbl_g, lbl_b, 240))
+    # Label in metallic chroma tint
+    draw.text(((width - w_lbl) // 2, 455), label_text, font=font_label, fill=(c1[0], c1[1], c1[2], 240))
     
     filepath = os.path.join("/Users/pallavipatil/AP-LABs/AP-Lab/public/images/stats", data["filename"])
     img.save(filepath, "PNG")
-    print(f"Generated rainbow chroma card: {filepath}")
+    print(f"Generated metallic chroma card: {filepath}")
 
-print("All rainbow chroma gallery stat cards generated successfully!")
+print("All metallic chroma gallery stat cards generated successfully!")

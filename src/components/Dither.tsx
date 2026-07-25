@@ -87,10 +87,10 @@ vec3 dither(vec2 uv, vec3 color) {
   vec2 scaledCoord = floor(uv * resolution / pixelSize);
   int x = int(mod(scaledCoord.x, 8.0));
   int y = int(mod(scaledCoord.y, 8.0));
-  float threshold = bayerMatrix8x8[y * 8 + x] - 0.25;
+  float threshold = bayerMatrix8x8[y * 8 + x] - 0.2;
   float step = 1.0 / (colorNum - 1.0);
-  color += threshold * step;
-  float bias = 0.2;
+  color += threshold * step * 1.35;
+  float bias = 0.04;
   color = clamp(color - bias, 0.0, 1.0);
   return floor(color * (colorNum - 1.0) + 0.5) / (colorNum - 1.0);
 }
@@ -101,7 +101,7 @@ void main() {
   p.x *= resolution.x / resolution.y;
   
   vec2 samplePos = p;
-  float alpha = 0.92;
+  float alpha = 0.96;
   float f = 0.0;
   
   if (enableMouseInteraction == 1) {
@@ -124,8 +124,8 @@ void main() {
     samplePos += pushVector;
     
     f = pattern(samplePos) + holeMask * 0.35;
-    // Retain crisp dither texture opacity
-    alpha = clamp(0.92 - holeMask * 0.78, 0.18, 0.92);
+    // Crisp dither texture opacity
+    alpha = clamp(0.96 - holeMask * 0.76, 0.22, 0.96);
   } else {
     f = pattern(samplePos);
   }
