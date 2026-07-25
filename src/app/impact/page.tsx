@@ -11,6 +11,7 @@ import { USMap } from "@/components/USMap";
 import { LiveUserCounter } from "@/components/LiveUserCounter";
 import ProfileCard from "@/components/ProfileCard";
 import BorderGlow from "@/components/BorderGlow";
+import CircularGallery from "@/components/CircularGallery";
 
 const SeamlessVideo = ({ src, className }: { src: string; className: string }) => {
   const [active, setActive] = useState(0);
@@ -96,204 +97,28 @@ export default function ImpactPage() {
         </div>
       </section>
 
-      {/* Bento Grid Command Center with BorderGlow & Continuous Animated Background Graphs */}
-      <section className="px-6 md:px-[120px] pb-24 z-10 relative">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-          {/* Card 1: Active Scholars (Centered & Larger) */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="md:col-span-2 md:row-span-2"
-          >
-            <BorderGlow
-              glowColor="166 72 50"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#20c997', '#38bdf8', '#4fd1c5']}
-              className="h-full"
-            >
-              <div className="p-8 sm:p-12 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[340px]">
-                {/* Continuous Detailed Animated Teal Background Wave Graph */}
-                <div className="absolute inset-x-0 bottom-0 top-[15%] opacity-35 pointer-events-none z-0">
-                  <svg viewBox="0 0 1000 400" className="w-full h-full" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="tealGraphGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#20c997" stopOpacity="0.8" />
-                        <stop offset="100%" stopColor="#20c997" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-                    <motion.path
-                      fill="url(#tealGraphGrad)"
-                      animate={{ 
-                        d: [
-                          "M0,400 L0,260 Q250,140 500,240 T750,140 T1000,40 L1000,400 Z",
-                          "M0,400 L0,240 Q250,260 500,160 T750,220 T1000,100 L1000,400 Z",
-                          "M0,400 L0,260 Q250,140 500,240 T750,140 T1000,40 L1000,400 Z"
-                        ]
-                      }}
-                      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.path
-                      fill="none"
-                      stroke="#20c997"
-                      strokeWidth="3.5"
-                      animate={{ 
-                        d: [
-                          "M0,260 Q250,140 500,240 T750,140 T1000,40",
-                          "M0,240 Q250,260 500,160 T750,220 T1000,100",
-                          "M0,260 Q250,140 500,240 T750,140 T1000,40"
-                        ]
-                      }}
-                      transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                  </svg>
-                </div>
+import CircularGallery from "@/components/CircularGallery";
 
-                <div className="relative z-10 flex flex-col items-center justify-center">
-                  <div className="text-7xl sm:text-8xl md:text-[104px] font-inter font-bold mb-3 tracking-tight text-white leading-none">1,340</div>
-                  <span className="font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-white/60 font-semibold">Verified Concurrent Scholars</span>
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
+/* ... */
 
-          {/* Card 2: Average Study Session (Centered & Larger) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            <BorderGlow
-              glowColor="43 96 56"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#f59e0b', '#fbbf24', '#fef08a']}
-              className="h-full"
-            >
-              <div className="p-8 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[260px]">
-                {/* Continuous Detailed Animated Amber Mountain Background Graph */}
-                <div className="absolute inset-x-0 bottom-0 top-[15%] opacity-35 pointer-events-none z-0">
-                  <svg viewBox="0 0 400 200" className="w-full h-full" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="amberGraphGrad" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.85" />
-                        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
-                      </linearGradient>
-                    </defs>
-                    <motion.path
-                      fill="url(#amberGraphGrad)"
-                      animate={{
-                        d: [
-                          "M0,200 L0,140 Q100,40 200,100 T400,20 L400,200 Z",
-                          "M0,200 L0,110 Q100,90 200,50 T400,70 L400,200 Z",
-                          "M0,200 L0,140 Q100,40 200,100 T400,20 L400,200 Z"
-                        ]
-                      }}
-                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                    <motion.path
-                      fill="none"
-                      stroke="#f59e0b"
-                      strokeWidth="3"
-                      animate={{
-                        d: [
-                          "M0,140 Q100,40 200,100 T400,20",
-                          "M0,110 Q100,90 200,50 T400,70",
-                          "M0,140 Q100,40 200,100 T400,20"
-                        ]
-                      }}
-                      transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    />
-                  </svg>
-                </div>
-
-                <div className="relative z-10 flex flex-col items-center justify-center">
-                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-2 text-white tracking-tight leading-none">56m</div>
-                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 font-semibold">Avg. Study Session</span>
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
-
-          {/* Card 3: Pass Rate Matrix (Clean High-Tech Accuracy Matrix Graph) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <BorderGlow
-              glowColor="268 60 68"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#a484d7', '#c084fc', '#e879f9']}
-              className="h-full"
-            >
-              <div className="p-8 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[260px]">
-                {/* Continuous Clean Purple Accuracy Histogram Step Matrix Background */}
-                <div className="absolute inset-x-4 bottom-2 top-[20%] opacity-30 pointer-events-none z-0 flex items-end justify-between space-x-1.5 px-2">
-                  {[45, 60, 50, 75, 65, 88, 92, 85, 95, 78, 88].map((val, idx) => (
-                    <motion.div
-                      key={idx}
-                      animate={{ height: [`${val * 0.6}%`, `${val * 0.95}%`, `${val * 0.6}%`] }}
-                      transition={{ repeat: Infinity, duration: 2.2 + (idx * 0.2), ease: "easeInOut" }}
-                      className="flex-1 rounded-t-sm bg-gradient-to-t from-purple-600/80 via-primary-purple to-purple-300 shadow-[0_0_8px_rgba(192,132,252,0.5)]"
-                    />
-                  ))}
-                </div>
-
-                <div className="relative z-10 flex flex-col items-center justify-center">
-                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-2 text-white tracking-tight leading-none">88.4%</div>
-                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 font-semibold">Questions Correct</span>
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
-
-          {/* Card 4: Monthly Traffic */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="md:col-span-2"
-          >
-            <BorderGlow
-              glowColor="189 94 48"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#22d3ee', '#38bdf8', '#818cf8']}
-              className="h-full"
-            >
-              <div className="p-8 flex items-center justify-between h-full relative overflow-hidden group min-h-[170px]">
-                <div className="relative z-10">
-                  <div className="text-5xl sm:text-6xl md:text-7xl font-inter font-bold text-white tracking-tight mb-1">22.4K</div>
-                  <span className="font-mono text-xs uppercase tracking-[0.2em] text-white/60 font-semibold">Total Network Visits</span>
-                </div>
-                {/* Continuous Smooth Animated Cyan Equalizer Frequency Bar Graph Background */}
-                <div className="absolute right-6 bottom-0 top-0 w-1/2 opacity-35 flex items-end justify-between px-2 pb-6 pointer-events-none">
-                  {[35, 65, 45, 85, 55, 95, 75, 110, 50, 90, 60, 100].map((h, i) => (
-                    <motion.div 
-                      key={i}
-                      animate={{ height: [h * 0.3, h * 0.9, h * 0.3] }}
-                      transition={{ repeat: Infinity, duration: 1.5 + (i * 0.18), ease: "easeInOut" }}
-                      className="w-2 bg-gradient-to-t from-cyan-500 to-cyan-300 rounded-t-full shadow-[0_0_12px_rgba(34,211,238,0.6)]" 
-                    />
-                  ))}
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
+      {/* 3D Interactive Circular Stats Gallery */}
+      <section className="px-4 sm:px-6 md:px-[120px] pb-24 z-10 relative">
+        <div className="max-w-7xl mx-auto h-[560px] relative rounded-3xl overflow-hidden bg-black/40 border border-white/10 backdrop-blur-xl shadow-2xl">
+          <CircularGallery
+            bend={3}
+            textColor="#ffffff"
+            borderRadius={0.06}
+            scrollSpeed={2.5}
+            scrollEase={0.04}
+            items={[
+              { image: "/images/stats/card1.png", text: "1,340 Concurrent Scholars" },
+              { image: "/images/stats/card2.png", text: "56m Daily Study Session" },
+              { image: "/images/stats/card3.png", text: "88.4% Accuracy Rate" },
+              { image: "/images/stats/card4.png", text: "22.4K Network Visits" },
+              { image: "/images/stats/card5.png", text: "50 US States Active" },
+              { image: "/images/stats/card6.png", text: "100% Free & Open Access" }
+            ]}
+          />
         </div>
       </section>
 

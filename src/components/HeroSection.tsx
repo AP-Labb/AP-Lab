@@ -355,10 +355,10 @@ export function HeroSection() {
         <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.18)_0%,rgba(147,51,234,0.08)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
       </div>
 
-      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Visible & Sleek) */}
+      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Crisp & Visible) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <Dither
-          waveColor={[0.10, 0.14, 0.26]}
+          waveColor={[0.18, 0.28, 0.52]}
           disableAnimation={false}
           enableMouseInteraction={true}
           mouseRadius={0.30}
