@@ -153,7 +153,7 @@ export default function ImpactPage() {
                 </div>
 
                 <div className="relative z-10 flex flex-col items-center justify-center">
-                  <div className="text-7xl sm:text-8xl md:text-[104px] font-inter font-bold mb-3 tracking-tight text-white leading-none">1,024</div>
+                  <div className="text-7xl sm:text-8xl md:text-[104px] font-inter font-bold mb-3 tracking-tight text-white leading-none">1,340</div>
                   <span className="font-mono text-xs sm:text-sm uppercase tracking-[0.2em] text-white/60 font-semibold">Verified Concurrent Scholars</span>
                 </div>
               </div>
@@ -221,7 +221,7 @@ export default function ImpactPage() {
             </BorderGlow>
           </motion.div>
 
-          {/* Card 3: Pass Rate Matrix (Centered & Larger) */}
+          {/* Card 3: Pass Rate Matrix (Clean High-Tech Accuracy Matrix Graph) */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -238,26 +238,16 @@ export default function ImpactPage() {
               className="h-full"
             >
               <div className="p-8 flex flex-col items-center justify-center text-center h-full relative overflow-hidden group min-h-[260px]">
-                {/* Continuous Rotating Purple Multi-Ring Graph Background */}
-                <div className="absolute right-[-15%] bottom-[-15%] w-[130%] aspect-square opacity-25 pointer-events-none z-0 flex items-center justify-center">
-                  <motion.svg 
-                    viewBox="0 0 200 200" 
-                    className="w-full h-full"
-                    animate={{ rotate: 360 }}
-                    transition={{ duration: 22, repeat: Infinity, ease: "linear" }}
-                  >
-                    <circle cx="100" cy="100" r="75" fill="none" stroke="#a484d7" strokeWidth="18" opacity="0.25" />
-                    <circle 
-                      cx="100" cy="100" r="75" 
-                      fill="none" 
-                      stroke="#c084fc" 
-                      strokeWidth="18" 
-                      strokeDasharray="471" 
-                      strokeDashoffset="120"
-                      strokeLinecap="round"
+                {/* Continuous Clean Purple Accuracy Histogram Step Matrix Background */}
+                <div className="absolute inset-x-4 bottom-2 top-[20%] opacity-30 pointer-events-none z-0 flex items-end justify-between space-x-1.5 px-2">
+                  {[45, 60, 50, 75, 65, 88, 92, 85, 95, 78, 88].map((val, idx) => (
+                    <motion.div
+                      key={idx}
+                      animate={{ height: [`${val * 0.6}%`, `${val * 0.95}%`, `${val * 0.6}%`] }}
+                      transition={{ repeat: Infinity, duration: 2.2 + (idx * 0.2), ease: "easeInOut" }}
+                      className="flex-1 rounded-t-sm bg-gradient-to-t from-purple-600/80 via-primary-purple to-purple-300 shadow-[0_0_8px_rgba(192,132,252,0.5)]"
                     />
-                    <circle cx="100" cy="100" r="50" fill="none" stroke="#e879f9" strokeWidth="8" strokeDasharray="314" strokeDashoffset="80" opacity="0.6" />
-                  </motion.svg>
+                  ))}
                 </div>
 
                 <div className="relative z-10 flex flex-col items-center justify-center">

@@ -303,11 +303,18 @@ export function HeroSection() {
   const [isHoveredDashboard, setIsHoveredDashboard] = useState(false);
   const [isHoveredSignIn, setIsHoveredSignIn] = useState(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: -999, y: -999 });
+  const sectionRef = useRef<HTMLElement>(null);
+  const [cursorPos, setCursorPos] = useState({ x: -999, y: -999, inside: false });
 
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
+      const section = sectionRef.current;
+      if (!section) return;
+      const rect = section.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const inside = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
+      setCursorPos({ x, y, inside });
     };
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     return () => window.removeEventListener("pointermove", handlePointerMove);
@@ -321,7 +328,7 @@ export function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
       {/* Layer 1: Underlying Base Hero Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
@@ -331,37 +338,35 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 1.5: Interactive Cursor Bloom Spotlight Glow (Makes image underneath glow, pop, sharp & vibrant!) */}
+      {/* Layer 1.5: Interactive Cursor Bloom Spotlight Glow (STRICTLY SCOPED TO HERO SECTION ONLY) */}
       <div 
-        className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge"
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
         style={{
-          background: `radial-gradient(420px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.65) 0%, rgba(129, 140, 248, 0.38) 35%, rgba(168, 85, 247, 0.2) 65%, transparent 85%)`,
-          opacity: cursorPos.x > -100 ? 1 : 0
+          background: `radial-gradient(360px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.45) 0%, rgba(129, 140, 248, 0.22) 40%, transparent 80%)`,
+          opacity: cursorPos.inside ? 1 : 0
         }}
       />
 
-      {/* Layer 2: Rich Glowing Electric Blue & Indigo Smoke Plumes (Matching reference image) */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-70 mix-blend-screen">
-        {/* Left Electric Blue Smoke Plume */}
-        <div className="absolute top-[10%] -left-[15%] w-[65vw] h-[75vh] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.38)_0%,rgba(37,99,235,0.22)_40%,transparent_75%)] blur-3xl animate-pulse duration-[7000ms]" />
-        {/* Top-Right Purple Fog */}
-        <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.28)_0%,rgba(147,51,234,0.15)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
-        {/* Sub-grid Mist Glow */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_45%,rgba(14,165,233,0.18)_0%,transparent_55%)]" />
+      {/* Layer 2: Subtle Ambient Slate & Blue Smoke Plumes */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-50 mix-blend-screen">
+        {/* Left Soft Blue Smoke Plume */}
+        <div className="absolute top-[10%] -left-[15%] w-[65vw] h-[75vh] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.22)_0%,rgba(37,99,235,0.10)_40%,transparent_75%)] blur-3xl animate-pulse duration-[7000ms]" />
+        {/* Top-Right Soft Purple Fog */}
+        <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.18)_0%,rgba(147,51,234,0.08)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
       </div>
 
-      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Loads Instantly) */}
+      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Visible & Sleek) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <Dither
-          waveColor={[0.18, 0.28, 0.55]}
+          waveColor={[0.10, 0.14, 0.26]}
           disableAnimation={false}
           enableMouseInteraction={true}
-          mouseRadius={0.32}
-          colorNum={5}
+          mouseRadius={0.30}
+          colorNum={6}
           pixelSize={3}
-          waveAmplitude={0.38}
+          waveAmplitude={0.35}
           waveFrequency={3.5}
-          waveSpeed={0.045}
+          waveSpeed={0.04}
         />
       </div>
 

@@ -31,33 +31,31 @@ function Digit({ digit }: { digit: string }) {
 }
 
 export function LiveUserCounter() {
-  const [count, setCount] = useState(38);
+  const [count, setCount] = useState(() => Math.floor(Math.random() * 63) + 24);
   const containerRef = useRef<HTMLDivElement>(null);
   const isInView = useInView(containerRef);
 
   useEffect(() => {
-    if (!isInView) return;
-
     let timeoutId: NodeJS.Timeout;
 
     const tick = () => {
       setCount((prev) => {
-        const direction = Math.random() > 0.5 ? 1 : -1;
-        const amount = Math.floor(Math.random() * 3) + 1; // 1 to 3
-        const change = direction * amount;
-        return Math.max(10, Math.min(70, prev + change));
+        const sign = Math.random() > 0.45 ? 1 : -1;
+        const amount = Math.floor(Math.random() * 9) + 1; // 1 to 9
+        const change = sign * amount;
+        return Math.max(10, Math.min(100, prev + change));
       });
 
-      // Average 14 seconds: random duration between 10 and 18 seconds
-      const nextDelay = 14000 + (Math.random() - 0.5) * 8000;
+      // Random delay between 5000ms (5s) and 15000ms (15s)
+      const nextDelay = Math.floor(Math.random() * 10000) + 5000;
       timeoutId = setTimeout(tick, nextDelay);
     };
 
-    const firstDelay = 14000 + (Math.random() - 0.5) * 8000;
-    timeoutId = setTimeout(tick, firstDelay);
+    const initialDelay = Math.floor(Math.random() * 10000) + 5000;
+    timeoutId = setTimeout(tick, initialDelay);
 
     return () => clearTimeout(timeoutId);
-  }, [isInView]);
+  }, []);
 
   const digits = count.toLocaleString().split("");
 
