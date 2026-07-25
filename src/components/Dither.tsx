@@ -100,8 +100,9 @@ void main() {
   vec2 p = uv - 0.5;
   p.x *= resolution.x / resolution.y;
   
-  float f = pattern(p);
+  vec2 samplePos = p;
   float alpha = 0.92;
+  float f = 0.0;
   
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
@@ -115,17 +116,17 @@ void main() {
     float noiseEdge = cnoise(vec2(cos(angle) * 3.5 + time * 2.2, sin(angle) * 3.5 + time * 2.2)) * 0.09;
     noiseEdge += cnoise(p * 6.5 - time * 1.2) * 0.06;
     
-    // Slightly reduced reveal radius
     float dynamicRadius = mouseRadius + noiseEdge;
-    
-    // Smooth organic parting mask: 1.0 inside hole, 0.0 outside
     float holeMask = 1.0 - smoothstep(dynamicRadius * 0.25, dynamicRadius, dist);
     
-    // Repel wave density around hole edge
-    f += holeMask * 0.3;
+    // PHYSICAL PUSH VECTOR: Pushes/warps dither smoke texture outward away from cursor center!
+    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.22);
+    samplePos += pushVector;
     
-    // Retain thin layer of misty dither opacity inside hole (never 100% bare glass)
+    f = pattern(samplePos) + holeMask * 0.35;
     alpha = clamp(0.92 - holeMask * 0.78, 0.15, 0.92);
+  } else {
+    f = pattern(samplePos);
   }
   
   vec3 col = mix(vec3(0.0), waveColor, f);

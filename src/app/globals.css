@@ -1178,18 +1178,26 @@ body {
   animation: discord-logo-shake 0.8s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
 }
 
-/* Liquid glass glassmorphic capsule badge with background line gradient shifting & unique shimmer hover */
+/* Liquid glass glassmorphic capsule badge with transparent backdrop */
 .liquid-glass-badge {
   position: relative;
-  background: rgba(6, 7, 12, 0.65);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   box-shadow: 
-    inset 0 1px 1px rgba(255, 255, 255, 0.1),
-    0 10px 40px rgba(0, 0, 0, 0.6);
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    0 8px 32px rgba(0, 0, 0, 0.4);
   overflow: hidden;
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.liquid-glass-badge:hover {
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.28);
+  box-shadow: 
+    inset 0 1px 2px rgba(255, 255, 255, 0.2),
+    0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 .liquid-glass-badge::before {
@@ -1197,14 +1205,8 @@ body {
   position: absolute;
   inset: 0;
   z-index: 0;
-  background: linear-gradient(90deg, 
-    rgba(217, 70, 239, 0.08) 0%, 
-    rgba(139, 92, 246, 0.08) 35%, 
-    rgba(59, 130, 246, 0.08) 70%, 
-    rgba(6, 182, 212, 0.08) 100%
-  );
-  background-size: 300% 300%;
-  animation: gradient-shift 6s ease infinite;
+  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.08), transparent 70%);
+  opacity: 0.8;
 }
 
 .liquid-glass-badge::after {

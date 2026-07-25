@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
-import dynamic from "next/dynamic";
-const Dither = dynamic(() => import("./Dither"), { ssr: false });
+import Dither from "./Dither";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -323,29 +322,35 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 2: Sub-Dither Animated Rolling Cloud & Fog Mist */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none mix-blend-screen opacity-40">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,rgba(56,189,248,0.18)_0%,transparent_60%)] animate-pulse duration-[6000ms]" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_60%,rgba(164,132,215,0.15)_0%,transparent_65%)] animate-pulse duration-[8000ms]" />
+      {/* Layer 2: Rich Glowing Electric Blue & Indigo Smoke Plumes (Matching reference image) */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-70 mix-blend-screen">
+        {/* Left Electric Blue Smoke Plume */}
+        <div className="absolute top-[10%] -left-[15%] w-[65vw] h-[75vh] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.38)_0%,rgba(37,99,235,0.22)_40%,transparent_75%)] blur-3xl animate-pulse duration-[7000ms]" />
+        {/* Top-Right Purple Fog */}
+        <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.28)_0%,rgba(147,51,234,0.15)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
+        {/* Sub-grid Mist Glow */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_45%,rgba(14,165,233,0.18)_0%,transparent_55%)]" />
       </div>
 
-      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer */}
+      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Loads Instantly) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <Dither
-          waveColor={[0.16, 0.24, 0.48]}
+          waveColor={[0.18, 0.28, 0.55]}
           disableAnimation={false}
           enableMouseInteraction={true}
           mouseRadius={0.32}
           colorNum={5}
           pixelSize={3}
-          waveAmplitude={0.35}
+          waveAmplitude={0.38}
           waveFrequency={3.5}
-          waveSpeed={0.04}
+          waveSpeed={0.045}
         />
       </div>
 
-      {/* Layer 4: Over-Dither Atmospheric Vignette & Top Misty Fog */}
+      {/* Layer 4: Dark Center Radial Backdrop Vignette for Text Legibility & Over-Dither Fog */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        {/* Center Text Dark Vignette Focus */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.78)_0%,rgba(5,7,15,0.45)_55%,transparent_100%)]" />
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-deep-navy" />
         <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent" />
       </div>
