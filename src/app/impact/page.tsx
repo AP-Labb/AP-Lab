@@ -97,10 +97,6 @@ export default function ImpactPage() {
         </div>
       </section>
 
-import CircularGallery from "@/components/CircularGallery";
-
-/* ... */
-
       {/* 3D Interactive Circular Stats Gallery */}
       <section className="px-4 sm:px-6 md:px-[120px] pb-24 z-10 relative">
         <div className="max-w-7xl mx-auto h-[560px] relative rounded-3xl overflow-hidden bg-black/40 border border-white/10 backdrop-blur-xl shadow-2xl">
