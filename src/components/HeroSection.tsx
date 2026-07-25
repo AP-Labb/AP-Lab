@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
-import DigitalVeilReveal from "./DigitalVeilReveal";
+import Dither from "./Dither";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -313,9 +313,19 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Translucent Digital Veil Reveal WebGL Background */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <DigitalVeilReveal imageSrc="/images/HEROSECTION.png" />
+      {/* Dithered Smoke Wave WebGL Background Overlay */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-80">
+        <Dither
+          waveColor={[0.12, 0.16, 0.35]}
+          disableAnimation={false}
+          enableMouseInteraction={true}
+          mouseRadius={0.4}
+          colorNum={4}
+          pixelSize={3}
+          waveAmplitude={0.35}
+          waveFrequency={3.5}
+          waveSpeed={0.04}
+        />
       </div>
 
       {/* Seamless Fade Transition at bottom */}
