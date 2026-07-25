@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { useState, useRef, useEffect } from "react";
 import { USMap } from "@/components/USMap";
 import { LiveUserCounter } from "@/components/LiveUserCounter";
+import ProfileCard from "@/components/ProfileCard";
 
 const SeamlessVideo = ({ src, className }: { src: string; className: string }) => {
   const [active, setActive] = useState(0);
@@ -267,24 +268,33 @@ export default function ImpactPage() {
         </div>
       </section>
 
-      {/* CTA Segment */}
-      <section className="py-40 px-6 text-center relative overflow-hidden z-10 border-t border-white/5">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-medical-teal/5 blur-[120px] rounded-full pointer-events-none" />
+      {/* Founder Profile Card Section */}
+      <section className="py-24 px-6 text-center relative overflow-hidden z-10 border-t border-white/5 flex flex-col items-center justify-center">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-purple/10 blur-[140px] rounded-full pointer-events-none" />
         
-        <h2 className="font-instrument text-5xl md:text-8xl mb-12 text-white relative z-10">
-          Enter the <span className="italic text-medical-teal">Ecosystem</span>.
+        <h2 className="font-instrument text-4xl md:text-6xl mb-12 text-white relative z-10">
+          Meet the <span className="italic text-primary-purple">Founder</span>
         </h2>
-        
-        <Link href="/dashboard" className="inline-block relative z-10">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-10 py-5 rounded-full bg-white text-black font-manrope font-bold text-sm tracking-wide shadow-[0_0_30px_rgba(255,255,255,0.3)] hover:bg-white/90 transition-all flex items-center space-x-3"
-          >
-            <span>Go to Dashboard</span>
-            <ArrowRight className="w-4 h-4" />
-          </motion.button>
-        </Link>
+
+        <div className="relative z-10 flex items-center justify-center">
+          <ProfileCard
+            name="Yash Patil"
+            title="Founder"
+            handle="yashpatil"
+            status="Building AP Lab"
+            contactText="Contact"
+            avatarUrl="/images/yash-patil.png"
+            showUserInfo={true}
+            enableTilt={true}
+            enableMobileTilt={false}
+            behindGlowEnabled={true}
+            behindGlowColor="rgba(164, 132, 215, 0.67)"
+            innerGradient="linear-gradient(145deg, #2e10658c 0%, #71C4FF44 100%)"
+            onContactClick={() => {
+              window.location.href = "mailto:yash@theaplab.org";
+            }}
+          />
+        </div>
       </section>
 
       <Footer />
