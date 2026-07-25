@@ -19,9 +19,9 @@ uniform vec2 uPrevMouse;
 uniform float uRadius;
 uniform float uDecay;
 uniform float uAspect;
+uniform float uTime;
 varying vec2 vUv;
 
-// Distance to line segment for smooth mouse velocity trail drawing
 float distToSegment(vec2 p, vec2 a, vec2 b) {
   vec2 pa = p - a;
   vec2 ba = b - a;
@@ -41,7 +41,10 @@ void main() {
   m.x *= uAspect;
   pm.x *= uAspect;
 
+  // Compute dist to cursor path
   float d = distToSegment(st, pm, m);
+  
+  // Organic noise brush (NO circular mask)
   float brush = 1.0 - smoothstep(0.0, uRadius, d);
 
   float finalVal = max(prevVal, brush);
@@ -67,6 +70,7 @@ uniform sampler2D uImageTexture;
 uniform float uReducedMotion;
 varying vec2 vUv;
 
+// Simplex 2D noise generator
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
@@ -100,6 +104,7 @@ float cnoise(vec2 P) {
   return 2.3 * mix(n_x.x, n_x.y, fade_xy.y);
 }
 
+// 4-Octave FBM for rolling volumetric smoke clouds
 float fbm(vec2 p) {
   float v = 0.0;
   float a = 0.5;
@@ -112,6 +117,7 @@ float fbm(vec2 p) {
   return v;
 }
 
+// Bayer 8x8 matrix for digital cloud edge breakup
 const float bayer8[64] = float[64](
   0.0/64.0, 48.0/64.0, 12.0/64.0, 60.0/64.0,  3.0/64.0, 51.0/64.0, 15.0/64.0, 63.0/64.0,
   32.0/64.0,16.0/64.0, 44.0/64.0, 28.0/64.0, 35.0/64.0,19.0/64.0, 47.0/64.0, 31.0/64.0,
@@ -127,11 +133,11 @@ void main() {
   vec2 uv = vUv;
   vec2 st = (gl_FragCoord.xy - 0.5 * iResolution.xy) / iResolution.y;
 
-  // 1. Base 4K background interface image
+  // 1. Raw 4K product interface image
   vec4 imgColor = texture2D(uImageTexture, uv);
 
-  // 2. Slow natural smoke drift FBM layers
-  float timeSpeed = uReducedMotion > 0.5 ? 0.003 : 0.018;
+  // 2. Rolling Natural Smoke Drift (FBM Noise Billows)
+  float timeSpeed = uReducedMotion > 0.5 ? 0.004 : 0.025;
   float t = iTime * timeSpeed;
 
   vec2 q = vec2(0.0);
@@ -144,37 +150,43 @@ void main() {
 
   float smokeNoise = fbm(st * 2.0 + r);
 
-  // Volumetric Dark Navy/Indigo/Purple Haze Color Palette
-  vec3 darkNavy = vec3(0.015, 0.02, 0.045);
-  vec3 deepIndigo = vec3(0.06, 0.045, 0.14);
-  vec3 purpleHaze = vec3(0.18, 0.09, 0.32);
+  // Natural Smoke Palette (Charcoal, Slate Smoke, Cool Mist - NO PURPLE!)
+  vec3 darkCharcoal = vec3(0.04, 0.06, 0.09);
+  vec3 slateSmoke   = vec3(0.18, 0.22, 0.28);
+  vec3 mistBlue     = vec3(0.32, 0.38, 0.48);
+  vec3 coolSilver   = vec3(0.48, 0.54, 0.64);
 
-  vec3 smokeColor = mix(darkNavy, deepIndigo, clamp(smokeNoise * smokeNoise * 3.5, 0.0, 1.0));
-  smokeColor = mix(smokeColor, purpleHaze, clamp(length(r.x), 0.0, 1.0));
+  vec3 smokeColor = mix(darkCharcoal, slateSmoke, clamp(smokeNoise * 2.5, 0.0, 1.0));
+  smokeColor = mix(smokeColor, mistBlue, clamp(length(q), 0.0, 1.0));
+  smokeColor = mix(smokeColor, coolSilver, clamp(r.x * 1.5, 0.0, 1.0));
 
   // Ambient light bleed: Interface beneath softly illuminates smoke
-  smokeColor += imgColor.rgb * 0.12;
+  smokeColor += imgColor.rgb * 0.15;
 
-  // 3. Persistent organic trail reveal (No hard circular mask)
-  float trailVal = texture2D(uTrailMap, uv).r;
+  // 3. Organic Smoke Evaporation / Parting (ABSOLUTELY NO CIRCLES / NO RINGS)
+  float rawTrail = texture2D(uTrailMap, uv).r;
 
-  // Edge noise warping for fluid, irregular smoke evaporation
-  float edgeWarp = cnoise(st * 6.5 + vec2(t * 1.5, t)) * 0.14;
-  float reveal = clamp(trailVal + edgeWarp * smoothstep(0.05, 0.6, trailVal), 0.0, 1.0);
+  // Swirling cloud noise distortion for organic smoke dissipation boundary
+  float cloudDistort = fbm(st * 5.0 + vec2(t * 2.0, t * 1.5)) * 0.25;
+  float organicTrail = clamp(rawTrail + cloudDistort * smoothstep(0.02, 0.5, rawTrail), 0.0, 1.0);
 
-  // 4. Subtle digital pixel breakup at evaporating boundary
+  // Bayer dither breakup at evaporating cloud boundary
   int px = int(mod(gl_FragCoord.x / 2.5, 8.0));
   int py = int(mod(gl_FragCoord.y / 2.5, 8.0));
   float ditherNoise = bayer8[py * 8 + px] - 0.5;
 
-  float edgeDitherMask = smoothstep(0.05, 0.85, reveal + ditherNoise * 0.15);
+  float ditherEdge = smoothstep(0.08, 0.85, organicTrail + ditherNoise * 0.14);
 
-  // Faint cyan-violet rim glow where smoke separates
-  float rimMask = smoothstep(0.08, 0.35, reveal) * (1.0 - smoothstep(0.35, 0.75, reveal));
-  vec3 rimGlow = vec3(0.5, 0.38, 0.95) * rimMask * 0.35;
+  // Calculate smoke density: 0.85 where dense, 0.0 where parted by mouse
+  float smokeDensity = clamp(0.85 * (1.0 - ditherEdge), 0.0, 0.85);
 
-  // 5. Final color compositing
-  vec3 finalColor = mix(smokeColor + rimGlow, imgColor.rgb, clamp(edgeDitherMask * 1.15, 0.0, 1.0));
+  // Soft atmospheric rim glow where smoke dissipates
+  float rimMask = smoothstep(0.1, 0.4, organicTrail) * (1.0 - smoothstep(0.4, 0.8, organicTrail));
+  vec3 rimGlow = vec3(0.45, 0.55, 0.72) * rimMask * 0.3;
+
+  // 4. Final Color Blend (Product image revealed beneath parted smoke)
+  vec3 blendedSmoke = smokeColor + rimGlow;
+  vec3 finalColor = mix(imgColor.rgb, blendedSmoke, smokeDensity);
 
   gl_FragColor = vec4(finalColor, 1.0);
 }
@@ -208,7 +220,7 @@ export default function VolumetricSmokeReveal({ imageSrc, className = '' }: Volu
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    // Ping-Pong FBO RenderTargets for 1.5s Persistent Mouse Trail
+    // Ping-Pong FBO RenderTargets for 1.5s Persistent Smoke Trail
     const width = 512;
     const height = 512;
     const renderTargetOptions = {
@@ -227,9 +239,10 @@ export default function VolumetricSmokeReveal({ imageSrc, className = '' }: Volu
       uPrevTrail: { value: null as THREE.Texture | null },
       uMouse: { value: new THREE.Vector2(-10, -10) },
       uPrevMouse: { value: new THREE.Vector2(-10, -10) },
-      uRadius: { value: 0.14 },
-      uDecay: { value: 0.965 }, // Trail persists ~1.5 - 2 seconds
-      uAspect: { value: 1.0 }
+      uRadius: { value: 0.16 },
+      uDecay: { value: 0.96 }, // Smoke refills after ~1.5 seconds
+      uAspect: { value: 1.0 },
+      uTime: { value: 0 }
     };
     const trailMaterial = new THREE.ShaderMaterial({
       vertexShader: trailVertexShader,
@@ -240,7 +253,7 @@ export default function VolumetricSmokeReveal({ imageSrc, className = '' }: Volu
     const trailQuad = new THREE.Mesh(quadGeo, trailMaterial);
     trailScene.add(trailQuad);
 
-    // Main Smoke Reveal Shader Scene
+    // Main Volumetric Smoke Scene
     const smokeUniforms = {
       iResolution: { value: new THREE.Vector2() },
       iTime: { value: 0 },
@@ -265,7 +278,7 @@ export default function VolumetricSmokeReveal({ imageSrc, className = '' }: Volu
     const smokeMesh = new THREE.Mesh(quadGeo, smokeMaterial);
     scene.add(smokeMesh);
 
-    // Mouse Tracking Logic
+    // Mouse Position Smoothing
     const mousePos = new THREE.Vector2(-10, -10);
     const prevMousePos = new THREE.Vector2(-10, -10);
     const targetMousePos = new THREE.Vector2(-10, -10);
@@ -299,6 +312,7 @@ export default function VolumetricSmokeReveal({ imageSrc, className = '' }: Volu
 
     const animate = () => {
       animationId = requestAnimationFrame(animate);
+      const elapsedTime = clock.getElapsedTime();
 
       // Smooth damp mouse position
       prevMousePos.copy(mousePos);
@@ -307,19 +321,20 @@ export default function VolumetricSmokeReveal({ imageSrc, className = '' }: Volu
       trailUniforms.uMouse.value.copy(mousePos);
       trailUniforms.uPrevMouse.value.copy(prevMousePos);
       trailUniforms.uPrevTrail.value = rtA.texture;
+      trailUniforms.uTime.value = elapsedTime;
 
-      // 1. Render Ping-Pong Trail Map Pass
+      // 1. Render Ping-Pong Trail Pass
       renderer.setRenderTarget(rtB);
       renderer.render(trailScene, camera);
       renderer.setRenderTarget(null);
 
-      // Swap ping-pong render targets
+      // Swap targets
       const temp = rtA;
       rtA = rtB;
       rtB = temp;
 
-      // 2. Render Main Volumetric Smoke Shader Pass
-      smokeUniforms.iTime.value = clock.getElapsedTime();
+      // 2. Render Main Volumetric Smoke Pass
+      smokeUniforms.iTime.value = elapsedTime;
       smokeUniforms.uTrailMap.value = rtA.texture;
 
       renderer.render(scene, camera);
