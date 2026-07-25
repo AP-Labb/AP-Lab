@@ -244,7 +244,7 @@ export default function Dither({
   colorNum = 4,
   pixelSize = 2,
   disableAnimation = false,
-  enableMouseInteraction = true,
+  enableMouseInteraction = false,
   mouseRadius = 1
 }: {
   waveSpeed?: number;

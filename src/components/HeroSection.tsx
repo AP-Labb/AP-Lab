@@ -330,7 +330,7 @@ export function HeroSection() {
         <Dither
           waveColor={[0.85, 0.55, 1.0]}
           disableAnimation={false}
-          enableMouseInteraction={true}
+          enableMouseInteraction={false}
           mouseRadius={0.5}
           colorNum={5}
           pixelSize={3}
