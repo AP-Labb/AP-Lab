@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
+import PixelCard from "./PixelCard";
 
 function CountUpNumber({ endValue, duration = 2, decimals = 0, prefix = "", suffix = "" }: { endValue: number; duration?: number; decimals?: number; prefix?: string; suffix?: string }) {
   const [count, setCount] = useState(0);
@@ -99,28 +100,30 @@ export function StatsSection() {
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <SpotlightCard 
-            spotlightColor="rgba(0, 0, 0, 0.16)"
-            className="w-full bg-gradient-to-r from-white via-slate-100 to-slate-200 rounded-3xl p-8 md:p-12 text-center text-slate-900 border border-white/60 shadow-[0_20px_50px_rgba(255,255,255,0.12)] transition-all duration-300 hover:scale-[1.005]"
-          >
-            {/* Background subtle dark dot pattern */}
-            <div 
-              className="absolute inset-0 pointer-events-none opacity-25"
-              style={{
-                backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.25) 1px, transparent 1px)",
-                backgroundSize: "16px 16px"
-              }}
-            />
+          <PixelCard colors="#475569,#64748b,#94a3b8" className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-3xl">
+            <SpotlightCard 
+              spotlightColor="rgba(0, 0, 0, 0.16)"
+              className="w-full bg-gradient-to-r from-white via-slate-100 to-slate-200 rounded-3xl p-8 md:p-12 text-center text-slate-900 border border-white/60 shadow-[0_20px_50px_rgba(255,255,255,0.12)] transition-all duration-300 hover:scale-[1.005]"
+            >
+              {/* Background subtle dark dot pattern */}
+              <div 
+                className="absolute inset-0 pointer-events-none opacity-25"
+                style={{
+                  backgroundImage: "radial-gradient(circle, rgba(0, 0, 0, 0.25) 1px, transparent 1px)",
+                  backgroundSize: "16px 16px"
+                }}
+              />
 
-            <div className="relative z-20 space-y-2">
-              <div className="font-inter font-black text-5xl sm:text-6xl md:text-7xl tracking-tight text-slate-950">
-                <CountUpNumber endValue={1250} suffix="+" />
+              <div className="relative z-20 space-y-2">
+                <div className="font-inter font-black text-5xl sm:text-6xl md:text-7xl tracking-tight text-slate-950">
+                  <CountUpNumber endValue={1250} suffix="+" />
+                </div>
+                <div className="text-sm md:text-base font-bold text-slate-700 tracking-wide">
+                  Active AP® Scholars
+                </div>
               </div>
-              <div className="text-sm md:text-base font-bold text-slate-700 tracking-wide">
-                Active AP® Scholars
-              </div>
-            </div>
-          </SpotlightCard>
+            </SpotlightCard>
+          </PixelCard>
         </motion.div>
 
         {/* Bottom Row - 3 Dark Cards */}
@@ -132,40 +135,46 @@ export function StatsSection() {
           className="grid grid-cols-1 md:grid-cols-3 gap-4"
         >
           {/* Card 1 */}
-          <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
-            <div className="relative z-20 space-y-2">
-              <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
-                <CountUpNumber endValue={4.96} decimals={2} />
+          <PixelCard colors="#38bdf8,#818cf8,#c084fc" gap={6} speed={40} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
+            <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group w-full">
+              <div className="relative z-20 space-y-2">
+                <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
+                  <CountUpNumber endValue={4.96} decimals={2} />
+                </div>
+                <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
+                  Stars Rated by Users
+                </div>
               </div>
-              <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
-                Stars Rated by Users
-              </div>
-            </div>
-          </SpotlightCard>
+            </SpotlightCard>
+          </PixelCard>
 
           {/* Card 2 */}
-          <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
-            <div className="relative z-20 space-y-2">
-              <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
-                <CountUpNumber endValue={15} suffix="k+" />
+          <PixelCard colors="#38bdf8,#818cf8,#c084fc" gap={6} speed={40} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
+            <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group w-full">
+              <div className="relative z-20 space-y-2">
+                <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
+                  <CountUpNumber endValue={15} suffix="k+" />
+                </div>
+                <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
+                  Practice Questions
+                </div>
               </div>
-              <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
-                Practice Questions
-              </div>
-            </div>
-          </SpotlightCard>
+            </SpotlightCard>
+          </PixelCard>
 
           {/* Card 3 */}
-          <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group">
-            <div className="relative z-20 space-y-2">
-              <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
-                <CountUpNumber endValue={100} suffix="%" />
+          <PixelCard colors="#38bdf8,#818cf8,#c084fc" gap={6} speed={40} className="w-full !border-none !aspect-auto !h-auto !bg-transparent p-0 rounded-2xl md:rounded-3xl">
+            <SpotlightCard className="bg-[#0b0c10] border border-white/10 rounded-2xl md:rounded-3xl p-6 md:p-8 text-center text-white hover:border-white/20 transition-all duration-300 shadow-xl group w-full">
+              <div className="relative z-20 space-y-2">
+                <div className="font-inter font-bold text-3xl sm:text-4xl md:text-5xl tracking-tight text-white">
+                  <CountUpNumber endValue={100} suffix="%" />
+                </div>
+                <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
+                  Free & Open Access
+                </div>
               </div>
-              <div className="text-xs md:text-sm font-medium text-white/50 tracking-wide">
-                Free & Open Access
-              </div>
-            </div>
-          </SpotlightCard>
+            </SpotlightCard>
+          </PixelCard>
         </motion.div>
       </div>
     </section>

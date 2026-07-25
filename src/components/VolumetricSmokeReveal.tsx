@@ -22,6 +22,40 @@ uniform float uAspect;
 uniform float uTime;
 varying vec2 vUv;
 
+// Simplex 2D Noise for noise-warping the trail brush (100% NO CIRCLES)
+vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
+vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
+vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
+vec2 fade(vec2 t) { return t*t*t*(t*(t*6.0-15.0)+10.0); }
+
+float cnoise(vec2 P) {
+  vec4 Pi = floor(P.xyxy) + vec4(0.0,0.0,1.0,1.0);
+  vec4 Pf = fract(P.xyxy) - vec4(0.0,0.0,1.0,1.0);
+  Pi = mod289(Pi);
+  vec4 ix = Pi.xzxz;
+  vec4 iy = Pi.yyww;
+  vec4 fx = Pf.xzxz;
+  vec4 fy = Pf.yyww;
+  vec4 i = permute(permute(ix) + iy);
+  vec4 gx = fract(i * (1.0/41.0)) * 2.0 - 1.0;
+  vec4 gy = abs(gx) - 0.5;
+  vec4 tx = floor(gx + 0.5);
+  gx = gx - tx;
+  vec2 g00 = vec2(gx.x, gy.x);
+  vec2 g10 = vec2(gx.y, gy.y);
+  vec2 g01 = vec2(gx.z, gy.z);
+  vec2 g11 = vec2(gx.w, gy.w);
+  vec4 norm = taylorInvSqrt(vec4(dot(g00,g00), dot(g01,g01), dot(g10,g10), dot(g11,g11)));
+  g00 *= norm.x; g01 *= norm.y; g10 *= norm.z; g11 *= norm.w;
+  float n00 = dot(g00, vec2(fx.x, fy.x));
+  float n10 = dot(g10, vec2(fx.y, fy.y));
+  float n01 = dot(g01, vec2(fx.z, fy.z));
+  float n11 = dot(g11, vec2(fx.w, fy.w));
+  vec2 fade_xy = fade(Pf.xy);
+  vec2 n_x = mix(vec2(n00, n01), vec2(n10, n11), fade_xy.x);
+  return 2.3 * mix(n_x.x, n_x.y, fade_xy.y);
+}
+
 float distToSegment(vec2 p, vec2 a, vec2 b) {
   vec2 pa = p - a;
   vec2 ba = b - a;
@@ -41,11 +75,19 @@ void main() {
   m.x *= uAspect;
   pm.x *= uAspect;
 
-  // Compute dist to cursor path
-  float d = distToSegment(st, pm, m);
+  // Warp brush coordinates with high-frequency noise so trail map NEVER forms a circle!
+  vec2 noiseOffset = vec2(
+    cnoise(st * 10.0 + vec2(uTime * 0.7, uTime * 0.5)),
+    cnoise(st * 10.0 - vec2(uTime * 0.6, uTime * 0.8))
+  ) * 0.08;
+
+  float d = distToSegment(st + noiseOffset, pm, m);
   
-  // Organic noise brush (NO circular mask)
-  float brush = 1.0 - smoothstep(0.0, uRadius, d);
+  // Irregular organic cloud blob brush
+  float noiseShape = cnoise(st * 15.0 + vec2(uTime * 0.4));
+  float dynamicRadius = uRadius * (0.75 + 0.55 * noiseShape);
+  float rawBrush = clamp(1.0 - (d / max(dynamicRadius, 0.01)), 0.0, 1.0);
+  float brush = pow(rawBrush, 1.4) * (0.65 + 0.7 * noiseShape);
 
   float finalVal = max(prevVal, brush);
   gl_FragColor = vec4(vec3(finalVal), 1.0);
@@ -150,7 +192,7 @@ void main() {
 
   float smokeNoise = fbm(st * 2.0 + r);
 
-  // Natural Smoke Palette (Charcoal, Slate Smoke, Cool Mist - NO PURPLE!)
+  // Authentic Smoke Palette (Charcoal, Slate Smoke, Cool Mist - NO PURPLE!)
   vec3 darkCharcoal = vec3(0.04, 0.06, 0.09);
   vec3 slateSmoke   = vec3(0.18, 0.22, 0.28);
   vec3 mistBlue     = vec3(0.32, 0.38, 0.48);
@@ -163,30 +205,25 @@ void main() {
   // Ambient light bleed: Interface beneath softly illuminates smoke
   smokeColor += imgColor.rgb * 0.15;
 
-  // 3. Organic Smoke Evaporation / Parting (ABSOLUTELY NO CIRCLES / NO RINGS)
+  // 3. Organic Smoke Evaporation / Parting (100% NON-CIRCULAR)
   float rawTrail = texture2D(uTrailMap, uv).r;
 
-  // Swirling cloud noise distortion for organic smoke dissipation boundary
-  float cloudDistort = fbm(st * 5.0 + vec2(t * 2.0, t * 1.5)) * 0.25;
-  float organicTrail = clamp(rawTrail + cloudDistort * smoothstep(0.02, 0.5, rawTrail), 0.0, 1.0);
+  // Multi-scale cloud noise distortion for organic smoke dissipation boundary
+  float cloudDistort = fbm(st * 4.5 + vec2(t * 1.8, t * 1.4));
+  float organicReveal = clamp(rawTrail * (0.6 + 0.8 * cloudDistort), 0.0, 1.0);
 
   // Bayer dither breakup at evaporating cloud boundary
   int px = int(mod(gl_FragCoord.x / 2.5, 8.0));
   int py = int(mod(gl_FragCoord.y / 2.5, 8.0));
   float ditherNoise = bayer8[py * 8 + px] - 0.5;
 
-  float ditherEdge = smoothstep(0.08, 0.85, organicTrail + ditherNoise * 0.14);
+  float ditherEdge = smoothstep(0.05, 0.75, organicReveal + ditherNoise * 0.15);
 
   // Calculate smoke density: 0.85 where dense, 0.0 where parted by mouse
   float smokeDensity = clamp(0.85 * (1.0 - ditherEdge), 0.0, 0.85);
 
-  // Soft atmospheric rim glow where smoke dissipates
-  float rimMask = smoothstep(0.1, 0.4, organicTrail) * (1.0 - smoothstep(0.4, 0.8, organicTrail));
-  vec3 rimGlow = vec3(0.45, 0.55, 0.72) * rimMask * 0.3;
-
-  // 4. Final Color Blend (Product image revealed beneath parted smoke)
-  vec3 blendedSmoke = smokeColor + rimGlow;
-  vec3 finalColor = mix(imgColor.rgb, blendedSmoke, smokeDensity);
+  // Final Color Blend (NO CIRCULAR RINGS OR HALOS)
+  vec3 finalColor = mix(imgColor.rgb, smokeColor, smokeDensity);
 
   gl_FragColor = vec4(finalColor, 1.0);
 }
