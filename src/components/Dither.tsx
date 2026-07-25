@@ -110,15 +110,17 @@ void main() {
   uv -= 0.5;
   uv.x *= resolution.x / resolution.y;
   float f = pattern(uv);
+  vec3 col = mix(vec3(0.0), waveColor, f);
+  col = applyDither(gl_FragCoord.xy, col);
+
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
     mouseNDC.x *= resolution.x / resolution.y;
     float dist = length(uv - mouseNDC);
-    float effect = 1.0 - smoothstep(0.0, mouseRadius, dist);
-    f -= 0.5 * effect;
+    float partMask = smoothstep(0.0, mouseRadius, dist);
+    col *= partMask;
   }
-  vec3 col = mix(vec3(0.0), waveColor, f);
-  col = applyDither(gl_FragCoord.xy, col);
+
   gl_FragColor = vec4(col, 1.0);
 }
 `;
@@ -161,6 +163,20 @@ function DitheredWaves({
       res.set(w, h);
     }
   }, [size, gl]);
+
+  useEffect(() => {
+    if (!enableMouseInteraction) return;
+
+    const handlePointerMove = (e: PointerEvent) => {
+      if (!gl.domElement) return;
+      const rect = gl.domElement.getBoundingClientRect();
+      const dpr = gl.getPixelRatio();
+      mouseRef.current.set((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove);
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, [gl, enableMouseInteraction]);
 
   const prevColor = useRef([...waveColor]);
   useFrame(({ clock }) => {
