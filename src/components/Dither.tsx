@@ -109,26 +109,31 @@ void main() {
     mouseNDC.x *= resolution.x / resolution.y;
     
     vec2 dir = p - mouseNDC;
-    // Anisotropic fluid contour: non-circular organic tear
-    vec2 normDir = dir * vec2(1.2, 0.9);
-    float dist = length(normDir);
     
-    // Multi-frequency organic turbulence around perimeter
-    float angle = atan(dir.y, dir.x);
-    float noiseEdge = cnoise(vec2(cos(angle * 2.5) * 2.2 + time * 1.5, sin(angle * 2.5) * 2.2 + time * 1.5)) * 0.12;
-    noiseEdge += cnoise(p * 4.5 - time * 1.2) * 0.08;
+    // Diagonal rotation (~30 deg)
+    float aRot = 0.52;
+    mat2 rot = mat2(cos(aRot), -sin(aRot), sin(aRot), cos(aRot));
+    vec2 rotDir = rot * dir;
     
-    float dynamicRadius = mouseRadius + noiseEdge;
-    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.2, dynamicRadius, dist);
+    // Stretched non-circular aspect ratio: 2.6x horizontal, 0.58x vertical
+    rotDir *= vec2(2.6, 0.58);
     
-    // Subtle fluid wave repulsion along edge
-    float ripple = sin(dist * 22.0 - time * 3.5) * 0.05 * holeMask;
-    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.16 + ripple);
+    // High-amplitude Simplex noise distortion around perimeter (completely destroys circular shape)
+    float angle = atan(rotDir.y, rotDir.x);
+    float noiseEdge = cnoise(vec2(cos(angle * 2.0) * 3.5 + time * 2.0, sin(angle * 2.0) * 3.5 + time * 2.0)) * 0.35;
+    noiseEdge += cnoise(p * 8.0 - vec2(time * 1.8)) * 0.22;
+    
+    float tearDist = length(rotDir) - noiseEdge;
+    float holeMask = 1.0 - smoothstep(mouseRadius * 0.15, mouseRadius * 1.5, tearDist);
+    holeMask = clamp(holeMask, 0.0, 1.0);
+    
+    // Repulsion wave displacement
+    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.25);
     samplePos += pushVector;
     
     f = pattern(samplePos);
-    // Smooth, pristine parting transparency (no dark patches)
-    alpha = mix(0.96, 0.04, holeMask);
+    // Smooth organic tear parting
+    alpha = mix(0.96, 0.03, holeMask);
   } else {
     f = pattern(samplePos);
   }

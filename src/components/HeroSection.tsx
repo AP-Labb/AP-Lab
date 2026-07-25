@@ -353,15 +353,6 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 1.5: Interactive Cursor Bloom Spotlight Glow (STRICTLY SCOPED & NON-CIRCULAR FLUID ELLIPSE) */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
-        style={{
-          background: `radial-gradient(380px 220px ellipse at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.28) 0%, rgba(129, 140, 248, 0.14) 40%, transparent 80%)`,
-          opacity: cursorPos.inside ? 1 : 0
-        }}
-      />
-
       {/* Storm Roll-in Overlay Container: Triggers seamlessly AFTER preloader opens! */}
       <motion.div 
         initial={{ opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}
