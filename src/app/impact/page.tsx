@@ -81,7 +81,7 @@ export default function ImpactPage() {
             transition={{ duration: 0.8, delay: 0.1 }}
             className="font-inter font-bold text-5xl sm:text-6xl md:text-[88px] text-white tracking-tight leading-[0.9] mb-8"
           >
-            The <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-medical-teal via-[#4fd1c5] to-cyan-400 animate-gradient-x bg-[length:200%_200%] pr-4">Epicenter</span> <br /> of Excellence.
+            The <span className="text-transparent bg-clip-text bg-gradient-to-r from-medical-teal via-[#4fd1c5] to-cyan-400 animate-gradient-x bg-[length:200%_200%] pr-4">Epicenter</span> <br /> of Excellence.
           </motion.h1>
           
           <motion.p 
@@ -103,10 +103,10 @@ export default function ImpactPage() {
             initial={{ opacity: 0, scale: 0.95 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="md:col-span-2 md:row-span-2 liquid-glass-strong bg-[#0a0a0f] border border-white/10 rounded-[32px] p-10 flex flex-col justify-between relative overflow-hidden group hover:border-medical-teal/30 transition-all duration-500"
+            className="md:col-span-2 md:row-span-2 bg-[#070913]/90 border border-white/12 rounded-[28px] p-8 sm:p-10 flex flex-col justify-between relative overflow-hidden group hover:border-medical-teal/40 transition-all duration-300 shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 z-0" />
-            <div className="absolute inset-x-0 bottom-0 top-[30%] opacity-30 pointer-events-none z-0">
+            <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0" />
+            <div className="absolute inset-x-0 bottom-0 top-[35%] opacity-25 pointer-events-none z-0">
               <svg viewBox="0 0 1000 400" className="w-full h-full" preserveAspectRatio="none">
                 <defs>
                   <linearGradient id="activeScholarsChart" x1="0" y1="0" x2="0" y2="1">
@@ -125,31 +125,34 @@ export default function ImpactPage() {
                   d="M0,300 Q150,200 300,280 T600,150 T800,200 T1000,50"
                   fill="none"
                   stroke="#20c997"
-                  strokeWidth="4"
+                  strokeWidth="3.5"
                   initial={{ pathLength: 0 }}
                   whileInView={{ pathLength: 1 }}
                   transition={{ duration: 2, ease: "easeInOut" }}
                 />
               </svg>
             </div>
-            <div className="flex items-center justify-between relative z-10 mb-20">
+
+            <div className="flex items-center justify-between relative z-10 mb-16">
               <div className="flex items-center space-x-3">
-                <div className="w-12 h-12 rounded-xl bg-medical-teal/10 border border-medical-teal/20 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-medical-teal" />
+                <div className="w-11 h-11 rounded-xl bg-medical-teal/10 border border-medical-teal/25 flex items-center justify-center shadow-inner">
+                  <Users className="w-5 h-5 text-medical-teal" />
                 </div>
+                <span className="font-mono text-xs font-bold text-white/70 uppercase tracking-wider">Infrastructure</span>
               </div>
-              <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-mono font-bold uppercase tracking-widest animate-pulse">
-                Online
+              <div className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[10px] font-mono font-bold uppercase tracking-widest flex items-center space-x-1.5 shadow-inner">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Live Signal</span>
               </div>
             </div>
+
             <div className="relative z-10">
-              <div className="text-7xl md:text-8xl font-instrument mb-4 tracking-tighter text-white">1,024</div>
-              <div className="flex items-center space-x-4">
-                <div className="h-[2px] w-12 bg-medical-teal/50" />
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">Verified Concurrent Scholars</span>
+              <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-3 tracking-tight text-white">1,024</div>
+              <div className="flex items-center space-x-3">
+                <div className="h-[2px] w-8 bg-medical-teal/60 rounded-full" />
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">Verified Concurrent Scholars</span>
               </div>
             </div>
-            <div className="absolute bottom-0 right-0 w-[300px] h-[300px] bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMiIgY3k9IjIiIHI9IjIiIGZpbGw9InJnYmEoMjU1LCAyNTUsIDI1NSwgMC4wNSkiLz48L3N2Zz4=')] opacity-50 mask-image:linear-gradient(to_bottom_left,black,transparent)" />
           </motion.div>
 
           {/* Average Study Session */}
@@ -158,15 +161,15 @@ export default function ImpactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.1 }}
-            className="liquid-glass-strong bg-[#0a0a0f] border border-white/10 rounded-[32px] p-8 relative group hover:border-yellow-400/30 transition-all duration-500 flex flex-col justify-between"
+            className="bg-[#070913]/90 border border-white/12 rounded-[28px] p-7 sm:p-8 relative group hover:border-amber-400/40 transition-all duration-300 flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
           >
-             <div className="w-10 h-10 rounded-xl bg-yellow-400/10 border border-yellow-400/20 flex items-center justify-center mb-8">
-               <Clock className="w-5 h-5 text-yellow-400" />
+             <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center mb-6">
+               <Clock className="w-5 h-5 text-amber-400" />
              </div>
-              <div>
-                <div className="text-5xl font-instrument mb-2 text-white">56m</div>
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">Avg. Study Session</span>
-              </div>
+             <div>
+               <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">56m</div>
+               <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Avg. Study Session</span>
+             </div>
           </motion.div>
 
           {/* Pass Rate Matrix */}
@@ -175,33 +178,16 @@ export default function ImpactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.2 }}
-            className="liquid-glass-strong bg-[#0a0a0f] border border-white/10 rounded-[32px] p-8 relative group hover:border-primary-purple/30 transition-all duration-500 flex flex-col justify-between overflow-hidden"
+            className="bg-[#070913]/90 border border-white/12 rounded-[28px] p-7 sm:p-8 relative group hover:border-primary-purple/40 transition-all duration-300 flex flex-col justify-between overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
           >
-             <div className="absolute right-[-40%] bottom-[-40%] w-[180%] aspect-square opacity-10 pointer-events-none z-0">
-               <svg viewBox="0 0 200 200" className="w-full h-full transform -rotate-90">
-                 <circle cx="100" cy="100" r="80" fill="none" stroke="#a484d7" strokeWidth="40" opacity="0.2" />
-                 <motion.circle 
-                   cx="100" cy="100" r="80" 
-                   fill="none" 
-                   stroke="#a484d7" 
-                   strokeWidth="40" 
-                   strokeDasharray="502" 
-                   strokeDashoffset="502"
-                   initial={{ strokeDashoffset: 502 }}
-                   whileInView={{ strokeDashoffset: 8 }}
-                   transition={{ duration: 2, ease: "easeInOut" }}
-                   strokeLinecap="round"
-                 />
-               </svg>
-             </div>
-             <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary-purple/20 blur-3xl rounded-full z-0" />
-             <div className="w-10 h-10 rounded-xl bg-primary-purple/10 border border-primary-purple/20 flex items-center justify-center mb-8 relative z-10">
+             <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary-purple/15 blur-3xl rounded-full z-0 pointer-events-none" />
+             <div className="w-10 h-10 rounded-xl bg-primary-purple/10 border border-primary-purple/25 flex items-center justify-center mb-6 relative z-10">
                <Trophy className="w-5 h-5 text-primary-purple" />
              </div>
-              <div className="relative z-10">
-                <div className="text-5xl font-instrument mb-2 text-white tracking-tighter">88.4%</div>
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/40">questions answered correctly</span>
-              </div>
+             <div className="relative z-10">
+               <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">88.4%</div>
+               <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Questions Correct</span>
+             </div>
           </motion.div>
 
           {/* Monthly Traffic */}
@@ -210,23 +196,23 @@ export default function ImpactPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: 0.3 }}
-            className="md:col-span-2 liquid-glass-strong bg-[#0a0a0f] border border-white/10 rounded-[32px] p-8 flex items-center justify-between relative group hover:border-cyan-400/30 transition-all duration-500 overflow-hidden"
+            className="md:col-span-2 bg-[#070913]/90 border border-white/12 rounded-[28px] p-7 sm:p-8 flex items-center justify-between relative group hover:border-cyan-400/40 transition-all duration-300 overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.7)] backdrop-blur-2xl"
           >
              <div className="relative z-10">
-               <div className="flex items-center space-x-3 mb-6">
-                 <div className="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/20 flex items-center justify-center">
+               <div className="flex items-center space-x-3 mb-4">
+                 <div className="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center">
                    <Activity className="w-5 h-5 text-cyan-400" />
                  </div>
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400">total site visits</span>
+                 <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 font-bold">Total Network Visits</span>
                </div>
-                <div className="text-6xl font-instrument text-white tracking-tighter">22.4K</div>
+               <div className="text-5xl sm:text-6xl font-inter font-bold text-white tracking-tight">22.4K</div>
              </div>
-             <div className="absolute right-0 bottom-0 top-0 w-1/2 opacity-20 flex items-end justify-between px-6 pb-6">
+             <div className="absolute right-4 bottom-0 top-0 w-1/2 opacity-25 flex items-end justify-between px-4 pb-6 pointer-events-none">
                {[40, 70, 45, 90, 60, 100, 80, 120].map((h, i) => (
                  <motion.div 
                    key={i}
-                   animate={{ height: [h * 0.5, h, h * 0.5] }}
-                   transition={{ repeat: Infinity, duration: 1.5 + (i * 0.2), ease: "easeInOut" }}
+                   animate={{ height: [h * 0.4, h * 0.9, h * 0.4] }}
+                   transition={{ repeat: Infinity, duration: 1.6 + (i * 0.2), ease: "easeInOut" }}
                    className="w-2 bg-cyan-400 rounded-t-full" 
                  />
                ))}
