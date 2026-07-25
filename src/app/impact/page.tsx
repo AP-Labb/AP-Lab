@@ -10,7 +10,7 @@ import { useState, useRef, useEffect } from "react";
 import { USMap } from "@/components/USMap";
 import { LiveUserCounter } from "@/components/LiveUserCounter";
 import ProfileCard from "@/components/ProfileCard";
-import BorderGlow from "@/components/BorderGlow";
+import ChromaGrid, { ChromaItem } from "@/components/ChromaGrid";
 
 const SeamlessVideo = ({ src, className }: { src: string; className: string }) => {
   const [active, setActive] = useState(0);
@@ -58,6 +58,61 @@ export default function ImpactPage() {
     document.title = "Impact | AP Lab";
   }, []);
 
+  const chromaItems: ChromaItem[] = [
+    {
+      icon: (
+        <div className="w-12 h-12 rounded-xl bg-medical-teal/15 border border-medical-teal/30 flex items-center justify-center">
+          <Users className="w-6 h-6 text-medical-teal" />
+        </div>
+      ),
+      stat: "1,024",
+      title: "Active Scholars",
+      subtitle: "Verified Concurrent Scholars",
+      handle: "INFRASTRUCTURE // LIVE",
+      borderColor: "#20c997",
+      gradient: "linear-gradient(145deg, #091a18 0%, #05070f 100%)"
+    },
+    {
+      icon: (
+        <div className="w-12 h-12 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center">
+          <Clock className="w-6 h-6 text-amber-400" />
+        </div>
+      ),
+      stat: "56m",
+      title: "Study Duration",
+      subtitle: "Avg. Daily Study Session",
+      handle: "ENGAGEMENT // RETENTION",
+      borderColor: "#f59e0b",
+      gradient: "linear-gradient(145deg, #1c1507 0%, #05070f 100%)"
+    },
+    {
+      icon: (
+        <div className="w-12 h-12 rounded-xl bg-primary-purple/15 border border-primary-purple/30 flex items-center justify-center">
+          <Trophy className="w-6 h-6 text-primary-purple" />
+        </div>
+      ),
+      stat: "88.4%",
+      title: "Pass Rate Matrix",
+      subtitle: "Questions Correctly Answered",
+      handle: "MASTERY // SCORE ACCURACY",
+      borderColor: "#a484d7",
+      gradient: "linear-gradient(145deg, #180e26 0%, #05070f 100%)"
+    },
+    {
+      icon: (
+        <div className="w-12 h-12 rounded-xl bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center">
+          <Activity className="w-6 h-6 text-cyan-400" />
+        </div>
+      ),
+      stat: "22.4K",
+      title: "Network Scale",
+      subtitle: "Total Platform Visits",
+      handle: "TRAFFIC // GLOBAL REACH",
+      borderColor: "#22d3ee",
+      gradient: "linear-gradient(145deg, #091a24 0%, #05070f 100%)"
+    }
+  ];
+
   return (
     <main className="min-h-screen bg-transparent text-white selection:bg-medical-teal selection:text-black overflow-hidden relative">
       {/* Background Video */}
@@ -96,172 +151,16 @@ export default function ImpactPage() {
         </div>
       </section>
 
-      {/* Bento Grid Command Center with BorderGlow */}
+      {/* Interactive ChromaGrid Statistics Section */}
       <section className="px-6 md:px-[120px] pb-24 z-10 relative">
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-          {/* Active Scholars */}
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            className="md:col-span-2 md:row-span-2"
-          >
-            <BorderGlow
-              glowColor="166 72 50"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#20c997', '#38bdf8', '#4fd1c5']}
-              className="h-full"
-            >
-              <div className="p-8 sm:p-10 flex flex-col justify-between h-full relative overflow-hidden group">
-                <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none" />
-                <div className="absolute inset-x-0 bottom-0 top-[35%] opacity-20 pointer-events-none z-0">
-                  <svg viewBox="0 0 1000 400" className="w-full h-full" preserveAspectRatio="none">
-                    <defs>
-                      <linearGradient id="activeScholarsChart" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#20c997" stopOpacity="0.8" />
-                        <stop offset="100%" stopColor="#20c997" stopOpacity="0" />
-                      </linearGradient>
-                    </defs>
-                    <motion.path
-                      d="M0,400 L0,300 Q150,200 300,280 T600,150 T800,200 T1000,50 L1000,400 Z"
-                      fill="url(#activeScholarsChart)"
-                      initial={{ y: 200, opacity: 0 }}
-                      whileInView={{ y: 0, opacity: 1 }}
-                      transition={{ duration: 1.5, ease: "easeOut" }}
-                    />
-                    <motion.path
-                      d="M0,300 Q150,200 300,280 T600,150 T800,200 T1000,50"
-                      fill="none"
-                      stroke="#20c997"
-                      strokeWidth="3.5"
-                      initial={{ pathLength: 0 }}
-                      whileInView={{ pathLength: 1 }}
-                      transition={{ duration: 2, ease: "easeInOut" }}
-                    />
-                  </svg>
-                </div>
-
-                <div className="flex items-center justify-between relative z-10 mb-16">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-11 h-11 rounded-xl bg-medical-teal/10 border border-medical-teal/25 flex items-center justify-center shadow-inner">
-                      <Users className="w-5 h-5 text-medical-teal" />
-                    </div>
-                    <span className="font-mono text-xs font-bold text-white/70 uppercase tracking-wider">Infrastructure</span>
-                  </div>
-                </div>
-
-                <div className="relative z-10">
-                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-3 tracking-tight text-white">1,024</div>
-                  <div className="flex items-center space-x-3">
-                    <div className="h-[2px] w-8 bg-medical-teal/60 rounded-full" />
-                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">Verified Concurrent Scholars</span>
-                  </div>
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
-
-          {/* Average Study Session */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-          >
-            <BorderGlow
-              glowColor="43 96 56"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#f59e0b', '#fbbf24', '#fef08a']}
-              className="h-full"
-            >
-              <div className="p-7 sm:p-8 flex flex-col justify-between h-full relative group">
-                <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center mb-6">
-                  <Clock className="w-5 h-5 text-amber-400" />
-                </div>
-                <div>
-                  <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">56m</div>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Avg. Study Session</span>
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
-
-          {/* Pass Rate Matrix */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <BorderGlow
-              glowColor="268 60 68"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#a484d7', '#c084fc', '#e879f9']}
-              className="h-full"
-            >
-              <div className="p-7 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden group">
-                <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary-purple/15 blur-3xl rounded-full z-0 pointer-events-none" />
-                <div className="w-10 h-10 rounded-xl bg-primary-purple/10 border border-primary-purple/25 flex items-center justify-center mb-6 relative z-10">
-                  <Trophy className="w-5 h-5 text-primary-purple" />
-                </div>
-                <div className="relative z-10">
-                  <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">88.4%</div>
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Questions Correct</span>
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
-
-          {/* Monthly Traffic */}
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="md:col-span-2"
-          >
-            <BorderGlow
-              glowColor="189 94 48"
-              backgroundColor="#070913"
-              borderRadius={28}
-              glowRadius={40}
-              glowIntensity={1.2}
-              colors={['#22d3ee', '#38bdf8', '#818cf8']}
-              className="h-full"
-            >
-              <div className="p-7 sm:p-8 flex items-center justify-between h-full relative overflow-hidden group">
-                <div className="relative z-10">
-                  <div className="flex items-center space-x-3 mb-4">
-                    <div className="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center">
-                      <Activity className="w-5 h-5 text-cyan-400" />
-                    </div>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 font-bold">Total Network Visits</span>
-                  </div>
-                  <div className="text-5xl sm:text-6xl font-inter font-bold text-white tracking-tight">22.4K</div>
-                </div>
-                <div className="absolute right-4 bottom-0 top-0 w-1/2 opacity-25 flex items-end justify-between px-4 pb-6 pointer-events-none">
-                  {[40, 70, 45, 90, 60, 100, 80, 120].map((h, i) => (
-                    <motion.div 
-                      key={i}
-                      animate={{ height: [h * 0.4, h * 0.9, h * 0.4] }}
-                      transition={{ repeat: Infinity, duration: 1.6 + (i * 0.2), ease: "easeInOut" }}
-                      className="w-2 bg-cyan-400 rounded-t-full" 
-                    />
-                  ))}
-                </div>
-              </div>
-            </BorderGlow>
-          </motion.div>
-        </div>
+        <ChromaGrid 
+          items={chromaItems}
+          radius={320}
+          columns={4}
+          damping={0.45}
+          fadeOut={0.6}
+          ease="power3.out"
+        />
       </section>
 
       {/* Global Scale Map */}
