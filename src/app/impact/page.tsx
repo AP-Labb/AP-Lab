@@ -281,18 +281,15 @@ export default function ImpactPage() {
             name="Yash Patil"
             title="Founder"
             handle="yashpatil"
-            status="Building AP Lab"
-            contactText="Contact"
-            avatarUrl="/images/yash-patil.png"
-            showUserInfo={true}
+            status="Online"
+            contactText="Contact Me"
+            avatarUrl="/images/yash-patil-cutout.png"
+            showUserInfo={false}
             enableTilt={true}
             enableMobileTilt={false}
             behindGlowEnabled={true}
-            behindGlowColor="rgba(164, 132, 215, 0.67)"
-            innerGradient="linear-gradient(145deg, #2e10658c 0%, #71C4FF44 100%)"
-            onContactClick={() => {
-              window.location.href = "mailto:yash@theaplab.org";
-            }}
+            behindGlowColor="rgba(125, 190, 255, 0.67)"
+            innerGradient="linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)"
           />
         </div>
       </section>
