@@ -315,7 +315,7 @@ export function HeroSection() {
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
       {/* Translucent Digital Veil Reveal WebGL Background */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
-        <DigitalVeilReveal imageSrc="/images/Hero2.png" />
+        <DigitalVeilReveal imageSrc="/images/HEROSECTION.png" />
       </div>
 
       {/* Seamless Fade Transition at bottom */}

@@ -16,6 +16,7 @@ const trailFragmentShader = `
 uniform sampler2D uPrevTrail;
 uniform vec2 uMouse;
 uniform vec2 uPrevMouse;
+uniform vec2 uVel;
 uniform float uRadius;
 uniform float uDecay;
 uniform float uAspect;
@@ -75,19 +76,21 @@ void main() {
   m.x *= uAspect;
   pm.x *= uAspect;
 
-  // Warp brush coordinates with multi-frequency noise (100% NO CIRCLES!)
+  // Warp brush coordinates with multi-frequency noise & velocity displacement (100% NO CIRCLES!)
+  vec2 velOffset = uVel * 0.08;
   vec2 noiseOffset = vec2(
     cnoise(st * 7.5 + vec2(uTime * 0.6, uTime * 0.4)),
     cnoise(st * 7.5 - vec2(uTime * 0.5, uTime * 0.7))
-  ) * 0.12;
+  ) * 0.12 + velOffset;
 
   float d = distToSegment(st + noiseOffset, pm, m);
   
-  // Large, generous organic focus lens brush
-  float noiseShape = cnoise(st * 11.0 + vec2(uTime * 0.3));
-  float dynamicRadius = uRadius * (0.85 + 0.45 * noiseShape);
+  // Breathing organic focus lens brush (expands/contracts subtly)
+  float noiseShape = cnoise(st * 10.0 + vec2(uTime * 0.3));
+  float breathe = 0.85 + 0.25 * sin(uTime * 1.6) + 0.30 * noiseShape;
+  float dynamicRadius = uRadius * breathe;
   float rawBrush = clamp(1.0 - (d / max(dynamicRadius, 0.01)), 0.0, 1.0);
-  float brush = pow(rawBrush, 1.2) * (0.75 + 0.5 * noiseShape);
+  float brush = pow(rawBrush, 1.25) * (0.75 + 0.5 * noiseShape);
 
   float finalVal = max(prevVal, brush);
   gl_FragColor = vec4(vec3(finalVal), 1.0);
@@ -108,12 +111,13 @@ precision highp float;
 uniform vec2 iResolution;
 uniform float iTime;
 uniform vec2 iMouse;
+uniform vec2 iVel;
 uniform sampler2D uTrailMap;
 uniform sampler2D uImageTexture;
 uniform float uReducedMotion;
 varying vec2 vUv;
 
-// Simplex 2D noise generator for organic reveal mask
+// Simplex 2D noise generator
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
@@ -147,7 +151,7 @@ float cnoise(vec2 P) {
   return 2.3 * mix(n_x.x, n_x.y, fade_xy.y);
 }
 
-// 2.5% Animated Fine Digital Film Grain
+// 1.5% Animated Fine Digital Film Grain
 float rand(vec2 co) {
   return fract(sin(dot(co.xy, vec2(12.9898, 78.233))) * 43758.5453);
 }
@@ -210,48 +214,61 @@ void main() {
   float blurAmount = mix(7.5, 0.0, focusFactor);
   vec4 blurredImg = sampleBlurredImage(uImageTexture, uv, blurAmount);
 
-  // 3. Translucent Digital Veil Layer (Apple / Linear / Vercel style)
-  // Baseline image is visible at ~28% opacity, clearer in the hero center
+  // 3. Translucent Digital Veil Layer (Deep Navy / Near-Black Tint: #05070A to #0B0F16)
+  // Baseline image is visible at ~28% opacity, clearer in hero center
   float centerClarity = smoothstep(0.9, 0.15, length(st));
   vec3 baselineImage = blurredImg.rgb * mix(0.24, 0.38, centerClarity);
 
-  // Atmospheric Gradients (Deep Navy & Dark Indigo)
+  // Atmospheric Gradient (Cool Blue #0B192E to Soft Purple #1A1033)
   float dist = length(st);
-  vec3 deepNavy = vec3(0.015, 0.025, 0.055);
-  vec3 darkIndigo = vec3(0.05, 0.04, 0.12);
-  vec3 veilGradient = mix(darkIndigo, deepNavy, smoothstep(0.1, 0.85, dist));
+  vec3 coolBlue = vec3(0.043, 0.098, 0.180);  // #0B192E
+  vec3 softPurple = vec3(0.102, 0.063, 0.200); // #1A1033
+  vec3 veilGradient = mix(coolBlue, softPurple, smoothstep(0.1, 0.85, dist));
 
-  // Soft Vignette: Atmosphere gradually increases toward corners
-  float vignette = smoothstep(0.95, 0.3, dist);
-  vec3 dimmedBackground = (baselineImage + veilGradient * 0.55) * vignette;
+  // Soft Vignette: Focus attention toward center
+  float vignette = smoothstep(0.95, 0.25, dist);
+  vec3 dimmedBackground = (baselineImage + veilGradient * 0.50) * vignette;
 
-  // 3% Animated Fine Digital Film Grain
-  float grain = (rand(gl_FragCoord.xy + t * 4.0) - 0.5) * 0.03;
+  // 1.5% Animated Fine Digital Film Grain (displaced by cursor velocity)
+  vec2 grainVelOffset = iVel * 0.02;
+  float grain = (rand(gl_FragCoord.xy + grainVelOffset + t * 4.0) - 0.5) * 0.015;
   dimmedBackground += vec3(grain);
 
-  // Floating Micro-Dust Sparks (Layer 3)
-  float sparkNoise = rand(gl_FragCoord.xy * 0.08 + vec2(t * 0.5, t * 0.3));
+  // Floating Micro-Dust Sparks with Cursor Repulsion Physics
+  vec2 sparkPos = gl_FragCoord.xy * 0.08 + vec2(t * 0.5, t * 0.3);
+  vec2 sparkMouseDist = (iMouse - vUv);
+  float sparkRepulsion = smoothstep(0.25, 0.0, length(sparkMouseDist));
+  sparkPos += sparkMouseDist * sparkRepulsion * 0.05;
+
+  float sparkNoise = rand(sparkPos);
   if (sparkNoise > 0.994) {
-    dimmedBackground += vec3(0.18, 0.22, 0.42);
+    dimmedBackground += vec3(0.15, 0.18, 0.38);
   }
 
-  // 4. Focused In-Focus Spotlight (Pin-Sharp 4K, 12% Brighter, Vivid Contrast)
-  // Subtle Chromatic Refraction at the lens focus boundary
+  // 4. Focused Spotlight (Pin-Sharp 4K, Saturation Boost, Highlight Bloom)
+  // Subtle Chromatic Aberration at lens boundary (0.3px refraction)
   float edgeDistortion = smoothstep(0.1, 0.4, revealMask) * (1.0 - smoothstep(0.4, 0.8, revealMask));
-  vec2 caOffset = vec2(edgeDistortion * 0.0028, 0.0);
+  vec2 caOffset = vec2(edgeDistortion * 0.0004, 0.0);
   float rCh = texture2D(uImageTexture, uv + caOffset).r;
   float gCh = texture2D(uImageTexture, uv).g;
   float bCh = texture2D(uImageTexture, uv - caOffset).b;
   vec3 focusedImg = vec3(rCh, gCh, bCh);
 
-  // Brighten revealed interface by 12% and enhance contrast
-  focusedImg = pow(focusedImg, vec3(0.90)) * 1.12;
+  // Saturation boost in revealed zone
+  float gray = dot(focusedImg, vec3(0.299, 0.587, 0.114));
+  focusedImg = mix(vec3(gray), focusedImg, 1.18);
+  focusedImg = pow(focusedImg, vec3(0.92)) * 1.10;
 
-  // Faint cyan-purple bloom at focus rim
+  // Soft Bloom Lift in Highlights
+  float lum = dot(focusedImg, vec3(0.299, 0.587, 0.114));
+  vec3 highlightBloom = vec3(0.12, 0.16, 0.38) * smoothstep(0.65, 1.0, lum) * 0.18;
+  focusedImg += highlightBloom;
+
+  // Faint Blue/Purple Bloom at reveal boundary edge
   float rimBloom = edgeDistortion * 0.22;
-  vec3 bloomColor = vec3(0.35, 0.45, 0.95) * rimBloom;
+  vec3 bloomColor = vec3(0.25, 0.32, 0.85) * rimBloom;
 
-  // 5. Final Composite (Lens Focus Reveal: Soft 7.5px blur -> Pin-sharp 100% vivid product interface)
+  // 5. Final Composite (Adaptive Glass Lens Focus Reveal)
   vec3 finalColor = mix(dimmedBackground + bloomColor, focusedImg, focusFactor);
 
   gl_FragColor = vec4(finalColor, 1.0);
@@ -305,8 +322,9 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       uPrevTrail: { value: null as THREE.Texture | null },
       uMouse: { value: new THREE.Vector2(-10, -10) },
       uPrevMouse: { value: new THREE.Vector2(-10, -10) },
+      uVel: { value: new THREE.Vector2(0, 0) },
       uRadius: { value: 0.35 }, // Large generous focus spotlight
-      uDecay: { value: 0.965 }, // Smooth 1.5 - 2.5s trail recovery
+      uDecay: { value: 0.972 }, // Smooth 1.5 - 2.5s trail recovery
       uAspect: { value: 1.0 },
       uTime: { value: 0 }
     };
@@ -324,6 +342,7 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       iResolution: { value: new THREE.Vector2() },
       iTime: { value: 0 },
       iMouse: { value: new THREE.Vector2(0.5, 0.5) },
+      iVel: { value: new THREE.Vector2(0, 0) },
       uTrailMap: { value: null as THREE.Texture | null },
       uImageTexture: { value: null as THREE.Texture | null },
       uReducedMotion: { value: checkReducedMotion() ? 1.0 : 0.0 }
@@ -345,10 +364,11 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
     const veilMesh = new THREE.Mesh(quadGeo, veilMaterial);
     scene.add(veilMesh);
 
-    // Mouse Tracking Logic
+    // Mouse Tracking & Velocity Logic
     const mousePos = new THREE.Vector2(-10, -10);
     const prevMousePos = new THREE.Vector2(-10, -10);
     const targetMousePos = new THREE.Vector2(-10, -10);
+    const mouseVel = new THREE.Vector2(0, 0);
 
     const handleResize = () => {
       if (!container) return;
@@ -381,16 +401,19 @@ export default function DigitalVeilReveal({ imageSrc, className = '' }: DigitalV
       animationId = requestAnimationFrame(animate);
       const elapsedTime = clock.getElapsedTime();
 
-      // Smooth damp mouse position
+      // Smooth damp mouse position & compute velocity
       prevMousePos.copy(mousePos);
       mousePos.lerp(targetMousePos, 0.25);
+      mouseVel.subVectors(mousePos, prevMousePos);
 
       trailUniforms.uMouse.value.copy(mousePos);
       trailUniforms.uPrevMouse.value.copy(prevMousePos);
+      trailUniforms.uVel.value.copy(mouseVel);
       trailUniforms.uPrevTrail.value = rtA.texture;
       trailUniforms.uTime.value = elapsedTime;
 
       veilUniforms.iMouse.value.copy(mousePos);
+      veilUniforms.iVel.value.copy(mouseVel);
 
       // 1. Render Ping-Pong Trail Pass
       renderer.setRenderTarget(rtB);
