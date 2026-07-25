@@ -314,27 +314,27 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* 4K Background Image (Full 4K Brightness & Saturation, Unwarped) */}
+      {/* 4K Hero Background Image (Hero2.png) */}
       <div className="absolute inset-0 z-0 opacity-100 pointer-events-none overflow-hidden select-none">
         <img 
-          src="/images/RealHero.png" 
+          src="/images/Hero2.png" 
           alt="AP Lab Hero Background" 
           className="w-full h-full object-cover object-center scale-[1.01]"
         />
       </div>
 
-      {/* Semi-Transparent Dither Overlay (Parts open wherever mouse cursor moves) */}
-      <div className="absolute inset-0 z-[1] opacity-80 pointer-events-none overflow-hidden mix-blend-screen">
+      {/* Monotone Smoky Dither Overlay (Parts at mouse cursor to reveal Hero2.png image below) */}
+      <div className="absolute inset-0 z-[1] opacity-90 pointer-events-none overflow-hidden mix-blend-screen">
         <Dither
-          waveColor={[0.85, 0.55, 1.0]}
+          waveColor={[0.42, 0.45, 0.52]}
           disableAnimation={false}
           enableMouseInteraction={true}
-          mouseRadius={0.55}
+          mouseRadius={0.5}
           colorNum={5}
-          pixelSize={3}
-          waveAmplitude={0.4}
-          waveFrequency={3.5}
-          waveSpeed={0.06}
+          pixelSize={2}
+          waveAmplitude={0.35}
+          waveFrequency={2.2}
+          waveSpeed={0.03}
         />
       </div>
 

@@ -110,7 +110,7 @@ void main() {
   uv -= 0.5;
   uv.x *= resolution.x / resolution.y;
   float f = pattern(uv);
-  vec3 col = mix(vec3(0.0), waveColor, f);
+  vec3 col = mix(vec3(0.04, 0.05, 0.08), waveColor, f);
   col = applyDither(gl_FragCoord.xy, col);
 
   if (enableMouseInteraction == 1) {
