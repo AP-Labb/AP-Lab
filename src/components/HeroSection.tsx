@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
-import GridDistortion from "./GridDistortion";
-import Dither from "./Dither";
+import VolumetricSmokeReveal from "./VolumetricSmokeReveal";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
@@ -314,28 +313,9 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* 4K Hero Background Image (Hero2.png) */}
-      <div className="absolute inset-0 z-0 opacity-100 pointer-events-none overflow-hidden select-none">
-        <img 
-          src="/images/Hero2.png" 
-          alt="AP Lab Hero Background" 
-          className="w-full h-full object-cover object-center scale-[1.01]"
-        />
-      </div>
-
-      {/* Monotone Smoky Dither Overlay (Parts at mouse cursor to reveal Hero2.png image below) */}
-      <div className="absolute inset-0 z-[1] opacity-90 pointer-events-none overflow-hidden mix-blend-screen">
-        <Dither
-          waveColor={[0.42, 0.45, 0.52]}
-          disableAnimation={false}
-          enableMouseInteraction={true}
-          mouseRadius={0.5}
-          colorNum={5}
-          pixelSize={2}
-          waveAmplitude={0.35}
-          waveFrequency={2.2}
-          waveSpeed={0.03}
-        />
+      {/* Cinematic Volumetric Smoke Reveal WebGL Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <VolumetricSmokeReveal imageSrc="/images/Hero2.png" />
       </div>
 
       {/* Seamless Fade Transition at bottom */}
