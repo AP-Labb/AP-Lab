@@ -314,29 +314,40 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Underlying Background Image (Revealed through organic Dither cursor parting) */}
+      {/* Layer 1: Underlying Base Hero Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-90 brightness-110 contrast-105"
+          className="w-full h-full object-cover opacity-95 brightness-110 contrast-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-deep-navy" />
       </div>
 
-      {/* Interactive Dithered Smoke Wave WebGL Layer */}
-      <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden select-none">
+      {/* Layer 2: Sub-Dither Animated Rolling Cloud & Fog Mist */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none mix-blend-screen opacity-40">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_30%_40%,rgba(56,189,248,0.18)_0%,transparent_60%)] animate-pulse duration-[6000ms]" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_60%,rgba(164,132,215,0.15)_0%,transparent_65%)] animate-pulse duration-[8000ms]" />
+      </div>
+
+      {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <Dither
-          waveColor={[0.15, 0.22, 0.45]}
+          waveColor={[0.16, 0.24, 0.48]}
           disableAnimation={false}
           enableMouseInteraction={true}
-          mouseRadius={0.45}
+          mouseRadius={0.32}
           colorNum={5}
           pixelSize={3}
           waveAmplitude={0.35}
           waveFrequency={3.5}
           waveSpeed={0.04}
         />
+      </div>
+
+      {/* Layer 4: Over-Dither Atmospheric Vignette & Top Misty Fog */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-deep-navy" />
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent" />
       </div>
 
       {/* Seamless Fade Transition at bottom */}

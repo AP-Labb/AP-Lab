@@ -101,7 +101,7 @@ void main() {
   p.x *= resolution.x / resolution.y;
   
   float f = pattern(p);
-  float alpha = 0.95;
+  float alpha = 0.92;
   
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
@@ -110,21 +110,22 @@ void main() {
     vec2 dir = p - mouseNDC;
     float dist = length(dir);
     
-    // Dynamically varying organic noise perimeter around cursor
+    // Organic noise distortion around cursor perimeter
     float angle = atan(dir.y, dir.x);
-    float noiseEdge = cnoise(vec2(cos(angle) * 3.5 + time * 2.0, sin(angle) * 3.5 + time * 2.0)) * 0.14;
-    noiseEdge += cnoise(p * 7.0 - time * 1.2) * 0.08;
+    float noiseEdge = cnoise(vec2(cos(angle) * 3.5 + time * 2.2, sin(angle) * 3.5 + time * 2.2)) * 0.09;
+    noiseEdge += cnoise(p * 6.5 - time * 1.2) * 0.06;
     
+    // Slightly reduced reveal radius
     float dynamicRadius = mouseRadius + noiseEdge;
     
     // Smooth organic parting mask: 1.0 inside hole, 0.0 outside
-    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.2, dynamicRadius, dist);
+    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.25, dynamicRadius, dist);
     
     // Repel wave density around hole edge
-    f += holeMask * 0.35;
+    f += holeMask * 0.3;
     
-    // Fade out dither layer alpha inside cursor hole to reveal background image underneath
-    alpha = clamp(0.95 - holeMask * 1.1, 0.0, 0.95);
+    // Retain thin layer of misty dither opacity inside hole (never 100% bare glass)
+    alpha = clamp(0.92 - holeMask * 0.78, 0.15, 0.92);
   }
   
   vec3 col = mix(vec3(0.0), waveColor, f);
@@ -169,7 +170,8 @@ function DitheredWaves({
   mouseRadius
 }: DitheredWavesProps) {
   const mesh = useRef<THREE.Mesh>(null);
-  const mouseRef = useRef(new THREE.Vector2());
+  const mouseRef = useRef(new THREE.Vector2(-9999, -9999));
+  const targetMouseRef = useRef(new THREE.Vector2(-9999, -9999));
   const { viewport, size, gl } = useThree();
 
   const waveUniformsRef = useRef({
@@ -179,7 +181,7 @@ function DitheredWaves({
     waveFrequency: new THREE.Uniform(waveFrequency),
     waveAmplitude: new THREE.Uniform(waveAmplitude),
     waveColor: new THREE.Uniform(new THREE.Color(...waveColor)),
-    mousePos: new THREE.Uniform(new THREE.Vector2(0, 0)),
+    mousePos: new THREE.Uniform(new THREE.Vector2(-9999, -9999)),
     enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
     mouseRadius: new THREE.Uniform(mouseRadius),
     colorNum: new THREE.Uniform(colorNum),
@@ -195,6 +197,22 @@ function DitheredWaves({
       res.set(w, h);
     }
   }, [size, gl]);
+
+  // Global window pointer listener so reveal works across ENTIRE page/hero without dead zones
+  useEffect(() => {
+    if (!enableMouseInteraction) return;
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const canvas = gl.domElement;
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      const dpr = gl.getPixelRatio();
+      targetMouseRef.current.set((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
+    };
+
+    window.addEventListener('pointermove', handlePointerMove, { passive: true });
+    return () => window.removeEventListener('pointermove', handlePointerMove);
+  }, [enableMouseInteraction, gl]);
 
   const prevColor = useRef([...waveColor]);
   useFrame(({ clock }) => {
@@ -218,40 +236,23 @@ function DitheredWaves({
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
 
+    // Smooth inertia lerp (0.12 factor) for a subtle, responsive cursor trailing delay
     if (enableMouseInteraction) {
+      mouseRef.current.lerp(targetMouseRef.current, 0.12);
       u.mousePos.value.copy(mouseRef.current);
     }
   });
 
-  const handlePointerMove = (e: any) => {
-    if (!enableMouseInteraction) return;
-    const rect = gl.domElement.getBoundingClientRect();
-    const dpr = gl.getPixelRatio();
-    mouseRef.current.set((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
-  };
-
   return (
-    <>
-      <mesh ref={mesh} scale={[viewport.width, viewport.height, 1]}>
-        <planeGeometry args={[1, 1]} />
-        <shaderMaterial
-          vertexShader={ditherVertexShader}
-          fragmentShader={ditherSinglePassShader}
-          uniforms={waveUniformsRef.current}
-          transparent={true}
-        />
-      </mesh>
-
-      <mesh
-        onPointerMove={handlePointerMove}
-        position={[0, 0, 0.01]}
-        scale={[viewport.width, viewport.height, 1]}
-        visible={false}
-      >
-        <planeGeometry args={[1, 1]} />
-        <meshBasicMaterial transparent opacity={0} />
-      </mesh>
-    </>
+    <mesh ref={mesh} scale={[viewport.width, viewport.height, 1]}>
+      <planeGeometry args={[1, 1]} />
+      <shaderMaterial
+        vertexShader={ditherVertexShader}
+        fragmentShader={ditherSinglePassShader}
+        uniforms={waveUniformsRef.current}
+        transparent={true}
+      />
+    </mesh>
   );
 }
 
@@ -276,7 +277,7 @@ export default function Dither({
   pixelSize = 2,
   disableAnimation = false,
   enableMouseInteraction = true,
-  mouseRadius = 1
+  mouseRadius = 0.32
 }: DitherProps) {
   const [mounted, setMounted] = useState(false);
 
