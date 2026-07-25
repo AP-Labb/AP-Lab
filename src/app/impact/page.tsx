@@ -10,7 +10,7 @@ import { useState, useRef, useEffect } from "react";
 import { USMap } from "@/components/USMap";
 import { LiveUserCounter } from "@/components/LiveUserCounter";
 import ProfileCard from "@/components/ProfileCard";
-import CardSwap, { Card } from "@/components/CardSwap";
+import BorderGlow from "@/components/BorderGlow";
 
 const SeamlessVideo = ({ src, className }: { src: string; className: string }) => {
   const [active, setActive] = useState(0);
@@ -96,103 +96,171 @@ export default function ImpactPage() {
         </div>
       </section>
 
-      {/* Interactive CardSwap Metrics Command Center */}
-      <section className="px-6 md:px-[120px] pb-32 z-10 relative flex flex-col items-center justify-center min-h-[480px]">
-        <div className="w-full max-w-4xl h-[400px] relative flex items-center justify-center">
-          <CardSwap
-            width={480}
-            height={320}
-            cardDistance={50}
-            verticalDistance={45}
-            delay={4000}
-            pauseOnHover={true}
-            skewAmount={4}
+      {/* Bento Grid Command Center with BorderGlow */}
+      <section className="px-6 md:px-[120px] pb-24 z-10 relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+          {/* Active Scholars */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.96 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            className="md:col-span-2 md:row-span-2"
           >
-            {/* Card 1: Active Scholars */}
-            <Card className="!bg-[#090b16] !border-medical-teal/30 p-8 flex flex-col justify-between shadow-[0_25px_60px_rgba(0,0,0,0.85)] rounded-2xl relative overflow-hidden backdrop-blur-2xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-medical-teal/10 blur-3xl rounded-full pointer-events-none" />
-              <div className="flex items-center justify-between relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-medical-teal/15 border border-medical-teal/30 flex items-center justify-center">
-                  <Users className="w-6 h-6 text-medical-teal" />
+            <BorderGlow
+              glowColor="166 72 50"
+              backgroundColor="#070913"
+              borderRadius={28}
+              glowRadius={40}
+              glowIntensity={1.2}
+              colors={['#20c997', '#38bdf8', '#4fd1c5']}
+              className="h-full"
+            >
+              <div className="p-8 sm:p-10 flex flex-col justify-between h-full relative overflow-hidden group">
+                <div className="absolute inset-0 bg-gradient-to-br from-medical-teal/10 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-0 pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 top-[35%] opacity-20 pointer-events-none z-0">
+                  <svg viewBox="0 0 1000 400" className="w-full h-full" preserveAspectRatio="none">
+                    <defs>
+                      <linearGradient id="activeScholarsChart" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#20c997" stopOpacity="0.8" />
+                        <stop offset="100%" stopColor="#20c997" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+                    <motion.path
+                      d="M0,400 L0,300 Q150,200 300,280 T600,150 T800,200 T1000,50 L1000,400 Z"
+                      fill="url(#activeScholarsChart)"
+                      initial={{ y: 200, opacity: 0 }}
+                      whileInView={{ y: 0, opacity: 1 }}
+                      transition={{ duration: 1.5, ease: "easeOut" }}
+                    />
+                    <motion.path
+                      d="M0,300 Q150,200 300,280 T600,150 T800,200 T1000,50"
+                      fill="none"
+                      stroke="#20c997"
+                      strokeWidth="3.5"
+                      initial={{ pathLength: 0 }}
+                      whileInView={{ pathLength: 1 }}
+                      transition={{ duration: 2, ease: "easeInOut" }}
+                    />
+                  </svg>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-[10px] font-mono font-bold uppercase tracking-widest flex items-center space-x-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Live Signal</span>
-                </span>
-              </div>
-              <div className="relative z-10 my-auto pt-4">
-                <div className="text-6xl sm:text-7xl font-inter font-extrabold text-white tracking-tight mb-2">1,024</div>
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-white/50 font-medium">Verified Concurrent Scholars</div>
-              </div>
-              <div className="relative z-10 border-t border-white/10 pt-4 flex items-center justify-between">
-                <span className="text-xs text-white/40 font-mono">Infrastructure Matrix</span>
-                <span className="text-xs text-medical-teal font-mono font-bold uppercase tracking-wider">AP Lab Global</span>
-              </div>
-            </Card>
 
-            {/* Card 2: Average Study Session */}
-            <Card className="!bg-[#0c0916] !border-amber-400/30 p-8 flex flex-col justify-between shadow-[0_25px_60px_rgba(0,0,0,0.85)] rounded-2xl relative overflow-hidden backdrop-blur-2xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-amber-400/10 blur-3xl rounded-full pointer-events-none" />
-              <div className="flex items-center justify-between relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-amber-400/15 border border-amber-400/30 flex items-center justify-center">
-                  <Clock className="w-6 h-6 text-amber-400" />
+                <div className="flex items-center justify-between relative z-10 mb-16">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-11 h-11 rounded-xl bg-medical-teal/10 border border-medical-teal/25 flex items-center justify-center shadow-inner">
+                      <Users className="w-5 h-5 text-medical-teal" />
+                    </div>
+                    <span className="font-mono text-xs font-bold text-white/70 uppercase tracking-wider">Infrastructure</span>
+                  </div>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-amber-400/10 border border-amber-400/30 text-amber-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-                  Engagement
-                </span>
-              </div>
-              <div className="relative z-10 my-auto pt-4">
-                <div className="text-6xl sm:text-7xl font-inter font-extrabold text-white tracking-tight mb-2">56m</div>
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-white/50 font-medium">Avg. Daily Study Session</div>
-              </div>
-              <div className="relative z-10 border-t border-white/10 pt-4 flex items-center justify-between">
-                <span className="text-xs text-white/40 font-mono">Student Focus</span>
-                <span className="text-xs text-amber-400 font-mono font-bold uppercase tracking-wider">High Retention</span>
-              </div>
-            </Card>
 
-            {/* Card 3: Pass Rate Matrix */}
-            <Card className="!bg-[#11091a] !border-primary-purple/30 p-8 flex flex-col justify-between shadow-[0_25px_60px_rgba(0,0,0,0.85)] rounded-2xl relative overflow-hidden backdrop-blur-2xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-primary-purple/10 blur-3xl rounded-full pointer-events-none" />
-              <div className="flex items-center justify-between relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-primary-purple/15 border border-primary-purple/30 flex items-center justify-center">
-                  <Trophy className="w-6 h-6 text-primary-purple" />
+                <div className="relative z-10">
+                  <div className="text-6xl sm:text-7xl md:text-8xl font-inter font-bold mb-3 tracking-tight text-white">1,024</div>
+                  <div className="flex items-center space-x-3">
+                    <div className="h-[2px] w-8 bg-medical-teal/60 rounded-full" />
+                    <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 font-medium">Verified Concurrent Scholars</span>
+                  </div>
                 </div>
-                <span className="px-3 py-1 rounded-full bg-primary-purple/10 border border-primary-purple/30 text-primary-purple text-[10px] font-mono font-bold uppercase tracking-widest">
-                  Mastery Rate
-                </span>
               </div>
-              <div className="relative z-10 my-auto pt-4">
-                <div className="text-6xl sm:text-7xl font-inter font-extrabold text-white tracking-tight mb-2">88.4%</div>
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-white/50 font-medium">Questions Answered Correctly</div>
-              </div>
-              <div className="relative z-10 border-t border-white/10 pt-4 flex items-center justify-between">
-                <span className="text-xs text-white/40 font-mono">Academic Excellence</span>
-                <span className="text-xs text-primary-purple font-mono font-bold uppercase tracking-wider">Verifiable Score</span>
-              </div>
-            </Card>
+            </BorderGlow>
+          </motion.div>
 
-            {/* Card 4: Total Network Visits */}
-            <Card className="!bg-[#060c18] !border-cyan-400/30 p-8 flex flex-col justify-between shadow-[0_25px_60px_rgba(0,0,0,0.85)] rounded-2xl relative overflow-hidden backdrop-blur-2xl">
-              <div className="absolute top-0 right-0 w-48 h-48 bg-cyan-400/10 blur-3xl rounded-full pointer-events-none" />
-              <div className="flex items-center justify-between relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-cyan-400/15 border border-cyan-400/30 flex items-center justify-center">
-                  <Activity className="w-6 h-6 text-cyan-400" />
+          {/* Average Study Session */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+          >
+            <BorderGlow
+              glowColor="43 96 56"
+              backgroundColor="#070913"
+              borderRadius={28}
+              glowRadius={40}
+              glowIntensity={1.2}
+              colors={['#f59e0b', '#fbbf24', '#fef08a']}
+              className="h-full"
+            >
+              <div className="p-7 sm:p-8 flex flex-col justify-between h-full relative group">
+                <div className="w-10 h-10 rounded-xl bg-amber-400/10 border border-amber-400/25 flex items-center justify-center mb-6">
+                  <Clock className="w-5 h-5 text-amber-400" />
                 </div>
-                <span className="px-3 py-1 rounded-full bg-cyan-400/10 border border-cyan-400/30 text-cyan-300 text-[10px] font-mono font-bold uppercase tracking-widest">
-                  Network Growth
-                </span>
+                <div>
+                  <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">56m</div>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Avg. Study Session</span>
+                </div>
               </div>
-              <div className="relative z-10 my-auto pt-4">
-                <div className="text-6xl sm:text-7xl font-inter font-extrabold text-white tracking-tight mb-2">22.4K</div>
-                <div className="font-mono text-xs uppercase tracking-[0.2em] text-white/50 font-medium">Total Platform Visits</div>
+            </BorderGlow>
+          </motion.div>
+
+          {/* Pass Rate Matrix */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.2 }}
+          >
+            <BorderGlow
+              glowColor="268 60 68"
+              backgroundColor="#070913"
+              borderRadius={28}
+              glowRadius={40}
+              glowIntensity={1.2}
+              colors={['#a484d7', '#c084fc', '#e879f9']}
+              className="h-full"
+            >
+              <div className="p-7 sm:p-8 flex flex-col justify-between h-full relative overflow-hidden group">
+                <div className="absolute -right-8 -top-8 w-32 h-32 bg-primary-purple/15 blur-3xl rounded-full z-0 pointer-events-none" />
+                <div className="w-10 h-10 rounded-xl bg-primary-purple/10 border border-primary-purple/25 flex items-center justify-center mb-6 relative z-10">
+                  <Trophy className="w-5 h-5 text-primary-purple" />
+                </div>
+                <div className="relative z-10">
+                  <div className="text-4xl sm:text-5xl font-inter font-bold mb-2 text-white tracking-tight">88.4%</div>
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-white/50 font-medium">Questions Correct</span>
+                </div>
               </div>
-              <div className="relative z-10 border-t border-white/10 pt-4 flex items-center justify-between">
-                <span className="text-xs text-white/40 font-mono">Monthly Scale</span>
-                <span className="text-xs text-cyan-400 font-mono font-bold uppercase tracking-wider">Active Traffic</span>
+            </BorderGlow>
+          </motion.div>
+
+          {/* Monthly Traffic */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="md:col-span-2"
+          >
+            <BorderGlow
+              glowColor="189 94 48"
+              backgroundColor="#070913"
+              borderRadius={28}
+              glowRadius={40}
+              glowIntensity={1.2}
+              colors={['#22d3ee', '#38bdf8', '#818cf8']}
+              className="h-full"
+            >
+              <div className="p-7 sm:p-8 flex items-center justify-between h-full relative overflow-hidden group">
+                <div className="relative z-10">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <div className="w-10 h-10 rounded-xl bg-cyan-400/10 border border-cyan-400/25 flex items-center justify-center">
+                      <Activity className="w-5 h-5 text-cyan-400" />
+                    </div>
+                    <span className="font-mono text-[10px] uppercase tracking-widest text-cyan-400 font-bold">Total Network Visits</span>
+                  </div>
+                  <div className="text-5xl sm:text-6xl font-inter font-bold text-white tracking-tight">22.4K</div>
+                </div>
+                <div className="absolute right-4 bottom-0 top-0 w-1/2 opacity-25 flex items-end justify-between px-4 pb-6 pointer-events-none">
+                  {[40, 70, 45, 90, 60, 100, 80, 120].map((h, i) => (
+                    <motion.div 
+                      key={i}
+                      animate={{ height: [h * 0.4, h * 0.9, h * 0.4] }}
+                      transition={{ repeat: Infinity, duration: 1.6 + (i * 0.2), ease: "easeInOut" }}
+                      className="w-2 bg-cyan-400 rounded-t-full" 
+                    />
+                  ))}
+                </div>
               </div>
-            </Card>
-          </CardSwap>
+            </BorderGlow>
+          </motion.div>
         </div>
       </section>
 
