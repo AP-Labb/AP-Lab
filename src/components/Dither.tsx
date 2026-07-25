@@ -109,23 +109,25 @@ void main() {
     mouseNDC.x *= resolution.x / resolution.y;
     
     vec2 dir = p - mouseNDC;
-    float dist = length(dir);
+    // Anisotropic stretch: breaks geometric circle into an irregular fluid tear contour
+    vec2 normDir = dir * vec2(1.35, 0.82);
+    float dist = length(normDir);
     
-    // Organic noise distortion around cursor perimeter
+    // High-frequency organic noise distortion around perimeter (eliminates circular edges)
     float angle = atan(dir.y, dir.x);
-    float noiseEdge = cnoise(vec2(cos(angle) * 3.5 + time * 2.2, sin(angle) * 3.5 + time * 2.2)) * 0.09;
-    noiseEdge += cnoise(p * 6.5 - time * 1.2) * 0.06;
+    float noiseEdge = cnoise(vec2(cos(angle * 3.0) * 2.8 + time * 1.8, sin(angle * 3.0) * 2.8 + time * 1.8)) * 0.18;
+    noiseEdge += cnoise(p * 5.5 - time * 1.4) * 0.12;
     
     float dynamicRadius = mouseRadius + noiseEdge;
-    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.25, dynamicRadius, dist);
+    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.12, dynamicRadius, dist);
     
-    // PHYSICAL PUSH VECTOR: Pushes/warps dither smoke texture outward away from cursor center!
-    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.22);
+    // STRONG PHYSICAL PUSH REPULSION: Warps & pushes dither noise texture OUTWARD away from cursor center!
+    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.48);
     samplePos += pushVector;
     
-    f = pattern(samplePos) + holeMask * 0.35;
+    f = pattern(samplePos) + holeMask * 0.45;
     // Crisp dither texture opacity
-    alpha = clamp(0.96 - holeMask * 0.76, 0.22, 0.96);
+    alpha = clamp(0.96 - holeMask * 0.82, 0.15, 0.96);
   } else {
     f = pattern(samplePos);
   }

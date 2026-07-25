@@ -305,6 +305,18 @@ export function HeroSection() {
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [cursorPos, setCursorPos] = useState({ x: -999, y: -999, inside: false });
+  const [stormDelay, setStormDelay] = useState(0.2);
+
+  useEffect(() => {
+    // Check if preloader is running for the first time in this tab session
+    const hasSeenInTab = sessionStorage.getItem("aplab_tab_opened");
+    if (!hasSeenInTab) {
+      // Preloader cutout opens at 0.42s and finishes at ~1.02s
+      setStormDelay(1.1);
+    } else {
+      setStormDelay(0.2);
+    }
+  }, []);
 
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
@@ -338,20 +350,20 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 1.5: Interactive Cursor Bloom Spotlight Glow (STRICTLY SCOPED TO HERO SECTION ONLY) */}
+      {/* Layer 1.5: Interactive Cursor Bloom Spotlight Glow (STRICTLY SCOPED & NON-CIRCULAR FLUID ELLIPSE) */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
         style={{
-          background: `radial-gradient(360px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.45) 0%, rgba(129, 140, 248, 0.22) 40%, transparent 80%)`,
+          background: `radial-gradient(420px 240px ellipse at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.45) 0%, rgba(129, 140, 248, 0.22) 40%, transparent 80%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       />
 
-      {/* Storm Roll-in Overlay Container: Starts with pristine image, then storm clouds & dither roll in smoothly! */}
+      {/* Storm Roll-in Overlay Container: Delayed until preloader finishes, then storm clouds & dither roll in! */}
       <motion.div 
         initial={{ opacity: 0, scale: 1.12, y: -40, filter: "blur(16px)" }}
         animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 2.2, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+        transition={{ duration: 2.2, delay: stormDelay, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none"
       >
         {/* Layer 2: Subtle Ambient Slate & Blue Smoke Plumes */}
