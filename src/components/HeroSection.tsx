@@ -305,17 +305,20 @@ export function HeroSection() {
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [cursorPos, setCursorPos] = useState({ x: -999, y: -999, inside: false });
-  const [stormDelay, setStormDelay] = useState(0.2);
+  const [startStorm, setStartStorm] = useState(false);
 
   useEffect(() => {
-    // Check if preloader is running for the first time in this tab session
-    const hasSeenInTab = sessionStorage.getItem("aplab_tab_opened");
-    if (!hasSeenInTab) {
-      // Preloader cutout opens at 0.42s and finishes at ~1.02s
-      setStormDelay(1.1);
-    } else {
-      setStormDelay(0.2);
-    }
+    // Determine if page just mounted with intro preloader
+    const sessionActive = sessionStorage.getItem("aplab_storm_loaded");
+    sessionStorage.setItem("aplab_storm_loaded", "true");
+    
+    // If first load in session, wait 1150ms for preloader panels to split open, then roll in storm!
+    const delayMs = sessionActive ? 80 : 1150;
+    const timer = setTimeout(() => {
+      setStartStorm(true);
+    }, delayMs);
+
+    return () => clearTimeout(timer);
   }, []);
 
   useEffect(() => {
@@ -354,16 +357,16 @@ export function HeroSection() {
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
         style={{
-          background: `radial-gradient(420px 240px ellipse at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.45) 0%, rgba(129, 140, 248, 0.22) 40%, transparent 80%)`,
+          background: `radial-gradient(380px 220px ellipse at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.28) 0%, rgba(129, 140, 248, 0.14) 40%, transparent 80%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       />
 
-      {/* Storm Roll-in Overlay Container: Delayed until preloader finishes, then storm clouds & dither roll in! */}
+      {/* Storm Roll-in Overlay Container: Triggers seamlessly AFTER preloader opens! */}
       <motion.div 
-        initial={{ opacity: 0, scale: 1.12, y: -40, filter: "blur(16px)" }}
-        animate={{ opacity: 1, scale: 1, y: 0, filter: "blur(0px)" }}
-        transition={{ duration: 2.2, delay: stormDelay, ease: [0.16, 1, 0.3, 1] }}
+        initial={{ opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}
+        animate={startStorm ? { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}
+        transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
         className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none"
       >
         {/* Layer 2: Subtle Ambient Slate & Blue Smoke Plumes */}

@@ -109,25 +109,26 @@ void main() {
     mouseNDC.x *= resolution.x / resolution.y;
     
     vec2 dir = p - mouseNDC;
-    // Anisotropic stretch: breaks geometric circle into an irregular fluid tear contour
-    vec2 normDir = dir * vec2(1.35, 0.82);
+    // Anisotropic fluid contour: non-circular organic tear
+    vec2 normDir = dir * vec2(1.2, 0.9);
     float dist = length(normDir);
     
-    // High-frequency organic noise distortion around perimeter (eliminates circular edges)
+    // Multi-frequency organic turbulence around perimeter
     float angle = atan(dir.y, dir.x);
-    float noiseEdge = cnoise(vec2(cos(angle * 3.0) * 2.8 + time * 1.8, sin(angle * 3.0) * 2.8 + time * 1.8)) * 0.18;
-    noiseEdge += cnoise(p * 5.5 - time * 1.4) * 0.12;
+    float noiseEdge = cnoise(vec2(cos(angle * 2.5) * 2.2 + time * 1.5, sin(angle * 2.5) * 2.2 + time * 1.5)) * 0.12;
+    noiseEdge += cnoise(p * 4.5 - time * 1.2) * 0.08;
     
     float dynamicRadius = mouseRadius + noiseEdge;
-    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.12, dynamicRadius, dist);
+    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.2, dynamicRadius, dist);
     
-    // STRONG PHYSICAL PUSH REPULSION: Warps & pushes dither noise texture OUTWARD away from cursor center!
-    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.48);
+    // Subtle fluid wave repulsion along edge
+    float ripple = sin(dist * 22.0 - time * 3.5) * 0.05 * holeMask;
+    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.16 + ripple);
     samplePos += pushVector;
     
-    f = pattern(samplePos) + holeMask * 0.45;
-    // Crisp dither texture opacity
-    alpha = clamp(0.96 - holeMask * 0.82, 0.15, 0.96);
+    f = pattern(samplePos);
+    // Smooth, pristine parting transparency (no dark patches)
+    alpha = mix(0.96, 0.04, holeMask);
   } else {
     f = pattern(samplePos);
   }
