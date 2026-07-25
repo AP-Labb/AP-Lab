@@ -314,14 +314,24 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Dithered Smoke Wave WebGL Background Overlay */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-80">
+      {/* Underlying Background Image (Revealed through organic Dither cursor parting) */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
+        <img 
+          src="/images/HEROSECTION.png" 
+          alt="Hero Background" 
+          className="w-full h-full object-cover opacity-90 brightness-110 contrast-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-deep-navy" />
+      </div>
+
+      {/* Interactive Dithered Smoke Wave WebGL Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-auto overflow-hidden select-none">
         <Dither
-          waveColor={[0.12, 0.16, 0.35]}
+          waveColor={[0.15, 0.22, 0.45]}
           disableAnimation={false}
           enableMouseInteraction={true}
-          mouseRadius={0.4}
-          colorNum={4}
+          mouseRadius={0.45}
+          colorNum={5}
           pixelSize={3}
           waveAmplitude={0.35}
           waveFrequency={3.5}

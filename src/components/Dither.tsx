@@ -101,18 +101,36 @@ void main() {
   p.x *= resolution.x / resolution.y;
   
   float f = pattern(p);
+  float alpha = 0.95;
+  
   if (enableMouseInteraction == 1) {
     vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
     mouseNDC.x *= resolution.x / resolution.y;
-    float dist = length(p - mouseNDC);
-    float effect = 1.0 - smoothstep(0.0, mouseRadius, dist);
-    f -= 0.5 * effect;
+    
+    vec2 dir = p - mouseNDC;
+    float dist = length(dir);
+    
+    // Dynamically varying organic noise perimeter around cursor
+    float angle = atan(dir.y, dir.x);
+    float noiseEdge = cnoise(vec2(cos(angle) * 3.5 + time * 2.0, sin(angle) * 3.5 + time * 2.0)) * 0.14;
+    noiseEdge += cnoise(p * 7.0 - time * 1.2) * 0.08;
+    
+    float dynamicRadius = mouseRadius + noiseEdge;
+    
+    // Smooth organic parting mask: 1.0 inside hole, 0.0 outside
+    float holeMask = 1.0 - smoothstep(dynamicRadius * 0.2, dynamicRadius, dist);
+    
+    // Repel wave density around hole edge
+    f += holeMask * 0.35;
+    
+    // Fade out dither layer alpha inside cursor hole to reveal background image underneath
+    alpha = clamp(0.95 - holeMask * 1.1, 0.0, 0.95);
   }
   
   vec3 col = mix(vec3(0.0), waveColor, f);
   col = dither(uv, col);
   
-  gl_FragColor = vec4(col, 1.0);
+  gl_FragColor = vec4(col, alpha);
 }
 `;
 
@@ -220,6 +238,7 @@ function DitheredWaves({
           vertexShader={ditherVertexShader}
           fragmentShader={ditherSinglePassShader}
           uniforms={waveUniformsRef.current}
+          transparent={true}
         />
       </mesh>
 
@@ -265,14 +284,14 @@ export default function Dither({
     setMounted(true);
   }, []);
 
-  if (!mounted) return <div className="dither-container bg-black/40" />;
+  if (!mounted) return <div className="dither-container bg-transparent" />;
 
   return (
     <Canvas
       className="dither-container"
       camera={{ position: [0, 0, 6] }}
       dpr={1}
-      gl={{ antialias: true, preserveDrawingBuffer: true }}
+      gl={{ antialias: true, preserveDrawingBuffer: true, alpha: true }}
     >
       <DitheredWaves
         waveSpeed={waveSpeed}
