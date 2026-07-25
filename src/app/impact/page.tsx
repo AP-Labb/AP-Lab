@@ -79,7 +79,7 @@ export default function ImpactPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.1 }}
-            className="font-inter font-extrabold text-5xl sm:text-6xl md:text-[88px] text-white tracking-tight leading-[0.9] mb-8"
+            className="font-inter font-bold text-5xl sm:text-6xl md:text-[88px] text-white tracking-tight leading-[0.9] mb-8"
           >
             The <span className="italic text-transparent bg-clip-text bg-gradient-to-r from-medical-teal via-[#4fd1c5] to-cyan-400 animate-gradient-x bg-[length:200%_200%] pr-4">Epicenter</span> <br /> of Excellence.
           </motion.h1>
@@ -244,7 +244,7 @@ export default function ImpactPage() {
               <MapPin className="w-4 h-4 text-white" />
               <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white">National Infrastructure</span>
             </div>
-            <h2 className="font-inter font-extrabold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight mb-8 leading-[0.95]">
+            <h2 className="font-inter font-bold text-4xl sm:text-5xl md:text-6xl text-white tracking-tight mb-8 leading-[0.95]">
               Reach across <br /><span className="italic text-white/50">state lines.</span>
             </h2>
             <p className="font-inter text-white/40 text-xl leading-relaxed mb-12">
@@ -272,8 +272,8 @@ export default function ImpactPage() {
       <section className="py-24 px-6 text-center relative overflow-hidden z-10 border-t border-white/5 flex flex-col items-center justify-center">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary-purple/10 blur-[140px] rounded-full pointer-events-none" />
         
-        <h2 className="font-inter font-extrabold text-4xl sm:text-5xl md:text-6xl tracking-tight mb-12 text-white relative z-10">
-          Meet the <span className="italic text-primary-purple">Founder</span>
+        <h2 className="font-inter font-bold text-4xl sm:text-5xl md:text-6xl tracking-tight mb-12 text-white relative z-10">
+          Meet the Founder
         </h2>
 
         <div className="relative z-10 flex items-center justify-center">
