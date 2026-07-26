@@ -355,7 +355,7 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
       </div>
 
-      {/* Layer 2: Apple / Linear.app / Framer Pure White Soft Spotlight & Rim Light Sweep */}
+      {/* Layer 2: Apple / Linear / Framer Spotlight with UI Glint/Shimmer Light Sweep (ONLY ON UI LINES, NOT ON BACKGROUND) */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 overflow-hidden select-none mix-blend-color-dodge"
         style={{
@@ -364,11 +364,14 @@ export function HeroSection() {
           opacity: cursorInside ? 1 : 0
         }}
       >
-        <img 
-          src="/images/HEROSECTION.png" 
-          alt="Hero UI Aluminum Light Sweep" 
-          className="w-full h-full object-cover brightness-[2.1] contrast-[2.8] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)] drop-shadow-[0_0_10px_rgba(255,255,255,0.45)]"
-        />
+        <div className="relative w-full h-full">
+          <img 
+            src="/images/HEROSECTION.png" 
+            alt="Hero UI Aluminum Light Sweep" 
+            className="w-full h-full object-cover brightness-[2.1] contrast-[2.8] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)] drop-shadow-[0_0_10px_rgba(255,255,255,0.45)]"
+          />
+          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/35 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
+        </div>
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />

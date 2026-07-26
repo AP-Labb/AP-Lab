@@ -1267,6 +1267,19 @@ body {
   animation: borderGlowPulse 4s ease-in-out infinite;
 }
 
+@keyframes uiGlintSweep {
+  0% {
+    transform: translateX(-100%) rotate(25deg);
+  }
+  100% {
+    transform: translateX(200%) rotate(25deg);
+  }
+}
+
+.animate-ui-glint {
+  animation: uiGlintSweep 3.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 
 
 

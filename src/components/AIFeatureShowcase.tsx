@@ -210,29 +210,8 @@ export function AIFeatureShowcase() {
               </AnimatePresence>
             </div>
 
-            {/* Input & Quick Suggestions Bar */}
+            {/* Input Bar */}
             <div className="p-5 border-t border-white/5 bg-[#030408]/90">
-              <div className="flex gap-2 mb-3.5 overflow-x-auto pb-1 select-none scrollbar-none">
-                <div 
-                  className="shrink-0 text-[11px] px-3.5 py-1.5 rounded-full border bg-white/[0.03] text-white/70 font-manrope font-semibold"
-                  style={{ borderColor: `${current.accentColor}30` }}
-                >
-                  🔍 Explain concept
-                </div>
-                <div 
-                  className="shrink-0 text-[11px] px-3.5 py-1.5 rounded-full border bg-white/[0.03] text-white/70 font-manrope font-semibold"
-                  style={{ borderColor: `${current.accentColor}30` }}
-                >
-                  📝 Quiz me
-                </div>
-                <div 
-                  className="shrink-0 text-[11px] px-3.5 py-1.5 rounded-full border bg-white/[0.03] text-white/70 font-manrope font-semibold"
-                  style={{ borderColor: `${current.accentColor}30` }}
-                >
-                  💡 Key Terms
-                </div>
-              </div>
-
               <div className="relative flex items-center rounded-full border border-white/5 px-4 py-2 bg-[#1c1c1f] text-white">
                 <input
                   type="text"
