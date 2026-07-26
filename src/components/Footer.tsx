@@ -4,7 +4,7 @@ import Link from "next/link";
 import React from "react";
 import LogoLoop from "./LogoLoop";
 
-function GoogleWhiteLogo() {
+function GoogleLogoSVG() {
   return (
     <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 15.987 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
@@ -12,7 +12,7 @@ function GoogleWhiteLogo() {
   );
 }
 
-function FirebaseWhiteLogo() {
+function FirebaseLogoSVG() {
   return (
     <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M3.877 15.717L6.59 2.115a.76.76 0 011.417-.197l2.585 4.957-6.715 8.842zm16.246 0L18.008 3.82a.76.76 0 00-1.346-.356l-3.376 5.565 6.837 6.688zM12.91 8.922l-2.073-3.97L3.6 16.51l7.854 4.39a1.09 1.09 0 001.085 0l7.861-4.39-7.49-7.588z" />
@@ -20,7 +20,7 @@ function FirebaseWhiteLogo() {
   );
 }
 
-function ReactWhiteIcon() {
+function ReactLogoSVG() {
   return (
     <svg className="w-9 h-9 text-white opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 100 100" fill="none">
       <circle cx="50" cy="50" r="9" fill="currentColor" />
@@ -31,47 +31,64 @@ function ReactWhiteIcon() {
   );
 }
 
-function NextWhiteIcon() {
+function NextLogoSVG() {
   return (
-    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 128 128">
-      <path d="M64 0a64 64 0 1 0 64 64A64.07 64.07 0 0 0 64 0zm33.4 96L55.8 45.4V96H45V32h14.8l41.6 50.6V32h10.8v64z" />
+    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm4.995 16.979l-5.748-7.925v7.925H9.686V7.021h1.724l5.58 7.693V7.021h1.561v9.958h-1.556z" />
     </svg>
   );
 }
 
-function TSWhiteIcon() {
+function TypeScriptLogoSVG() {
   return (
-    <svg className="w-8 h-8 text-white opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 128 128">
-      <rect width="128" height="128" rx="18" fill="currentColor" />
-      <path d="M38.5 48h30.8v11.7H54v42.3H39.2V59.7H38.5V48zm50.3 35.8c-2.4-1.6-5.8-2.9-10.1-3.9-3.2-.8-5.3-1.6-6.4-2.5-1.1-.9-1.6-2-1.6-3.4 0-1.5.7-2.7 2-3.6 1.4-.9 3.4-1.4 6-1.4 2.8 0 5.4.6 7.9 1.7 2.5 1.1 4.7 2.7 6.6 4.7l6.6-8.7c-3.1-2.9-6.8-5.1-11.1-6.5s-8.9-2.2-13.8-2.2c-7.3 0-13.1 1.7-17.3 5-4.2 3.3-6.3 8-6.3 14.2 0 4.7 1.3 8.6 4 11.6 2.7 3 6.9 5.3 12.6 6.9 3.8 1.1 6.5 2.1 7.9 3 1.4.9 2.1 2.2 2.1 3.9 0 1.7-.8 3.1-2.3 4.1-1.5 1-3.7 1.5-6.6 1.5-3.8 0-7.3-.9-10.7-2.7-3.4-1.8-6.3-4.4-8.8-7.7l-7.3 8.9c3.7 4.5 8.1 7.9 13.3 10.1 5.2 2.2 11.1 3.3 17.7 3.3 7.8 0 14-1.8 18.5-5.3 4.5-3.5 6.8-8.4 6.8-14.7 0-4.9-1.4-8.9-4.2-12.1z" fill="#000" />
+    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M1.125 0C.507 0 0 .507 0 1.125v21.75C0 23.493.507 24 1.125 24h21.75c.618 0 1.125-.507 1.125-1.125V1.125C24 .507 23.493 0 22.875 0H1.125zm17.363 9.75c.612 0 1.154.037 1.627.111a6.38 6.38 0 0 1 1.306.34v2.458a3.95 3.95 0 0 0-1.285-.505 5.03 5.03 0 0 0-1.284-.158c-.734 0-1.306.18-1.716.541-.409.361-.614.867-.614 1.517 0 .422.093.77.279 1.045.186.275.452.51.797.705.346.195.772.376 1.28.544l.87.286c.804.258 1.488.558 2.052.9.565.341 1.002.766 1.312 1.275.31.509.465 1.144.465 1.905 0 .844-.22 1.574-.66 2.19-.44.615-1.07 1.087-1.89 1.415-.82.328-1.815.492-2.985.492-1.007 0-1.956-.114-2.847-.342a9.92 9.92 0 0 1-2.283-.873v-2.663c.953.518 1.895.892 2.827 1.123.931.23 1.769.346 2.513.346.804 0 1.436-.18 1.897-.54.46-.36.69-.877.69-1.55 0-.463-.105-.843-.314-1.14-.21-.297-.506-.547-.889-.75-.382-.203-.847-.393-1.395-.57l-.87-.272c-.845-.272-1.556-.583-2.134-.932a3.86 3.86 0 0 1-1.34-1.295c-.322-.519-.483-1.16-.483-1.924 0-.845.223-1.569.668-2.172.446-.603 1.077-1.06 1.894-1.371.817-.311 1.785-.467 2.904-.467zm-8.835.15v2.325H6.772v9.75H3.975v-9.75H1.095V9.9h8.558z" />
     </svg>
   );
 }
 
-function VercelWhiteIcon() {
+function VercelLogoSVG() {
   return (
-    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 1155 1000">
-      <path d="M577.344 0L1154.69 1000H0L577.344 0Z" />
+    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M12 1L24 22H0L12 1z" />
     </svg>
   );
 }
 
-function TailwindWhiteIcon() {
+function TailwindLogoSVG() {
   return (
-    <svg className="w-9 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 100 100">
-      <path d="M50 20c-15 0-25 7.5-30 22.5 7.5-7.5 16.25-10 26.25-7.5 5.7 1.4 9.8 5.6 14.3 10.2C67.8 51.9 76.5 60 95 60c15 0 25-7.5 30-22.5-7.5 7.5-16.25 10-26.25 7.5-5.7-1.4-9.8-5.6-14.3-10.2C77.2 28.1 68.5 20 50 20zM25 60c-15 0-25 7.5-30 22.5 7.5-7.5 16.25-10 26.25-7.5 5.7 1.4 9.8 5.6 14.3 10.2C42.8 91.9 51.5 100 70 100c15 0 25-7.5 30-22.5-7.5 7.5-16.25 10-26.25 7.5-5.7-1.4-9.8-5.6-14.3-10.2C52.2 68.1 43.5 60 25 60z" />
+    <svg className="w-9 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C7.666 17.818 9.027 19.2 12.001 19.2c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
+    </svg>
+  );
+}
+
+function GitHubLogoSVG() {
+  return (
+    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+    </svg>
+  );
+}
+
+function DockerLogoSVG() {
+  return (
+    <svg className="w-9 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.186.186 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.954 0h2.12a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.954 0h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186H8.075a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.955 0h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186H5.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm5.909-3.13h2.12a.186.186 0 00.186-.185V5.876a.186.186 0 00-.186-.186h-2.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.954 0h2.119a.186.186 0 00.186-.185V5.876a.186.186 0 00-.186-.186H8.075a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.955 0h2.119a.186.186 0 00.186-.185V5.876a.186.186 0 00-.186-.186H5.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm5.909-3.13h2.12a.186.186 0 00.186-.185V2.747a.186.186 0 00-.186-.186h-2.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zM.004 12.399c0 1.58.468 3.125 1.354 4.475C3.21 19.727 6.47 21 10.3 21c4.545 0 8.272-1.83 10.842-4.908 1.488-1.78 2.257-3.957 2.257-6.26 0-.25-.008-.501-.025-.75-.386-.17-1.428-.535-2.735-.535-1.282 0-2.484.285-3.32.743-.19.103-.393.18-.6.23a10.988 10.988 0 00-2.836.375 7.64 7.64 0 01-1.636.175c-1.328 0-2.528-.42-3.395-.98a.186.186 0 00-.28.14c-.03.473-.398.847-.876.847h-6.8a.186.186 0 01-.186-.186v-1.8a.186.186 0 00-.186-.186H.19a.186.186 0 00-.186.186v.054z" />
     </svg>
   );
 }
 
 const whiteTechLogos = [
-  { node: <GoogleWhiteLogo />, title: "Google", href: "https://google.com" },
-  { node: <FirebaseWhiteLogo />, title: "Firebase", href: "https://firebase.google.com" },
-  { node: <ReactWhiteIcon />, title: "React", href: "https://react.dev" },
-  { node: <NextWhiteIcon />, title: "Next.js", href: "https://nextjs.org" },
-  { node: <TSWhiteIcon />, title: "TypeScript", href: "https://www.typescriptlang.org" },
-  { node: <VercelWhiteIcon />, title: "Vercel", href: "https://vercel.com" },
-  { node: <TailwindWhiteIcon />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+  { node: <GoogleLogoSVG />, title: "Google", href: "https://google.com" },
+  { node: <FirebaseLogoSVG />, title: "Firebase", href: "https://firebase.google.com" },
+  { node: <ReactLogoSVG />, title: "React", href: "https://react.dev" },
+  { node: <NextLogoSVG />, title: "Next.js", href: "https://nextjs.org" },
+  { node: <TypeScriptLogoSVG />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+  { node: <VercelLogoSVG />, title: "Vercel", href: "https://vercel.com" },
+  { node: <TailwindLogoSVG />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+  { node: <GitHubLogoSVG />, title: "GitHub", href: "https://github.com" },
+  { node: <DockerLogoSVG />, title: "Docker", href: "https://www.docker.com" },
 ];
 
 const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (

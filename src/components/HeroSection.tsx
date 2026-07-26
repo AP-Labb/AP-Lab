@@ -336,18 +336,19 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
       </div>
 
+      {/* Layer 2: Interactive Image Line Highlight (Brightens & illuminates ONLY the image lines under cursor with ZERO circular spotlight border) */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none"
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none mix-blend-screen"
         style={{
-          maskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 45%, transparent 80%)`,
-          WebkitMaskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 45%, transparent 80%)`,
+          maskImage: `radial-gradient(280px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.5) 45%, transparent 75%)`,
+          WebkitMaskImage: `radial-gradient(280px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.5) 45%, transparent 75%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       >
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero Background Glow Lines" 
-          className="w-full h-full object-cover brightness-[1.85] contrast-[1.45] saturate-[1.6] drop-shadow-[0_0_16px_rgba(56,189,248,0.85)]"
+          className="w-full h-full object-cover brightness-[1.6] contrast-[1.85] saturate-[1.8] filter drop-shadow-[0_0_12px_rgba(56,189,248,0.5)]"
         />
       </div>
 
