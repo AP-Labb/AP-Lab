@@ -353,18 +353,18 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 1.2: Interactive Cursor Bloom & Specular Glow (Makes background image pop & glow brilliantly under parted dither!) */}
+      {/* Layer 1.2: Interactive Pure Neutral Color-Agnostic Bloom Spotlight (Enhances & blooms WHATEVER colors are on the image underneath!) */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
         style={{
-          background: `radial-gradient(450px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.75) 0%, rgba(139, 92, 246, 0.45) 35%, rgba(6, 182, 212, 0.20) 65%, transparent 85%)`,
+          background: `radial-gradient(220px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.40) 45%, transparent 75%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       />
       <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-screen overflow-hidden"
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-overlay overflow-hidden"
         style={{
-          background: `radial-gradient(300px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255, 255, 255, 0.45) 0%, rgba(56, 189, 248, 0.2) 50%, transparent 80%)`,
+          background: `radial-gradient(160px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255, 255, 255, 0.70) 0%, transparent 70%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       />
@@ -384,13 +384,13 @@ export function HeroSection() {
           <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.25)_0%,rgba(147,51,234,0.12)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
         </div>
 
-        {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Crisp & Visible) */}
+        {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Crisp & Refined) */}
         <div className="absolute inset-0">
           <Dither
             waveColor={[0.20, 0.32, 0.60]}
             disableAnimation={false}
             enableMouseInteraction={true}
-            mouseRadius={0.32}
+            mouseRadius={0.16}
             colorNum={7}
             pixelSize={2.5}
             waveAmplitude={0.38}

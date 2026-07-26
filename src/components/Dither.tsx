@@ -130,12 +130,12 @@ void main() {
       noiseEdge += cnoise(p * 7.0 - vec2(time * 1.6)) * 0.18;
       
       float tearDist = length(rotDir) - noiseEdge;
-      float holeMask = 1.0 - smoothstep(mouseRadius * 0.1, mouseRadius * 1.4, tearDist);
+      float holeMask = 1.0 - smoothstep(mouseRadius * 0.1, mouseRadius * 0.95, tearDist);
       holeMask = clamp(holeMask, 0.0, 1.0) * strength;
       
-      // Physical push vector repelling voxels outward along persistent trail
+      // Gentle physical push vector repelling voxels outward along persistent trail
       vec2 pushDir = normalize(dir + vec2(0.0001));
-      totalPush += pushDir * (holeMask * 0.38);
+      totalPush += pushDir * (holeMask * 0.12);
       
       maxHoleMask = max(maxHoleMask, holeMask);
     }
@@ -260,29 +260,29 @@ function DitheredWaves({
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
 
-    // Persistent Voxel Displacement Physics Update
+    // Smooth inertia lerp (0.06 factor) for silky fluid cursor momentum
     if (enableMouseInteraction) {
-      mouseRef.current.lerp(targetMouseRef.current, 0.25);
+      mouseRef.current.lerp(targetMouseRef.current, 0.06);
       
-      // Inject new trail point when mouse moves > 5px
-      if (mouseRef.current.distanceTo(lastAddPosRef.current) > 5) {
+      // Inject new trail point when mouse moves > 6px
+      if (mouseRef.current.distanceTo(lastAddPosRef.current) > 6) {
         lastAddPosRef.current.copy(mouseRef.current);
         trailPointsRef.current.unshift({
           x: mouseRef.current.x,
           y: mouseRef.current.y,
           strength: 1.0
         });
-        if (trailPointsRef.current.length > 16) {
+        if (trailPointsRef.current.length > 10) {
           trailPointsRef.current.pop();
         }
       }
       
-      // Decay trail point strength so voxels stay pushed out and slowly relax back over 1.8s!
+      // Decay trail point strength so voxels stay pushed out and slowly relax back over 1.6s!
       trailPointsRef.current.forEach((pt) => {
-        pt.strength *= 0.945;
+        pt.strength *= 0.93;
       });
       
-      trailPointsRef.current = trailPointsRef.current.filter((pt) => pt.strength > 0.02);
+      trailPointsRef.current = trailPointsRef.current.filter((pt) => pt.strength > 0.03);
       
       const uPos = u.trailPos.value;
       const uStr = u.trailStrength.value;
@@ -335,7 +335,7 @@ export default function Dither({
   pixelSize = 2,
   disableAnimation = false,
   enableMouseInteraction = true,
-  mouseRadius = 0.32
+  mouseRadius = 0.16
 }: DitherProps) {
   const [mounted, setMounted] = useState(false);
 
