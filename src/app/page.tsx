@@ -64,6 +64,8 @@ const partnerLogos = [
   { node: <TailwindIcon />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
 ];
 
+import { GlobalStudentMap } from "@/components/GlobalStudentMap";
+
 export default function LandingPage() {
   return (
     <main className="min-h-screen bg-deep-navy selection:bg-medical-teal selection:text-white">
@@ -117,6 +119,7 @@ export default function LandingPage() {
             }}
           />
         </div>
+        <GlobalStudentMap />
         <FAQSection />
         <SocialsSlider />
       </div>

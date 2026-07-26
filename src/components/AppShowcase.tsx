@@ -314,25 +314,42 @@ export function AppShowcase() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 }}
-                  className="h-full flex flex-col justify-between p-8 relative overflow-hidden group backdrop-blur-2xl col-span-1"
+                  className="h-full flex flex-col justify-between p-8 relative overflow-hidden group backdrop-blur-2xl col-span-1 text-black cursor-pointer"
                 >
-                  <div className="text-left z-10 shrink-0">
-                    <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">VIDEO TUTORIALS</span>
-                    <h3 className="text-2xl font-inter font-bold text-black tracking-tight">HD Video Modules.</h3>
+                  <div className="text-left relative z-10 flex flex-col shrink-0">
+                    <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">VIDEO COMPANIONS</span>
+                    <h3 className="text-2xl font-inter font-bold text-black tracking-tight">Topic-Specific Video Lessons.</h3>
                     <p className="text-black/50 font-inter text-[11px] max-w-sm mt-1 leading-relaxed">
-                      Comprehensive lecture videos mapped to every single topic in the AP specification.
+                      Every syllabus topic is paired with a handpicked specialized video to clarify complex concepts.
                     </p>
                   </div>
 
-                  <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-2 px-1">
-                    <div className="w-full max-w-[380px] h-[220px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-neutral-300 group-hover:scale-[1.03] transition-transform duration-500 bg-[#07080f] relative flex items-center justify-center">
-                      <img 
-                        src="/images/interactive-lesson-showcase.png" 
-                        alt="HD Video Modules" 
-                        className="w-full h-full object-cover rounded-xl opacity-90"
-                      />
-                      <div className="absolute w-12 h-12 rounded-full bg-white/90 shadow-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Play className="w-5 h-5 text-black fill-black ml-0.5" />
+                  <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-neutral-200/80 shadow-lg mt-4 bg-black flex flex-col justify-between p-4 transition-all duration-300 shrink-0">
+                    <Image 
+                      src="/images/biology-thumbnail.jpg"
+                      alt="Introduction to Cells with the Amoeba Sisters"
+                      fill
+                      sizes="(max-w-md) 100vw, 350px"
+                      style={{ objectFit: "cover" }}
+                      className="opacity-90 scale-[1.05] group-hover:scale-110 transition-transform duration-500 ease-out"
+                    />
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
+
+                    <div className="flex justify-end items-center relative z-10">
+                      <span className="text-[8px] font-mono text-white/90 bg-black/60 backdrop-blur-md px-1.5 py-0.5 rounded">12:45</span>
+                    </div>
+
+                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                      <div className="w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ease-out group-hover:bg-red-600 group-hover:text-white">
+                        <Play className="w-5 h-5 text-black fill-current transition-colors duration-300 group-hover:text-white ml-0.5" />
+                      </div>
+                    </div>
+
+                    <div className="w-full relative z-10 space-y-2">
+                      <div className="flex flex-col">
+                        <span className="text-white font-manrope font-extrabold text-[12px] leading-tight drop-shadow-md">Introduction to Cells</span>
+                        <span className="text-[9px] text-white/70 mt-0.5 drop-shadow-sm">with the Amoeba Sisters</span>
                       </div>
                     </div>
                   </div>

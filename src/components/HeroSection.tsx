@@ -345,26 +345,26 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Darkened Base Background Image */}
+      {/* Base Darkened Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-30 brightness-[0.2] contrast-[1.35]"
+          className="w-full h-full object-cover opacity-60 brightness-[0.55] contrast-[1.2]"
         />
-        <div className="absolute inset-0 bg-black/75 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_10%,rgba(5,7,15,0.98)_100%)]" />
+        <div className="absolute inset-0 bg-[#05070f]/60" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#05070f_95%)]" />
       </div>
 
-      {/* Periodic Smooth Specular Light Shimmer Sweep Revealing ONLY the UI on the Image */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-95 mix-blend-color-dodge">
+      {/* Animated Specular Light Sweep Illuminating UI Lines */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-80">
         <div className="relative w-full h-full">
           <img 
             src="/images/HEROSECTION.png" 
             alt="Hero UI Periodic Shimmer Reveal" 
-            className="w-full h-full object-cover brightness-[2.8] contrast-[4.2] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)]"
+            className="w-full h-full object-cover brightness-[1.8] contrast-[2.5]"
           />
-          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/20 via-white/60 via-white/20 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
+          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/30 via-white/70 via-white/30 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
         </div>
       </div>
 
