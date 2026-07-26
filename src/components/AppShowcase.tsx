@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import React, { useState } from "react";
 import { Flame, Play, Calendar, Calculator, Minus, X, GripHorizontal } from "lucide-react";
+import BorderGlow from "@/components/BorderGlow";
 
 export function AppShowcase() {
   const [isLeaderboardHovered, setIsLeaderboardHovered] = useState(false);
@@ -58,73 +59,77 @@ export function AppShowcase() {
           <div className="sticky top-[100px] z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
               {/* Box 1 (Top Left) - GAMIFICATION */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                onMouseEnter={() => setIsLeaderboardHovered(true)}
-                onMouseLeave={() => setIsLeaderboardHovered(false)}
-                className="bg-[#000000] border border-white/15 rounded-[32px] h-[450px] flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group shadow-[0_30px_90px_rgba(0,0,0,0.9)] backdrop-blur-xl cursor-pointer"
-              >
-                <div className="text-center relative z-10 flex flex-col items-center">
-                  <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">GAMIFICATION</span>
-                  <h3 className="text-2xl md:text-3xl font-inter font-bold text-white tracking-tight">Academic Progression & Badges.</h3>
-                  <p className="text-white/50 font-inter text-xs max-w-sm mt-2 leading-relaxed">
-                    Earn XP across all courses to level up and climb the live global leaderboard.
-                  </p>
-                </div>
-
-                <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-2">
-                  <div className="flex flex-col space-y-2 bg-[#ffffff] border border-neutral-200 rounded-2xl p-4 w-full max-w-[300px] text-left shadow-lg group-hover:scale-[1.04] transition-transform duration-500 ease-out">
-                    {leaderboardUsers.map((user) => (
-                      <motion.div 
-                        key={user.id} 
-                        layout
-                        transition={{ type: "spring", stiffness: 350, damping: 25 }}
-                        className="flex items-center justify-between bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-2"
-                      >
-                        <div className="flex items-center space-x-2">
-                          <span className="text-[10px] font-mono font-bold text-neutral-400 w-3">#{user.rank}</span>
-                          <LevelBadge level={user.lvl} showLabel={false} size="sm" className="scale-75 origin-center shrink-0 -mx-1" />
-                          <div className="flex flex-col">
-                            <span className="text-[11px] font-manrope font-bold text-neutral-800 leading-tight">{user.name}</span>
-                            <span className="text-[8px] font-mono text-neutral-400 mt-0.5">Level {user.lvl}</span>
-                          </div>
-                        </div>
-                        <span className="text-[9px] font-mono font-bold text-neutral-600 bg-neutral-200/50 px-2 py-0.5 rounded">{user.xp}</span>
-                      </motion.div>
-                    ))}
+              <BorderGlow colors={['#c084fc', '#f472b6', '#38bdf8']} borderRadius={32} backgroundColor="#000000" className="h-[450px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  onMouseEnter={() => setIsLeaderboardHovered(true)}
+                  onMouseLeave={() => setIsLeaderboardHovered(false)}
+                  className="h-full flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group backdrop-blur-xl cursor-pointer"
+                >
+                  <div className="text-center relative z-10 flex flex-col items-center">
+                    <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">GAMIFICATION</span>
+                    <h3 className="text-2xl md:text-3xl font-inter font-bold text-white tracking-tight">Academic Progression & Badges.</h3>
+                    <p className="text-white/50 font-inter text-xs max-w-sm mt-2 leading-relaxed">
+                      Earn XP across all courses to level up and climb the live global leaderboard.
+                    </p>
                   </div>
-                </div>
-              </motion.div>
+
+                  <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-2">
+                    <div className="flex flex-col space-y-2 bg-[#ffffff] border border-neutral-200 rounded-2xl p-4 w-full max-w-[300px] text-left shadow-lg group-hover:scale-[1.04] transition-transform duration-500 ease-out">
+                      {leaderboardUsers.map((user) => (
+                        <motion.div 
+                          key={user.id} 
+                          layout
+                          transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                          className="flex items-center justify-between bg-neutral-50 border border-neutral-100 rounded-xl px-3 py-2"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <span className="text-[10px] font-mono font-bold text-neutral-400 w-3">#{user.rank}</span>
+                            <LevelBadge level={user.lvl} showLabel={false} size="sm" className="scale-75 origin-center shrink-0 -mx-1" />
+                            <div className="flex flex-col">
+                              <span className="text-[11px] font-manrope font-bold text-neutral-800 leading-tight">{user.name}</span>
+                              <span className="text-[8px] font-mono text-neutral-400 mt-0.5">Level {user.lvl}</span>
+                            </div>
+                          </div>
+                          <span className="text-[9px] font-mono font-bold text-neutral-600 bg-neutral-200/50 px-2 py-0.5 rounded">{user.xp}</span>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </div>
+                </motion.div>
+              </BorderGlow>
 
               {/* Box 2 (Top Right) - INTERACTIVE LESSONS */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className="bg-[#ffffff] border border-neutral-200 rounded-[32px] h-[450px] flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group shadow-[0_30px_90px_rgba(0,0,0,0.9)] backdrop-blur-xl"
-              >
-                <div className="text-center relative z-10 flex flex-col items-center">
-                  <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">INTERACTIVE LESSONS</span>
-                  <h3 className="text-2xl md:text-3xl font-inter font-bold text-black tracking-tight mb-1">Interactive Course Guides.</h3>
-                  <p className="text-black/50 font-inter text-xs max-w-sm mt-1 leading-relaxed">
-                    Seamless curriculum mapping of video modules, reading articles, and interactive visual aids.
-                  </p>
-                </div>
-
-                <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-2 px-1">
-                  <div className="w-full max-w-[400px] h-[235px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-neutral-800 group-hover:scale-[1.03] transition-transform duration-500 bg-[#07080f] p-1 flex items-center justify-center">
-                    <img 
-                      src="/images/interactive-lesson-showcase.png" 
-                      alt="Interactive Course Guides" 
-                      className="w-full h-full object-contain rounded-xl"
-                    />
+              <BorderGlow colors={['#38bdf8', '#c084fc', '#f472b6']} borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                  className="h-full flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group backdrop-blur-xl"
+                >
+                  <div className="text-center relative z-10 flex flex-col items-center">
+                    <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">INTERACTIVE LESSONS</span>
+                    <h3 className="text-2xl md:text-3xl font-inter font-bold text-black tracking-tight mb-1">Interactive Course Guides.</h3>
+                    <p className="text-black/50 font-inter text-xs max-w-sm mt-1 leading-relaxed">
+                      Seamless curriculum mapping of video modules, reading articles, and interactive visual aids.
+                    </p>
                   </div>
-                </div>
-              </motion.div>
+
+                  <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-2 px-1">
+                    <div className="w-full max-w-[400px] h-[235px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-neutral-800 group-hover:scale-[1.03] transition-transform duration-500 bg-[#07080f] p-1 flex items-center justify-center">
+                      <img 
+                        src="/images/interactive-lesson-showcase.png" 
+                        alt="Interactive Course Guides" 
+                        className="w-full h-full object-contain rounded-xl"
+                      />
+                    </div>
+                  </div>
+                </motion.div>
+              </BorderGlow>
             </div>
           </div>
 

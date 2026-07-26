@@ -61,6 +61,8 @@ const showcaseSlides: ShowcaseSlide[] = [
   }
 ];
 
+import BorderGlow from "@/components/BorderGlow";
+
 export function AIFeatureShowcase() {
   const [activeStep, setActiveStep] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -110,41 +112,58 @@ export function AIFeatureShowcase() {
       {/* Main Split Layout: Left Screenshots vs Right Sticky Course Page AI Tutor Drawer */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
         
-        {/* Left Column: Exact Uploaded Course Page Screenshots */}
+        {/* Left Column: Exact Uploaded Course Page Screenshots with BorderGlow */}
         <div className="lg:col-span-7 space-y-12 pt-2">
           {showcaseSlides.map((slide, idx) => {
             const isActive = activeStep === idx;
             return (
-              <div
+              <BorderGlow
                 key={slide.id}
-                onClick={() => setActiveStep(idx)}
+                colors={[slide.accentColor, '#c084fc', '#38bdf8']}
+                borderRadius={24}
+                backgroundColor="#05070E"
+                glowIntensity={1.2}
+                edgeSensitivity={35}
                 className={cn(
-                  "rounded-3xl border border-white/20 transition-opacity duration-300 cursor-pointer overflow-hidden relative shadow-2xl bg-black/80",
+                  "transition-opacity duration-300 cursor-pointer overflow-hidden relative shadow-2xl",
                   isActive ? "opacity-100 ring-1 ring-white/30" : "opacity-40 hover:opacity-70"
                 )}
               >
-                {/* Real Course Page Screenshot Image */}
-                <div className="relative w-full overflow-hidden bg-black/90 p-1 sm:p-2">
-                  <img
-                    src={slide.imageSrc}
-                    alt={slide.imageAlt}
-                    className={cn(
-                      "w-full h-auto object-cover rounded-2xl origin-center transition-transform duration-300",
-                      slide.zoomScale
-                    )}
-                  />
+                <div 
+                  onClick={() => setActiveStep(idx)}
+                  className="w-full h-full"
+                >
+                  {/* Real Course Page Screenshot Image */}
+                  <div className="relative w-full overflow-hidden bg-black/90 p-1 sm:p-2">
+                    <img
+                      src={slide.imageSrc}
+                      alt={slide.imageAlt}
+                      className={cn(
+                        "w-full h-auto object-cover rounded-2xl origin-center transition-transform duration-300",
+                        slide.zoomScale
+                      )}
+                    />
+                  </div>
                 </div>
-              </div>
+              </BorderGlow>
             );
           })}
         </div>
 
-        {/* Right Column: STICKY Course Page AI Tutor Drawer (Stops cleanly at bottom of last screenshot) */}
+        {/* Right Column: STICKY Course Page AI Tutor Drawer with BorderGlow */}
         <div className="lg:col-span-5 sticky top-28 z-30 pt-2">
-          <motion.div 
-            layout
-            className="w-full bg-[#05060c]/95 border border-white/15 text-white rounded-3xl flex flex-col shadow-2xl backdrop-blur-3xl overflow-hidden"
+          <BorderGlow
+            colors={[current.accentColor, '#c084fc', '#38bdf8']}
+            borderRadius={24}
+            backgroundColor="#05060c"
+            glowIntensity={1.2}
+            edgeSensitivity={35}
+            className="w-full shadow-2xl overflow-hidden"
           >
+            <motion.div 
+              layout
+              className="w-full text-white flex flex-col backdrop-blur-3xl overflow-hidden"
+            >
             {/* Course Page AIAssistantDrawer Header */}
             <div className="h-20 border-b border-white/10 bg-white/[0.01] flex items-center justify-between px-6">
               <div className="flex items-center space-x-3.5">
@@ -230,6 +249,7 @@ export function AIFeatureShowcase() {
             </div>
 
           </motion.div>
+          </BorderGlow>
         </div>
 
       </div>

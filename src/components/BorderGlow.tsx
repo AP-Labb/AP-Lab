@@ -1,7 +1,23 @@
 "use client";
 
-import { useRef, useCallback, useEffect, ReactNode, CSSProperties } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import './BorderGlow.css';
+
+interface BorderGlowProps {
+  children: React.ReactNode;
+  className?: string;
+  edgeSensitivity?: number;
+  glowColor?: string;
+  backgroundColor?: string;
+  borderRadius?: number;
+  glowRadius?: number;
+  glowIntensity?: number;
+  coneSpread?: number;
+  animated?: boolean;
+  colors?: string[];
+  fillOpacity?: number;
+  style?: React.CSSProperties;
+}
 
 function parseHSL(hslStr: string) {
   const match = hslStr.match(/([\d.]+)\s*([\d.]+)%?\s*([\d.]+)%?/);
@@ -38,7 +54,7 @@ function buildGradientVars(colors: string[]) {
 function easeOutCubic(x: number) { return 1 - Math.pow(1 - x, 3); }
 function easeInCubic(x: number) { return x * x * x; }
 
-interface AnimateOptions {
+function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease = easeOutCubic, onUpdate, onEnd }: {
   start?: number;
   end?: number;
   duration?: number;
@@ -46,9 +62,7 @@ interface AnimateOptions {
   ease?: (x: number) => number;
   onUpdate: (v: number) => void;
   onEnd?: () => void;
-}
-
-function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease = easeOutCubic, onUpdate, onEnd }: AnimateOptions) {
+}) {
   const t0 = performance.now() + delay;
   function tick() {
     const elapsed = performance.now() - t0;
@@ -60,23 +74,7 @@ function animateValue({ start = 0, end = 100, duration = 1000, delay = 0, ease =
   setTimeout(() => requestAnimationFrame(tick), delay);
 }
 
-interface BorderGlowProps {
-  children: ReactNode;
-  className?: string;
-  edgeSensitivity?: number;
-  glowColor?: string;
-  backgroundColor?: string;
-  borderRadius?: number;
-  glowRadius?: number;
-  glowIntensity?: number;
-  coneSpread?: number;
-  animated?: boolean;
-  colors?: string[];
-  fillOpacity?: number;
-  style?: CSSProperties;
-}
-
-const BorderGlow = ({
+export function BorderGlow({
   children,
   className = '',
   edgeSensitivity = 30,
@@ -90,7 +88,7 @@ const BorderGlow = ({
   colors = ['#c084fc', '#f472b6', '#38bdf8'],
   fillOpacity = 0.5,
   style = {}
-}: BorderGlowProps) => {
+}: BorderGlowProps) {
   const cardRef = useRef<HTMLDivElement>(null);
 
   const getCenterOfElement = useCallback((el: HTMLElement) => {
@@ -162,7 +160,7 @@ const BorderGlow = ({
     <div
       ref={cardRef}
       onPointerMove={handlePointerMove}
-      className={`border-glow-card ${className}`.trim()}
+      className={`border-glow-card ${className}`}
       style={{
         '--card-bg': backgroundColor,
         '--edge-sensitivity': edgeSensitivity,
@@ -173,7 +171,7 @@ const BorderGlow = ({
         ...glowVars,
         ...buildGradientVars(colors),
         ...style
-      } as CSSProperties}
+      } as React.CSSProperties}
     >
       <span className="edge-light" />
       <div className="border-glow-inner">
@@ -181,6 +179,6 @@ const BorderGlow = ({
       </div>
     </div>
   );
-};
+}
 
 export default BorderGlow;
