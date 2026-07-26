@@ -2,6 +2,72 @@
 
 import Link from "next/link";
 import React from "react";
+import LogoLoop from "./LogoLoop";
+
+function GoogleWhiteLogo() {
+  return (
+    <img 
+      src="/images/logos/google.png" 
+      alt="Google" 
+      className="h-8 w-auto object-contain filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity" 
+    />
+  );
+}
+
+function FirebaseWhiteLogo() {
+  return (
+    <img 
+      src="/images/logos/firebase.png" 
+      alt="Firebase" 
+      className="h-8 w-auto object-contain filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity" 
+    />
+  );
+}
+
+function ReactWhiteIcon() {
+  return (
+    <svg className="w-9 h-9 text-white/90 hover:text-white transition-colors" viewBox="0 0 100 100" fill="none">
+      <circle cx="50" cy="50" r="9" fill="currentColor" />
+      <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" />
+      <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" transform="rotate(60 50 50)" />
+      <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" transform="rotate(120 50 50)" />
+    </svg>
+  );
+}
+
+function NextWhiteIcon() {
+  return (
+    <svg className="w-9 h-9 text-white/90 hover:text-white transition-colors" viewBox="0 0 128 128" fill="currentColor">
+      <path d="M64 0a64 64 0 1 0 64 64A64.07 64.07 0 0 0 64 0zm33.4 96L55.8 45.4V96H45V32h14.8l41.6 50.6V32h10.8v64z" />
+    </svg>
+  );
+}
+
+function TSWhiteIcon() {
+  return (
+    <svg className="w-9 h-9 text-white/90 hover:text-white transition-colors" viewBox="0 0 128 128">
+      <rect width="128" height="128" rx="18" fill="currentColor" />
+      <path d="M38.5 48h30.8v11.7H54v42.3H39.2V59.7H38.5V48zm50.3 35.8c-2.4-1.6-5.8-2.9-10.1-3.9-3.2-.8-5.3-1.6-6.4-2.5-1.1-.9-1.6-2-1.6-3.4 0-1.5.7-2.7 2-3.6 1.4-.9 3.4-1.4 6-1.4 2.8 0 5.4.6 7.9 1.7 2.5 1.1 4.7 2.7 6.6 4.7l6.6-8.7c-3.1-2.9-6.8-5.1-11.1-6.5s-8.9-2.2-13.8-2.2c-7.3 0-13.1 1.7-17.3 5-4.2 3.3-6.3 8-6.3 14.2 0 4.7 1.3 8.6 4 11.6 2.7 3 6.9 5.3 12.6 6.9 3.8 1.1 6.5 2.1 7.9 3 1.4.9 2.1 2.2 2.1 3.9 0 1.7-.8 3.1-2.3 4.1-1.5 1-3.7 1.5-6.6 1.5-3.8 0-7.3-.9-10.7-2.7-3.4-1.8-6.3-4.4-8.8-7.7l-7.3 8.9c3.7 4.5 8.1 7.9 13.3 10.1 5.2 2.2 11.1 3.3 17.7 3.3 7.8 0 14-1.8 18.5-5.3 4.5-3.5 6.8-8.4 6.8-14.7 0-4.9-1.4-8.9-4.2-12.1z" fill="#000" />
+    </svg>
+  );
+}
+
+function TailwindWhiteIcon() {
+  return (
+    <svg className="w-9 h-9 text-white/90 hover:text-white transition-colors" viewBox="0 0 100 100" fill="currentColor">
+      <path d="M50 20c-15 0-25 7.5-30 22.5 7.5-7.5 16.25-10 26.25-7.5 5.7 1.4 9.8 5.6 14.3 10.2C67.8 51.9 76.5 60 95 60c15 0 25-7.5 30-22.5-7.5 7.5-16.25 10-26.25 7.5-5.7-1.4-9.8-5.6-14.3-10.2C77.2 28.1 68.5 20 50 20zM25 60c-15 0-25 7.5-30 22.5 7.5-7.5 16.25-10 26.25-7.5 5.7 1.4 9.8 5.6 14.3 10.2C42.8 91.9 51.5 100 70 100c15 0 25-7.5 30-22.5-7.5 7.5-16.25 10-26.25 7.5-5.7-1.4-9.8-5.6-14.3-10.2C52.2 68.1 43.5 60 25 60z" />
+    </svg>
+  );
+}
+
+const whiteTechLogos = [
+  { node: <GoogleWhiteLogo />, title: "Google", href: "https://google.com" },
+  { node: <FirebaseWhiteLogo />, title: "Firebase", href: "https://firebase.google.com" },
+  { node: <ReactWhiteIcon />, title: "React", href: "https://react.dev" },
+  { node: <NextWhiteIcon />, title: "Next.js", href: "https://nextjs.org" },
+  { node: <TSWhiteIcon />, title: "TypeScript", href: "https://www.typescriptlang.org" },
+  { node: <TailwindWhiteIcon />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
+];
 
 const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -59,7 +125,29 @@ const footerSocials = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-black text-white pt-16 overflow-hidden relative">
+    <footer className="w-full bg-black text-white pt-0 overflow-hidden relative border-t border-white/10">
+      {/* Top Section: Connected All-White Monochrome Partner Logo Loop */}
+      <div className="w-full border-b border-white/10 py-8 bg-black relative overflow-hidden select-none mb-12">
+        <div className="max-w-[1400px] mx-auto px-6 mb-4 text-center">
+          <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest">
+            POWERED BY INDUSTRY LEADERS
+          </span>
+        </div>
+        <div className="h-14 relative overflow-hidden flex items-center">
+          <LogoLoop
+            logos={whiteTechLogos}
+            speed={100}
+            direction="left"
+            logoHeight={36}
+            gap={60}
+            hoverSpeed={0}
+            scaleOnHover
+            fadeOut
+            fadeOutColor="#000000"
+            ariaLabel="Technology partners"
+          />
+        </div>
+      </div>
       
       {/* Top Section: Three Columns with Vertical Lines */}
       <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto_auto] gap-8 md:gap-0 border-b border-white/10 pb-16 relative">

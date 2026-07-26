@@ -119,27 +119,6 @@ export default function LandingPage() {
         </div>
         <FAQSection />
         <SocialsSlider />
-
-        {/* React Bits Logo Loop Component at the VERY bottom of the landing page */}
-        <section className="py-10 bg-black/60 border-t border-white/10 z-20 relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6 mb-3 text-center">
-            <p className="text-[11px] font-mono tracking-widest text-white/40 uppercase">POWERED BY GLOBAL TECH PARTNERS</p>
-          </div>
-          <div className="h-16 relative overflow-hidden flex items-center">
-            <LogoLoop
-              logos={partnerLogos}
-              speed={100}
-              direction="left"
-              logoHeight={36}
-              gap={48}
-              hoverSpeed={0}
-              scaleOnHover
-              fadeOut
-              fadeOutColor="#05070f"
-              ariaLabel="Technology partners"
-            />
-          </div>
-        </section>
       </div>
       <Footer />
     </main>
