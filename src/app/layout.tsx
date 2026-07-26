@@ -86,6 +86,8 @@ export const metadata: Metadata = {
   }
 };
 
+import { GradualBlurWrapper } from "@/components/GradualBlurWrapper";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -106,6 +108,7 @@ export default function RootLayout({
               <SmoothScroll>
                 {children}
               </SmoothScroll>
+              <GradualBlurWrapper />
             </UIProvider>
           </ProgressProvider>
         </AuthProvider>

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Moon, Sun, User, Palette, Check, Settings, Info } from "lucide-react";
+import { X, Moon, Sun, User, Palette, Check, Settings, Info, Volume2 } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
 import { updateProfile } from "firebase/auth";
@@ -90,6 +90,7 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [nameInput, setNameInput] = useState<string>("");
   const [savingName, setSavingName] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
+  const [voiceSetting, setVoiceSetting] = useState<string>("1");
 
   useEffect(() => {
     if (progress) {
@@ -97,7 +98,18 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
       if (progress.courseBg) setSelectedBg(progress.courseBg);
       setNameInput(progress.displayName || currentUser?.displayName || "");
     }
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("aplab_voice_setting") || "1";
+      setVoiceSetting(saved);
+    }
   }, [progress, currentUser]);
+
+  const handleVoiceChange = (id: string) => {
+    setVoiceSetting(id);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("aplab_voice_setting", id);
+    }
+  };
 
   // Lock body scroll when modal is open
   useEffect(() => {
@@ -333,6 +345,43 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                           <Check className="w-2.5 h-2.5 stroke-[3]" />
                         </div>
                       )}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* 3. Audio Voice Selector (4 Global Options) */}
+            <div className="space-y-2.5">
+              <label className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
+                <Volume2 className="w-3.5 h-3.5 text-white/60" />
+                <span>Article Read Aloud Voice Profile</span>
+              </label>
+
+              <div className="grid grid-cols-2 gap-2">
+                {[
+                  { id: "1", name: "Natural US Female", desc: "Google / Samantha" },
+                  { id: "2", name: "Natural US Male", desc: "Daniel / Alex" },
+                  { id: "3", name: "Natural UK Female", desc: "Karen / Serena" },
+                  { id: "4", name: "Natural UK Male", desc: "Oliver / George" },
+                ].map((v) => {
+                  const isSelected = voiceSetting === v.id;
+                  return (
+                    <button
+                      key={v.id}
+                      type="button"
+                      onClick={() => handleVoiceChange(v.id)}
+                      className={`p-3 rounded-xl border text-left transition-all flex flex-col justify-between cursor-pointer ${
+                        isSelected
+                          ? "bg-purple-600/20 border-purple-500/60 text-white shadow-md"
+                          : "bg-white/[0.03] border-white/10 hover:bg-white/[0.07] text-white/70"
+                      }`}
+                    >
+                      <div className="flex items-center justify-between w-full mb-1">
+                        <span className="font-manrope font-bold text-xs text-white">{v.name}</span>
+                        {isSelected && <Check className="w-3.5 h-3.5 text-purple-400" />}
+                      </div>
+                      <span className="text-[10px] text-white/40 font-sans">{v.desc}</span>
                     </button>
                   );
                 })}

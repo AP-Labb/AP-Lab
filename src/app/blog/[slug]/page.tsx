@@ -102,9 +102,8 @@ export default function SingleBlogPostPage({ params }: { params: { slug: string 
             )}
           </div>
 
-          {/* Read Aloud Audio Player Bar */}
-          <div className="flex items-center justify-between px-6 py-3 rounded-2xl bg-[#0e1628]/80 border border-white/10 mb-8">
-            <span className="text-xs font-mono font-bold text-white/50 uppercase tracking-wider">Audio Companion</span>
+          {/* Read Aloud Audio Player Circle Button */}
+          <div className="flex items-center justify-end mb-6">
             <ReadAloudButton textToRead={post.content} title={post.title} />
           </div>
 

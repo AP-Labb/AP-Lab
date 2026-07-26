@@ -1584,13 +1584,40 @@ export default function APDynamicCoursePage() {
   const [topicInteracted, setTopicInteracted] = useState(false);
   const [tabInteracted, setTabInteracted] = useState(false);
 
-  // Safely initialize active topic
+  // Initialize and Sync Tab from URL query parameters (?tab=video | article | practice)
   useEffect(() => {
-    if (course && course.units.length > 0 && course.units[0].topics.length > 0) {
-      setActiveTopic(course.units[0].topics[0]);
-      setActiveUnit(course.units[0].id);
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      const tabParam = urlParams.get("tab");
+      if (tabParam === "article" || tabParam === "practice" || tabParam === "video") {
+        setActiveTab(tabParam);
+      }
     }
-  }, [course]);
+  }, []);
+
+  const handleTabSelection = (newTab: "video" | "article" | "practice") => {
+    setActiveTab(newTab);
+    setTabInteracted(true);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", newTab);
+      window.history.replaceState(null, "", url.toString());
+    }
+  };
+
+  // Google / Browser "Are you sure you want to leave? You may have unsaved progress" Web Pop-up
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (activeTab === "practice") {
+        e.preventDefault();
+        e.returnValue = "You have unsaved practice question progress. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [activeTab]);
 
   // Dynamic Browser Tab Title tracking course, unit number, and topic
   useEffect(() => {
@@ -1999,10 +2026,7 @@ export default function APDynamicCoursePage() {
                 ].map((tab) => (
                   <button
                     key={tab.id}
-                    onClick={() => {
-                      setActiveTab(tab.id as any);
-                      setTabInteracted(true);
-                    }}
+                    onClick={() => handleTabSelection(tab.id as any)}
                     className={cn(
                       "flex items-center space-x-2 px-6 py-2.5 rounded-xl text-sm font-medium transition-all relative",
                       activeTab === tab.id 
@@ -2052,13 +2076,11 @@ export default function APDynamicCoursePage() {
                       exit={{ opacity: 0, y: -10 }}
                       className="space-y-8 article-content-container"
                     >
-                      {/* Read Aloud Audio Player Bar */}
-                      <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
-                        <span className="text-xs font-mono font-bold uppercase tracking-wider text-white/50">Article Audio Companion</span>
+                      {/* Read Aloud Audio Player Circle Button */}
+                      <div className="flex items-center justify-end pb-2 mb-4">
                         <ReadAloudButton 
                           textToRead={activeTopic.article} 
                           title={activeTopic.title} 
-                          isLightMode={isLightMode} 
                         />
                       </div>
 
