@@ -355,13 +355,15 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   return (
     <>
-      <button
+      <motion.button
         onClick={() => setIsSettingsOpen(true)}
         className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+        whileHover="hover"
+        initial="rest"
       >
         <motion.div
           className="flex-shrink-0"
-          whileHover={{ rotate: 90 }}
+          variants={{ rest: { rotate: 0 }, hover: { rotate: 90 } }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         >
           <Settings className="w-5 h-5" />
@@ -376,9 +378,53 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
         >
           Settings
         </motion.span>
-      </button>
+      </motion.button>
       <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
     </>
+  );
+}
+
+function HoldSignOutButton({ onConfirm }: { onConfirm: () => void }) {
+  const [progress, setProgress] = useState(0);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  const startHold = () => {
+    const startTime = Date.now();
+    intervalRef.current = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const p = Math.min(100, (elapsed / 3000) * 100);
+      setProgress(p);
+      if (p >= 100) {
+        clearInterval(intervalRef.current!);
+        onConfirm();
+      }
+    }, 16);
+  };
+
+  const stopHold = () => {
+    setProgress(0);
+    if (intervalRef.current) clearInterval(intervalRef.current);
+  };
+
+  return (
+    <button
+      onMouseDown={startHold}
+      onMouseUp={stopHold}
+      onMouseLeave={stopHold}
+      onTouchStart={startHold}
+      onTouchEnd={stopHold}
+      onTouchCancel={stopHold}
+      className="flex-1 relative overflow-hidden rounded-full bg-red-500 text-white text-sm font-semibold select-none shadow-[0_4px_12px_rgba(239,68,68,0.2)] py-2.5"
+    >
+      {/* Fill bar */}
+      <div
+        className="absolute inset-0 bg-red-700 origin-left pointer-events-none"
+        style={{ transform: `scaleX(${progress / 100})`, transition: progress === 0 ? "transform 0.2s ease" : "none" }}
+      />
+      <span className="relative z-10 pointer-events-none">
+        {progress > 5 ? `Hold... ${Math.round(progress)}%` : "Hold to Sign Out"}
+      </span>
+    </button>
   );
 }
 
@@ -709,137 +755,149 @@ export default function Dashboard() {
             {/* Divider */}
             <div className="h-px bg-white/[0.06] mb-4 mx-2" />
 
-            {/* Nav Links with animated icons */}
+            {/* Nav Links with animated icons — hover on the whole row triggers child variants */}
             <div className="flex flex-col gap-1">
 
-              {/* Home */}
-              <Link
-                href="/"
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white group/home"
-              >
-                <motion.div
-                  className="flex-shrink-0"
-                  whileHover={{ x: [0, -3, 3, -2, 2, 0], y: [0, -2, 0] }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
+              {/* Home — smooth float up on row hover */}
+              <motion.div whileHover="hover" initial="rest">
+                <Link
+                  href="/"
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
                 >
-                  <Home className="w-5 h-5" />
-                </motion.div>
-                <motion.span
-                  animate={{
-                    display: sidebarOpen ? "inline-block" : "none",
-                    opacity: sidebarOpen ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Home
-                </motion.span>
-              </Link>
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { y: 0, scale: 1 },
+                      hover: { y: -3, scale: 1.1 },
+                    }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Home className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Home
+                  </motion.span>
+                </Link>
+              </motion.div>
 
-              {/* Dashboard */}
-              <Link
-                href="/dashboard"
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white group/dash"
-              >
-                <motion.div
-                  className="flex-shrink-0"
-                  whileHover={{ scale: [1, 1.12, 0.95, 1.06, 1], rotate: [0, 4, -4, 2, 0] }}
-                  transition={{ duration: 0.45, ease: "easeInOut" }}
+              {/* Dashboard — squares shift/scale on row hover */}
+              <motion.div whileHover="hover" initial="rest">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white"
                 >
-                  <LayoutDashboard className="w-5 h-5" />
-                </motion.div>
-                <motion.span
-                  animate={{
-                    display: sidebarOpen ? "inline-block" : "none",
-                    opacity: sidebarOpen ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Dashboard
-                </motion.span>
-              </Link>
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.15, rotate: 8 },
+                    }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <LayoutDashboard className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Dashboard
+                  </motion.span>
+                </Link>
+              </motion.div>
 
-              {/* Progress */}
-              <Link
-                href="/dashboard/progress"
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white group/prog"
-              >
-                <motion.div
-                  className="flex-shrink-0"
-                  whileHover={{ y: [0, -3, 1, -1, 0] }}
-                  transition={{ duration: 0.4, ease: "easeInOut" }}
+              {/* Progress — animated rising bars on row hover */}
+              <motion.div whileHover="hover" initial="rest">
+                <Link
+                  href="/dashboard/progress"
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
                 >
-                  <BarChart2 className="w-5 h-5" />
-                </motion.div>
-                <motion.span
-                  animate={{
-                    display: sidebarOpen ? "inline-block" : "none",
-                    opacity: sidebarOpen ? 1 : 0,
-                  }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Progress
-                </motion.span>
-              </Link>
+                  {/* Custom animated bars SVG replacing BarChart2 */}
+                  <div className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]">
+                    {[
+                      { height: "40%", delay: 0 },
+                      { height: "70%", delay: 0.05 },
+                      { height: "55%", delay: 0.1 },
+                      { height: "90%", delay: 0.15 },
+                    ].map((bar, i) => (
+                      <motion.div
+                        key={i}
+                        className="flex-1 rounded-sm bg-current"
+                        style={{ height: bar.height }}
+                        variants={{
+                          rest: { scaleY: 1, originY: 1 },
+                          hover: { scaleY: [1, 1.5, 1.2, 1.35, 1], originY: 1 },
+                        }}
+                        transition={{ duration: 0.5, delay: bar.delay, ease: "easeInOut" }}
+                      />
+                    ))}
+                  </div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Progress
+                  </motion.span>
+                </Link>
+              </motion.div>
 
-              {/* Review (star with burst lines) */}
-              <button
+              {/* Review — star with rays that radiate out and fade on row hover */}
+              <motion.button
                 onClick={() => setIsReviewModalOpen(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                whileHover="hover"
+                initial="rest"
               >
-                <motion.div
-                  className="flex-shrink-0 relative"
-                  whileHover="burst"
-                  initial="idle"
-                >
-                  {/* Burst lines */}
+                <div className="flex-shrink-0 relative w-5 h-5">
+                  {/* 8 radiating rays */}
                   {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
                     <motion.div
                       key={angle}
-                      className="absolute bg-yellow-400/60 rounded-full"
+                      className="absolute rounded-full bg-yellow-300"
                       style={{
-                        width: "2px",
-                        height: "6px",
+                        width: "1.5px",
+                        height: "5px",
                         top: "50%",
                         left: "50%",
-                        transformOrigin: "0 0",
-                        transform: `rotate(${angle}deg) translate(-50%, -50%)`,
+                        transformOrigin: "center bottom",
+                        transform: `rotate(${angle}deg) translateX(-50%) translateY(-140%)`,
                       }}
                       variants={{
-                        idle: { scale: 0, opacity: 0, translateX: 0, translateY: 0 },
-                        burst: {
-                          scale: [0, 1, 0],
-                          opacity: [0, 0.8, 0],
-                          translateX: Math.cos((angle * Math.PI) / 180) * 10,
-                          translateY: Math.sin((angle * Math.PI) / 180) * 10,
+                        rest: { opacity: 0, scaleY: 0.3, translateY: 0 },
+                        hover: {
+                          opacity: [0, 0.9, 0],
+                          scaleY: [0.3, 1.2, 0.8],
+                          translateY: [0, -4, -6],
                         },
                       }}
-                      transition={{ duration: 0.45, delay: i * 0.02, ease: "easeOut" }}
+                      transition={{ duration: 0.5, delay: i * 0.03, ease: "easeOut" }}
                     />
                   ))}
+                  {/* Star icon */}
                   <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
                     variants={{
-                      idle: { scale: 1 },
-                      burst: { scale: [1, 1.3, 1] },
+                      rest: { scale: 1 },
+                      hover: { scale: 1.2 },
                     }}
-                    transition={{ duration: 0.35 }}
+                    transition={{ duration: 0.25 }}
                   >
-                    <Star className="w-5 h-5" />
+                    <Star className="w-4 h-4" />
                   </motion.div>
-                </motion.div>
+                </div>
                 <motion.span
-                  animate={{
-                    display: sidebarOpen ? "inline-block" : "none",
-                    opacity: sidebarOpen ? 1 : 0,
-                  }}
+                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
                   transition={{ duration: 0.15 }}
                   className="text-sm font-manrope font-semibold whitespace-pre"
                 >
                   Review
                 </motion.span>
-              </button>
+              </motion.button>
 
               {/* Settings */}
               <SidebarSettingsButton open={sidebarOpen} />
@@ -847,8 +905,8 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Bottom: Profile Widget + Sign Out */}
-          <div className="flex flex-col gap-2">
+          {/* Bottom: Profile Widget + Sign Out — pb-24 clears the bottom blur */}
+          <div className="flex flex-col gap-2 pb-24">
             <div className="h-px bg-white/[0.06] mx-2 mb-2" />
 
             {/* Profile — compact circle when closed, full widget when open */}
@@ -892,29 +950,31 @@ export default function Dashboard() {
               </AnimatePresence>
             </button>
 
-            {/* Sign Out */}
-            <button
+            {/* Sign Out — animated on row hover */}
+            <motion.button
               onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400 group/signout"
+              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400"
+              whileHover="hover"
+              initial="rest"
             >
               <motion.div
                 className="flex-shrink-0"
-                whileHover={{ x: [0, 4, -2, 3, 0] }}
-                transition={{ duration: 0.4, ease: "easeInOut" }}
+                variants={{
+                  rest: { x: 0 },
+                  hover: { x: 3 },
+                }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
               >
                 <LogOut className="w-5 h-5" />
               </motion.div>
               <motion.span
-                animate={{
-                  display: sidebarOpen ? "inline-block" : "none",
-                  opacity: sidebarOpen ? 1 : 0,
-                }}
+                animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
                 transition={{ duration: 0.15 }}
                 className="font-manrope font-semibold text-sm whitespace-pre"
               >
                 Sign Out
               </motion.span>
-            </button>
+            </motion.button>
           </div>
         </SidebarBody>
       </Sidebar>
@@ -942,6 +1002,7 @@ export default function Dashboard() {
               distortion={0.05}
             />
           </div>
+
 
           {/* Header Section */}
           <div className="text-center mb-10 flex flex-col items-center justify-center relative z-10">
@@ -1175,9 +1236,10 @@ export default function Dashboard() {
                 <LogOut className="w-5 h-5 text-red-400" />
               </div>
 
-              <h3 className="font-manrope font-bold text-lg text-white text-center mb-6 px-2 relative z-10">
+              <h3 className="font-manrope font-bold text-lg text-white text-center mb-1 px-2 relative z-10">
                 Are you sure you want to sign out?
               </h3>
+              <p className="text-white/40 text-xs text-center mb-6 relative z-10">Hold the button for 3 seconds to confirm</p>
               
               <div className="flex items-center space-x-3 w-full relative z-10">
                 <button
@@ -1186,8 +1248,8 @@ export default function Dashboard() {
                 >
                   Cancel
                 </button>
-                <button
-                  onClick={async () => {
+                <HoldSignOutButton
+                  onConfirm={async () => {
                     try {
                       await signOut(auth);
                       window.location.href = "/";
@@ -1195,11 +1257,9 @@ export default function Dashboard() {
                       console.error("Error signing out:", error);
                     }
                   }}
-                  className="flex-1 py-2.5 rounded-full bg-red-500 text-white text-sm font-semibold hover:bg-red-600 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-[0_4px_12px_rgba(239,68,68,0.2)]"
-                >
-                  Sign Out
-                </button>
+                />
               </div>
+
             </motion.div>
           </motion.div>
         )}
