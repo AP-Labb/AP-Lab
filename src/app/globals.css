@@ -1246,6 +1246,27 @@ body {
   100% { left: 150%; }
 }
 
+@keyframes magicLines {
+  0% {
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
+  }
+  50% {
+    background-position: 100% 50%;
+    filter: hue-rotate(180deg);
+  }
+  100% {
+    background-position: 0% 50%;
+    filter: hue-rotate(360deg);
+  }
+}
+
+.magic-flowing-lines {
+  background: linear-gradient(115deg, #38bdf8, #818cf8, #c084fc, #f472b6, #34d399, #38bdf8);
+  background-size: 300% 300%;
+  animation: magicLines 6s linear infinite;
+}
+
 
 
 

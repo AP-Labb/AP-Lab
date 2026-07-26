@@ -336,19 +336,23 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
       </div>
 
-      {/* Layer 2: Interactive Shifting Glowing Lines (High-pass threshold filter: highlights EVERYTHING EXCEPT dark/black background, with animated shifting glow motion and ZERO circle border) */}
+      {/* Layer 2: Interactive Flowing Magic Color Lines (Highlights & animates the actual UI lines, cards & graph paths with continuous shifting magic neon colors under the cursor) */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none mix-blend-color-dodge"
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none"
         style={{
-          maskImage: `radial-gradient(300px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 80%)`,
-          WebkitMaskImage: `radial-gradient(300px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 80%)`,
+          maskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 85%)`,
+          WebkitMaskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 85%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       >
+        {/* Animated Flowing Spectrum Color Backdrop */}
+        <div className="absolute inset-0 magic-flowing-lines opacity-95" />
+
+        {/* High-Pass Threshold Image Overlay: Multiplies with the flowing spectrum backdrop so ONLY the vector UI lines, text & graphics light up with shifting colors */}
         <img 
           src="/images/HEROSECTION.png" 
-          alt="Hero Background Glow Lines" 
-          className="w-full h-full object-cover brightness-[1.95] contrast-[3.4] saturate-[2.2] filter drop-shadow-[0_0_16px_rgba(56,189,248,0.9)] animate-pulse duration-[3000ms]"
+          alt="Hero Background Magic Flowing Lines" 
+          className="w-full h-full object-cover brightness-[2.2] contrast-[3.8] mix-blend-multiply filter drop-shadow-[0_0_14px_rgba(168,85,247,0.8)]"
         />
       </div>
 

@@ -59,11 +59,17 @@ export function ScrollVideoSection() {
       ref={containerRef} 
       className="relative w-full pt-12 pb-32 px-4 sm:px-6 md:px-12 flex flex-col justify-center items-center z-20 overflow-visible" 
     >
-      {/* Top Volumetric LaserFlow Beam Container: Flows down from Included Classes section into top-left of the video frame */}
-      <div className="absolute -top-[220px] left-1/2 -translate-x-1/2 w-full max-w-[1300px] h-[650px] z-10 pointer-events-none overflow-hidden select-none">
+      {/* Top Volumetric LaserFlow Beam Container: Flows down into top-right of the video frame with a clean top fade out */}
+      <div 
+        className="absolute -top-[120px] left-1/2 -translate-x-1/2 w-full max-w-[1300px] h-[580px] z-10 pointer-events-none overflow-hidden select-none"
+        style={{
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 28%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 28%, black 100%)"
+        }}
+      >
         <LaserFlow
-          horizontalBeamOffset={-0.26}
-          verticalBeamOffset={-0.12}
+          horizontalBeamOffset={0.28}
+          verticalBeamOffset={-0.08}
           horizontalSizing={0.45}
           verticalSizing={2.2}
           fogIntensity={0.65}
@@ -72,7 +78,7 @@ export function ScrollVideoSection() {
           wispDensity={1.4}
           wispSpeed={16.0}
           wispIntensity={6.0}
-          color="#38BDF8"
+          color="#A855F7"
         />
       </div>
 
