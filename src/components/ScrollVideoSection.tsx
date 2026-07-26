@@ -63,8 +63,10 @@ export function ScrollVideoSection() {
       <div 
         className="absolute -top-[155px] left-1/2 -translate-x-1/2 w-full max-w-[1300px] h-[610px] z-10 pointer-events-none overflow-hidden select-none"
         style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 100%)"
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 100%), linear-gradient(to right, black 0%, black 78%, transparent 97%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 100%), linear-gradient(to right, black 0%, black 78%, transparent 97%)",
+          maskComposite: "intersect",
+          WebkitMaskComposite: "source-in"
         }}
       >
         <LaserFlow
