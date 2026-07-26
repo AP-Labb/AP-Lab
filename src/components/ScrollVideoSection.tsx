@@ -61,10 +61,10 @@ export function ScrollVideoSection() {
     >
       {/* Top Volumetric LaserFlow Beam Container: Flows down into top-right of the video frame with a clean top fade out */}
       <div 
-        className="absolute -top-[120px] left-1/2 -translate-x-1/2 w-full max-w-[1300px] h-[580px] z-10 pointer-events-none overflow-hidden select-none"
+        className="absolute -top-[155px] left-1/2 -translate-x-1/2 w-full max-w-[1300px] h-[610px] z-10 pointer-events-none overflow-hidden select-none"
         style={{
-          maskImage: "linear-gradient(to bottom, transparent 0%, black 28%, black 100%)",
-          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 28%, black 100%)"
+          maskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 100%)",
+          WebkitMaskImage: "linear-gradient(to bottom, transparent 0%, black 18%, black 100%)"
         }}
       >
         <LaserFlow
@@ -96,7 +96,7 @@ export function ScrollVideoSection() {
 
       {/* Background Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[70%] h-[70%] bg-primary-purple/30 blur-[120px] rounded-[100%] pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-medical-teal/25 blur-[100px] rounded-[100%] pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40%] h-[40%] bg-purple-600/25 blur-[100px] rounded-[100%] pointer-events-none" />
 
       {/* Video Card Container (Clean flat layout without 3D fold scroll distortion) */}
       <div
@@ -132,8 +132,8 @@ export function ScrollVideoSection() {
           </svg>
         </motion.div>
 
-        {/* Video Card Frame */}
-        <div className="relative w-full aspect-video rounded-[16px] md:rounded-[24px] p-2 sm:p-3 md:p-4 bg-white/[0.06] border border-sky-400/30 backdrop-blur-[40px] shadow-[0_30px_90px_-15px_rgba(0,0,0,0.9),0_0_40px_rgba(56,189,248,0.25)] flex justify-center items-center overflow-hidden">
+        {/* Video Card Frame (Purplish glow matching LaserFlow beam) */}
+        <div className="relative w-full aspect-video rounded-[16px] md:rounded-[24px] p-2 sm:p-3 md:p-4 bg-white/[0.06] border border-purple-500/40 backdrop-blur-[40px] shadow-[0_30px_90px_-15px_rgba(0,0,0,0.9),0_0_50px_rgba(168,85,247,0.35)] flex justify-center items-center overflow-hidden">
           <div className="relative w-full h-full rounded-[12px] md:rounded-[18px] overflow-hidden border border-white/20 bg-[#020202] flex justify-center items-center shadow-[inset_0_0_50px_rgba(0,0,0,0.8)]">
              <video
                ref={videoRef}

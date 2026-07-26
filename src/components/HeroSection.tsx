@@ -336,23 +336,23 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
       </div>
 
-      {/* Layer 2: Interactive Flowing Magic Color Lines (Highlights & animates the actual UI lines, cards & graph paths with continuous shifting magic neon colors under the cursor) */}
+      {/* Layer 2: Interactive Luminescent Border & Line Glow (Animates border & vector line highlights under the cursor matching pointer direction and the uploaded design) */}
       <div 
         className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none"
         style={{
-          maskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 85%)`,
-          WebkitMaskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 85%)`,
+          maskImage: `radial-gradient(300px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 85%)`,
+          WebkitMaskImage: `radial-gradient(300px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 50%, transparent 85%)`,
           opacity: cursorPos.inside ? 1 : 0
         }}
       >
-        {/* Animated Flowing Spectrum Color Backdrop */}
-        <div className="absolute inset-0 magic-flowing-lines opacity-95" />
+        {/* Directional Luminescent Border & Edge Glow Backdrop */}
+        <div className="absolute inset-0 border-glow-gradient opacity-95" />
 
-        {/* High-Pass Threshold Image Overlay: Multiplies with the flowing spectrum backdrop so ONLY the vector UI lines, text & graphics light up with shifting colors */}
+        {/* High-Pass Threshold Vector Line Mask: Multiplies with the luminescent gradient backdrop so ONLY the vector UI borders, cards & lines light up */}
         <img 
           src="/images/HEROSECTION.png" 
-          alt="Hero Background Magic Flowing Lines" 
-          className="w-full h-full object-cover brightness-[2.2] contrast-[3.8] mix-blend-multiply filter drop-shadow-[0_0_14px_rgba(168,85,247,0.8)]"
+          alt="Hero Background Border Glow Lines" 
+          className="w-full h-full object-cover brightness-[2.3] contrast-[4.2] mix-blend-multiply filter drop-shadow-[0_0_12px_rgba(251,191,36,0.7)]"
         />
       </div>
 
