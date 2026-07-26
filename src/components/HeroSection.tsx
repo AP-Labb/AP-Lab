@@ -349,21 +349,21 @@ export function HeroSection() {
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-75 brightness-[0.65] contrast-[1.12]"
+          className="w-full h-full object-cover opacity-45 brightness-[0.35] contrast-[1.25]"
         />
-        <div className="absolute inset-0 bg-black/45 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
+        <div className="absolute inset-0 bg-black/65 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(5,7,15,0.95)_100%)]" />
       </div>
 
-      {/* Layer 1: Full-Screen Specular Light Shimmer Sweep Across the WHOLE Hero Background Image UI */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-70 mix-blend-color-dodge">
+      {/* Layer 1: Specular Light Shimmer Sweep Across WHOLE Background ILLUMINATING ONLY THE UI LINES */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-90 mix-blend-color-dodge">
         <div className="relative w-full h-full">
           <img 
             src="/images/HEROSECTION.png" 
             alt="Hero UI Full Shimmer Sweep" 
-            className="w-full h-full object-cover brightness-[1.8] contrast-[2.2] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.7)]"
+            className="w-full h-full object-cover brightness-[2.6] contrast-[3.8] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)]"
           />
-          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
+          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/45 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
         </div>
       </div>
 
@@ -379,7 +379,7 @@ export function HeroSection() {
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero UI Spotlight Cursor Reveal" 
-          className="w-full h-full object-cover brightness-[2.3] contrast-[3.0] filter drop-shadow-[0_0_3px_rgba(255,255,255,0.95)] drop-shadow-[0_0_12px_rgba(255,255,255,0.5)]"
+          className="w-full h-full object-cover brightness-[2.8] contrast-[4.0] filter drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]"
         />
       </div>
 
