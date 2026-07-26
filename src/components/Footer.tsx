@@ -157,37 +157,21 @@ const footerSocials = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-black text-white pt-12 overflow-hidden relative border-t border-white/10">
-      {/* Top Section: 21st.dev Style Clean Tech Partner Cards Grid */}
-      <div className="max-w-[1400px] mx-auto px-6 mb-16">
-        <div className="flex items-center justify-between mb-6">
-          <span className="font-mono text-[10px] font-bold text-white/40 uppercase tracking-widest">
-            POWERED BY INDUSTRY LEADERS & PLATFORM INFRASTRUCTURE
-          </span>
-        </div>
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
-          {whiteTechLogos.map((tech, idx) => (
-            <a
-              key={idx}
-              href={tech.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#0b0d14] hover:bg-white/[0.08] border border-white/10 rounded-xl p-3 flex items-center space-x-3 transition-all duration-200 group"
-            >
-              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
-                {tech.node}
-              </div>
-              <div className="flex flex-col text-left overflow-hidden">
-                <span className="font-manrope font-bold text-xs text-white truncate leading-tight group-hover:text-purple-300 transition-colors">
-                  {tech.title}
-                </span>
-                <span className="font-sans text-[10px] text-white/40 truncate mt-0.5">
-                  {tech.subtitle}
-                </span>
-              </div>
-            </a>
-          ))}
-        </div>
+    <footer className="w-full bg-black text-white pt-10 overflow-hidden relative border-t border-white/10">
+      {/* Clean Clickable Monochrome Logos in Single Horizontal Line */}
+      <div className="max-w-[1400px] mx-auto px-6 mb-10 flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-14">
+        {whiteTechLogos.map((tech, idx) => (
+          <a
+            key={idx}
+            href={tech.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={tech.title}
+            className="opacity-50 hover:opacity-100 transition-all duration-300 hover:scale-110 transform flex items-center justify-center"
+          >
+            {tech.node}
+          </a>
+        ))}
       </div>
       
       {/* Top Section: Three Columns with Vertical Lines */}

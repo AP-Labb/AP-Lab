@@ -365,7 +365,10 @@ export function HeroSection() {
             maskImage: "linear-gradient(110deg, transparent 35%, #000 50%, transparent 65%)",
             WebkitMaskSize: "200% 100%",
             maskSize: "200% 100%",
-            animation: "ui-glint 6.5s infinite ease-in-out"
+            animation: "ui-glint 6.5s infinite ease-in-out",
+            transform: "translate3d(0,0,0)",
+            willChange: "transform, mask-image",
+            backfaceVisibility: "hidden",
           }}
         >
           <img 
