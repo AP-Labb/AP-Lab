@@ -84,6 +84,7 @@ import { VocabularyPopover } from "@/components/VocabularyPopover";
 import { DiagramContainer } from "@/components/DiagramContainer";
 import { playSuccessSound, playFailureSound } from "@/lib/sounds";
 import { DesmosCalculatorModal } from "@/components/DesmosCalculatorModal";
+import { ReadAloudButton } from "@/components/ReadAloudButton";
 
 function MagneticButton({ children, className, onClick, disabled, accentColor }: { children: React.ReactNode, className?: string, onClick?: () => void, disabled?: boolean, accentColor: string }) {
   const ref = useRef<HTMLButtonElement>(null);
@@ -2051,6 +2052,16 @@ export default function APDynamicCoursePage() {
                       exit={{ opacity: 0, y: -10 }}
                       className="space-y-8 article-content-container"
                     >
+                      {/* Read Aloud Audio Player Bar */}
+                      <div className="flex items-center justify-between pb-4 border-b border-white/10 mb-6">
+                        <span className="text-xs font-mono font-bold uppercase tracking-wider text-white/50">Article Audio Companion</span>
+                        <ReadAloudButton 
+                          textToRead={activeTopic.article} 
+                          title={activeTopic.title} 
+                          isLightMode={isLightMode} 
+                        />
+                      </div>
+
                       {activeTopic.article.split("##").map((section, idx) => {
                         if (!section.trim()) return null;
                         const isFirst = idx === 0;

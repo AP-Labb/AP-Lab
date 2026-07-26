@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 
+import { ReadAloudButton } from "@/components/ReadAloudButton";
+
 export default function SingleBlogPostPage({ params }: { params: { slug: string } | Promise<{ slug: string }> }) {
   // Safely unwrap params whether passed synchronously or as a Promise
   const resolvedParams = params && typeof (params as any).then === "function" ? use(params as Promise<{ slug: string }>) : (params as { slug: string });
@@ -98,6 +100,12 @@ export default function SingleBlogPostPage({ params }: { params: { slug: string 
                 ))}
               </div>
             )}
+          </div>
+
+          {/* Read Aloud Audio Player Bar */}
+          <div className="flex items-center justify-between px-6 py-3 rounded-2xl bg-[#0e1628]/80 border border-white/10 mb-8">
+            <span className="text-xs font-mono font-bold text-white/50 uppercase tracking-wider">Audio Companion</span>
+            <ReadAloudButton textToRead={post.content} title={post.title} />
           </div>
 
           {/* Cover Image */}

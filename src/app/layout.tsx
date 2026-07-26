@@ -86,8 +86,6 @@ export const metadata: Metadata = {
   }
 };
 
-import GradualBlur from "@/components/GradualBlur";
-
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -108,16 +106,6 @@ export default function RootLayout({
               <SmoothScroll>
                 {children}
               </SmoothScroll>
-              <GradualBlur
-                target="page"
-                position="bottom"
-                height="6rem"
-                strength={2}
-                divCount={5}
-                curve="bezier"
-                exponential={true}
-                opacity={1}
-              />
             </UIProvider>
           </ProgressProvider>
         </AuthProvider>
