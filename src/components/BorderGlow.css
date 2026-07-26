@@ -13,35 +13,32 @@
   transform: translate3d(0, 0, 0.01px);
   display: flex;
   flex-direction: column;
-  background: var(--card-bg, #120F17);
+  background: var(--card-bg, #000000);
   overflow: hidden;
   box-shadow:
-    rgba(0, 0, 0, 0.2) 0px 2px 4px,
-    rgba(0, 0, 0, 0.15) 0px 4px 12px,
-    rgba(0, 0, 0, 0.1) 0px 12px 24px;
+    rgba(0, 0, 0, 0.4) 0px 4px 16px,
+    rgba(0, 0, 0, 0.3) 0px 8px 32px;
 }
 
-/* Outer/Inner glowing border ring using mask XOR - Strict prop colors only */
+/* Outer/Inner glowing border ring using mask XOR - Clean 3-color monochrome gradient */
 .border-glow-card::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: inherit;
-  padding: 2px;
+  padding: 1.75px;
   background:
-    var(--gradient-one),
-    var(--gradient-two),
-    var(--gradient-three),
-    var(--gradient-four),
-    var(--gradient-five),
-    var(--gradient-base);
+    var(--gradient-one, radial-gradient(at 80% 55%, var(--glow-color-1, #ffffff) 0px, transparent 50%)),
+    var(--gradient-two, radial-gradient(at 20% 25%, var(--glow-color-2, #cbd5e1) 0px, transparent 50%)),
+    var(--gradient-three, radial-gradient(at 50% 80%, var(--glow-color-3, #64748b) 0px, transparent 50%)),
+    var(--gradient-base, linear-gradient(135deg, var(--glow-color-1, #ffffff) 0%, var(--glow-color-2, #cbd5e1) 50%, var(--glow-color-3, #64748b) 100%));
 
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
   z-index: 10;
-  opacity: 0.5;
+  opacity: 0.6;
   transition: opacity 0.3s ease;
 }
 
@@ -57,18 +54,18 @@
   inset: 0;
   border-radius: inherit;
   background:
-    var(--gradient-one),
-    var(--gradient-two),
-    var(--gradient-three),
-    var(--gradient-base);
-  opacity: 0.15;
+    var(--gradient-one, radial-gradient(at 80% 55%, var(--glow-color-1, #ffffff) 0px, transparent 50%)),
+    var(--gradient-two, radial-gradient(at 20% 25%, var(--glow-color-2, #cbd5e1) 0px, transparent 50%)),
+    var(--gradient-three, radial-gradient(at 50% 80%, var(--glow-color-3, #64748b) 0px, transparent 50%)),
+    var(--gradient-base, linear-gradient(135deg, var(--glow-color-1, #ffffff) 0%, var(--glow-color-2, #cbd5e1) 50%, var(--glow-color-3, #64748b) 100%));
+  opacity: 0.08;
   transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 0;
 }
 
 .border-glow-card:hover::after {
-  opacity: 0.35;
+  opacity: 0.25;
 }
 
 /* Edge light drop shadow glow */

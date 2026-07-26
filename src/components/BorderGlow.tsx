@@ -25,18 +25,26 @@ function parseHSL(hslStr: string) {
   return { h: parseFloat(match[1]), s: parseFloat(match[2]), l: parseFloat(match[3]) };
 }
 
-const GRADIENT_POSITIONS = ['80% 55%', '69% 34%', '8% 6%', '41% 38%', '86% 85%', '82% 18%', '51% 4%'];
+const GRADIENT_POSITIONS = ['80% 55%', '20% 25%', '50% 80%', '41% 38%', '86% 85%', '82% 18%', '51% 4%'];
 const GRADIENT_KEYS = ['--gradient-one', '--gradient-two', '--gradient-three', '--gradient-four', '--gradient-five', '--gradient-six', '--gradient-seven'];
 const COLOR_MAP = [0, 1, 2, 0, 1, 2, 1];
 
 function buildGradientVars(colors: string[]) {
   const vars: Record<string, string> = {};
+  const c1 = colors[0] || '#ffffff';
+  const c2 = colors[1] || c1;
+  const c3 = colors[2] || c2;
+
+  vars['--glow-color-1'] = c1;
+  vars['--glow-color-2'] = c2;
+  vars['--glow-color-3'] = c3;
+
   for (let i = 0; i < 7; i++) {
     const c = colors[Math.min(COLOR_MAP[i], colors.length - 1)];
     vars[GRADIENT_KEYS[i]] = `radial-gradient(at ${GRADIENT_POSITIONS[i]}, ${c} 0px, transparent 50%)`;
   }
-  vars['--gradient-base'] = `linear-gradient(${colors[0]} 0 100%)`;
-  vars['--glow-main-color'] = colors[0];
+  vars['--gradient-base'] = `linear-gradient(135deg, ${c1} 0%, ${c2} 50%, ${c3} 100%)`;
+  vars['--glow-main-color'] = c1;
   return vars;
 }
 
@@ -45,13 +53,13 @@ export function BorderGlow({
   className = '',
   edgeSensitivity = 30,
   glowColor = '265 90 75',
-  backgroundColor = '#120F17',
+  backgroundColor = '#000000',
   borderRadius = 28,
   glowRadius = 40,
   glowIntensity = 1.0,
   coneSpread = 25,
   animated = false,
-  colors = ['#c084fc', '#f472b6', '#38bdf8'],
+  colors = ['#ffffff', '#cbd5e1', '#64748b'],
   fillOpacity = 0.5,
   style = {}
 }: BorderGlowProps) {

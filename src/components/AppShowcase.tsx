@@ -58,8 +58,8 @@ export function AppShowcase() {
           {/* ROW 1 STICKY STACK (Gamification & Interactive Lessons) */}
           <div className="sticky top-[100px] z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 1 (Top Left) - GAMIFICATION (Black Card -> White Glow) */}
-              <BorderGlow colors={['#ffffff', '#e2e8f0', '#ffffff']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
+              {/* Box 1 (Top Left) - GAMIFICATION (Pitch Black Card -> Light Monochrome Gradient Glow) */}
+              <BorderGlow colors={['#ffffff', '#cbd5e1', '#64748b']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -67,7 +67,7 @@ export function AppShowcase() {
                   transition={{ duration: 0.6 }}
                   onMouseEnter={() => setIsLeaderboardHovered(true)}
                   onMouseLeave={() => setIsLeaderboardHovered(false)}
-                  className="h-full flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group backdrop-blur-xl cursor-pointer"
+                  className="h-full flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group bg-black cursor-pointer"
                 >
                   <div className="text-center relative z-10 flex flex-col items-center">
                     <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">GAMIFICATION</span>
@@ -102,14 +102,14 @@ export function AppShowcase() {
                 </motion.div>
               </BorderGlow>
 
-              {/* Box 2 (Top Right) - INTERACTIVE LESSONS (White Card -> Black Glow) */}
-              <BorderGlow colors={['#000000', '#1e293b', '#000000']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
+              {/* Box 2 (Top Right) - INTERACTIVE LESSONS (White Card -> Dark Monochrome Gradient Glow) */}
+              <BorderGlow colors={['#000000', '#334155', '#1e293b']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 }}
-                  className="h-full flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group backdrop-blur-xl"
+                  className="h-full flex flex-col justify-between p-8 md:p-10 relative overflow-hidden group bg-white"
                 >
                   <div className="text-center relative z-10 flex flex-col items-center">
                     <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">INTERACTIVE LESSONS</span>
@@ -136,14 +136,14 @@ export function AppShowcase() {
           {/* ROW 2 STICKY STACK (Embedded Desmos Calculator & Mock Exams) */}
           <div className="sticky top-[125px] z-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 3 (Bottom Left) - EMBEDDED GRAPHING CALCULATOR (White Card -> Black Glow) */}
-              <BorderGlow colors={['#000000', '#1e293b', '#000000']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[460px]">
+              {/* Box 3 (Bottom Left) - EMBEDDED GRAPHING CALCULATOR (White Card -> Dark Monochrome Gradient Glow) */}
+              <BorderGlow colors={['#000000', '#334155', '#1e293b']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[460px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
-                  className="h-full flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group backdrop-blur-2xl"
+                  className="h-full flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group bg-white"
                 >
                   <div className="text-center relative z-10 flex flex-col items-center shrink-0">
                     <span className="text-[10px] font-mono tracking-widest text-emerald-600 font-extrabold uppercase mb-1">EMBEDDED CALCULATOR</span>
@@ -188,14 +188,14 @@ export function AppShowcase() {
                 </motion.div>
               </BorderGlow>
 
-              {/* Box 4 (Bottom Right) - EXAM SIMULATOR (Black Card -> White Glow) */}
-              <BorderGlow colors={['#ffffff', '#e2e8f0', '#ffffff']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[460px]">
+              {/* Box 4 (Bottom Right) - EXAM SIMULATOR (Pitch Black Card -> Light Monochrome Gradient Glow) */}
+              <BorderGlow colors={['#ffffff', '#cbd5e1', '#64748b']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[460px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.15 }}
-                  className="h-full flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group backdrop-blur-2xl"
+                  className="h-full flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group bg-black"
                 >
                   <div className="text-center relative z-10 flex flex-col items-center shrink-0">
                     <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">EXAM SIMULATOR</span>
@@ -222,14 +222,14 @@ export function AppShowcase() {
           {/* ROW 3 STICKY STACK (Progress Tracking & Video Lessons) */}
           <div className="sticky top-[150px] z-30">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 5 (Bottom Left) - PROGRESS TRACKING (Black Card -> White Glow) */}
-              <BorderGlow colors={['#ffffff', '#e2e8f0', '#ffffff']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
+              {/* Box 5 (Bottom Left) - PROGRESS TRACKING (Pitch Black Card -> Light Monochrome Gradient Glow) */}
+              <BorderGlow colors={['#ffffff', '#cbd5e1', '#64748b']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6 }}
-                  className="h-full flex flex-col justify-between p-8 relative overflow-hidden group backdrop-blur-2xl col-span-1"
+                  className="h-full flex flex-col justify-between p-8 relative overflow-hidden group bg-black col-span-1"
                 >
                   <div className="text-left z-10 shrink-0">
                     <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">PROGRESS TRACKING</span>
@@ -307,8 +307,8 @@ export function AppShowcase() {
                 </motion.div>
               </BorderGlow>
 
-              {/* Box 6 (Bottom Right) - VIDEO MODULES (White Card -> Black Glow) */}
-              <BorderGlow colors={['#000000', '#1e293b', '#000000']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
+              {/* Box 6 (Bottom Right) - VIDEO MODULES (White Card -> Dark Monochrome Gradient Glow) */}
+              <BorderGlow colors={['#000000', '#334155', '#1e293b']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}

@@ -345,26 +345,26 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Base Darkened Background Image */}
+      {/* Base Darkened Background Image (HERONEW.png) */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
-          src="/images/HEROSECTION.png" 
+          src="/images/HERONEW.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-60 brightness-[0.55] contrast-[1.2]"
+          className="w-full h-full object-cover opacity-40 brightness-[0.4] contrast-[1.3]"
         />
-        <div className="absolute inset-0 bg-[#05070f]/60" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,#05070f_95%)]" />
+        <div className="absolute inset-0 bg-black/75 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_15%,rgba(5,7,15,0.98)_95%)]" />
       </div>
 
-      {/* Animated Specular Light Sweep Illuminating UI Lines */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-80">
+      {/* Animated Specular Light Sweep Illuminating ONLY UI & Text on HERONEW.png */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-90 mix-blend-color-dodge">
         <div className="relative w-full h-full">
           <img 
-            src="/images/HEROSECTION.png" 
+            src="/images/HERONEW.png" 
             alt="Hero UI Periodic Shimmer Reveal" 
-            className="w-full h-full object-cover brightness-[1.8] contrast-[2.5]"
+            className="w-full h-full object-cover brightness-[2.8] contrast-[4.2] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)]"
           />
-          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/30 via-white/70 via-white/30 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
+          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/25 via-white/75 via-white/25 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
         </div>
       </div>
 
@@ -485,13 +485,6 @@ export function HeroSection() {
             rel="noopener noreferrer"
             className="w-full sm:w-auto relative group"
           >
-            {/* Plain and simple 50+ members popup on hover */}
-            <div className="absolute -top-9 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 group-hover:-translate-y-1 pointer-events-none transition-all duration-200 z-30 whitespace-nowrap">
-              <div className="px-2.5 py-1 rounded-md bg-[#121422] border border-white/10 text-white/80 text-[11px] font-manrope font-semibold shadow-md">
-                50+ members
-              </div>
-            </div>
-
             <button className="pb-ai-button-inverted w-full sm:w-auto">
               <span className="pb-ai-sparkle flex items-center justify-center">
                 <DiscordLogoIcon className="w-5 h-5" />

@@ -42,7 +42,7 @@ export function DottedMap<M extends Marker = Marker>({
   mapSamples = 5000,
   markers = [],
   dotColor = "currentColor",
-  markerColor = "#FF6900",
+  markerColor = "rgba(255, 255, 255, 0.95)",
   dotRadius = 0.2,
   stagger = true,
   pulse = false,
@@ -109,65 +109,25 @@ export function DottedMap<M extends Marker = Marker>({
         const x = marker.x + offsetX;
         const y = marker.y;
         const r = marker.size ?? dotRadius;
-        const shouldPulse = pulse
-          ? marker.pulse !== false
-          : marker.pulse === true;
-        const pulseTo = r * 2.8;
 
         return (
           <g key={`${marker.x}-${marker.y}-${index}`}>
-            <circle cx={x} cy={y} r={r} fill={markerColor} />
-
-            {shouldPulse ? (
-              <g pointerEvents="none">
-                <circle
-                  cx={x}
-                  cy={y}
-                  r={r}
-                  fill="none"
-                  stroke={markerColor}
-                  strokeOpacity={1}
-                  strokeWidth={0.35}
-                >
-                  <animate
-                    attributeName="r"
-                    values={`${r};${pulseTo}`}
-                    dur="1.4s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    values="1;0"
-                    dur="1.4s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-                <circle
-                  cx={x}
-                  cy={y}
-                  r={r}
-                  fill="none"
-                  stroke={markerColor}
-                  strokeOpacity={0.9}
-                  strokeWidth={0.3}
-                >
-                  <animate
-                    attributeName="r"
-                    values={`${r};${pulseTo}`}
-                    dur="1.4s"
-                    begin="0.7s"
-                    repeatCount="indefinite"
-                  />
-                  <animate
-                    attributeName="opacity"
-                    values="0.9;0"
-                    dur="1.4s"
-                    begin="0.7s"
-                    repeatCount="indefinite"
-                  />
-                </circle>
-              </g>
-            ) : null}
+            {/* Static Liquid Glass Outer Ring */}
+            <circle
+              cx={x}
+              cy={y}
+              r={r * 1.6}
+              fill="rgba(255, 255, 255, 0.15)"
+              stroke="rgba(255, 255, 255, 0.4)"
+              strokeWidth={0.12}
+            />
+            {/* Static Inner Solid Glass Dot */}
+            <circle
+              cx={x}
+              cy={y}
+              r={r}
+              fill={markerColor}
+            />
 
             {renderMarkerOverlay?.({
               marker: { ...marker, x, y },
