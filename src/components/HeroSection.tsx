@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence, Transition, Variants, useSpring, useMotionValue, useMotionValueEvent } from "framer-motion";
 import Dither from "./Dither";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
@@ -301,7 +301,14 @@ export function HeroSection() {
   const [isHoveredSignIn, setIsHoveredSignIn] = useState(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
-  const [cursorPos, setCursorPos] = useState({ x: -999, y: -999, inside: false });
+
+  const rawX = useMotionValue(-999);
+  const rawY = useMotionValue(-999);
+  const smoothX = useSpring(rawX, { stiffness: 180, damping: 24, mass: 0.6 });
+  const smoothY = useSpring(rawY, { stiffness: 180, damping: 24, mass: 0.6 });
+
+  const [cursorInside, setCursorInside] = useState(false);
+  const [springPos, setSpringPos] = useState({ x: -999, y: -999 });
 
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
@@ -311,11 +318,23 @@ export function HeroSection() {
       const x = e.clientX - rect.left;
       const y = e.clientY - rect.top;
       const inside = x >= 0 && x <= rect.width && y >= 0 && y <= rect.height;
-      setCursorPos({ x, y, inside });
+      if (inside) {
+        rawX.set(x);
+        rawY.set(y);
+      }
+      setCursorInside(inside);
     };
+
     window.addEventListener("pointermove", handlePointerMove, { passive: true });
     return () => window.removeEventListener("pointermove", handlePointerMove);
-  }, []);
+  }, [rawX, rawY]);
+
+  useMotionValueEvent(smoothX, "change", (latestX) => {
+    setSpringPos((prev) => ({ ...prev, x: latestX }));
+  });
+  useMotionValueEvent(smoothY, "change", (latestY) => {
+    setSpringPos((prev) => ({ ...prev, y: latestY }));
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -336,19 +355,19 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
       </div>
 
-      {/* Layer 2: Isolated UI Lines & Text Layer (Removes dark background completely and illuminates ONLY the vector UI lines & text near cursor with magical animated glow) */}
+      {/* Layer 2: Apple / Linear.app / Framer Pure White Soft Spotlight & Rim Light Sweep */}
       <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none mix-blend-screen"
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 overflow-hidden select-none mix-blend-color-dodge"
         style={{
-          maskImage: `radial-gradient(280px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 45%, transparent 75%)`,
-          WebkitMaskImage: `radial-gradient(280px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 45%, transparent 75%)`,
-          opacity: cursorPos.inside ? 1 : 0
+          maskImage: `radial-gradient(280px circle at ${springPos.x}px ${springPos.y}px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.45) 45%, transparent 75%)`,
+          WebkitMaskImage: `radial-gradient(280px circle at ${springPos.x}px ${springPos.y}px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.45) 45%, transparent 75%)`,
+          opacity: cursorInside ? 1 : 0
         }}
       >
         <img 
           src="/images/HEROSECTION.png" 
-          alt="Hero UI Lines Magical Glow" 
-          className="w-full h-full object-cover brightness-[2.6] contrast-[4.5] saturate-[2.0] filter drop-shadow-[0_0_10px_rgba(56,189,248,0.95)] drop-shadow-[0_0_20px_rgba(168,85,247,0.85)] drop-shadow-[0_0_32px_rgba(236,72,153,0.7)] animate-pulse duration-[2500ms]"
+          alt="Hero UI Aluminum Light Sweep" 
+          className="w-full h-full object-cover brightness-[2.1] contrast-[2.8] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)] drop-shadow-[0_0_10px_rgba(255,255,255,0.45)]"
         />
       </div>
 

@@ -2,7 +2,7 @@
 
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
-import { FlaskConical, Brain, ArrowUp } from "lucide-react";
+import { Dna, Brain, FlaskConical, ArrowUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -19,41 +19,45 @@ interface ShowcaseSlide {
   highlightText: string;
   userQuestion: string;
   aiResponse: string;
+  zoomScale: string;
 }
 
 const showcaseSlides: ShowcaseSlide[] = [
   {
     id: 1,
-    courseName: "Chemistry",
-    courseIcon: <FlaskConical className="w-5 h-5 relative z-10 text-sky-400" />,
-    accentColor: "#38bdf8",
+    courseName: "AP® Biology",
+    courseIcon: <Dna className="w-5 h-5 relative z-10 text-emerald-400" />,
+    accentColor: "#10b981", // Bio Green
     imageSrc: "/images/ai-showcase/screenshot_1.png",
     imageAlt: "Molecular Geometry and Polarity Textbook Selection",
     highlightText: "This unequal electron distribution creates a polar covalent bond",
     userQuestion: "Can you explain what a polar covalent bond is and why unequal electron distribution causes an electric dipole in water?",
-    aiResponse: "A polar covalent bond occurs when two atoms share electrons unequally due to a difference in electronegativity. In water ($H_2O$), oxygen is significantly more electronegative than hydrogen, pulling shared electron density toward its nucleus. This creates a partial negative charge ($\delta^-$) on oxygen and a partial positive charge ($\delta^+$) on each hydrogen, forming a permanent **electric dipole**."
+    aiResponse: "A polar covalent bond occurs when two atoms share electrons unequally due to a difference in electronegativity. In water ($H_2O$), oxygen is significantly more electronegative than hydrogen, pulling shared electron density toward its nucleus. This creates a partial negative charge ($\delta^-$) on oxygen and a partial positive charge ($\delta^+$) on each hydrogen, forming a permanent **electric dipole**.",
+    zoomScale: "scale-[1.18]"
   },
   {
     id: 2,
-    courseName: "Psychology",
-    courseIcon: <Brain className="w-5 h-5 relative z-10 text-pink-400" />,
-    accentColor: "#ec4899",
+    courseName: "AP® Psychology",
+    courseIcon: <Brain className="w-5 h-5 relative z-10 text-purple-400" />,
+    accentColor: "#8b5cf6", // AP Psychology Purple
     imageSrc: "/images/ai-showcase/screenshot_2.png",
     imageAlt: "Sleep States and Waves Textbook Selection",
     highlightText: "NREM-1",
     userQuestion: "What characterizes NREM-1 sleep and how does it transition into theta waves and hypnagogic jerks?",
-    aiResponse: "NREM-1 (Non-Rapid Eye Movement Stage 1) is the light transition phase between wakefulness and sleep. As brain activity slows, high-frequency alpha waves are replaced by **theta waves (4–7 Hz)**. During NREM-1, individuals frequently experience **hypnagogic hallucinations** or **hypnagogic jerks**—sudden muscle spasms often accompanied by a sensation of falling."
+    aiResponse: "NREM-1 (Non-Rapid Eye Movement Stage 1) is the light transition phase between wakefulness and sleep. As brain activity slows, high-frequency alpha waves are replaced by **theta waves (4–7 Hz)**. During NREM-1, individuals frequently experience **hypnagogic hallucinations** or **hypnagogic jerks**—sudden muscle spasms often accompanied by a sensation of falling.",
+    zoomScale: "scale-[1.12]"
   },
   {
     id: 3,
-    courseName: "Chemistry",
-    courseIcon: <FlaskConical className="w-5 h-5 relative z-10 text-emerald-400" />,
-    accentColor: "#34d399",
+    courseName: "AP® Chemistry",
+    courseIcon: <FlaskConical className="w-5 h-5 relative z-10 text-cyan-400" />,
+    accentColor: "#06b6d4", // AP Chemistry Teal Blue
     imageSrc: "/images/ai-showcase/screenshot_3.png",
     imageAlt: "Periodic Trends Map Textbook Selection",
     highlightText: "periodic trends",
     userQuestion: "How do ionization energy, electronegativity, and atomic radius change across periodic trends?",
-    aiResponse: "Across a period (left to right), **ionization energy** and **electronegativity** increase due to a higher effective nuclear charge ($Z_{eff}$), while **atomic radius** decreases as protons pull electrons closer. Down a group (top to bottom), atomic radius increases with added electron shells, while ionization energy and electronegativity decrease due to electron shielding."
+    aiResponse: "Across a period (left to right), **ionization energy** and **electronegativity** increase due to a higher effective nuclear charge ($Z_{eff}$), while **atomic radius** decreases as protons pull electrons closer. Down a group (top to bottom), atomic radius increases with added electron shells, while ionization energy and electronegativity decrease due to electron shielding.",
+    zoomScale: "scale-[1.12]"
   }
 ];
 
@@ -106,7 +110,7 @@ export function AIFeatureShowcase() {
       {/* Main Split Layout: Left Screenshots vs Right Sticky Course Page AI Tutor Drawer */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
         
-        {/* Left Column: Exact Uploaded Course Page Screenshots (Zoomed in, white borders, no hover expansion) */}
+        {/* Left Column: Exact Uploaded Course Page Screenshots */}
         <div className="lg:col-span-7 space-y-12 pt-2">
           {showcaseSlides.map((slide, idx) => {
             const isActive = activeStep === idx;
@@ -119,12 +123,15 @@ export function AIFeatureShowcase() {
                   isActive ? "opacity-100 ring-1 ring-white/30" : "opacity-40 hover:opacity-70"
                 )}
               >
-                {/* Real Course Page Screenshot Image (Zoomed in 1.12x for max readability) */}
+                {/* Real Course Page Screenshot Image */}
                 <div className="relative w-full overflow-hidden bg-black/90 p-1 sm:p-2">
                   <img
                     src={slide.imageSrc}
                     alt={slide.imageAlt}
-                    className="w-full h-auto object-cover rounded-2xl scale-[1.12] origin-center"
+                    className={cn(
+                      "w-full h-auto object-cover rounded-2xl origin-center transition-transform duration-300",
+                      slide.zoomScale
+                    )}
                   />
                 </div>
               </div>
@@ -138,7 +145,7 @@ export function AIFeatureShowcase() {
             layout
             className="w-full bg-[#05060c]/95 border border-white/15 text-white rounded-3xl flex flex-col shadow-2xl backdrop-blur-3xl overflow-hidden"
           >
-            {/* Course Page AIAssistantDrawer Header (Subject icon, NO green pulsing dot) */}
+            {/* Course Page AIAssistantDrawer Header */}
             <div className="h-20 border-b border-white/10 bg-white/[0.01] flex items-center justify-between px-6">
               <div className="flex items-center space-x-3.5">
                 <div 
