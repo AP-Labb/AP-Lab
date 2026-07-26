@@ -6,7 +6,7 @@ import LogoLoop from "./LogoLoop";
 
 function GoogleLogoSVG() {
   return (
-    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+    <svg className="w-6 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 15.987 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z" />
     </svg>
   );
@@ -14,7 +14,7 @@ function GoogleLogoSVG() {
 
 function FirebaseLogoSVG() {
   return (
-    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+    <svg className="w-6 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M3.877 15.717L6.59 2.115a.76.76 0 011.417-.197l2.585 4.957-6.715 8.842zm16.246 0L18.008 3.82a.76.76 0 00-1.346-.356l-3.376 5.565 6.837 6.688zM12.91 8.922l-2.073-3.97L3.6 16.51l7.854 4.39a1.09 1.09 0 001.085 0l7.861-4.39-7.49-7.588z" />
     </svg>
   );
@@ -22,7 +22,7 @@ function FirebaseLogoSVG() {
 
 function ReactLogoSVG() {
   return (
-    <svg className="w-9 h-9 text-white opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 100 100" fill="none">
+    <svg className="w-6.5 h-6.5 text-white opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 100 100" fill="none">
       <circle cx="50" cy="50" r="9" fill="currentColor" />
       <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" />
       <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" transform="rotate(60 50 50)" />
@@ -33,32 +33,31 @@ function ReactLogoSVG() {
 
 function NextLogoSVG() {
   return (
-    <svg className="w-8 h-8 opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 128 128" fill="none">
-      <circle cx="64" cy="64" r="64" fill="url(#next_grad)" />
-      <path d="M100.5 108.5L47.2 40H38v48h10.8V49.6l45.2 60.5c2.2-1.2 4.3-2.6 6.5-4.1z" fill="white" />
-      <path d="M80 40h10.8v48H80V40z" fill="white" />
-      <defs>
-        <linearGradient id="next_grad" x1="20" y1="20" x2="108" y2="108" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#FFFFFF" />
-          <stop offset="1" stopColor="#000000" />
-        </linearGradient>
-      </defs>
+    <svg className="w-6 h-6 opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 180 180" fill="none">
+      <mask id="next_official_mask" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="0" width="180" height="180">
+        <circle cx="90" cy="90" r="90" fill="black" />
+      </mask>
+      <g mask="url(#next_official_mask)">
+        <circle cx="90" cy="90" r="84" fill="black" stroke="white" strokeWidth="12" />
+        <path d="M149.508 157.52L69.141 54H54V126H67.5V70.9706L138.82 162.776C142.564 161.205 146.134 159.444 149.508 157.52Z" fill="white" />
+        <rect x="115" y="54" width="13.5" height="72" fill="white" />
+      </g>
     </svg>
   );
 }
 
 function TypeScriptLogoSVG() {
   return (
-    <svg className="w-8 h-8 opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 128 128">
-      <rect width="128" height="128" rx="20" fill="white" />
-      <path d="M38.5 48h30.8v11.7H54v42.3H39.2V59.7H38.5V48zm50.3 35.8c-2.4-1.6-5.8-2.9-10.1-3.9-3.2-.8-5.3-1.6-6.4-2.5-1.1-.9-1.6-2-1.6-3.4 0-1.5.7-2.7 2-3.6 1.4-.9 3.4-1.4 6-1.4 2.8 0 5.4.6 7.9 1.7 2.5 1.1 4.7 2.7 6.6 4.7l6.6-8.7c-3.1-2.9-6.8-5.1-11.1-6.5s-8.9-2.2-13.8-2.2c-7.3 0-13.1 1.7-17.3 5-4.2 3.3-6.3 8-6.3 14.2 0 4.7 1.3 8.6 4 11.6 2.7 3 6.9 5.3 12.6 6.9 3.8 1.1 6.5 2.1 7.9 3 1.4.9 2.1 2.2 2.1 3.9 0 1.7-.8 3.1-2.3 4.1-1.5 1-3.7 1.5-6.6 1.5-3.8 0-7.3-.9-10.7-2.7-3.4-1.8-6.3-4.4-8.8-7.7l-7.3 8.9c3.7 4.5 8.1 7.9 13.3 10.1 5.2 2.2 11.1 3.3 17.7 3.3 7.8 0 14-1.8 18.5-5.3 4.5-3.5 6.8-8.4 6.8-14.7 0-4.9-1.4-8.9-4.2-12.1z" fill="black" />
+    <svg className="w-6 h-6 opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 100 100" fill="none">
+      <rect width="100" height="100" rx="18" fill="white" />
+      <path d="M30 36H56V45H48V78H38V45H30V36ZM56 65C56 61 59 58 65 57C70 56 74 55 74 51C74 48 71 46 66 46C61 46 57 48 55 52L47 47C51 40 58 36 67 36C77 36 84 41 84 50C84 58 78 62 70 64C64 65 64 68 64 70H75V78H56V65Z" fill="#000000" />
     </svg>
   );
 }
 
 function VercelLogoSVG() {
   return (
-    <svg className="w-8 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+    <svg className="w-6 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M12 1L24 22H0L12 1z" />
     </svg>
   );
@@ -66,7 +65,7 @@ function VercelLogoSVG() {
 
 function TailwindLogoSVG() {
   return (
-    <svg className="w-9 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+    <svg className="w-6.5 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C7.666 17.818 9.027 19.2 12.001 19.2c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
     </svg>
   );
@@ -74,7 +73,7 @@ function TailwindLogoSVG() {
 
 function GitHubLogoSVG() {
   return (
-    <svg className="w-8 h-8 opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none">
+    <svg className="w-6 h-6 opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none">
       <circle cx="12" cy="12" r="11" fill="white" />
       <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" fill="black" />
     </svg>
@@ -83,7 +82,7 @@ function GitHubLogoSVG() {
 
 function DockerLogoSVG() {
   return (
-    <svg className="w-9 h-8 text-white fill-current opacity-90 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+    <svg className="w-7 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M13.983 11.078h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.119a.186.186 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.954 0h2.12a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186h-2.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.954 0h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186H8.075a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.955 0h2.119a.186.186 0 00.186-.185V9.006a.186.186 0 00-.186-.186H5.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm5.909-3.13h2.12a.186.186 0 00.186-.185V5.876a.186.186 0 00-.186-.186h-2.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.954 0h2.119a.186.186 0 00.186-.185V5.876a.186.186 0 00-.186-.186H8.075a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm-2.955 0h2.119a.186.186 0 00.186-.185V5.876a.186.186 0 00-.186-.186H5.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zm5.909-3.13h2.12a.186.186 0 00.186-.185V2.747a.186.186 0 00-.186-.186h-2.12a.185.185 0 00-.185.186v1.887c0 .102.083.185.185.185zM.004 12.399c0 1.58.468 3.125 1.354 4.475C3.21 19.727 6.47 21 10.3 21c4.545 0 8.272-1.83 10.842-4.908 1.488-1.78 2.257-3.957 2.257-6.26 0-.25-.008-.501-.025-.75-.386-.17-1.428-.535-2.735-.535-1.282 0-2.484.285-3.32.743-.19.103-.393.18-.6.23a10.988 10.988 0 00-2.836.375 7.64 7.64 0 01-1.636.175c-1.328 0-2.528-.42-3.395-.98a.186.186 0 00-.28.14c-.03.473-.398.847-.876.847h-6.8a.186.186 0 01-.186-.186v-1.8a.186.186 0 00-.186-.186H.19a.186.186 0 00-.186.186v.054z" />
     </svg>
   );
@@ -157,25 +156,9 @@ const footerSocials = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-black text-white pt-10 overflow-hidden relative border-t border-white/10">
-      {/* Clean Clickable Monochrome Logos in Single Horizontal Line */}
-      <div className="max-w-[1400px] mx-auto px-6 mb-10 flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-14">
-        {whiteTechLogos.map((tech, idx) => (
-          <a
-            key={idx}
-            href={tech.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={tech.title}
-            className="opacity-50 hover:opacity-100 transition-all duration-300 hover:scale-110 transform flex items-center justify-center"
-          >
-            {tech.node}
-          </a>
-        ))}
-      </div>
-      
-      {/* Top Section: Three Columns with Vertical Lines */}
-      <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto_auto] gap-8 md:gap-0 border-b border-white/10 pb-16 relative">
+    <footer className="w-full bg-black text-white pt-12 overflow-hidden relative border-t border-white/10">
+      {/* Top Section: Navigation, Follow & Connect Columns */}
+      <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 md:grid-cols-[1fr_1fr_auto_auto] gap-8 md:gap-0 pb-12 relative">
         
         {/* Left Column */}
         <div className="flex flex-col md:border-r border-white/10 md:pr-8">
@@ -268,6 +251,22 @@ export function Footer() {
           </div>
         </div>
 
+      </div>
+
+      {/* Clean Clickable Monochrome Logos in Single Horizontal Line Right Above Divider Line */}
+      <div className="max-w-[1400px] mx-auto px-6 py-6 border-t border-white/10 flex flex-wrap items-center justify-center gap-6 sm:gap-10 md:gap-12">
+        {whiteTechLogos.map((tech, idx) => (
+          <a
+            key={idx}
+            href={tech.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            title={tech.title}
+            className="opacity-50 hover:opacity-100 transition-all duration-300 hover:scale-110 transform flex items-center justify-center"
+          >
+            {tech.node}
+          </a>
+        ))}
       </div>
 
 
