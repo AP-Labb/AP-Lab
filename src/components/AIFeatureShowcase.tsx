@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
-import { Activity, ArrowUp, Sparkles } from "lucide-react";
+import { FlaskConical, Brain, ArrowUp } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 interface ShowcaseSlide {
   id: number;
   courseName: string;
+  courseIcon: React.ReactNode;
   accentColor: string;
   imageSrc: string;
   imageAlt: string;
@@ -24,6 +25,7 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     id: 1,
     courseName: "Chemistry",
+    courseIcon: <FlaskConical className="w-5 h-5 relative z-10 text-sky-400" />,
     accentColor: "#38bdf8",
     imageSrc: "/images/ai-showcase/screenshot_1.png",
     imageAlt: "Molecular Geometry and Polarity Textbook Selection",
@@ -34,6 +36,7 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     id: 2,
     courseName: "Psychology",
+    courseIcon: <Brain className="w-5 h-5 relative z-10 text-pink-400" />,
     accentColor: "#ec4899",
     imageSrc: "/images/ai-showcase/screenshot_2.png",
     imageAlt: "Sleep States and Waves Textbook Selection",
@@ -44,6 +47,7 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     id: 3,
     courseName: "Chemistry",
+    courseIcon: <FlaskConical className="w-5 h-5 relative z-10 text-emerald-400" />,
     accentColor: "#34d399",
     imageSrc: "/images/ai-showcase/screenshot_3.png",
     imageAlt: "Periodic Trends Map Textbook Selection",
@@ -77,9 +81,9 @@ export function AIFeatureShowcase() {
   return (
     <section 
       ref={containerRef}
-      className="relative w-full bg-[#030712] text-white py-24 px-4 sm:px-6 md:px-12 z-20"
+      className="relative w-full bg-[#02040a] text-white py-20 px-4 sm:px-6 md:px-12 z-20"
     >
-      {/* Clean Section Title (No badge, no selection buttons) */}
+      {/* Clean Section Title */}
       <div className="max-w-4xl mx-auto mb-16 text-center">
         <motion.h2 
           initial={{ opacity: 0, y: 20 }}
@@ -99,63 +103,57 @@ export function AIFeatureShowcase() {
         </motion.p>
       </div>
 
-      {/* Main Split Layout: Left Exact Course Page Screenshots vs Right Course Page AI Tutor Drawer */}
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative min-h-[1400px] lg:min-h-[1800px]">
+      {/* Main Split Layout: Left Screenshots vs Right Sticky Course Page AI Tutor Drawer */}
+      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-start relative">
         
-        {/* Left Column: Exact Uploaded Course Page Screenshots */}
-        <div className="lg:col-span-7 space-y-16 pt-4">
+        {/* Left Column: Exact Uploaded Course Page Screenshots (Zoomed in, white borders, no hover expansion) */}
+        <div className="lg:col-span-7 space-y-12 pt-2">
           {showcaseSlides.map((slide, idx) => {
             const isActive = activeStep === idx;
             return (
-              <motion.div
+              <div
                 key={slide.id}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: isActive ? 1 : 0.4, scale: isActive ? 1 : 0.98 }}
-                transition={{ duration: 0.4 }}
                 onClick={() => setActiveStep(idx)}
                 className={cn(
-                  "rounded-3xl border transition-all duration-500 cursor-pointer overflow-hidden relative shadow-2xl group",
-                  isActive 
-                    ? "bg-[#090D16] border-purple-500/40 shadow-[0_20px_60px_rgba(0,0,0,0.85),0_0_35px_rgba(168,85,247,0.2)]" 
-                    : "bg-[#05070E] border-white/10 opacity-40 hover:opacity-75"
+                  "rounded-3xl border border-white/20 transition-opacity duration-300 cursor-pointer overflow-hidden relative shadow-2xl bg-black/80",
+                  isActive ? "opacity-100 ring-1 ring-white/30" : "opacity-40 hover:opacity-70"
                 )}
               >
-                {/* Real Course Page Screenshot Image */}
-                <div className="relative w-full overflow-hidden bg-black/60">
+                {/* Real Course Page Screenshot Image (Zoomed in 1.12x for max readability) */}
+                <div className="relative w-full overflow-hidden bg-black/90 p-1 sm:p-2">
                   <img
                     src={slide.imageSrc}
                     alt={slide.imageAlt}
-                    className="w-full h-auto object-cover rounded-3xl transition-transform duration-500 group-hover:scale-[1.01]"
+                    className="w-full h-auto object-cover rounded-2xl scale-[1.12] origin-center"
                   />
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
 
-        {/* Right Column: STICKY Course Page AI Tutor Drawer (Matches AIAssistantDrawer.tsx exactly) */}
-        <div className="lg:col-span-5 sticky top-28 z-30 pt-4">
+        {/* Right Column: STICKY Course Page AI Tutor Drawer (Stops cleanly at bottom of last screenshot) */}
+        <div className="lg:col-span-5 sticky top-28 z-30 pt-2">
           <motion.div 
             layout
-            className="w-full bg-[#05060c]/95 border border-white/15 text-white rounded-3xl flex flex-col shadow-[0_30px_90px_rgba(0,0,0,0.95),0_0_40px_rgba(139,92,246,0.2)] backdrop-blur-3xl overflow-hidden"
+            className="w-full bg-[#05060c]/95 border border-white/15 text-white rounded-3xl flex flex-col shadow-2xl backdrop-blur-3xl overflow-hidden"
           >
-            {/* Exact AIAssistantDrawer Header */}
+            {/* Course Page AIAssistantDrawer Header (Subject icon, NO green pulsing dot) */}
             <div className="h-20 border-b border-white/10 bg-white/[0.01] flex items-center justify-between px-6">
               <div className="flex items-center space-x-3.5">
                 <div 
-                  className="w-10 h-10 rounded-full border flex items-center justify-center relative overflow-hidden group shadow-inner bg-white/[0.02]"
+                  className="w-10 h-10 rounded-full border border-white/10 flex items-center justify-center relative overflow-hidden bg-white/[0.03] shadow-inner"
                   style={{ borderColor: `${current.accentColor}40` }}
                 >
                   <div 
-                    className="absolute inset-0 opacity-15 transition-opacity duration-300"
+                    className="absolute inset-0 opacity-15"
                     style={{ backgroundColor: current.accentColor }}
                   />
-                  <Activity className="w-5 h-5 relative z-10 animate-pulse" style={{ color: current.accentColor }} />
+                  {current.courseIcon}
                 </div>
                 <div>
                   <div className="flex items-center space-x-2">
                     <h3 className="font-instrument text-lg font-bold text-white">AI Tutor</h3>
-                    <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" title="Active" />
                   </div>
                   <p className="text-xs mt-0.5 text-white/40 font-mono">
                     {current.courseName} • 1/5 messages • Powered by Gemini
@@ -164,15 +162,15 @@ export function AIFeatureShowcase() {
               </div>
             </div>
 
-            {/* Chat Messages (Matches AIAssistantDrawer i-Message bubbles) */}
+            {/* Chat Messages */}
             <div className="p-5 space-y-4 font-inter min-h-[340px] flex flex-col justify-end">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={current.id}
-                  initial={{ opacity: 0, y: 12 }}
+                  initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -12 }}
-                  transition={{ duration: 0.3 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.25 }}
                   className="space-y-4"
                 >
                   {/* User Message Bubble */}
@@ -205,9 +203,8 @@ export function AIFeatureShowcase() {
               </AnimatePresence>
             </div>
 
-            {/* Exact AIAssistantDrawer Input & Quick Suggestions Bar */}
+            {/* Input & Quick Suggestions Bar */}
             <div className="p-5 border-t border-white/5 bg-[#030408]/90">
-              {/* Clickable Quick Suggestions */}
               <div className="flex gap-2 mb-3.5 overflow-x-auto pb-1 select-none scrollbar-none">
                 <div 
                   className="shrink-0 text-[11px] px-3.5 py-1.5 rounded-full border bg-white/[0.03] text-white/70 font-manrope font-semibold"
@@ -229,7 +226,6 @@ export function AIFeatureShowcase() {
                 </div>
               </div>
 
-              {/* Exact Course Page Input Form */}
               <div className="relative flex items-center rounded-full border border-white/5 px-4 py-2 bg-[#1c1c1f] text-white">
                 <input
                   type="text"
