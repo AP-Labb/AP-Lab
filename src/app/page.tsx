@@ -108,14 +108,15 @@ export default function LandingPage() {
             </div>
           </div>
           
-          {/* White dots transition mask on the black background at the bottom */}
+          {/* White dots transition mask at the bottom where white background section ends and transitions to black */}
           <div 
-            className="absolute bottom-[-96px] left-0 right-0 h-[96px] z-20 pointer-events-none opacity-80"
+            className="absolute -bottom-16 left-0 right-0 h-[128px] z-20 pointer-events-none opacity-90"
             style={{
-              backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.35) 1.2px, transparent 1.2px)",
+              backgroundImage: "radial-gradient(rgba(255, 255, 255, 0.4) 1.3px, transparent 1.3px)",
               backgroundSize: "14px 14px",
-              WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.95), transparent)",
-              maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.95), transparent)",
+              WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 10%, transparent 95%)",
+              maskImage: "linear-gradient(to bottom, rgba(0,0,0,1) 10%, transparent 95%)",
+              clipPath: "polygon(0 0, 100% 0, 100% 128px, 0 80px)",
             }}
           />
         </div>

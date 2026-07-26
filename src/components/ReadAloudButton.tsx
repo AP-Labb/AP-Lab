@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Volume2, Pause, VolumeX } from "lucide-react";
+import { Volume2, Pause } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ReadAloudButtonProps {
@@ -64,37 +64,66 @@ export function ReadAloudButton({
     }
   }, []);
 
-  const getSelectedVoice = (): SpeechSynthesisVoice | null => {
-    if (voices.length === 0) return null;
+  const getSelectedVoice = (availableVoices: SpeechSynthesisVoice[]): SpeechSynthesisVoice | null => {
+    if (availableVoices.length === 0) return null;
 
     const savedVoiceProfile = localStorage.getItem("aplab_voice_setting") || "1";
-    const englishVoices = voices.filter((v) => v.lang.startsWith("en"));
+    const englishVoices = availableVoices.filter((v) => v.lang.toLowerCase().startsWith("en"));
+    const allVoices = englishVoices.length > 0 ? englishVoices : availableVoices;
 
     switch (savedVoiceProfile) {
       case "2": // Natural US Male
         return (
-          englishVoices.find(
-            (v) => v.name.includes("Male") || v.name.includes("Daniel") || v.name.includes("David") || v.name.includes("Alex")
-          ) || englishVoices[0]
+          allVoices.find(
+            (v) =>
+              (v.name.includes("Male") || v.name.includes("Daniel") || v.name.includes("David") || v.name.includes("Alex") || v.name.includes("Fred")) &&
+              !v.name.includes("UK") &&
+              !v.lang.toLowerCase().includes("gb")
+          ) || allVoices[0]
         );
       case "3": // Natural UK Female
         return (
-          englishVoices.find(
-            (v) => (v.lang.includes("GB") || v.name.includes("UK")) && (v.name.includes("Female") || v.name.includes("Karen") || v.name.includes("Serena"))
-          ) || englishVoices.find((v) => v.lang.includes("GB")) || englishVoices[0]
+          allVoices.find(
+            (v) =>
+              v.lang.toLowerCase().includes("gb") ||
+              v.lang.toLowerCase().includes("uk") ||
+              v.name.includes("UK English Female") ||
+              v.name.includes("British") ||
+              v.name.includes("Karen") ||
+              v.name.includes("Serena") ||
+              v.name.includes("Martha") ||
+              v.name.includes("Kate") ||
+              v.name.includes("Fiona")
+          ) ||
+          allVoices.find((v) => v.lang.toLowerCase().includes("gb")) ||
+          allVoices[0]
         );
       case "4": // Natural UK Male
         return (
-          englishVoices.find(
-            (v) => (v.lang.includes("GB") || v.name.includes("UK")) && (v.name.includes("Male") || v.name.includes("Oliver") || v.name.includes("George"))
-          ) || englishVoices.find((v) => v.lang.includes("GB")) || englishVoices[0]
+          allVoices.find(
+            (v) =>
+              (v.lang.toLowerCase().includes("gb") ||
+                v.lang.toLowerCase().includes("uk") ||
+                v.name.includes("UK English Male") ||
+                v.name.includes("British") ||
+                v.name.includes("Arthur") ||
+                v.name.includes("Oliver") ||
+                v.name.includes("George") ||
+                v.name.includes("Daniel")) &&
+              (v.name.includes("Male") || v.name.includes("UK") || v.lang.toLowerCase().includes("gb"))
+          ) ||
+          allVoices.find((v) => v.lang.toLowerCase().includes("gb")) ||
+          allVoices[0]
         );
       case "1": // Natural US Female (Default)
       default:
         return (
-          englishVoices.find(
-            (v) => v.name.includes("Google") || v.name.includes("Samantha") || v.name.includes("Natural") || v.name.includes("Enhanced")
-          ) || englishVoices[0]
+          allVoices.find(
+            (v) =>
+              (v.name.includes("Google US English") || v.name.includes("Samantha") || v.name.includes("Natural") || v.name.includes("Enhanced") || v.name.includes("Victoria") || v.name.includes("Zira")) &&
+              !v.name.includes("UK") &&
+              !v.lang.toLowerCase().includes("gb")
+          ) || allVoices[0]
         );
     }
   };
@@ -108,10 +137,16 @@ export function ReadAloudButton({
     } else {
       window.speechSynthesis.cancel(); // Stop previous playback
 
+      let currentVoices = voices;
+      if (currentVoices.length === 0) {
+        currentVoices = window.speechSynthesis.getVoices();
+        setVoices(currentVoices);
+      }
+
       const cleanText = getCleanText(textToRead, title);
       const utterance = new SpeechSynthesisUtterance(cleanText);
 
-      const targetVoice = getSelectedVoice();
+      const targetVoice = getSelectedVoice(currentVoices);
       if (targetVoice) {
         utterance.voice = targetVoice;
       }
@@ -146,10 +181,7 @@ export function ReadAloudButton({
     <button
       onClick={handleTogglePlay}
       className={cn(
-        "w-10 h-10 rounded-full border transition-all duration-300 backdrop-blur-2xl flex items-center justify-center text-white cursor-pointer select-none group shadow-lg active:scale-95",
-        isPlaying
-          ? "bg-purple-600/30 border-purple-400/60 shadow-[0_0_20px_rgba(168,85,247,0.5)] animate-pulse"
-          : "bg-white/10 hover:bg-white/20 border-white/25 hover:border-white/40",
+        "w-10 h-10 rounded-full border border-white/25 hover:border-white/40 bg-white/10 hover:bg-white/20 text-white backdrop-blur-2xl flex items-center justify-center cursor-pointer select-none group shadow-lg active:scale-95 transition-all duration-200",
         className
       )}
       title={isPlaying ? "Pause Read Aloud" : "Read Article Aloud (Fluid Natural Speech)"}
