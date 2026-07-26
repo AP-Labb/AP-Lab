@@ -9,7 +9,7 @@ function GoogleWhiteLogo() {
     <img 
       src="/images/logos/google.png" 
       alt="Google" 
-      className="h-8 w-auto object-contain filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity" 
+      className="h-8 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" 
     />
   );
 }
@@ -19,7 +19,7 @@ function FirebaseWhiteLogo() {
     <img 
       src="/images/logos/firebase.png" 
       alt="Firebase" 
-      className="h-8 w-auto object-contain filter brightness-0 invert opacity-90 hover:opacity-100 transition-opacity" 
+      className="h-8 w-auto object-contain opacity-90 hover:opacity-100 transition-opacity" 
     />
   );
 }
