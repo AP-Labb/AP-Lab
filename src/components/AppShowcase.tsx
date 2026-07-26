@@ -58,8 +58,8 @@ export function AppShowcase() {
           {/* ROW 1 STICKY STACK (Gamification & Interactive Lessons) */}
           <div className="sticky top-[100px] z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 1 (Top Left) - GAMIFICATION */}
-              <BorderGlow colors={['#c084fc', '#f472b6', '#38bdf8']} borderRadius={32} backgroundColor="#000000" className="h-[450px]">
+              {/* Box 1 (Top Left) - GAMIFICATION (Black Card -> White Glow) */}
+              <BorderGlow colors={['#ffffff', '#e2e8f0', '#ffffff']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -102,8 +102,8 @@ export function AppShowcase() {
                 </motion.div>
               </BorderGlow>
 
-              {/* Box 2 (Top Right) - INTERACTIVE LESSONS */}
-              <BorderGlow colors={['#38bdf8', '#c084fc', '#f472b6']} borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
+              {/* Box 2 (Top Right) - INTERACTIVE LESSONS (White Card -> Black Glow) */}
+              <BorderGlow colors={['#000000', '#1e293b', '#000000']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -136,90 +136,94 @@ export function AppShowcase() {
           {/* ROW 2 STICKY STACK (Embedded Desmos Calculator & Mock Exams) */}
           <div className="sticky top-[125px] z-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 3 (Bottom Left) - EMBEDDED GRAPHING CALCULATOR */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-[#ffffff] border border-neutral-300 rounded-[32px] h-[460px] flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group shadow-[0_40px_100px_rgba(0,0,0,0.95)] backdrop-blur-2xl"
-              >
-                <div className="text-center relative z-10 flex flex-col items-center shrink-0">
-                  <span className="text-[10px] font-mono tracking-widest text-emerald-600 font-extrabold uppercase mb-1">EMBEDDED CALCULATOR</span>
-                  <h3 className="text-xl md:text-2xl font-inter font-bold text-black tracking-tight mb-1">Built-in Desmos® Graphing Calculator.</h3>
-                  <p className="text-neutral-500 font-inter text-xs max-w-sm leading-relaxed">
-                    Seamlessly plot functions, solve equations, and analyze datasets with an integrated, floating Desmos graphing window during practice and mock exams.
-                  </p>
-                </div>
+              {/* Box 3 (Bottom Left) - EMBEDDED GRAPHING CALCULATOR (White Card -> Black Glow) */}
+              <BorderGlow colors={['#000000', '#1e293b', '#000000']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[460px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="h-full flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group backdrop-blur-2xl"
+                >
+                  <div className="text-center relative z-10 flex flex-col items-center shrink-0">
+                    <span className="text-[10px] font-mono tracking-widest text-emerald-600 font-extrabold uppercase mb-1">EMBEDDED CALCULATOR</span>
+                    <h3 className="text-xl md:text-2xl font-inter font-bold text-black tracking-tight mb-1">Built-in Desmos® Graphing Calculator.</h3>
+                    <p className="text-neutral-500 font-inter text-xs max-w-sm leading-relaxed">
+                      Seamlessly plot functions, solve equations, and analyze datasets with an integrated, floating Desmos graphing window during practice and mock exams.
+                    </p>
+                  </div>
 
-                <div className="w-full max-w-[420px] mx-auto relative z-10 transition-all duration-300 group-hover:scale-[1.03] -mt-5 shrink-0">
-                  <div className="bg-[#0c0d16] border border-neutral-800 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden text-left font-sans">
-                    <div className="flex items-center justify-between px-3.5 py-2 bg-[#131524] border-b border-white/10 select-none">
-                      <div className="flex items-center space-x-2">
-                        <GripHorizontal className="w-3.5 h-3.5 text-white/40" />
-                        <div className="w-5 h-5 rounded-md bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
-                          <Calculator className="w-3 h-3 text-emerald-400" />
+                  <div className="w-full max-w-[420px] mx-auto relative z-10 transition-all duration-300 group-hover:scale-[1.03] -mt-5 shrink-0">
+                    <div className="bg-[#0c0d16] border border-neutral-800 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden text-left font-sans">
+                      <div className="flex items-center justify-between px-3.5 py-2 bg-[#131524] border-b border-white/10 select-none">
+                        <div className="flex items-center space-x-2">
+                          <GripHorizontal className="w-3.5 h-3.5 text-white/40" />
+                          <div className="w-5 h-5 rounded-md bg-emerald-500/20 border border-emerald-500/30 flex items-center justify-center">
+                            <Calculator className="w-3 h-3 text-emerald-400" />
+                          </div>
+                          <span className="font-manrope font-bold text-[11px] text-white tracking-wide">
+                            Desmos® Graphing Calculator
+                          </span>
                         </div>
-                        <span className="font-manrope font-bold text-[11px] text-white tracking-wide">
-                          Desmos® Graphing Calculator
-                        </span>
+
+                        <div className="flex items-center space-x-1">
+                          <div className="w-4 h-4 rounded flex items-center justify-center text-white/40 hover:text-white">
+                            <Minus className="w-3 h-3" />
+                          </div>
+                          <div className="w-4 h-4 rounded flex items-center justify-center text-white/40 hover:text-white">
+                            <X className="w-3 h-3" />
+                          </div>
+                        </div>
                       </div>
 
-                      <div className="flex items-center space-x-1">
-                        <div className="w-4 h-4 rounded flex items-center justify-center text-white/40 hover:text-white">
-                          <Minus className="w-3 h-3" />
-                        </div>
-                        <div className="w-4 h-4 rounded flex items-center justify-center text-white/40 hover:text-white">
-                          <X className="w-3 h-3" />
-                        </div>
+                      <div className="relative w-full h-[195px] overflow-hidden bg-[#1a1a1a]">
+                        <img 
+                          src="/images/desmos-showcase.png" 
+                          alt="Desmos Graphing Calculator" 
+                          className="w-full h-full object-cover object-top"
+                        />
                       </div>
                     </div>
+                  </div>
+                </motion.div>
+              </BorderGlow>
 
-                    <div className="relative w-full h-[195px] overflow-hidden bg-[#1a1a1a]">
+              {/* Box 4 (Bottom Right) - EXAM SIMULATOR (Black Card -> White Glow) */}
+              <BorderGlow colors={['#ffffff', '#e2e8f0', '#ffffff']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[460px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                  className="h-full flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group backdrop-blur-2xl"
+                >
+                  <div className="text-center relative z-10 flex flex-col items-center shrink-0">
+                    <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">EXAM SIMULATOR</span>
+                    <h3 className="text-xl md:text-2xl font-inter font-bold text-white tracking-tight mb-1">Comprehensive Mock Diagnostics.</h3>
+                    <p className="text-white/50 font-inter text-xs max-w-sm leading-relaxed">
+                      Full-length, timed diagnostic mock exams built to match the exact scoring weight of the actual test.
+                    </p>
+                  </div>
+
+                  <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-1 px-1">
+                    <div className="w-full max-w-[420px] h-[240px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/10 group-hover:scale-[1.04] transition-transform duration-500 bg-[#07080f]">
                       <img 
-                        src="/images/desmos-showcase.png" 
-                        alt="Desmos Graphing Calculator" 
+                        src="/images/mock-exam-showcase.png" 
+                        alt="Comprehensive Mock Diagnostics" 
                         className="w-full h-full object-cover object-top"
                       />
                     </div>
                   </div>
-                </div>
-              </motion.div>
-
-              {/* Box 4 (Bottom Right) - EXAM SIMULATOR */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className="bg-[#000000] border border-white/20 rounded-[32px] h-[460px] flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group shadow-[0_40px_100px_rgba(0,0,0,0.95)] backdrop-blur-2xl"
-              >
-                <div className="text-center relative z-10 flex flex-col items-center shrink-0">
-                  <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">EXAM SIMULATOR</span>
-                  <h3 className="text-xl md:text-2xl font-inter font-bold text-white tracking-tight mb-1">Comprehensive Mock Diagnostics.</h3>
-                  <p className="text-white/50 font-inter text-xs max-w-sm leading-relaxed">
-                    Full-length, timed diagnostic mock exams built to match the exact scoring weight of the actual test.
-                  </p>
-                </div>
-
-                <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-1 px-1">
-                  <div className="w-full max-w-[420px] h-[240px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.6)] border border-white/10 group-hover:scale-[1.04] transition-transform duration-500 bg-[#07080f]">
-                    <img 
-                      src="/images/mock-exam-showcase.png" 
-                      alt="Comprehensive Mock Diagnostics" 
-                      className="w-full h-full object-cover object-top"
-                    />
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </BorderGlow>
             </div>
           </div>
 
           {/* ROW 3 STICKY STACK (Progress Tracking & Video Lessons) */}
           <div className="sticky top-[150px] z-30">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 5 (Bottom Left) - PROGRESS TRACKING (Dark Card -> White Glow) */}
-              <BorderGlow colors={['#ffffff', '#e2e8f0', '#94a3b8']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
+              {/* Box 5 (Bottom Left) - PROGRESS TRACKING (Black Card -> White Glow) */}
+              <BorderGlow colors={['#ffffff', '#e2e8f0', '#ffffff']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -227,84 +231,84 @@ export function AppShowcase() {
                   transition={{ duration: 0.6 }}
                   className="h-full flex flex-col justify-between p-8 relative overflow-hidden group backdrop-blur-2xl col-span-1"
                 >
-                <div className="text-left z-10 shrink-0">
-                  <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">PROGRESS TRACKING</span>
-                  <h3 className="text-2xl font-inter font-bold text-white tracking-tight">Real-Time Performance Metrics.</h3>
-                  <p className="text-white/50 font-inter text-[11px] max-w-sm mt-1 leading-relaxed">
-                    Track your syllabus progress and daily learning habits in one unified place.
-                  </p>
-                </div>
-
-                <div className="bg-white/5 border border-white/5 rounded-xl p-5 flex flex-col justify-between hover:border-white/10 transition-colors w-full mt-2.5 z-10 flex-1 min-h-[220px] shrink-0">
-                  <div className="flex items-center space-x-2 mb-3 text-white shrink-0">
-                    <Calendar className="w-5 h-5 text-white" />
-                    <span className="text-[13px] font-mono font-bold uppercase tracking-wider text-white">Activity Calendar</span>
+                  <div className="text-left z-10 shrink-0">
+                    <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">PROGRESS TRACKING</span>
+                    <h3 className="text-2xl font-inter font-bold text-white tracking-tight">Real-Time Performance Metrics.</h3>
+                    <p className="text-white/50 font-inter text-[11px] max-w-sm mt-1 leading-relaxed">
+                      Track your syllabus progress and daily learning habits in one unified place.
+                    </p>
                   </div>
-                  
-                  <div className="flex-1 flex flex-col justify-around w-full">
-                    <div className="grid grid-cols-7 gap-2 text-center w-full text-[11px] font-mono text-white/40 font-bold uppercase mb-2 shrink-0">
-                      {["S", "M", "T", "W", "T", "F", "S"].map((day, idx) => (
-                        <div key={idx}>{day}</div>
-                      ))}
+
+                  <div className="bg-white/5 border border-white/5 rounded-xl p-5 flex flex-col justify-between hover:border-white/10 transition-colors w-full mt-2.5 z-10 flex-1 min-h-[220px] shrink-0">
+                    <div className="flex items-center space-x-2 mb-3 text-white shrink-0">
+                      <Calendar className="w-5 h-5 text-white" />
+                      <span className="text-[13px] font-mono font-bold uppercase tracking-wider text-white">Activity Calendar</span>
                     </div>
                     
-                    <div className="grid grid-cols-7 gap-2 w-full">
-                      {Array.from({ length: 28 }).map((_, idx) => {
-                        const dayNum = idx - 2;
-                        const isValid = dayNum > 0 && dayNum <= 25;
-                        
-                        let bgClass = "bg-white/[0.02] border-white/5 text-white/20 opacity-30 cursor-default select-none";
-                        let displayDay = "";
-                        let xpGained = 0;
-                        
-                        if (isValid) {
-                          const activeDays = {
-                            1: { bg: "bg-emerald-950/40 border-emerald-500/30 text-emerald-400", xp: 50 },
-                            2: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 150 },
-                            4: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 450 },
-                            5: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 350 },
-                            8: { bg: "bg-emerald-950/40 border-emerald-500/30 text-emerald-400", xp: 75 },
-                            9: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 200 },
-                            14: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 400 },
-                            15: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 300 },
-                            16: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 180 },
-                            20: { bg: "bg-emerald-950/40 border-emerald-500/30 text-emerald-400", xp: 90 },
-                            21: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 220 },
-                            22: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 500 },
-                            23: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 140 },
-                          };
+                    <div className="flex-1 flex flex-col justify-around w-full">
+                      <div className="grid grid-cols-7 gap-2 text-center w-full text-[11px] font-mono text-white/40 font-bold uppercase mb-2 shrink-0">
+                        {["S", "M", "T", "W", "T", "F", "S"].map((day, idx) => (
+                          <div key={idx}>{day}</div>
+                        ))}
+                      </div>
+                      
+                      <div className="grid grid-cols-7 gap-2 w-full">
+                        {Array.from({ length: 28 }).map((_, idx) => {
+                          const dayNum = idx - 2;
+                          const isValid = dayNum > 0 && dayNum <= 25;
+                          
+                          let bgClass = "bg-white/[0.02] border-white/5 text-white/20 opacity-30 cursor-default select-none";
+                          let displayDay = "";
+                          let xpGained = 0;
+                          
+                          if (isValid) {
+                            const activeDays = {
+                              1: { bg: "bg-emerald-950/40 border-emerald-500/30 text-emerald-400", xp: 50 },
+                              2: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 150 },
+                              4: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 450 },
+                              5: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 350 },
+                              8: { bg: "bg-emerald-950/40 border-emerald-500/30 text-emerald-400", xp: 75 },
+                              9: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 200 },
+                              14: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 400 },
+                              15: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 300 },
+                              16: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 180 },
+                              20: { bg: "bg-emerald-950/40 border-emerald-500/30 text-emerald-400", xp: 90 },
+                              21: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 220 },
+                              22: { bg: "bg-emerald-500/25 border-emerald-500/60 text-emerald-100 font-black", xp: 500 },
+                              23: { bg: "bg-emerald-900/50 border-emerald-500/40 text-emerald-300", xp: 140 },
+                            };
 
-                          displayDay = dayNum.toString();
-                          const dayInfo = (activeDays as any)[dayNum];
-                          if (dayInfo) {
-                            bgClass = `${dayInfo.bg} shadow-[0_0_10px_rgba(16,185,129,0.15)] cursor-pointer hover:scale-105 transition-transform`;
-                            xpGained = dayInfo.xp;
+                            displayDay = dayNum.toString();
+                            const dayInfo = (activeDays as any)[dayNum];
+                            if (dayInfo) {
+                              bgClass = `${dayInfo.bg} shadow-[0_0_10px_rgba(16,185,129,0.15)] cursor-pointer hover:scale-105 transition-transform`;
+                              xpGained = dayInfo.xp;
+                            } else {
+                              bgClass = "bg-white/[0.04] border-white/10 text-white/40 hover:bg-white/10 cursor-pointer";
+                            }
+                          } else if (dayNum <= 0) {
+                            displayDay = (28 + dayNum).toString();
                           } else {
-                            bgClass = "bg-white/[0.04] border-white/10 text-white/40 hover:bg-white/10 cursor-pointer";
+                            displayDay = (dayNum - 25).toString();
                           }
-                        } else if (dayNum <= 0) {
-                          displayDay = (28 + dayNum).toString();
-                        } else {
-                          displayDay = (dayNum - 25).toString();
-                        }
 
-                        return (
-                          <div
-                            key={idx}
-                            className={`h-8 sm:h-9 rounded-lg border flex flex-col items-center justify-center text-[12px] font-bold font-mono transition-all relative group/day ${bgClass}`}
-                          >
-                            <span>{displayDay}</span>
-                          </div>
-                        );
-                      })}
+                          return (
+                            <div
+                              key={idx}
+                              className={`h-8 sm:h-9 rounded-lg border flex flex-col items-center justify-center text-[12px] font-bold font-mono transition-all relative group/day ${bgClass}`}
+                            >
+                              <span>{displayDay}</span>
+                            </div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
-                </div>
-              </motion.div>
+                </motion.div>
               </BorderGlow>
 
               {/* Box 6 (Bottom Right) - VIDEO MODULES (White Card -> Black Glow) */}
-              <BorderGlow colors={['#000000', '#1e293b', '#475569']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
+              <BorderGlow colors={['#000000', '#1e293b', '#000000']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
                 <motion.div 
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}

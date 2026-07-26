@@ -345,42 +345,27 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
+      {/* Darkened Base Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-45 brightness-[0.35] contrast-[1.25]"
+          className="w-full h-full object-cover opacity-30 brightness-[0.2] contrast-[1.35]"
         />
-        <div className="absolute inset-0 bg-black/65 mix-blend-multiply" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_20%,rgba(5,7,15,0.95)_100%)]" />
+        <div className="absolute inset-0 bg-black/75 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_10%,rgba(5,7,15,0.98)_100%)]" />
       </div>
 
-      {/* Layer 1: Specular Light Shimmer Sweep Across WHOLE Background ILLUMINATING ONLY THE UI LINES */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-90 mix-blend-color-dodge">
+      {/* Periodic Smooth Specular Light Shimmer Sweep Revealing ONLY the UI on the Image */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-95 mix-blend-color-dodge">
         <div className="relative w-full h-full">
           <img 
             src="/images/HEROSECTION.png" 
-            alt="Hero UI Full Shimmer Sweep" 
-            className="w-full h-full object-cover brightness-[2.6] contrast-[3.8] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)]"
+            alt="Hero UI Periodic Shimmer Reveal" 
+            className="w-full h-full object-cover brightness-[2.8] contrast-[4.2] filter drop-shadow-[0_0_2px_rgba(255,255,255,0.95)]"
           />
-          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/45 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
+          <div className="absolute inset-0 w-[200%] h-[200%] -top-1/2 -left-1/2 bg-gradient-to-r from-transparent via-white/20 via-white/60 via-white/20 to-transparent animate-ui-glint pointer-events-none mix-blend-color-dodge" />
         </div>
-      </div>
-
-      {/* Layer 2: Soft White Spotlight & Rim Light Reveal (Follows Cursor Pointer) */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 overflow-hidden select-none mix-blend-color-dodge"
-        style={{
-          maskImage: `radial-gradient(280px circle at ${springPos.x}px ${springPos.y}px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.45) 45%, transparent 75%)`,
-          WebkitMaskImage: `radial-gradient(280px circle at ${springPos.x}px ${springPos.y}px, rgba(255,255,255,1) 0%, rgba(255,255,255,0.45) 45%, transparent 75%)`,
-          opacity: cursorInside ? 1 : 0
-        }}
-      >
-        <img 
-          src="/images/HEROSECTION.png" 
-          alt="Hero UI Spotlight Cursor Reveal" 
-          className="w-full h-full object-cover brightness-[2.8] contrast-[4.0] filter drop-shadow-[0_0_4px_rgba(255,255,255,1)] drop-shadow-[0_0_15px_rgba(255,255,255,0.6)]"
-        />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />

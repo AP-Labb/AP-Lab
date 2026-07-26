@@ -21,7 +21,7 @@
     rgba(0, 0, 0, 0.1) 0px 12px 24px;
 }
 
-/* Outer/Inner glowing border ring using mask XOR */
+/* Outer/Inner glowing border ring using mask XOR - Strict prop colors only */
 .border-glow-card::before {
   content: "";
   position: absolute;
@@ -29,19 +29,19 @@
   border-radius: inherit;
   padding: 2px;
   background:
-    var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 1) 0px, transparent 50%)),
-    var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 1) 0px, transparent 50%)),
-    var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 1) 0px, transparent 50%)),
-    var(--gradient-four, radial-gradient(at 41% 38%, hsla(192, 100%, 64%, 1) 0px, transparent 50%)),
-    var(--gradient-five, radial-gradient(at 86% 85%, hsla(186, 100%, 74%, 1) 0px, transparent 50%)),
-    var(--gradient-base, linear-gradient(var(--glow-main-color, #c084fc) 0 100%));
+    var(--gradient-one),
+    var(--gradient-two),
+    var(--gradient-three),
+    var(--gradient-four),
+    var(--gradient-five),
+    var(--gradient-base);
 
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
   pointer-events: none;
   z-index: 10;
-  opacity: 0.45;
+  opacity: 0.5;
   transition: opacity 0.3s ease;
 }
 
@@ -57,11 +57,11 @@
   inset: 0;
   border-radius: inherit;
   background:
-    var(--gradient-one, radial-gradient(at 80% 55%, hsla(268, 100%, 76%, 0.4) 0px, transparent 50%)),
-    var(--gradient-two, radial-gradient(at 69% 34%, hsla(349, 100%, 74%, 0.4) 0px, transparent 50%)),
-    var(--gradient-three, radial-gradient(at 8% 6%, hsla(136, 100%, 78%, 0.4) 0px, transparent 50%)),
-    var(--gradient-base, linear-gradient(var(--glow-main-color, #c084fc) 0 100%));
-  opacity: 0.12;
+    var(--gradient-one),
+    var(--gradient-two),
+    var(--gradient-three),
+    var(--gradient-base);
+  opacity: 0.15;
   transition: opacity 0.3s ease;
   pointer-events: none;
   z-index: 0;
