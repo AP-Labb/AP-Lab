@@ -2,6 +2,7 @@
 
 import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
+import LaserFlow from "./LaserFlow";
 
 export function ScrollVideoSection() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -124,6 +125,19 @@ export function ScrollVideoSection() {
             <polygon points="32,20 76,50 32,80" />
           </svg>
         </motion.div>
+
+        {/* React Bits LaserFlow Effect Container around the Video Frame */}
+        <div className="absolute -inset-6 z-0 pointer-events-none rounded-[28px] overflow-hidden opacity-75">
+          <LaserFlow
+            color="#38BDF8"
+            horizontalBeamOffset={0.0}
+            verticalBeamOffset={0.0}
+            fogIntensity={0.55}
+            flowSpeed={0.4}
+            wispDensity={1.2}
+            wispSpeed={18.0}
+          />
+        </div>
 
         {/* The actual 3D card — overflow-hidden clips its inner content, not the cursor above */}
         <motion.div 
