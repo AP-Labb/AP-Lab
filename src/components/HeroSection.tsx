@@ -282,9 +282,7 @@ function MousePushedWrapper({ children, className, style, animate, transition }:
     <motion.div
       ref={ref}
       className={className}
-      style={{ ...style, x, y }}
-      animate={animate}
-      transition={transition}
+      style={{ x, y }}
     >
       {children}
     </motion.div>
@@ -295,8 +293,7 @@ export function HeroSection() {
   const { currentUser } = useAuth();
   const { openAuthModal } = useUI();
   const { scrollY } = useScroll();
-  const scrollIndicatorOpacity = useTransform(scrollY, [0, 180], [1, 0]);
-  const isPaused = false;
+  const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
 
   const words = ["learning", "discovery", "mastery", "science", "medicine", "knowledge"];
   const [wordIndex, setWordIndex] = useState(0);
@@ -305,21 +302,6 @@ export function HeroSection() {
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const [cursorPos, setCursorPos] = useState({ x: -999, y: -999, inside: false });
-  const [startStorm, setStartStorm] = useState(false);
-
-  useEffect(() => {
-    // Determine if page just mounted with intro preloader
-    const sessionActive = sessionStorage.getItem("aplab_storm_loaded");
-    sessionStorage.setItem("aplab_storm_loaded", "true");
-    
-    // If first load in session, wait 1150ms for preloader panels to split open, then roll in storm!
-    const delayMs = sessionActive ? 80 : 1150;
-    const timer = setTimeout(() => {
-      setStartStorm(true);
-    }, delayMs);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     const handlePointerMove = (e: PointerEvent) => {
@@ -344,56 +326,33 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Layer 1: Underlying Base Hero Background Image */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HEROSECTION.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-95 brightness-110 contrast-105"
+          className="w-full h-full object-cover opacity-75 brightness-[0.65] contrast-[1.12]"
+        />
+        <div className="absolute inset-0 bg-black/45 mix-blend-multiply" />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_30%,rgba(5,7,15,0.85)_100%)]" />
+      </div>
+
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-200 overflow-hidden select-none"
+        style={{
+          maskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 45%, transparent 80%)`,
+          WebkitMaskImage: `radial-gradient(320px circle at ${cursorPos.x}px ${cursorPos.y}px, black 0%, rgba(0,0,0,0.6) 45%, transparent 80%)`,
+          opacity: cursorPos.inside ? 1 : 0
+        }}
+      >
+        <img 
+          src="/images/HEROSECTION.png" 
+          alt="Hero Background Glow Lines" 
+          className="w-full h-full object-cover brightness-[1.85] contrast-[1.45] saturate-[1.6] drop-shadow-[0_0_16px_rgba(56,189,248,0.85)]"
         />
       </div>
 
-      {/* Storm Roll-in Overlay Container: Triggers seamlessly AFTER preloader opens! */}
-      <motion.div 
-        initial={{ opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}
-        animate={startStorm ? { opacity: 1, scale: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}
-        transition={{ duration: 2.2, ease: [0.16, 1, 0.3, 1] }}
-        className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none"
-      >
-        {/* Layer 2: Subtle Ambient Slate & Blue Smoke Plumes */}
-        <div className="absolute inset-0 opacity-60 mix-blend-screen">
-          {/* Left Electric Blue Smoke Plume */}
-          <div className="absolute top-[10%] -left-[15%] w-[65vw] h-[75vh] bg-[radial-gradient(ellipse_at_center,rgba(59,130,246,0.32)_0%,rgba(37,99,235,0.15)_40%,transparent_75%)] blur-3xl animate-pulse duration-[7000ms]" />
-          {/* Top-Right Purple Fog */}
-          <div className="absolute top-[15%] -right-[15%] w-[60vw] h-[70vh] bg-[radial-gradient(ellipse_at_center,rgba(168,85,247,0.25)_0%,rgba(147,51,234,0.12)_45%,transparent_75%)] blur-3xl animate-pulse duration-[9000ms]" />
-        </div>
-
-        {/* Layer 3: Interactive Dithered Smoke Wave WebGL Layer (Crisp & Refined) */}
-        <div className="absolute inset-0">
-          <Dither
-            waveColor={[0.20, 0.32, 0.60]}
-            disableAnimation={false}
-            enableMouseInteraction={true}
-            mouseRadius={0.16}
-            colorNum={7}
-            pixelSize={2.5}
-            waveAmplitude={0.38}
-            waveFrequency={3.5}
-            waveSpeed={0.045}
-          />
-        </div>
-
-        {/* Layer 4: Dark Center Radial Backdrop Vignette for Text Legibility & Over-Dither Fog */}
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.78)_0%,rgba(5,7,15,0.45)_55%,transparent_100%)]" />
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/60 to-transparent" />
-        </div>
-      </motion.div>
-
-      {/* Seamless Fade Transition at bottom */}
       <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />
 
-      {/* Hero Content Container */}
       <motion.div 
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
