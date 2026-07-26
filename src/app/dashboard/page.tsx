@@ -9,7 +9,7 @@ import {
   LogOut, Microscope, Library, Calculator, 
   Search, Dna, Beaker, Atom, History, Brain, BookOpen, Sigma, BarChart3, Binary,
   ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap,
-  Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf
+  Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings
 } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
 import { LevelLeaderboard } from "@/components/LevelLeaderboard";
@@ -28,6 +28,7 @@ import { getLevelForXp, getXpThresholdForLevel } from "@/lib/xpProgression";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import FolderComponent from "@/components/Folder";
+import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 
 
 const folders = [
@@ -356,7 +357,7 @@ export default function Dashboard() {
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const [showAccountPopup, setShowAccountPopup] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [onboardCompleted, setOnboardCompleted] = useState(false);
   const [dashboardTab, setDashboardTab] = useState<"courses" | "previews" | "leaderboard">("courses");
@@ -425,13 +426,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     document.title = "Dashboard | AP Lab";
-    if (typeof window !== "undefined") {
-      const handleScroll = () => {
-        setIsScrolled(window.scrollY > 20);
-      };
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }
   }, []);
 
   useEffect(() => {
@@ -624,50 +618,146 @@ export default function Dashboard() {
     });
   });
 
+  const sideNavLinks = [
+    {
+      label: "Home",
+      href: "/",
+      icon: <Home className="w-5 h-5 flex-shrink-0" />,
+    },
+    {
+      label: "Dashboard",
+      href: "/dashboard",
+      icon: <LayoutDashboard className="w-5 h-5 flex-shrink-0" />,
+    },
+    {
+      label: "Progress",
+      href: "/dashboard/progress",
+      icon: <BarChart2 className="w-5 h-5 flex-shrink-0" />,
+    },
+    {
+      label: "Review",
+      href: "#",
+      icon: <Star className="w-5 h-5 flex-shrink-0" />,
+    },
+  ];
+
   return (
-    <div className="min-h-screen flex flex-col relative z-0 overflow-x-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
-      
-      {/* Floating Navbar Pill */}
-      <nav className={cn(
-        "fixed left-1/2 -translate-x-1/2 w-[95%] max-w-6xl rounded-full px-6 md:px-8 flex items-center justify-between z-50 transition-all duration-500 ease-in-out",
-        isScrolled 
-          ? "top-4 py-3 bg-black/35 backdrop-blur-2xl border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] shadow-inner" 
-          : "top-6 py-4 bg-black/95 border border-white/15 shadow-2xl"
-      )}>
-        <Link href="/" className="flex items-center space-x-2.5 cursor-pointer group">
-          <Activity className="w-5 h-5 text-white group-hover:text-white/80 transition-colors" />
-          <span className="font-manrope font-bold text-white tracking-tight hidden sm:block">AP Lab</span>
-        </Link>
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
 
-        {/* Centered Dashboard Text */}
-        <div className="absolute left-1/2 -translate-x-1/2 font-cabin font-bold text-white/50 tracking-widest uppercase text-sm pointer-events-none">
-          Dashboard
-        </div>
+      {/* ===== LEFT SIDEBAR ===== */}
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
+        <SidebarBody className="justify-between gap-6 sticky top-0">
 
-        <div className="flex items-center space-x-3 sm:space-x-4">
-          <Link
-            href="/dashboard/progress"
-            className="w-10 h-10 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-300"
-            title="View Progress Analytics"
-          >
-            <BarChart2 className="w-4.5 h-4.5 text-white/80" />
-          </Link>
-          <button
-            onClick={() => setIsReviewModalOpen(true)}
-            className="w-10 h-10 rounded-full border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 flex items-center justify-center transition-all duration-300"
-            title="Write a Review"
-          >
-            <Star className="w-4.5 h-4.5 text-white/80" />
-          </button>
-          <AccountNavbarWidget onOpenProfile={() => setShowAccountPopup(true)} />
-        </div>
-      </nav>
+          {/* Top: Logo + Nav Links */}
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
-      {/* Main Content Container */}
-      <main className="flex-1 w-full flex flex-col items-center z-10">
+            {/* AP Lab Logo */}
+            <Link
+              href="/"
+              className="flex items-center gap-3 px-2 py-2.5 mb-4 group"
+            >
+              <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
+              <motion.span
+                animate={{
+                  display: sidebarOpen ? "inline-block" : "none",
+                  opacity: sidebarOpen ? 1 : 0,
+                }}
+                transition={{ duration: 0.15 }}
+                className="font-manrope font-bold text-white tracking-tight whitespace-pre text-sm"
+              >
+                AP Lab
+              </motion.span>
+            </Link>
+
+            {/* Divider */}
+            <div className="h-px bg-white/[0.06] mb-4 mx-2" />
+
+            {/* Nav Links */}
+            <div className="flex flex-col gap-1">
+              {sideNavLinks.map((link, idx) => {
+                const isActive = link.href === "/dashboard" 
+                  ? (typeof window !== "undefined" && window.location.pathname === "/dashboard")
+                  : false;
+                return (
+                  <SidebarLink
+                    key={idx}
+                    link={{
+                      ...link,
+                      ...(link.label === "Review" ? {} : {}),
+                    }}
+                    active={isActive}
+                    {...(link.label === "Review" ? {
+                      onClick: (e: React.MouseEvent) => {
+                        e.preventDefault();
+                        setIsReviewModalOpen(true);
+                      }
+                    } : {})}
+                  />
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom: User Avatar */}
+          <div className="flex flex-col gap-2">
+            <div className="h-px bg-white/[0.06] mx-2 mb-2" />
+            <button
+              onClick={() => setShowAccountPopup(true)}
+              className={cn(
+                "flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white",
+              )}
+            >
+              {progress?.photoURL || currentUser?.photoURL ? (
+                <img
+                  src={progress?.photoURL || currentUser?.photoURL || ""}
+                  alt="Avatar"
+                  className="w-6 h-6 rounded-full object-cover flex-shrink-0 border border-white/15"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
+                  {firstName.charAt(0).toUpperCase()}
+                </div>
+              )}
+              <motion.span
+                animate={{
+                  display: sidebarOpen ? "inline-block" : "none",
+                  opacity: sidebarOpen ? 1 : 0,
+                }}
+                transition={{ duration: 0.15 }}
+                className="font-manrope font-semibold text-sm whitespace-pre truncate max-w-[120px]"
+              >
+                {firstName}
+              </motion.span>
+            </button>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400"
+            >
+              <LogOut className="w-5 h-5 flex-shrink-0" />
+              <motion.span
+                animate={{
+                  display: sidebarOpen ? "inline-block" : "none",
+                  opacity: sidebarOpen ? 1 : 0,
+                }}
+                transition={{ duration: 0.15 }}
+                className="font-manrope font-semibold text-sm whitespace-pre"
+              >
+                Sign Out
+              </motion.span>
+            </button>
+          </div>
+        </SidebarBody>
+      </Sidebar>
+
+      {/* ===== MAIN CONTENT ===== */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+        {/* Mobile top bar spacer */}
+        <div className="h-14 md:hidden" />
+
+        <main className="flex-1 w-full flex flex-col items-center z-10">
         
         {/* UPPER REGION: Header & Search Bar (Dot Matrix Background) */}
-        <div className="relative w-full flex flex-col items-center pt-40 pb-12 px-6 z-40">
+        <div className="relative w-full flex flex-col items-center pt-24 pb-12 px-6 z-40">
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             <LightRays
               raysOrigin="top-center"
@@ -890,6 +980,7 @@ export default function Dashboard() {
         </div>
 
       </main>
+      </div>
 
       {/* Sign Out Confirmation Modal */}
       <AnimatePresence>
