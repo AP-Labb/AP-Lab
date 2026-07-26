@@ -6,7 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { BLOG_POSTS } from "@/data/blogs";
 import Link from "next/link";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, Eye } from "lucide-react";
 
 export default function BlogIndexPage() {
   useEffect(() => {
@@ -84,6 +84,11 @@ export default function BlogIndexPage() {
                         <span>{post.date}</span>
                         <span>•</span>
                         <span>{post.readTime}</span>
+                        <span>•</span>
+                        <div className="flex items-center space-x-1 text-purple-400">
+                          <Eye className="w-3 h-3" />
+                          <span>2.6k views</span>
+                        </div>
                       </div>
 
                       {/* Title */}

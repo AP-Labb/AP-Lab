@@ -1,13 +1,13 @@
 "use client";
 
-import React, { use, useEffect } from "react";
+import React, { use, useState, useEffect } from "react";
 import { BLOG_POSTS } from "@/data/blogs";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-
+import { Eye, ArrowLeft } from "lucide-react";
 import { ReadAloudButton } from "@/components/ReadAloudButton";
+import { incrementAndGetBlogViews } from "@/lib/blogViews";
 
 export default function SingleBlogPostPage({ params }: { params: { slug: string } | Promise<{ slug: string }> }) {
   // Safely unwrap params whether passed synchronously or as a Promise
@@ -15,11 +15,18 @@ export default function SingleBlogPostPage({ params }: { params: { slug: string 
   const slug = resolvedParams?.slug;
   const post = BLOG_POSTS.find((p) => p.slug === slug);
 
+  const [viewsCount, setViewsCount] = useState<number>(2680);
+
   useEffect(() => {
     if (post) {
       document.title = `${post.title} | AP Lab`;
     }
-  }, [post]);
+    if (slug) {
+      incrementAndGetBlogViews(slug).then((count) => {
+        setViewsCount(count);
+      });
+    }
+  }, [post, slug]);
 
   if (!post) {
     return (
@@ -65,6 +72,11 @@ export default function SingleBlogPostPage({ params }: { params: { slug: string 
               <span>{post.date}</span>
               <span>•</span>
               <span>{post.readTime}</span>
+              <span>•</span>
+              <div className="flex items-center space-x-1.5 text-purple-400 font-semibold bg-purple-500/10 border border-purple-500/20 px-2.5 py-1 rounded-full">
+                <Eye className="w-3.5 h-3.5" />
+                <span>{viewsCount.toLocaleString()} views</span>
+              </div>
             </div>
           </div>
 

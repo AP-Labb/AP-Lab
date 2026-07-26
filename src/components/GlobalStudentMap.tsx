@@ -29,7 +29,7 @@ const countryMarkers: CountryMarker[] = [
 
 export function GlobalStudentMap() {
   return (
-    <section className="relative w-full mt-16 sm:mt-24 md:mt-32 py-24 sm:py-32 px-4 sm:px-6 md:px-12 bg-[#030408] overflow-hidden text-center z-20 border-t border-white/10">
+    <section className="relative w-full mt-16 sm:mt-24 md:mt-32 py-24 sm:py-32 px-4 sm:px-6 md:px-12 bg-[#030408] overflow-hidden text-center z-20">
       {/* Background Ambient Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-600/10 blur-[140px] rounded-full pointer-events-none" />
 
