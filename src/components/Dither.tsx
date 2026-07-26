@@ -104,10 +104,9 @@ void main() {
   
   vec2 samplePos = p;
   float alpha = 0.96;
-  float f = 0.0;
+  float f = pattern(samplePos);
   
   if (enableMouseInteraction == 1 && trailCount > 0) {
-    vec2 totalPush = vec2(0.0);
     float maxHoleMask = 0.0;
     
     for (int i = 0; i < 16; i++) {
@@ -120,32 +119,19 @@ void main() {
       
       vec2 dir = p - trailNDC;
       
-      // Diagonal fluid rotation for non-circular tear
-      float aRot = 0.52;
-      mat2 rot = mat2(cos(aRot), -sin(aRot), sin(aRot), cos(aRot));
-      vec2 rotDir = rot * dir * vec2(2.4, 0.62);
+      // Organic noise edge (eliminates hard circles without giant oval stretching)
+      float angle = atan(dir.y, dir.x);
+      float noiseEdge = cnoise(vec2(cos(angle * 3.0) * 2.5 + time * 1.5, sin(angle * 3.0) * 2.5 + time * 1.5)) * 0.08;
       
-      float angle = atan(rotDir.y, rotDir.x);
-      float noiseEdge = cnoise(vec2(cos(angle * 2.0) * 3.2 + time * 2.0, sin(angle * 2.0) * 3.2 + time * 2.0)) * 0.30;
-      noiseEdge += cnoise(p * 7.0 - vec2(time * 1.6)) * 0.18;
-      
-      float tearDist = length(rotDir) - noiseEdge;
-      float holeMask = 1.0 - smoothstep(mouseRadius * 0.1, mouseRadius * 0.95, tearDist);
+      float dist = length(dir) - noiseEdge;
+      float holeMask = 1.0 - smoothstep(mouseRadius * 0.2, mouseRadius * 1.1, dist);
       holeMask = clamp(holeMask, 0.0, 1.0) * strength;
-      
-      // Gentle physical push vector repelling voxels outward along persistent trail
-      vec2 pushDir = normalize(dir + vec2(0.0001));
-      totalPush += pushDir * (holeMask * 0.12);
       
       maxHoleMask = max(maxHoleMask, holeMask);
     }
     
-    samplePos += totalPush;
-    f = pattern(samplePos);
-    // Smooth organic trail parting transparency
-    alpha = mix(0.96, 0.02, clamp(maxHoleMask, 0.0, 1.0));
-  } else {
-    f = pattern(samplePos);
+    // Clean, smooth parting transparency without twisting or warping pattern coordinates
+    alpha = mix(0.96, 0.0, clamp(maxHoleMask, 0.0, 1.0));
   }
   
   vec3 col = mix(vec3(0.0), waveColor, f);
@@ -231,7 +217,15 @@ function DitheredWaves({
       if (!canvas) return;
       const rect = canvas.getBoundingClientRect();
       const dpr = gl.getPixelRatio();
-      targetMouseRef.current.set((e.clientX - rect.left) * dpr, (e.clientY - rect.top) * dpr);
+      const x = (e.clientX - rect.left) * dpr;
+      const y = (e.clientY - rect.top) * dpr;
+      targetMouseRef.current.set(x, y);
+
+      // Snap mouseRef immediately if it's offscreen so there is ZERO delay & ZERO fly-in line!
+      if (mouseRef.current.x < -100) {
+        mouseRef.current.set(x, y);
+        lastAddPosRef.current.set(x, y);
+      }
     };
 
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
@@ -260,29 +254,29 @@ function DitheredWaves({
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
 
-    // Smooth inertia lerp (0.06 factor) for silky fluid cursor momentum
-    if (enableMouseInteraction) {
-      mouseRef.current.lerp(targetMouseRef.current, 0.06);
+    // Responsive lerp without lag
+    if (enableMouseInteraction && mouseRef.current.x > -100) {
+      mouseRef.current.lerp(targetMouseRef.current, 0.22);
       
-      // Inject new trail point when mouse moves > 6px
-      if (mouseRef.current.distanceTo(lastAddPosRef.current) > 6) {
+      // Inject new trail point when mouse moves > 8px
+      if (mouseRef.current.distanceTo(lastAddPosRef.current) > 8) {
         lastAddPosRef.current.copy(mouseRef.current);
         trailPointsRef.current.unshift({
           x: mouseRef.current.x,
           y: mouseRef.current.y,
           strength: 1.0
         });
-        if (trailPointsRef.current.length > 10) {
+        if (trailPointsRef.current.length > 8) {
           trailPointsRef.current.pop();
         }
       }
       
-      // Decay trail point strength so voxels stay pushed out and slowly relax back over 1.6s!
+      // Smooth decay over ~0.8s
       trailPointsRef.current.forEach((pt) => {
-        pt.strength *= 0.93;
+        pt.strength *= 0.88;
       });
       
-      trailPointsRef.current = trailPointsRef.current.filter((pt) => pt.strength > 0.03);
+      trailPointsRef.current = trailPointsRef.current.filter((pt) => pt.strength > 0.05);
       
       const uPos = u.trailPos.value;
       const uStr = u.trailStrength.value;

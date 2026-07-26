@@ -353,22 +353,6 @@ export function HeroSection() {
         />
       </div>
 
-      {/* Layer 1.2: Interactive Pure Neutral Color-Agnostic Bloom Spotlight (Enhances & blooms WHATEVER colors are on the image underneath!) */}
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
-        style={{
-          background: `radial-gradient(220px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.40) 45%, transparent 75%)`,
-          opacity: cursorPos.inside ? 1 : 0
-        }}
-      />
-      <div 
-        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-overlay overflow-hidden"
-        style={{
-          background: `radial-gradient(160px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255, 255, 255, 0.70) 0%, transparent 70%)`,
-          opacity: cursorPos.inside ? 1 : 0
-        }}
-      />
-
       {/* Storm Roll-in Overlay Container: Triggers seamlessly AFTER preloader opens! */}
       <motion.div 
         initial={{ opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}
