@@ -1584,6 +1584,20 @@ export default function APDynamicCoursePage() {
   const [topicInteracted, setTopicInteracted] = useState(false);
   const [tabInteracted, setTabInteracted] = useState(false);
 
+  // Safely initialize active topic on course load
+  useEffect(() => {
+    if (course && course.units.length > 0) {
+      // Find matching topic from URL query or default to Unit 1 Topic 1
+      if (!activeTopic) {
+        const firstTopic = course.units[0].topics[0];
+        if (firstTopic) {
+          setActiveTopic(firstTopic);
+          setActiveUnit(course.units[0].id);
+        }
+      }
+    }
+  }, [course, activeTopic]);
+
   // Initialize and Sync Tab from URL query parameters (?tab=video | article | practice)
   useEffect(() => {
     if (typeof window !== "undefined") {
