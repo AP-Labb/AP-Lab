@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import { 
-  Menu, X, Activity, Globe, Users, Mail, LayoutDashboard, LogIn, Newspaper,
-  ChevronDown, Compass, Sparkles, Calculator, Target, Trophy, Play, ArrowRight
+  Menu, X, Activity, Users, Mail, LayoutDashboard, LogIn, Newspaper,
+  ChevronDown, Lightbulb, BookOpen, Code2, CheckSquare, Trophy, Play
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -11,6 +11,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
 import { cn } from "@/lib/utils";
+import { FeaturesPreviewSVG } from "./FeaturesPreviewSVG";
 
 interface FeatureItem {
   id: string;
@@ -18,63 +19,56 @@ interface FeatureItem {
   subtitle: string;
   description: string;
   icon: React.ElementType;
-  image: string;
   href: string;
 }
 
 const featureItems: FeatureItem[] = [
   {
     id: "guides",
-    name: "Interactive Guides",
+    name: "INTERACTIVE GUIDES",
     subtitle: "Curriculum mapped articles & diagrams",
     description: "Deep dive into topic readings, step-by-step experiment schematics, and interactive visual aids built for every AP course.",
-    icon: Compass,
-    image: "/images/features-pixel-guides.png",
+    icon: Lightbulb,
     href: "/#app-showcase"
   },
   {
     id: "ai",
-    name: "AI Tutor & Proof Explainer",
+    name: "AI TUTOR & PROOF EXPLAINER",
     subtitle: "Instant problem solver & concepts",
     description: "Get 24/7 step-by-step assistance, instant AP FRQ scoring breakdown, and conceptual proof explainers tailored to your pace.",
-    icon: Sparkles,
-    image: "/images/features-pixel-ai.png",
+    icon: BookOpen,
     href: "/#ai-showcase"
   },
   {
     id: "calculator",
-    name: "Desmos® Graphing Window",
+    name: "DESMOS® CALCULATOR",
     subtitle: "Built-in floating graphing tool",
     description: "Plot functions, solve parametric equations, and analyze datasets directly inside practice questions and mock diagnostics.",
-    icon: Calculator,
-    image: "/images/features-pixel-calculator.png",
+    icon: Code2,
     href: "/#app-showcase"
   },
   {
     id: "exam",
-    name: "Full Diagnostic Mocks",
+    name: "MOCK DIAGNOSTICS",
     subtitle: "Timed exam simulators with real weights",
     description: "Simulate official College Board exam conditions with weighted section timing, instant scoring analytics, and weak-area reports.",
-    icon: Target,
-    image: "/images/features-pixel-exam.png",
+    icon: CheckSquare,
     href: "/#app-showcase"
   },
   {
     id: "leaderboard",
-    name: "Gamification & Live XP",
+    name: "GAMIFICATION & XP",
     subtitle: "Climb global student leaderboards",
     description: "Earn experience points for completed lessons and streaks, unlocking exclusive badges and competing against top AP scholars.",
     icon: Trophy,
-    image: "/images/features-pixel-leaderboard.png",
     href: "/#app-showcase"
   },
   {
     id: "video",
-    name: "HD Video Companions",
+    name: "HD VIDEO MODULES",
     subtitle: "Handpicked topic lecture videos",
     description: "Watch concise, high-yield video lessons from top educators paired directly with every single topic in the AP specification.",
     icon: Play,
-    image: "/images/features-pixel-video.png",
     href: "/#app-showcase"
   }
 ];
@@ -110,10 +104,10 @@ export function Navbar() {
 
       if (currentScrollY > 120) {
         if (currentScrollY > lastScrollY + 5) {
-          setIsVisible(false); // Scroll down -> hide
+          setIsVisible(false);
           setIsFeaturesOpen(false);
         } else if (currentScrollY < lastScrollY - 5) {
-          setIsVisible(true);  // Scroll up -> reveal
+          setIsVisible(true);
         }
       } else {
         setIsVisible(true);
@@ -173,9 +167,9 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Center Container: Desktop Navigation Links with Features Hover Mega-Menu */}
+          {/* Center Container: Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
-            {/* Features Hover Trigger Wrapper */}
+            {/* Features Hover Trigger Wrapper - Aligned clean dropdown right underneath */}
             <div 
               className="relative"
               onMouseEnter={handleMouseEnterFeatures}
@@ -183,12 +177,11 @@ export function Navbar() {
             >
               <button
                 className={cn(
-                  "relative font-manrope font-semibold text-[13px] tracking-wide transition-all duration-200 flex items-center px-4 py-1.5 rounded-full select-none cursor-pointer",
-                  isFeaturesOpen ? "text-white bg-white/20 font-bold" : "text-white/80 hover:text-white hover:bg-white/10"
+                  "relative font-manrope font-bold text-[13px] tracking-wider uppercase transition-all duration-200 flex items-center px-4 py-1.5 rounded-full select-none cursor-pointer",
+                  isFeaturesOpen ? "text-white bg-white/15" : "text-white/80 hover:text-white hover:bg-white/10"
                 )}
               >
-                <Sparkles className="w-3.5 h-3.5 mr-1.5 text-purple-300" />
-                <span>Features</span>
+                <span>FEATURES</span>
                 <ChevronDown className={cn("w-3.5 h-3.5 ml-1 transition-transform duration-200", isFeaturesOpen ? "rotate-180" : "")} />
               </button>
 
@@ -196,21 +189,16 @@ export function Navbar() {
               <AnimatePresence>
                 {isFeaturesOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    initial={{ opacity: 0, y: 8, scale: 0.99 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 8, scale: 0.98 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-[740px] z-50 pointer-events-auto"
+                    exit={{ opacity: 0, y: 6, scale: 0.99 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="absolute top-full left-0 pt-2 w-[720px] z-50 pointer-events-auto"
                   >
-                    <div className="bg-[#0e1017] border border-white/15 rounded-3xl p-4 sm:p-5 shadow-[0_25px_70px_rgba(0,0,0,0.9)] backdrop-blur-3xl grid grid-cols-[1.1fr_1fr] gap-4 overflow-hidden">
+                    <div className="bg-[#12141d] border border-white/10 rounded-2xl p-5 shadow-[0_25px_60px_rgba(0,0,0,0.85)] backdrop-blur-2xl grid grid-cols-[1fr_1.1fr] gap-6 text-left">
                       
-                      {/* Left Column: List of 6 Features with Icons */}
-                      <div className="flex flex-col space-y-1 pr-1">
-                        <div className="px-3 py-1 mb-1 border-b border-white/10 flex justify-between items-center">
-                          <span className="text-[10px] font-mono font-bold uppercase tracking-widest text-white/40">AP LAB CAPABILITIES</span>
-                          <span className="text-[10px] font-mono text-purple-400 font-semibold">Hover to preview</span>
-                        </div>
-
+                      {/* Left Column: 6 Feature Items (Twenty Style) */}
+                      <div className="flex flex-col space-y-1">
                         {featureItems.map((item) => {
                           const Icon = item.icon;
                           const isHovered = activeFeatureId === item.id;
@@ -222,26 +210,23 @@ export function Navbar() {
                               onMouseEnter={() => setActiveFeatureId(item.id)}
                               onClick={() => setIsFeaturesOpen(false)}
                               className={cn(
-                                "flex items-start space-x-3 p-2.5 rounded-2xl transition-all duration-200 group text-left",
+                                "flex items-start space-x-3.5 p-2.5 rounded-xl transition-all duration-150 group",
                                 isHovered 
-                                  ? "bg-white/10 border border-white/15 shadow-md translate-x-1" 
-                                  : "hover:bg-white/5 border border-transparent"
+                                  ? "bg-white/10 text-white" 
+                                  : "text-white/70 hover:text-white hover:bg-white/5"
                               )}
                             >
                               <div className={cn(
-                                "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 transition-colors mt-0.5",
-                                isHovered ? "bg-purple-500 text-white shadow-lg shadow-purple-500/30" : "bg-white/5 text-white/70 group-hover:text-white"
+                                "w-8 h-8 rounded-lg flex items-center justify-center shrink-0 transition-colors mt-0.5",
+                                isHovered ? "bg-white/15 text-white" : "bg-white/5 text-white/60"
                               )}>
                                 <Icon className="w-4 h-4" />
                               </div>
                               <div className="flex flex-col">
-                                <span className={cn(
-                                  "font-manrope font-bold text-[13px] leading-tight transition-colors",
-                                  isHovered ? "text-white" : "text-white/80 group-hover:text-white"
-                                )}>
+                                <span className="font-mono font-bold text-xs uppercase tracking-wider text-white">
                                   {item.name}
                                 </span>
-                                <span className="font-sans text-[11px] text-white/50 leading-snug mt-0.5">
+                                <span className="font-sans text-xs text-white/50 leading-normal mt-0.5">
                                   {item.subtitle}
                                 </span>
                               </div>
@@ -250,46 +235,21 @@ export function Navbar() {
                         })}
                       </div>
 
-                      {/* Right Column: Display Image Frame & Dynamic Pixel Artwork */}
-                      <div className="bg-[#05060a] border border-white/10 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden group/frame">
-                        {/* Dynamic Pixel Art Image Container */}
-                        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden border border-white/10 bg-[#090a12] shadow-inner mb-3">
-                          <AnimatePresence mode="wait">
-                            <motion.img
-                              key={activeFeature.id}
-                              src={activeFeature.image}
-                              alt={activeFeature.name}
-                              initial={{ opacity: 0, scale: 0.96 }}
-                              animate={{ opacity: 1, scale: 1 }}
-                              exit={{ opacity: 0, scale: 1.04 }}
-                              transition={{ duration: 0.25 }}
-                              className="w-full h-full object-cover rounded-xl"
-                            />
-                          </AnimatePresence>
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent pointer-events-none" />
-                          <div className="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-[9px] font-mono font-bold text-purple-300 uppercase">
-                            16-BIT PREVIEW
-                          </div>
+                      {/* Right Column: Display Frame Container (Twenty Style Vector Graphics) */}
+                      <div className="bg-[#090a10] border border-white/10 rounded-xl p-3.5 flex flex-col justify-between overflow-hidden">
+                        {/* Vector Preview Illustration */}
+                        <div className="relative w-full aspect-[16/10] rounded-lg overflow-hidden border border-white/10 bg-[#06070b] shadow-inner mb-3">
+                          <FeaturesPreviewSVG id={activeFeature.id} />
                         </div>
 
-                        {/* Feature Description Card underneath */}
-                        <div className="flex flex-col text-left space-y-1">
-                          <div className="flex items-center space-x-2">
-                            <h4 className="font-inter font-bold text-sm text-white tracking-tight">
-                              {activeFeature.name}
-                            </h4>
-                          </div>
-                          <p className="font-sans text-[11px] text-white/60 leading-relaxed">
+                        {/* Title and Subtitle underneath image */}
+                        <div className="flex flex-col text-left px-1 pb-1">
+                          <h4 className="font-manrope font-bold text-sm text-white tracking-tight">
+                            {activeFeature.name}
+                          </h4>
+                          <p className="font-sans text-xs text-white/50 leading-relaxed mt-1">
                             {activeFeature.description}
                           </p>
-                          <Link 
-                            href={activeFeature.href}
-                            onClick={() => setIsFeaturesOpen(false)}
-                            className="inline-flex items-center space-x-1 text-[11px] font-manrope font-bold text-purple-400 hover:text-purple-300 pt-1 group/link"
-                          >
-                            <span>Explore feature</span>
-                            <ArrowRight className="w-3 h-3 group-hover/link:translate-x-0.5 transition-transform" />
-                          </Link>
                         </div>
                       </div>
 
@@ -426,10 +386,9 @@ export function Navbar() {
               </Link>
               <Link 
                 href="/#app-showcase" 
-                className="font-manrope font-semibold text-xl text-purple-300 flex items-center space-x-3" 
+                className="font-manrope font-semibold text-xl text-white flex items-center space-x-3" 
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <Sparkles className="w-5 h-5 text-purple-300" />
                 <span>Features</span>
               </Link>
               {navLinks.map((link) => {
