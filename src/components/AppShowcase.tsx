@@ -218,14 +218,15 @@ export function AppShowcase() {
           {/* ROW 3 STICKY STACK (Progress Tracking & Video Lessons) */}
           <div className="sticky top-[150px] z-30">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-              {/* Box 5 (Bottom Left) - PROGRESS TRACKING */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6 }}
-                className="bg-[#000000] border border-white/20 rounded-[32px] h-[450px] flex flex-col justify-between p-8 relative overflow-hidden group shadow-[0_50px_120px_rgba(0,0,0,1)] backdrop-blur-2xl col-span-1"
-              >
+              {/* Box 5 (Bottom Left) - PROGRESS TRACKING (Dark Card -> White Glow) */}
+              <BorderGlow colors={['#ffffff', '#e2e8f0', '#94a3b8']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6 }}
+                  className="h-full flex flex-col justify-between p-8 relative overflow-hidden group backdrop-blur-2xl col-span-1"
+                >
                 <div className="text-left z-10 shrink-0">
                   <span className="text-[10px] font-mono tracking-widest text-white/40 font-bold uppercase mb-1">PROGRESS TRACKING</span>
                   <h3 className="text-2xl font-inter font-bold text-white tracking-tight">Real-Time Performance Metrics.</h3>
@@ -293,11 +294,6 @@ export function AppShowcase() {
                             className={`h-8 sm:h-9 rounded-lg border flex flex-col items-center justify-center text-[12px] font-bold font-mono transition-all relative group/day ${bgClass}`}
                           >
                             <span>{displayDay}</span>
-                            {xpGained > 0 && (
-                              <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 px-1.5 py-0.5 bg-neutral-900 border border-emerald-500/30 rounded text-[9px] text-emerald-300 opacity-0 group-hover/day:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-20">
-                                +{xpGained} XP
-                              </div>
-                            )}
                           </div>
                         );
                       })}
@@ -305,53 +301,39 @@ export function AppShowcase() {
                   </div>
                 </div>
               </motion.div>
+              </BorderGlow>
 
-              {/* Box 6 (Bottom Right) - TOPIC-SPECIFIC VIDEOS */}
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: 0.15 }}
-                className="bg-[#ffffff] border border-neutral-300 rounded-[32px] h-[450px] flex flex-col justify-between p-8 relative overflow-hidden group shadow-[0_50px_120px_rgba(0,0,0,1)] backdrop-blur-2xl col-span-1 text-black cursor-pointer hover:border-neutral-400 transition-colors duration-300"
-              >
-                <div className="text-left relative z-10 flex flex-col shrink-0">
-                  <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">VIDEO COMPANIONS</span>
-                  <h3 className="text-2xl font-inter font-bold text-black tracking-tight">Topic-Specific Video Lessons.</h3>
-                  <p className="text-black/50 font-inter text-[11px] max-w-sm mt-1 leading-relaxed">
-                    Every syllabus topic is paired with a handpicked specialized video to clarify complex concepts (curated, not created by us, for optimal quality).
-                  </p>
-                </div>
-
-                <div className="relative w-full aspect-video rounded-2xl overflow-hidden border border-neutral-200/80 shadow-lg mt-4 bg-black flex flex-col justify-between p-4 transition-all duration-300 shrink-0">
-                  <Image 
-                    src="/images/biology-thumbnail.jpg"
-                    alt="Introduction to Cells with the Amoeba Sisters"
-                    fill
-                    sizes="(max-w-md) 100vw, 350px"
-                    style={{ objectFit: "cover" }}
-                    className="opacity-90 scale-[1.05] group-hover:scale-110 transition-transform duration-500 ease-out"
-                  />
-
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent pointer-events-none" />
-
-                  <div className="flex justify-end items-center relative z-10">
-                    <span className="text-[8px] font-mono text-white/90 bg-black/60 backdrop-blur-md px-1.5 py-0.5 rounded">12:45</span>
+              {/* Box 6 (Bottom Right) - VIDEO MODULES (White Card -> Black Glow) */}
+              <BorderGlow colors={['#000000', '#1e293b', '#475569']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[450px]">
+                <motion.div 
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: 0.15 }}
+                  className="h-full flex flex-col justify-between p-8 relative overflow-hidden group backdrop-blur-2xl col-span-1"
+                >
+                  <div className="text-left z-10 shrink-0">
+                    <span className="text-[10px] font-mono tracking-widest text-black/40 font-bold uppercase mb-1">VIDEO TUTORIALS</span>
+                    <h3 className="text-2xl font-inter font-bold text-black tracking-tight">HD Video Modules.</h3>
+                    <p className="text-black/50 font-inter text-[11px] max-w-sm mt-1 leading-relaxed">
+                      Comprehensive lecture videos mapped to every single topic in the AP specification.
+                    </p>
                   </div>
 
-                  <div className="absolute inset-0 flex items-center justify-center z-10">
-                    <div className="w-12 h-12 rounded-full bg-white shadow-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 ease-out group-hover:bg-red-600 group-hover:text-white">
-                      <Play className="w-5 h-5 text-black fill-current transition-colors duration-300 group-hover:text-white" />
+                  <div className="relative w-full flex-1 flex items-center justify-center z-10 mt-2 px-1">
+                    <div className="w-full max-w-[380px] h-[220px] rounded-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-neutral-300 group-hover:scale-[1.03] transition-transform duration-500 bg-[#07080f] relative flex items-center justify-center">
+                      <img 
+                        src="/images/interactive-lesson-showcase.png" 
+                        alt="HD Video Modules" 
+                        className="w-full h-full object-cover rounded-xl opacity-90"
+                      />
+                      <div className="absolute w-12 h-12 rounded-full bg-white/90 shadow-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Play className="w-5 h-5 text-black fill-black ml-0.5" />
+                      </div>
                     </div>
                   </div>
-
-                  <div className="w-full relative z-10 space-y-2">
-                    <div className="flex flex-col">
-                      <span className="text-white font-manrope font-extrabold text-[12px] leading-tight drop-shadow-md">Introduction to Cells</span>
-                      <span className="text-[9px] text-white/70 mt-0.5 drop-shadow-sm">with the Amoeba Sisters</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </BorderGlow>
             </div>
           </div>
 

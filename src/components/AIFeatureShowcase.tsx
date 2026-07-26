@@ -116,16 +116,22 @@ export function AIFeatureShowcase() {
         <div className="lg:col-span-7 space-y-12 pt-2">
           {showcaseSlides.map((slide, idx) => {
             const isActive = activeStep === idx;
+            const subjectColors = slide.id === 1 
+              ? ['#10b981', '#34d399', '#059669'] // Green for Bio
+              : slide.id === 2 
+              ? ['#8b5cf6', '#a855f7', '#7c3aed'] // Purple for Psych
+              : ['#06b6d4', '#38bdf8', '#0284c7']; // Teal Blue for Chem
+
             return (
               <BorderGlow
                 key={slide.id}
-                colors={[slide.accentColor, '#c084fc', '#38bdf8']}
+                colors={subjectColors}
                 borderRadius={24}
                 backgroundColor="#05070E"
                 glowIntensity={1.2}
                 edgeSensitivity={35}
                 className={cn(
-                  "transition-opacity duration-300 cursor-pointer overflow-hidden relative shadow-2xl",
+                  "transition-opacity duration-300 cursor-pointer overflow-hidden relative shadow-2xl rounded-3xl",
                   isActive ? "opacity-100 ring-1 ring-white/30" : "opacity-40 hover:opacity-70"
                 )}
               >
@@ -134,7 +140,7 @@ export function AIFeatureShowcase() {
                   className="w-full h-full"
                 >
                   {/* Real Course Page Screenshot Image */}
-                  <div className="relative w-full overflow-hidden bg-black/90 p-1 sm:p-2">
+                  <div className="relative w-full overflow-hidden bg-black/90 p-1 sm:p-2 rounded-3xl">
                     <img
                       src={slide.imageSrc}
                       alt={slide.imageAlt}
@@ -150,15 +156,21 @@ export function AIFeatureShowcase() {
           })}
         </div>
 
-        {/* Right Column: STICKY Course Page AI Tutor Drawer with BorderGlow */}
+        {/* Right Column: STICKY Course Page AI Tutor Drawer with Subject BorderGlow */}
         <div className="lg:col-span-5 sticky top-28 z-30 pt-2">
           <BorderGlow
-            colors={[current.accentColor, '#c084fc', '#38bdf8']}
+            colors={
+              current.id === 1 
+                ? ['#10b981', '#34d399', '#059669'] // Green for Bio
+                : current.id === 2 
+                ? ['#8b5cf6', '#a855f7', '#7c3aed'] // Purple for Psych
+                : ['#06b6d4', '#38bdf8', '#0284c7']  // Teal Blue for Chem
+            }
             borderRadius={24}
             backgroundColor="#05060c"
             glowIntensity={1.2}
             edgeSensitivity={35}
-            className="w-full shadow-2xl overflow-hidden"
+            className="w-full shadow-2xl overflow-hidden rounded-3xl"
           >
             <motion.div 
               layout
