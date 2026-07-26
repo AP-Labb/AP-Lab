@@ -86,7 +86,7 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-screen px-3 py-4 hidden md:flex md:flex-col bg-[#07080e]/95 border-r border-white/[0.07] flex-shrink-0 relative z-50",
+        "h-screen px-3 py-4 hidden md:flex md:flex-col bg-[#07080e]/98 border-r border-white/[0.07] flex-shrink-0 relative z-50",
         className
       )}
       animate={{
@@ -112,7 +112,7 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          "h-14 px-4 flex flex-row md:hidden items-center justify-between bg-[#07080e]/95 border-b border-white/[0.07] w-full fixed top-0 left-0 right-0 z-50"
+          "h-14 px-4 flex flex-row md:hidden items-center justify-between bg-[#07080e]/98 border-b border-white/[0.07] w-full fixed top-0 left-0 right-0 z-50"
         )}
         {...props}
       >
@@ -158,7 +158,7 @@ export const SidebarLink = ({
   link: Links;
   className?: string;
   active?: boolean;
-  props?: LinkProps;
+  [key: string]: any;
 }) => {
   const { open, animate } = useSidebar();
   return (

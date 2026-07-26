@@ -24,6 +24,7 @@ import { ReviewModal } from "@/components/ReviewModal";
 import { Onboarding } from "@/components/Onboarding";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
+import { SettingsModal } from "@/components/SettingsModal";
 import { getLevelForXp, getXpThresholdForLevel } from "@/lib/xpProgression";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
@@ -350,6 +351,37 @@ function getLevelName(lvl: number): string {
   return "Apprentice";
 }
 
+function SidebarSettingsButton({ open }: { open: boolean }) {
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  return (
+    <>
+      <button
+        onClick={() => setIsSettingsOpen(true)}
+        className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+      >
+        <motion.div
+          className="flex-shrink-0"
+          whileHover={{ rotate: 90 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+        >
+          <Settings className="w-5 h-5" />
+        </motion.div>
+        <motion.span
+          animate={{
+            display: open ? "inline-block" : "none",
+            opacity: open ? 1 : 0,
+          }}
+          transition={{ duration: 0.15 }}
+          className="text-sm font-manrope font-semibold whitespace-pre"
+        >
+          Settings
+        </motion.span>
+      </button>
+      <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
+    </>
+  );
+}
+
 export default function Dashboard() {
   const { currentUser, loading: authLoading } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
@@ -656,7 +688,12 @@ export default function Dashboard() {
               href="/"
               className="flex items-center gap-3 px-2 py-2.5 mb-4 group"
             >
-              <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
+              <motion.div
+                whileHover={{ rotate: [0, -10, 10, -6, 6, 0] }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
+              </motion.div>
               <motion.span
                 animate={{
                   display: sidebarOpen ? "inline-block" : "none",
@@ -672,68 +709,201 @@ export default function Dashboard() {
             {/* Divider */}
             <div className="h-px bg-white/[0.06] mb-4 mx-2" />
 
-            {/* Nav Links */}
+            {/* Nav Links with animated icons */}
             <div className="flex flex-col gap-1">
-              {sideNavLinks.map((link, idx) => {
-                const isActive = link.href === "/dashboard" 
-                  ? (typeof window !== "undefined" && window.location.pathname === "/dashboard")
-                  : false;
-                return (
-                  <SidebarLink
-                    key={idx}
-                    link={{
-                      ...link,
-                      ...(link.label === "Review" ? {} : {}),
+
+              {/* Home */}
+              <Link
+                href="/"
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white group/home"
+              >
+                <motion.div
+                  className="flex-shrink-0"
+                  whileHover={{ x: [0, -3, 3, -2, 2, 0], y: [0, -2, 0] }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                >
+                  <Home className="w-5 h-5" />
+                </motion.div>
+                <motion.span
+                  animate={{
+                    display: sidebarOpen ? "inline-block" : "none",
+                    opacity: sidebarOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Home
+                </motion.span>
+              </Link>
+
+              {/* Dashboard */}
+              <Link
+                href="/dashboard"
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white group/dash"
+              >
+                <motion.div
+                  className="flex-shrink-0"
+                  whileHover={{ scale: [1, 1.12, 0.95, 1.06, 1], rotate: [0, 4, -4, 2, 0] }}
+                  transition={{ duration: 0.45, ease: "easeInOut" }}
+                >
+                  <LayoutDashboard className="w-5 h-5" />
+                </motion.div>
+                <motion.span
+                  animate={{
+                    display: sidebarOpen ? "inline-block" : "none",
+                    opacity: sidebarOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Dashboard
+                </motion.span>
+              </Link>
+
+              {/* Progress */}
+              <Link
+                href="/dashboard/progress"
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white group/prog"
+              >
+                <motion.div
+                  className="flex-shrink-0"
+                  whileHover={{ y: [0, -3, 1, -1, 0] }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                >
+                  <BarChart2 className="w-5 h-5" />
+                </motion.div>
+                <motion.span
+                  animate={{
+                    display: sidebarOpen ? "inline-block" : "none",
+                    opacity: sidebarOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Progress
+                </motion.span>
+              </Link>
+
+              {/* Review (star with burst lines) */}
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
+              >
+                <motion.div
+                  className="flex-shrink-0 relative"
+                  whileHover="burst"
+                  initial="idle"
+                >
+                  {/* Burst lines */}
+                  {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
+                    <motion.div
+                      key={angle}
+                      className="absolute bg-yellow-400/60 rounded-full"
+                      style={{
+                        width: "2px",
+                        height: "6px",
+                        top: "50%",
+                        left: "50%",
+                        transformOrigin: "0 0",
+                        transform: `rotate(${angle}deg) translate(-50%, -50%)`,
+                      }}
+                      variants={{
+                        idle: { scale: 0, opacity: 0, translateX: 0, translateY: 0 },
+                        burst: {
+                          scale: [0, 1, 0],
+                          opacity: [0, 0.8, 0],
+                          translateX: Math.cos((angle * Math.PI) / 180) * 10,
+                          translateY: Math.sin((angle * Math.PI) / 180) * 10,
+                        },
+                      }}
+                      transition={{ duration: 0.45, delay: i * 0.02, ease: "easeOut" }}
+                    />
+                  ))}
+                  <motion.div
+                    variants={{
+                      idle: { scale: 1 },
+                      burst: { scale: [1, 1.3, 1] },
                     }}
-                    active={isActive}
-                    {...(link.label === "Review" ? {
-                      onClick: (e: React.MouseEvent) => {
-                        e.preventDefault();
-                        setIsReviewModalOpen(true);
-                      }
-                    } : {})}
-                  />
-                );
-              })}
+                    transition={{ duration: 0.35 }}
+                  >
+                    <Star className="w-5 h-5" />
+                  </motion.div>
+                </motion.div>
+                <motion.span
+                  animate={{
+                    display: sidebarOpen ? "inline-block" : "none",
+                    opacity: sidebarOpen ? 1 : 0,
+                  }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Review
+                </motion.span>
+              </button>
+
+              {/* Settings */}
+              <SidebarSettingsButton open={sidebarOpen} />
+
             </div>
           </div>
 
-          {/* Bottom: User Avatar */}
+          {/* Bottom: Profile Widget + Sign Out */}
           <div className="flex flex-col gap-2">
             <div className="h-px bg-white/[0.06] mx-2 mb-2" />
+
+            {/* Profile — compact circle when closed, full widget when open */}
             <button
               onClick={() => setShowAccountPopup(true)}
-              className={cn(
-                "flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white",
-              )}
+              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.05] hover:text-white"
             >
-              {progress?.photoURL || currentUser?.photoURL ? (
-                <img
-                  src={progress?.photoURL || currentUser?.photoURL || ""}
-                  alt="Avatar"
-                  className="w-6 h-6 rounded-full object-cover flex-shrink-0 border border-white/15"
-                />
-              ) : (
-                <div className="w-6 h-6 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
-                  {firstName.charAt(0).toUpperCase()}
-                </div>
-              )}
-              <motion.span
-                animate={{
-                  display: sidebarOpen ? "inline-block" : "none",
-                  opacity: sidebarOpen ? 1 : 0,
-                }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-semibold text-sm whitespace-pre truncate max-w-[120px]"
-              >
-                {firstName}
-              </motion.span>
+              {/* Avatar - always a circle */}
+              <div className="flex-shrink-0">
+                {progress?.photoURL || currentUser?.photoURL ? (
+                  <img
+                    src={progress?.photoURL || currentUser?.photoURL || ""}
+                    alt="Avatar"
+                    className="w-7 h-7 rounded-full object-cover border border-white/20 flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
+                    {firstName.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </div>
+
+              {/* Full profile info — visible only when expanded */}
+              <AnimatePresence>
+                {sidebarOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col items-start text-left overflow-hidden"
+                  >
+                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
+                      {progress?.displayName || currentUser?.displayName || "Scholar"}
+                    </span>
+                    <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
+                      Lvl {level} • {xp.toLocaleString()} XP
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </button>
+
+            {/* Sign Out */}
             <button
               onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400"
+              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400 group/signout"
             >
-              <LogOut className="w-5 h-5 flex-shrink-0" />
+              <motion.div
+                className="flex-shrink-0"
+                whileHover={{ x: [0, 4, -2, 3, 0] }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+              >
+                <LogOut className="w-5 h-5" />
+              </motion.div>
               <motion.span
                 animate={{
                   display: sidebarOpen ? "inline-block" : "none",
@@ -748,6 +918,7 @@ export default function Dashboard() {
           </div>
         </SidebarBody>
       </Sidebar>
+
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
