@@ -38,37 +38,36 @@ export function FeaturesPreviewSVG({ id }: FeaturesPreviewSVGProps) {
 
     case "ai":
       return (
-        <svg className="w-full h-full text-purple-400" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg className="w-full h-full text-blue-500" viewBox="0 0 400 250" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect width="400" height="250" fill="#040508" />
           <pattern id="dot_grid_2" width="16" height="16" patternUnits="userSpaceOnUse">
             <circle cx="2" cy="2" r="1" fill="#ffffff" fillOpacity="0.06" />
           </pattern>
           <rect width="400" height="250" fill="url(#dot_grid_2)" />
 
-          {/* AI Tutor Chat Workspace Frame */}
-          <rect x="35" y="25" width="330" height="200" rx="12" fill="#090a12" stroke="#ffffff" strokeOpacity="0.1" strokeWidth="1.5" />
+          {/* AI Terminal Window Frame */}
+          <rect x="40" y="30" width="320" height="190" rx="10" fill="#080912" stroke="#ffffff" strokeOpacity="0.12" strokeWidth="1.5" />
           
           {/* Header bar */}
-          <rect x="35" y="25" width="330" height="32" rx="12" fill="#0f111d" />
-          <circle cx="55" cy="41" r="4" fill="#a855f7" />
-          <text x="67" y="45" fill="#ffffff" fillOpacity="0.9" fontSize="11" fontWeight="bold" fontFamily="sans-serif">AP Lab AI Assistant</text>
-          <rect x="300" y="34" width="50" height="14" rx="4" fill="#a855f7" fillOpacity="0.2" />
-          <text x="325" y="44" fill="#c084fc" fontSize="9" fontWeight="bold" fontFamily="sans-serif" textAnchor="middle">ONLINE</text>
+          <rect x="40" y="30" width="320" height="28" rx="10" fill="#0e101c" />
+          <circle cx="58" cy="44" r="3.5" fill="#3b82f6" opacity="0.8" />
+          <circle cx="70" cy="44" r="3.5" fill="#ffffff" opacity="0.2" />
+          <circle cx="82" cy="44" r="3.5" fill="#ffffff" opacity="0.2" />
 
-          {/* User Question Bubble */}
-          <rect x="170" y="72" width="180" height="34" rx="10" fill="#1e1b4b" stroke="#6366f1" strokeOpacity="0.4" strokeWidth="1" />
-          <text x="182" y="93" fill="#e0e7ff" fontSize="10" fontFamily="sans-serif">Explain Light Reactions in AP Bio...</text>
+          {/* User Query Bubble Lines */}
+          <rect x="180" y="72" width="160" height="34" rx="8" fill="#131a30" stroke="#3b82f6" strokeOpacity="0.3" strokeWidth="1" />
+          <line x1="195" y1="84" x2="315" y2="84" stroke="#60a5fa" strokeWidth="2.5" strokeLinecap="round" />
+          <line x1="195" y1="94" x2="265" y2="94" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
 
-          {/* AI Response Bubble */}
-          <rect x="50" y="118" width="220" height="58" rx="10" fill="#13112c" stroke="#a855f7" strokeOpacity="0.4" strokeWidth="1" />
-          <text x="64" y="138" fill="#c084fc" fontSize="10" fontWeight="bold" fontFamily="sans-serif">AI Tutor:</text>
-          <text x="64" y="154" fill="#e9d5ff" fontSize="10" fontFamily="sans-serif">H₂O + NADP⁺ + ADP → O₂ + NADPH + ATP</text>
+          {/* AI Response Lines */}
+          <rect x="60" y="118" width="220" height="52" rx="8" fill="#0d1222" stroke="#3b82f6" strokeWidth="1.5" />
+          <line x1="75" y1="132" x2="245" y2="132" stroke="#3b82f6" strokeWidth="3" strokeLinecap="round" />
+          <line x1="75" y1="144" x2="215" y2="144" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" opacity="0.8" />
+          <line x1="75" y1="156" x2="165" y2="156" stroke="#60a5fa" strokeWidth="2" strokeLinecap="round" opacity="0.5" />
 
-          {/* Input Box */}
-          <rect x="50" y="186" width="300" height="28" rx="8" fill="#0d0e18" stroke="#ffffff" strokeOpacity="0.12" strokeWidth="1" />
-          <text x="62" y="204" fill="#ffffff" fillOpacity="0.35" fontSize="10" fontFamily="sans-serif">Ask AI Tutor anything...</text>
-          <rect x="320" y="191" width="24" height="18" rx="5" fill="#a855f7" />
-          <path d="M330 196L336 200L330 204" stroke="#ffffff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+          {/* Input Box Line */}
+          <rect x="60" y="182" width="280" height="24" rx="6" fill="#06070d" stroke="#ffffff" strokeOpacity="0.1" strokeWidth="1" />
+          <line x1="72" y1="194" x2="160" y2="194" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" opacity="0.3" />
         </svg>
       );
 

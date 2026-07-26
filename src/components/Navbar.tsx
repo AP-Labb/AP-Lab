@@ -101,17 +101,7 @@ export function Navbar() {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
       setIsScrolled(currentScrollY > 20);
-
-      if (currentScrollY > 120) {
-        if (currentScrollY > lastScrollY + 5) {
-          setIsVisible(false);
-          setIsFeaturesOpen(false);
-        } else if (currentScrollY < lastScrollY - 5) {
-          setIsVisible(true);
-        }
-      } else {
-        setIsVisible(true);
-      }
+      setIsVisible(true); // Navbar stays visible on scroll
       setLastScrollY(currentScrollY);
     };
 
@@ -147,8 +137,8 @@ export function Navbar() {
         <nav className={cn(
           "pointer-events-auto transition-all duration-500 ease-in-out flex items-center justify-between text-white relative",
           isScrolled 
-            ? "mt-4 sm:mt-5 w-[92%] sm:w-[94%] max-w-7xl rounded-full border border-white/15 px-6 sm:px-8 md:px-10 py-3 bg-[#08090e]/90 backdrop-blur-2xl shadow-[0_12px_40px_0_rgba(0,0,0,0.8)]" 
-            : "mt-0 w-full max-w-full rounded-none border-b border-white/10 border-x-0 border-t-0 px-8 sm:px-12 md:px-16 py-4 sm:py-5 bg-[#08090e]/60 backdrop-blur-xl shadow-none"
+            ? "mt-4 sm:mt-5 w-[92%] sm:w-[94%] max-w-7xl rounded-full border border-white/15 px-6 sm:px-8 md:px-10 py-3 bg-[#08090e]/65 backdrop-blur-2xl shadow-[0_12px_40px_0_rgba(0,0,0,0.8)]" 
+            : "mt-0 w-full max-w-full rounded-none border-b border-white/10 border-x-0 border-t-0 px-8 sm:px-12 md:px-16 py-4 sm:py-5 bg-[#08090e]/50 backdrop-blur-xl shadow-none"
         )}>
           {/* Left Container: Logo */}
           <div className="flex-1 flex justify-start">

@@ -90,15 +90,15 @@ function DockerLogoSVG() {
 }
 
 const whiteTechLogos = [
-  { node: <GoogleLogoSVG />, title: "Google", href: "https://google.com" },
-  { node: <FirebaseLogoSVG />, title: "Firebase", href: "https://firebase.google.com" },
-  { node: <ReactLogoSVG />, title: "React", href: "https://react.dev" },
-  { node: <NextLogoSVG />, title: "Next.js", href: "https://nextjs.org" },
-  { node: <TypeScriptLogoSVG />, title: "TypeScript", href: "https://www.typescriptlang.org" },
-  { node: <VercelLogoSVG />, title: "Vercel", href: "https://vercel.com" },
-  { node: <TailwindLogoSVG />, title: "Tailwind CSS", href: "https://tailwindcss.com" },
-  { node: <GitHubLogoSVG />, title: "GitHub", href: "https://github.com" },
-  { node: <DockerLogoSVG />, title: "Docker", href: "https://www.docker.com" },
+  { node: <GoogleLogoSVG />, title: "Google", subtitle: "Generative AI", href: "https://google.com" },
+  { node: <FirebaseLogoSVG />, title: "Firebase", subtitle: "Realtime Auth", href: "https://firebase.google.com" },
+  { node: <ReactLogoSVG />, title: "React", subtitle: "UI Engine", href: "https://react.dev" },
+  { node: <NextLogoSVG />, title: "Next.js", subtitle: "App Framework", href: "https://nextjs.org" },
+  { node: <TypeScriptLogoSVG />, title: "TypeScript", subtitle: "Type Safety", href: "https://www.typescriptlang.org" },
+  { node: <VercelLogoSVG />, title: "Vercel", subtitle: "Global Edge Network", href: "https://vercel.com" },
+  { node: <TailwindLogoSVG />, title: "Tailwind CSS", subtitle: "Design System", href: "https://tailwindcss.com" },
+  { node: <GitHubLogoSVG />, title: "GitHub", subtitle: "Source Code", href: "https://github.com" },
+  { node: <DockerLogoSVG />, title: "Docker", subtitle: "Container Engine", href: "https://www.docker.com" },
 ];
 
 const DiscordIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -157,27 +157,36 @@ const footerSocials = [
 
 export function Footer() {
   return (
-    <footer className="w-full bg-black text-white pt-0 overflow-hidden relative border-t border-white/10">
-      {/* Top Section: Connected All-White Monochrome Partner Logo Loop */}
-      <div className="w-full border-b border-white/10 py-8 bg-black relative overflow-hidden select-none mb-12">
-        <div className="max-w-[1400px] mx-auto px-6 mb-4 text-center">
-          <span className="font-mono text-[10px] text-white/40 uppercase tracking-widest">
-            POWERED BY INDUSTRY LEADERS
+    <footer className="w-full bg-black text-white pt-12 overflow-hidden relative border-t border-white/10">
+      {/* Top Section: 21st.dev Style Clean Tech Partner Cards Grid */}
+      <div className="max-w-[1400px] mx-auto px-6 mb-16">
+        <div className="flex items-center justify-between mb-6">
+          <span className="font-mono text-[10px] font-bold text-white/40 uppercase tracking-widest">
+            POWERED BY INDUSTRY LEADERS & PLATFORM INFRASTRUCTURE
           </span>
         </div>
-        <div className="h-14 relative overflow-hidden flex items-center">
-          <LogoLoop
-            logos={whiteTechLogos}
-            speed={100}
-            direction="left"
-            logoHeight={36}
-            gap={60}
-            hoverSpeed={0}
-            scaleOnHover
-            fadeOut
-            fadeOutColor="#000000"
-            ariaLabel="Technology partners"
-          />
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3.5">
+          {whiteTechLogos.map((tech, idx) => (
+            <a
+              key={idx}
+              href={tech.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#0b0d14] hover:bg-white/[0.08] border border-white/10 rounded-xl p-3 flex items-center space-x-3 transition-all duration-200 group"
+            >
+              <div className="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+                {tech.node}
+              </div>
+              <div className="flex flex-col text-left overflow-hidden">
+                <span className="font-manrope font-bold text-xs text-white truncate leading-tight group-hover:text-purple-300 transition-colors">
+                  {tech.title}
+                </span>
+                <span className="font-sans text-[10px] text-white/40 truncate mt-0.5">
+                  {tech.subtitle}
+                </span>
+              </div>
+            </a>
+          ))}
         </div>
       </div>
       
