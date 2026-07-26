@@ -119,18 +119,19 @@ void main() {
       
       vec2 dir = p - trailNDC;
       
-      // Organic noise edge (eliminates hard circles without giant oval stretching)
+      // Multi-frequency organic turbulent edge (smoke particle breakup effect)
       float angle = atan(dir.y, dir.x);
-      float noiseEdge = cnoise(vec2(cos(angle * 3.0) * 2.5 + time * 1.5, sin(angle * 3.0) * 2.5 + time * 1.5)) * 0.08;
+      float noiseEdge = cnoise(vec2(cos(angle * 2.8) * 3.2 + time * 1.8, sin(angle * 2.8) * 3.2 + time * 1.8)) * 0.09;
+      noiseEdge += cnoise(p * 8.0 + vec2(time * 1.2)) * 0.05;
       
       float dist = length(dir) - noiseEdge;
-      float holeMask = 1.0 - smoothstep(mouseRadius * 0.2, mouseRadius * 1.1, dist);
+      float holeMask = 1.0 - smoothstep(mouseRadius * 0.15, mouseRadius * 1.15, dist);
       holeMask = clamp(holeMask, 0.0, 1.0) * strength;
       
       maxHoleMask = max(maxHoleMask, holeMask);
     }
     
-    // Clean, smooth parting transparency without twisting or warping pattern coordinates
+    // Dissolving smoke particle transparency
     alpha = mix(0.96, 0.0, clamp(maxHoleMask, 0.0, 1.0));
   }
   

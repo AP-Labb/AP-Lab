@@ -80,32 +80,18 @@ async function loadCustomFont(fontUrl: string) {
 
 async function resolveFont(font: string, fontUrl?: string) {
   const effectiveUrl = fontUrl || (font === DEFAULT_FONT ? DEFAULT_FONT_URL : null);
-  if (!effectiveUrl) {
-    if (typeof document !== 'undefined' && document.fonts && document.fonts.load) {
-      try {
-        await document.fonts.load(font);
-        await document.fonts.ready;
-      } catch {
-        // Ignore
-      }
-    }
-    return font;
-  }
+  if (!effectiveUrl) return font;
+
   try {
-    const family = await loadCustomFont(effectiveUrl);
+    const fontPromise = loadCustomFont(effectiveUrl);
+    const timeoutPromise = new Promise<string>((_, reject) => 
+      setTimeout(() => reject(new Error("Font load timeout")), 350)
+    );
+    const family = await Promise.race([fontPromise, timeoutPromise]);
     const sizeMatch = font.match(/^\s*(.*?\d+px)/);
     const prefix = sizeMatch ? sizeMatch[1].trim() : 'bold 30px';
-    const resolved = `${prefix} "${family}"`;
-    if (typeof document !== 'undefined' && document.fonts && document.fonts.load) {
-      try {
-        await document.fonts.load(resolved);
-      } catch {
-        // Ignore
-      }
-    }
-    return resolved;
+    return `${prefix} "${family}", sans-serif`;
   } catch (error) {
-    console.error('CircularGallery: unable to load font from', fontUrl, error);
     return font;
   }
 }
@@ -654,21 +640,31 @@ export default function CircularGallery({
     if (!containerRef.current) return;
     let app: App | null = null;
     let isMounted = true;
+
+    const resizeTimer = setTimeout(() => {
+      window.dispatchEvent(new Event('resize'));
+    }, 150);
+
     resolveFont(font, fontUrl).then(resolvedFont => {
       if (!isMounted || !containerRef.current) return;
-      app = new App(containerRef.current, {
-        items,
-        bend,
-        textColor,
-        borderRadius,
-        font: resolvedFont,
-        scrollSpeed,
-        scrollEase
-      });
+      try {
+        app = new App(containerRef.current, {
+          items,
+          bend,
+          textColor,
+          borderRadius,
+          font: resolvedFont,
+          scrollSpeed,
+          scrollEase
+        });
+      } catch (err) {
+        console.warn("CircularGallery WebGL initialization error:", err);
+      }
     });
 
     return () => {
       isMounted = false;
+      clearTimeout(resizeTimer);
       if (app) app.destroy();
     };
   }, [items, bend, textColor, borderRadius, font, fontUrl, scrollSpeed, scrollEase]);
