@@ -214,8 +214,8 @@ export function Footer() {
               Dashboard
             </Link>
             <span className="text-white/20">/</span>
-            <Link href="/impact" className="font-mono text-[10px] text-white/40 hover:text-white uppercase tracking-widest transition-colors">
-              Impact
+            <Link href="/#app-showcase" className="font-mono text-[10px] text-white/40 hover:text-white uppercase tracking-widest transition-colors">
+              Features
             </Link>
             <span className="text-white/20">/</span>
             <Link href="/blog" className="font-mono text-[10px] text-white/40 hover:text-white uppercase tracking-widest transition-colors">
