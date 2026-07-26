@@ -353,6 +353,22 @@ export function HeroSection() {
         />
       </div>
 
+      {/* Layer 1.2: Interactive Cursor Bloom & Specular Glow (Makes background image pop & glow brilliantly under parted dither!) */}
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-color-dodge overflow-hidden"
+        style={{
+          background: `radial-gradient(450px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(56, 189, 248, 0.75) 0%, rgba(139, 92, 246, 0.45) 35%, rgba(6, 182, 212, 0.20) 65%, transparent 85%)`,
+          opacity: cursorPos.inside ? 1 : 0
+        }}
+      />
+      <div 
+        className="absolute inset-0 z-0 pointer-events-none transition-opacity duration-300 mix-blend-screen overflow-hidden"
+        style={{
+          background: `radial-gradient(300px circle at ${cursorPos.x}px ${cursorPos.y}px, rgba(255, 255, 255, 0.45) 0%, rgba(56, 189, 248, 0.2) 50%, transparent 80%)`,
+          opacity: cursorPos.inside ? 1 : 0
+        }}
+      />
+
       {/* Storm Roll-in Overlay Container: Triggers seamlessly AFTER preloader opens! */}
       <motion.div 
         initial={{ opacity: 0, scale: 1.15, y: -50, filter: "blur(20px)" }}

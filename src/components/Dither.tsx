@@ -15,11 +15,13 @@ uniform float waveSpeed;
 uniform float waveFrequency;
 uniform float waveAmplitude;
 uniform vec3 waveColor;
-uniform vec2 mousePos;
 uniform int enableMouseInteraction;
 uniform float mouseRadius;
 uniform float colorNum;
 uniform float pixelSize;
+uniform vec2 trailPos[16];
+uniform float trailStrength[16];
+uniform int trailCount;
 
 vec4 mod289(vec4 x) { return x - floor(x * (1.0/289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 1.0) * x); }
@@ -104,36 +106,44 @@ void main() {
   float alpha = 0.96;
   float f = 0.0;
   
-  if (enableMouseInteraction == 1) {
-    vec2 mouseNDC = (mousePos / resolution - 0.5) * vec2(1.0, -1.0);
-    mouseNDC.x *= resolution.x / resolution.y;
+  if (enableMouseInteraction == 1 && trailCount > 0) {
+    vec2 totalPush = vec2(0.0);
+    float maxHoleMask = 0.0;
     
-    vec2 dir = p - mouseNDC;
+    for (int i = 0; i < 16; i++) {
+      if (i >= trailCount) break;
+      float strength = trailStrength[i];
+      if (strength <= 0.01) continue;
+      
+      vec2 trailNDC = (trailPos[i] / resolution - 0.5) * vec2(1.0, -1.0);
+      trailNDC.x *= resolution.x / resolution.y;
+      
+      vec2 dir = p - trailNDC;
+      
+      // Diagonal fluid rotation for non-circular tear
+      float aRot = 0.52;
+      mat2 rot = mat2(cos(aRot), -sin(aRot), sin(aRot), cos(aRot));
+      vec2 rotDir = rot * dir * vec2(2.4, 0.62);
+      
+      float angle = atan(rotDir.y, rotDir.x);
+      float noiseEdge = cnoise(vec2(cos(angle * 2.0) * 3.2 + time * 2.0, sin(angle * 2.0) * 3.2 + time * 2.0)) * 0.30;
+      noiseEdge += cnoise(p * 7.0 - vec2(time * 1.6)) * 0.18;
+      
+      float tearDist = length(rotDir) - noiseEdge;
+      float holeMask = 1.0 - smoothstep(mouseRadius * 0.1, mouseRadius * 1.4, tearDist);
+      holeMask = clamp(holeMask, 0.0, 1.0) * strength;
+      
+      // Physical push vector repelling voxels outward along persistent trail
+      vec2 pushDir = normalize(dir + vec2(0.0001));
+      totalPush += pushDir * (holeMask * 0.38);
+      
+      maxHoleMask = max(maxHoleMask, holeMask);
+    }
     
-    // Diagonal rotation (~30 deg)
-    float aRot = 0.52;
-    mat2 rot = mat2(cos(aRot), -sin(aRot), sin(aRot), cos(aRot));
-    vec2 rotDir = rot * dir;
-    
-    // Stretched non-circular aspect ratio: 2.6x horizontal, 0.58x vertical
-    rotDir *= vec2(2.6, 0.58);
-    
-    // High-amplitude Simplex noise distortion around perimeter (completely destroys circular shape)
-    float angle = atan(rotDir.y, rotDir.x);
-    float noiseEdge = cnoise(vec2(cos(angle * 2.0) * 3.5 + time * 2.0, sin(angle * 2.0) * 3.5 + time * 2.0)) * 0.35;
-    noiseEdge += cnoise(p * 8.0 - vec2(time * 1.8)) * 0.22;
-    
-    float tearDist = length(rotDir) - noiseEdge;
-    float holeMask = 1.0 - smoothstep(mouseRadius * 0.15, mouseRadius * 1.5, tearDist);
-    holeMask = clamp(holeMask, 0.0, 1.0);
-    
-    // Repulsion wave displacement
-    vec2 pushVector = normalize(dir + vec2(0.0001)) * (holeMask * 0.25);
-    samplePos += pushVector;
-    
+    samplePos += totalPush;
     f = pattern(samplePos);
-    // Smooth organic tear parting
-    alpha = mix(0.96, 0.03, holeMask);
+    // Smooth organic trail parting transparency
+    alpha = mix(0.96, 0.02, clamp(maxHoleMask, 0.0, 1.0));
   } else {
     f = pattern(samplePos);
   }
@@ -182,6 +192,8 @@ function DitheredWaves({
   const mesh = useRef<THREE.Mesh>(null);
   const mouseRef = useRef(new THREE.Vector2(-9999, -9999));
   const targetMouseRef = useRef(new THREE.Vector2(-9999, -9999));
+  const lastAddPosRef = useRef(new THREE.Vector2(-9999, -9999));
+  const trailPointsRef = useRef<Array<{ x: number; y: number; strength: number }>>([]);
   const { viewport, size, gl } = useThree();
 
   const waveUniformsRef = useRef({
@@ -191,11 +203,13 @@ function DitheredWaves({
     waveFrequency: new THREE.Uniform(waveFrequency),
     waveAmplitude: new THREE.Uniform(waveAmplitude),
     waveColor: new THREE.Uniform(new THREE.Color(...waveColor)),
-    mousePos: new THREE.Uniform(new THREE.Vector2(-9999, -9999)),
     enableMouseInteraction: new THREE.Uniform(enableMouseInteraction ? 1 : 0),
     mouseRadius: new THREE.Uniform(mouseRadius),
     colorNum: new THREE.Uniform(colorNum),
-    pixelSize: new THREE.Uniform(pixelSize)
+    pixelSize: new THREE.Uniform(pixelSize),
+    trailPos: new THREE.Uniform(Array.from({ length: 16 }, () => new THREE.Vector2(-9999, -9999))),
+    trailStrength: new THREE.Uniform(new Float32Array(16)),
+    trailCount: new THREE.Uniform(0)
   });
 
   useEffect(() => {
@@ -208,7 +222,7 @@ function DitheredWaves({
     }
   }, [size, gl]);
 
-  // Global window pointer listener so reveal works across ENTIRE page/hero without dead zones
+  // Global window pointer listener
   useEffect(() => {
     if (!enableMouseInteraction) return;
 
@@ -246,10 +260,44 @@ function DitheredWaves({
     u.enableMouseInteraction.value = enableMouseInteraction ? 1 : 0;
     u.mouseRadius.value = mouseRadius;
 
-    // Smooth inertia lerp (0.12 factor) for a subtle, responsive cursor trailing delay
+    // Persistent Voxel Displacement Physics Update
     if (enableMouseInteraction) {
-      mouseRef.current.lerp(targetMouseRef.current, 0.12);
-      u.mousePos.value.copy(mouseRef.current);
+      mouseRef.current.lerp(targetMouseRef.current, 0.25);
+      
+      // Inject new trail point when mouse moves > 5px
+      if (mouseRef.current.distanceTo(lastAddPosRef.current) > 5) {
+        lastAddPosRef.current.copy(mouseRef.current);
+        trailPointsRef.current.unshift({
+          x: mouseRef.current.x,
+          y: mouseRef.current.y,
+          strength: 1.0
+        });
+        if (trailPointsRef.current.length > 16) {
+          trailPointsRef.current.pop();
+        }
+      }
+      
+      // Decay trail point strength so voxels stay pushed out and slowly relax back over 1.8s!
+      trailPointsRef.current.forEach((pt) => {
+        pt.strength *= 0.945;
+      });
+      
+      trailPointsRef.current = trailPointsRef.current.filter((pt) => pt.strength > 0.02);
+      
+      const uPos = u.trailPos.value;
+      const uStr = u.trailStrength.value;
+      const count = trailPointsRef.current.length;
+      
+      for (let i = 0; i < 16; i++) {
+        if (i < count) {
+          uPos[i].set(trailPointsRef.current[i].x, trailPointsRef.current[i].y);
+          uStr[i] = trailPointsRef.current[i].strength;
+        } else {
+          uPos[i].set(-9999, -9999);
+          uStr[i] = 0;
+        }
+      }
+      u.trailCount.value = count;
     }
   });
 
