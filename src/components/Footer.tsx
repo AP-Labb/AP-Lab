@@ -22,26 +22,21 @@ function FirebaseLogoSVG() {
 
 function ReactLogoSVG() {
   return (
-    <svg className="w-6.5 h-6.5 text-white opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 100 100" fill="none">
-      <circle cx="50" cy="50" r="9" fill="currentColor" />
-      <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" />
-      <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" transform="rotate(60 50 50)" />
-      <ellipse cx="50" cy="50" rx="38" ry="14" stroke="currentColor" strokeWidth="5.5" transform="rotate(120 50 50)" />
+    <svg className="w-6 h-6 text-white opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="2" fill="currentColor" />
+      <g stroke="currentColor" strokeWidth="1.3">
+        <ellipse cx="12" cy="12" rx="9" ry="3.5" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(60 12 12)" />
+        <ellipse cx="12" cy="12" rx="9" ry="3.5" transform="rotate(120 12 12)" />
+      </g>
     </svg>
   );
 }
 
 function NextLogoSVG() {
   return (
-    <svg className="w-6 h-6 opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 180 180" fill="none">
-      <mask id="next_official_mask" style={{ maskType: "alpha" }} maskUnits="userSpaceOnUse" x="0" y="0" width="180" height="180">
-        <circle cx="90" cy="90" r="90" fill="black" />
-      </mask>
-      <g mask="url(#next_official_mask)">
-        <circle cx="90" cy="90" r="84" fill="black" stroke="white" strokeWidth="12" />
-        <path d="M149.508 157.52L69.141 54H54V126H67.5V70.9706L138.82 162.776C142.564 161.205 146.134 159.444 149.508 157.52Z" fill="white" />
-        <rect x="115" y="54" width="13.5" height="72" fill="white" />
-      </g>
+    <svg className="w-6 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+      <path d="M12 0C5.37 0 0 5.37 0 12s5.37 12 12 12 12-5.37 12-12S18.63 0 12 0zm5.54 18.23L10.3 7.85H8.77v8.3h1.54v-6.32l6.23 8.8c-.33.2-.67.38-1.03.6zm-1.84-2.18L9.08 7.85H7.54v8.3h1.54V9.83l6.62 9.35c.5-.32.97-.69 1.4-1.11l-3.86-5.46z" />
     </svg>
   );
 }
@@ -49,8 +44,8 @@ function NextLogoSVG() {
 function TypeScriptLogoSVG() {
   return (
     <svg className="w-6 h-6 opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 100 100" fill="none">
-      <rect width="100" height="100" rx="18" fill="white" />
-      <path d="M30 36H56V45H48V78H38V45H30V36ZM56 65C56 61 59 58 65 57C70 56 74 55 74 51C74 48 71 46 66 46C61 46 57 48 55 52L47 47C51 40 58 36 67 36C77 36 84 41 84 50C84 58 78 62 70 64C64 65 64 68 64 70H75V78H56V65Z" fill="#000000" />
+      <rect width="100" height="100" rx="16" fill="white" />
+      <text x="50" y="72" fill="black" fontSize="56" fontWeight="bold" fontFamily="system-ui, -apple-system, sans-serif" textAnchor="middle">TS</text>
     </svg>
   );
 }
@@ -65,7 +60,7 @@ function VercelLogoSVG() {
 
 function TailwindLogoSVG() {
   return (
-    <svg className="w-6.5 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
+    <svg className="w-6 h-6 text-white fill-current opacity-60 hover:opacity-100 transition-opacity" viewBox="0 0 24 24">
       <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C7.666 17.818 9.027 19.2 12.001 19.2c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z" />
     </svg>
   );
