@@ -7,7 +7,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
 import { ComparisonModal } from "./ComparisonModal";
-import { GradientDots } from "@/components/ui/gradient-dots";
+import { AnimatedStripeGradient } from "@/components/ui/animated-stripe-gradient";
 
 const DNAIcon = () => (
   <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20">
@@ -359,15 +359,9 @@ export function HeroSection() {
         <div className="absolute inset-0 bg-gradient-to-r from-white/[0.10] via-white/[0.04] to-transparent" />
       </div>
 
-      {/* Premium Dot-Grid Overlay — hex dot pattern with site-palette colour wash */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" style={{ opacity: 0.55, mixBlendMode: "overlay" }}>
-        <GradientDots
-          dotRadius={1}
-          spacing={18}
-          dotOpacity={0.25}
-          driftDuration={55}
-          colorCycleDuration={12}
-        />
+      {/* Clean animated stripe gradient — 21st.dev ribbon field, white/sky-blue/ultramarine/iris palette */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" style={{ opacity: 0.18, mixBlendMode: 'screen' }}>
+        <AnimatedStripeGradient />
       </div>
 
       {/* Moving Specular Light Wave Sweep Revealing Image Underneath */}
