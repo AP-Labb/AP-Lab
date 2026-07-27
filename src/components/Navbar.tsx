@@ -204,10 +204,8 @@ export function Navbar() {
 
   return (
     <>
-      {/* Hide / Reveal Wrapper on Scroll */}
-      <motion.div 
-        animate={{ y: isVisible ? 0 : -100 }}
-        transition={{ duration: 0.35, ease: "easeInOut" }}
+      {/* Sticky Top Wrapper */}
+      <div 
         className="fixed top-0 left-0 right-0 z-50 pointer-events-none flex justify-center"
       >
         <nav className={cn(
@@ -525,7 +523,7 @@ export function Navbar() {
             </button>
           </div>
         </nav>
-      </motion.div>
+      </div>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>

@@ -941,7 +941,7 @@ export default function Dashboard() {
                     }}
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                   >
-                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain filter invert contrast-125" />
+                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
                   </motion.div>
                   <motion.span
                     animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}

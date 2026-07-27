@@ -429,7 +429,7 @@ export default function AssistantPage() {
                     }}
                     transition={{ duration: 0.4, ease: "easeInOut" }}
                   >
-                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain filter invert contrast-125" />
+                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
                   </motion.div>
                   <motion.span
                     animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
@@ -516,128 +516,161 @@ export default function AssistantPage() {
         </SidebarBody>
       </Sidebar>
 
-      {/* ===== MAIN WORKSPACE (v0 SIMPLISTIC UI) ===== */}
+      {/* ===== MAIN WORKSPACE (CENTERED VERTICALLY WITH PEEKING PANDA) ===== */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative bg-[#0b0c10]">
         
-        {/* Messages / Hero Container */}
-        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-8 flex flex-col justify-between">
-          {messages.length === 0 ? (
-            /* Hero Centered Title (v0 style) */
-            <div className="my-auto flex flex-col items-center justify-center text-center space-y-8 max-w-2xl mx-auto w-full pt-16">
-              <motion.h1 
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight"
-              >
-                What can I help you ship?
-              </motion.h1>
-            </div>
-          ) : (
-            /* Chat Messages Stream */
-            <div className="max-w-3xl mx-auto w-full space-y-6 pt-4 pb-8">
-              {messages.map((msg) => (
-                <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                  <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
-                    {msg.role === "user" ? "You" : "Panda AI"}
-                  </div>
-                  <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[90%] ${
-                    msg.role === "user" 
-                      ? "bg-white/10 text-white rounded-tr-none font-inter" 
-                      : "bg-[#141622] border border-white/10 text-white/90 rounded-tl-none font-inter shadow-lg"
-                  }`}>
-                    <ReactMarkdown
-                      remarkPlugins={[remarkMath]}
-                      rehypePlugins={[rehypeKatex]}
-                      components={{
-                        code({ node, inline, className, children, ...props }: any) {
-                          const match = /language-(\w+)/.exec(className || '');
-                          return !inline ? (
-                            <div className="my-3 rounded-xl overflow-hidden border border-white/10 bg-[#080910]">
-                              <div className="px-4 py-1.5 bg-white/[0.04] border-b border-white/10 text-xs font-mono text-white/50">
-                                {match ? match[1] : 'code'}
+        {/* Messages / Hero Container - Centered Vertically */}
+        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 flex flex-col items-center justify-center">
+          <div className="max-w-3xl w-full flex flex-col items-center justify-center my-auto py-6">
+            
+            {/* Header Title */}
+            <motion.h1 
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight text-center mb-8"
+            >
+              What do you need help with, {firstName}?
+            </motion.h1>
+
+            {/* Chat Messages Stream (If messages exist) */}
+            {messages.length > 0 && (
+              <div className="w-full space-y-6 mb-6 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+                {messages.map((msg) => (
+                  <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
+                    <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
+                      {msg.role === "user" ? "You" : "Panda AI"}
+                    </div>
+                    <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[90%] ${
+                      msg.role === "user" 
+                        ? "bg-white/10 text-white rounded-tr-none font-inter" 
+                        : "bg-[#141622] border border-white/10 text-white/90 rounded-tl-none font-inter shadow-lg"
+                    }`}>
+                      <ReactMarkdown
+                        remarkPlugins={[remarkMath]}
+                        rehypePlugins={[rehypeKatex]}
+                        components={{
+                          code({ node, inline, className, children, ...props }: any) {
+                            const match = /language-(\w+)/.exec(className || '');
+                            return !inline ? (
+                              <div className="my-3 rounded-xl overflow-hidden border border-white/10 bg-[#080910]">
+                                <div className="px-4 py-1.5 bg-white/[0.04] border-b border-white/10 text-xs font-mono text-white/50">
+                                  {match ? match[1] : 'code'}
+                                </div>
+                                <pre className="p-4 overflow-x-auto text-xs font-mono text-emerald-300">
+                                  <code {...props}>{children}</code>
+                                </pre>
                               </div>
-                              <pre className="p-4 overflow-x-auto text-xs font-mono text-emerald-300">
-                                <code {...props}>{children}</code>
-                              </pre>
-                            </div>
-                          ) : (
-                            <code className="bg-white/10 px-1.5 py-0.5 rounded font-mono text-xs text-emerald-300" {...props}>
-                              {children}
-                            </code>
-                          );
-                        }
-                      }}
+                            ) : (
+                              <code className="bg-white/10 px-1.5 py-0.5 rounded font-mono text-xs text-emerald-300" {...props}>
+                                {children}
+                              </code>
+                            );
+                          }
+                        }}
+                      >
+                        {msg.content}
+                      </ReactMarkdown>
+                    </div>
+                  </div>
+                ))}
+
+                {isLoading && (
+                  <div className="flex flex-col items-start">
+                    <div className="text-[10px] font-mono text-white/30 mb-1 px-1">Panda AI</div>
+                    <div className="p-4 rounded-2xl bg-[#141622] border border-white/10 text-white/50 text-sm flex items-center gap-2">
+                      <span className="w-2 h-2 rounded-full bg-white/40 animate-ping" />
+                      Panda is thinking...
+                    </div>
+                  </div>
+                )}
+                <div ref={messagesEndRef} />
+              </div>
+            )}
+
+            {/* Input Box Card with Peeking Panda & Grabbing Paws */}
+            <div className="w-full relative pt-20">
+              
+              {/* Larger Panda Head Peeking from Behind top edge of message box */}
+              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 pointer-events-none select-none z-0">
+                <img 
+                  src="/images/panda-ai.png" 
+                  alt="Peeking Panda" 
+                  className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
+                />
+              </div>
+
+              {/* Input Box Wrapper */}
+              <div className="relative z-10 bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[110px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
+                
+                {/* Left Paw Grabbing Box Edge */}
+                <div className="absolute -left-3 top-12 pointer-events-none select-none z-20">
+                  <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
+                    <circle cx="7" cy="12" r="2" fill="black"/>
+                    <circle cx="7" cy="18" r="2" fill="black"/>
+                    <circle cx="10" cy="24" r="2" fill="black"/>
+                  </svg>
+                </div>
+
+                {/* Right Paw Grabbing Box Edge */}
+                <div className="absolute -right-3 top-12 pointer-events-none select-none z-20 transform scale-x-[-1]">
+                  <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
+                    <circle cx="7" cy="12" r="2" fill="black"/>
+                    <circle cx="7" cy="18" r="2" fill="black"/>
+                    <circle cx="10" cy="24" r="2" fill="black"/>
+                  </svg>
+                </div>
+
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  placeholder="Ask Panda AI a question..."
+                  className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[60px]"
+                />
+
+                <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
+                  <button
+                    type="button"
+                    className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]"
+                    title="Attach file (Coming Soon)"
+                  >
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+
+                  <button
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isLoading}
+                    className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Non-clickable Capability Badges */}
+              <div className="flex items-center justify-center flex-wrap gap-2 pt-4 select-none">
+                {CAPABILITY_BADGES.map((b, i) => {
+                  const Icon = b.icon;
+                  return (
+                    <div
+                      key={i}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14161f]/80 border border-white/[0.08] text-white/50 text-xs font-manrope font-medium"
                     >
-                      {msg.content}
-                    </ReactMarkdown>
-                  </div>
-                </div>
-              ))}
-
-              {isLoading && (
-                <div className="flex flex-col items-start">
-                  <div className="text-[10px] font-mono text-white/30 mb-1 px-1">Panda AI</div>
-                  <div className="p-4 rounded-2xl bg-[#141622] border border-white/10 text-white/50 text-sm flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-white/40 animate-ping" />
-                    Panda is thinking...
-                  </div>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-          )}
-
-          {/* Input Box + Badges Container */}
-          <div className="max-w-3xl mx-auto w-full pb-6 pt-2 space-y-3">
-            {/* Input Box Card */}
-            <div className="bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[110px] shadow-2xl focus-within:border-white/25 transition-all">
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                  }
-                }}
-                placeholder="Ask Panda AI a question..."
-                className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[60px]"
-              />
-
-              <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                <button
-                  type="button"
-                  className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]"
-                  title="Attach file (Coming Soon)"
-                >
-                  <Paperclip className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => handleSend()}
-                  disabled={!input.trim() || isLoading}
-                  className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
-                >
-                  <ArrowUp className="w-4 h-4" />
-                </button>
+                      <Icon className="w-3.5 h-3.5 text-white/40" />
+                      <span>{b.label}</span>
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
-            {/* Non-clickable Capability Badges */}
-            <div className="flex items-center justify-center flex-wrap gap-2 pt-1 select-none">
-              {CAPABILITY_BADGES.map((b, i) => {
-                const Icon = b.icon;
-                return (
-                  <div
-                    key={i}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14161f]/80 border border-white/[0.08] text-white/50 text-xs font-manrope font-medium"
-                  >
-                    <Icon className="w-3.5 h-3.5 text-white/40" />
-                    <span>{b.label}</span>
-                  </div>
-                );
-              })}
-            </div>
           </div>
         </div>
       </div>
