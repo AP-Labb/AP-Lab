@@ -42,8 +42,15 @@ export function Cursor({
         });
       };
 
-      const handleMouseEnter = () => setIsVisible(true);
-      const handleMouseLeave = () => setIsVisible(false);
+      const handleMouseEnter = () => {
+        setIsVisible(true);
+        parent.style.cursor = 'none';
+      };
+
+      const handleMouseLeave = () => {
+        setIsVisible(false);
+        parent.style.cursor = '';
+      };
 
       parent.addEventListener('mousemove', handleMouseMove);
       parent.addEventListener('mouseenter', handleMouseEnter);
@@ -53,6 +60,7 @@ export function Cursor({
         parent.removeEventListener('mousemove', handleMouseMove);
         parent.removeEventListener('mouseenter', handleMouseEnter);
         parent.removeEventListener('mouseleave', handleMouseLeave);
+        parent.style.cursor = '';
       };
     } else {
       const handleMouseMove = (e: MouseEvent) => {
@@ -75,7 +83,7 @@ export function Cursor({
   }, [attachToParent]);
 
   return (
-    <div ref={containerRef} className="pointer-events-none absolute inset-0 z-50 overflow-hidden">
+    <div ref={containerRef} className="pointer-events-none absolute inset-0 z-50 overflow-visible">
       <AnimatePresence>
         {isVisible && (
           <motion.div
@@ -84,13 +92,14 @@ export function Cursor({
               left: position.x,
               top: position.y,
               pointerEvents: 'none',
+              transform: 'translate(0, 0)',
             }}
             initial="initial"
             animate="animate"
             exit="exit"
             variants={variants}
             transition={transition}
-            className={className}
+            className={`z-[9999] ${className}`}
           >
             {children}
           </motion.div>

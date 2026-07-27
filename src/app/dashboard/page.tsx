@@ -926,6 +926,34 @@ export default function Dashboard() {
                 </motion.span>
               </motion.button>
 
+              {/* AI Assistant — Panda Mascot Icon */}
+              <Link href="/assistant" className="w-full">
+                <motion.div
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/70 hover:bg-emerald-500/10 hover:text-emerald-300 w-full group cursor-pointer"
+                  whileHover="hover"
+                  initial="rest"
+                >
+                  <motion.div
+                    className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-emerald-500/50 group-hover:border-emerald-400 shadow-sm"
+                    variants={{
+                      rest: { scale: 1 },
+                      hover: { scale: 1.2, rotate: 6 },
+                    }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <img src="/images/panda-mascot.png" alt="Panda AI" className="w-full h-full object-cover" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre flex items-center gap-1.5"
+                  >
+                    AI Assistant
+                    <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">NEW</span>
+                  </motion.span>
+                </motion.div>
+              </Link>
+
               {/* Settings */}
               <SidebarSettingsButton open={sidebarOpen} />
 

@@ -298,7 +298,7 @@ export function SubjectLabs() {
             onMouseLeave={() => setHoveredCard(null)}
             onClick={() => setActiveCourse("biology")}
             whileHover={{ y: -6 }}
-            className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+            className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
             <Cursor
               attachToParent
@@ -315,8 +315,8 @@ export function SubjectLabs() {
             >
               <div>
                 <MouseIcon color="#22c55e" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#22c55e] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
-                  AP® Biology
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#22c55e] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
+                  More +
                 </div>
               </div>
             </Cursor>
@@ -363,7 +363,7 @@ export function SubjectLabs() {
             onMouseLeave={() => setHoveredCard(null)}
             onClick={() => setActiveCourse("calculus")}
             whileHover={{ y: -6 }}
-            className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+            className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
             <Cursor
               attachToParent
@@ -380,8 +380,8 @@ export function SubjectLabs() {
             >
               <div>
                 <MouseIcon color="#ec4899" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#ec4899] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
-                  AP® Calculus
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#ec4899] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
+                  More +
                 </div>
               </div>
             </Cursor>
@@ -463,7 +463,7 @@ export function SubjectLabs() {
             onMouseLeave={() => setHoveredCard(null)}
             onClick={() => setActiveCourse("physics")}
             whileHover={{ y: -6 }}
-            className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+            className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
             <Cursor
               attachToParent
@@ -480,8 +480,8 @@ export function SubjectLabs() {
             >
               <div>
                 <MouseIcon color="#0ea5e9" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#0ea5e9] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
-                  AP® Physics
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#0ea5e9] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
+                  More +
                 </div>
               </div>
             </Cursor>
@@ -523,7 +523,7 @@ export function SubjectLabs() {
             onMouseLeave={() => setHoveredCard(null)}
             onClick={() => setActiveCourse("chemistry")}
             whileHover={{ y: -6 }}
-            className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
+            className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
             <Cursor
               attachToParent
@@ -540,8 +540,8 @@ export function SubjectLabs() {
             >
               <div>
                 <MouseIcon color="#14b8a6" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#14b8a6] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
-                  AP® Chemistry
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#14b8a6] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
+                  More +
                 </div>
               </div>
             </Cursor>
