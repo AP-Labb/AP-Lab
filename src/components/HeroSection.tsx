@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
 import { ComparisonModal } from "./ComparisonModal";
+import { GradientDots } from "@/components/ui/gradient-dots";
 
 const DNAIcon = () => (
   <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" strokeWidth="2" className="w-12 h-12 sm:w-16 sm:h-16 lg:w-20 lg:h-20">
@@ -354,6 +355,17 @@ export function HeroSection() {
         />
         {/* Dark Center Vignette Overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.85)_0%,rgba(5,7,15,0.72)_38%,transparent_82%)]" />
+      </div>
+
+      {/* Animated Gradient Dot Overlay — subtle colour shimmer on the background */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" style={{ opacity: 0.08, mixBlendMode: "screen" }}>
+        <GradientDots
+          dotSize={6}
+          spacing={12}
+          duration={40}
+          colorCycleDuration={8}
+          backgroundColor="transparent"
+        />
       </div>
 
       {/* Moving Specular Light Wave Sweep Revealing Image Underneath */}
