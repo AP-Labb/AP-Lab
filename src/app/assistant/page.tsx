@@ -516,103 +516,99 @@ export default function AssistantPage() {
         </SidebarBody>
       </Sidebar>
 
-      {/* ===== MAIN WORKSPACE (SCROLLABLE & CENTERED INITIAL STATE) ===== */}
+      {/* ===== MAIN WORKSPACE (SCROLLABLE & CENTERED INITIAL LANDING) ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10]">
         
         {/* Workspace Centered Container */}
-        <div className={`flex-1 w-full max-w-3xl mx-auto px-4 md:px-8 py-8 flex flex-col justify-between transition-all duration-500 ${
-          messages.length === 0 ? "my-auto min-h-[80vh]" : "min-h-0"
+        <div className={`w-full max-w-3xl mx-auto px-4 md:px-8 py-8 flex flex-col transition-all duration-500 ${
+          messages.length === 0 ? "min-h-[calc(100vh-4rem)] justify-center items-center" : "min-h-screen justify-between"
         }`}>
           
-          {/* Chat Messages Stream */}
-          <div className="w-full flex-1 flex flex-col justify-start">
-            
-            {/* Header Title (Only when no messages) */}
-            <AnimatePresence>
-              {messages.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.3 }}
-                  className="py-6 text-center shrink-0 my-auto"
-                >
-                  <h1 className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight">
-                    What do you need help with, {firstName}?
-                  </h1>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Chat Messages Stream List */}
-            {messages.length > 0 && (
-              <div className="w-full py-4 space-y-6">
-                {messages.map((msg) => (
-                  <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
-                    <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
-                      {msg.role === "user" ? "You" : "Panda AI"}
-                    </div>
-                    <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[90%] ${
-                      msg.role === "user" 
-                        ? "bg-white/10 text-white rounded-tr-none font-inter" 
-                        : "bg-[#141622] border border-white/10 text-white/90 rounded-tl-none font-inter shadow-lg"
-                    }`}>
-                      <ReactMarkdown
-                        remarkPlugins={[remarkMath]}
-                        rehypePlugins={[rehypeKatex]}
-                        components={{
-                          code({ node, inline, className, children, ...props }: any) {
-                            const match = /language-(\w+)/.exec(className || '');
-                            return !inline ? (
-                              <div className="my-3 rounded-xl overflow-hidden border border-white/10 bg-[#080910]">
-                                <div className="px-4 py-1.5 bg-white/[0.04] border-b border-white/10 text-xs font-mono text-white/50">
-                                  {match ? match[1] : 'code'}
-                                </div>
-                                <pre className="p-4 overflow-x-auto text-xs font-mono text-emerald-300">
-                                  <code {...props}>{children}</code>
-                                </pre>
-                              </div>
-                            ) : (
-                              <code className="bg-white/10 px-1.5 py-0.5 rounded font-mono text-xs text-emerald-300" {...props}>
-                                {children}
-                              </code>
-                            );
-                          }
-                        }}
-                      >
-                        {msg.content}
-                      </ReactMarkdown>
-                    </div>
-                  </div>
-                ))}
-
-                {/* AI Thinking Skeleton Loading Animation */}
-                {isLoading && (
-                  <div className="flex flex-col items-start w-full max-w-[85%] space-y-2">
-                    <div className="text-[10px] font-mono text-white/30 px-1">Panda AI</div>
-                    <div className="p-5 rounded-2xl bg-[#141622] border border-white/10 w-full space-y-3 shadow-lg animate-pulse">
-                      <div className="h-4 bg-white/10 rounded-md w-3/4" />
-                      <div className="h-4 bg-white/10 rounded-md w-full" />
-                      <div className="h-4 bg-white/10 rounded-md w-5/6" />
-                      <div className="h-4 bg-white/10 rounded-md w-1/2" />
-                    </div>
-                  </div>
-                )}
-                <div ref={messagesEndRef} />
-              </div>
+          {/* Header Title (Only when no messages) */}
+          <AnimatePresence>
+            {messages.length === 0 && (
+              <motion.div
+                initial={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="pb-8 text-center shrink-0"
+              >
+                <h1 className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight">
+                  What do you need help with, {firstName}?
+                </h1>
+              </motion.div>
             )}
-          </div>
+          </AnimatePresence>
+
+          {/* Chat Messages Stream List */}
+          {messages.length > 0 && (
+            <div className="w-full flex-1 py-4 space-y-6">
+              {messages.map((msg) => (
+                <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
+                  <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
+                    {msg.role === "user" ? "You" : "Panda AI"}
+                  </div>
+                  <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[90%] ${
+                    msg.role === "user" 
+                      ? "bg-white/10 text-white rounded-tr-none font-inter" 
+                      : "bg-[#141622] border border-white/10 text-white/90 rounded-tl-none font-inter shadow-lg"
+                  }`}>
+                    <ReactMarkdown
+                      remarkPlugins={[remarkMath]}
+                      rehypePlugins={[rehypeKatex]}
+                      components={{
+                        code({ node, inline, className, children, ...props }: any) {
+                          const match = /language-(\w+)/.exec(className || '');
+                          return !inline ? (
+                            <div className="my-3 rounded-xl overflow-hidden border border-white/10 bg-[#080910]">
+                              <div className="px-4 py-1.5 bg-white/[0.04] border-b border-white/10 text-xs font-mono text-white/50">
+                                {match ? match[1] : 'code'}
+                              </div>
+                              <pre className="p-4 overflow-x-auto text-xs font-mono text-emerald-300">
+                                <code {...props}>{children}</code>
+                              </pre>
+                            </div>
+                          ) : (
+                            <code className="bg-white/10 px-1.5 py-0.5 rounded font-mono text-xs text-emerald-300" {...props}>
+                              {children}
+                            </code>
+                          );
+                        }
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                </div>
+              ))}
+
+              {/* AI Thinking Skeleton Loading Animation */}
+              {isLoading && (
+                <div className="flex flex-col items-start w-full max-w-[85%] space-y-2">
+                  <div className="text-[10px] font-mono text-white/30 px-1">Panda AI</div>
+                  <div className="p-5 rounded-2xl bg-[#141622] border border-white/10 w-full space-y-3 shadow-lg animate-pulse">
+                    <div className="h-4 bg-white/10 rounded-md w-3/4" />
+                    <div className="h-4 bg-white/10 rounded-md w-full" />
+                    <div className="h-4 bg-white/10 rounded-md w-5/6" />
+                    <div className="h-4 bg-white/10 rounded-md w-1/2" />
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
 
           {/* Input Box Card with Centered Peeking Panda & Grabbing Paws */}
-          <div className="w-full relative pt-20 shrink-0 pb-6 mt-auto">
+          <div className="w-full relative pt-14 shrink-0 pb-6">
             
-            {/* Larger Panda Head Peeking from Behind top edge of message box (Fade out when messages exist) */}
+            {/* Panda Head Peeking from Behind top edge of message box (Positioned nicely under top edge) */}
             <AnimatePresence>
               {messages.length === 0 && (
                 <motion.div
                   initial={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute -top-24 left-1/2 -translate-x-1/2 w-52 h-52 pointer-events-none select-none z-0 flex items-center justify-center"
+                  className="absolute -top-14 left-1/2 -translate-x-1/2 w-44 h-44 pointer-events-none select-none z-0 flex items-center justify-center"
                 >
                   <img 
                     src="/images/panda-ai.png" 
@@ -633,7 +629,7 @@ export default function AssistantPage() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute -left-6 top-8 pointer-events-none select-none z-20"
+                    className="absolute -left-5 top-8 pointer-events-none select-none z-20"
                   >
                     <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
@@ -652,7 +648,7 @@ export default function AssistantPage() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute -right-6 top-8 pointer-events-none select-none z-20 transform scale-x-[-1]"
+                    className="absolute -right-5 top-8 pointer-events-none select-none z-20 transform scale-x-[-1]"
                   >
                     <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
