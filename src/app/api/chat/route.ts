@@ -4,7 +4,7 @@ import { courseRegistry } from "@/lib/courses/course-registry";
 
 export async function POST(req: Request) {
   try {
-    const { messages, message, course } = await req.json();
+    const { messages, message, course, isFirstMessage, userName } = await req.json();
 
     let chatMessages = messages;
     if (!chatMessages && message) {
@@ -23,9 +23,18 @@ export async function POST(req: Request) {
 
     const ai = new GoogleGenAI({ apiKey });
 
+    const studentName = userName || "Scholar";
+
     // Build system instruction
-    let systemInstruction = "You are an elite, supportive AI assistant for the AP Lab educational platform. " +
-                            "Help students understand AP curriculum topics clearly and concisely using Markdown.";
+    let systemInstruction = `You are Panda AI 🐼 — a friendly, encouraging, and elite AI study assistant for the AP Lab educational platform.
+
+PERSONALITY:
+- Be warm, supportive, and enthusiastic — like a knowledgeable friend, not a robot.
+- Use relevant emojis naturally throughout your responses (📚 🧪 ⚗️ 📊 💡 ✅ 🎯 🧠 etc.) but don't overdo it.
+- Keep answers clear, well-structured, and use Markdown formatting for readability.
+- You can help with all AP subjects: AP Biology, AP Chemistry, AP Physics, AP US History, AP Psychology, AP English Language, AP Calculus BC, AP Statistics, and AP Computer Science A.
+- You can draw ASCII charts, write code, explain concepts, create timelines, and solve problems.
+${isFirstMessage ? `- IMPORTANT: Start your very first response with a warm welcome message to ${studentName}, like "👋 Welcome, ${studentName}! I'm Panda AI — your study companion for all things AP. 🐼 Let's get started!" then answer their question.` : ''}`;
 
     if (course) {
       let slug = course;
@@ -35,16 +44,20 @@ export async function POST(req: Request) {
       const courseData = courseRegistry[slug];
       if (courseData) {
         const curriculumData = JSON.stringify(courseData.units);
-        systemInstruction = `You are an elite ${courseData.name} tutor for the 'AP Lab' educational platform.
-        
+        systemInstruction = `You are Panda AI 🐼 — a friendly, expert ${courseData.name} tutor for the 'AP Lab' platform.
+
+PERSONALITY:
+- Be warm, supportive, and use emojis naturally (📚 🧪 💡 ✅ 🎯 🧠 etc.).
+- Structure answers clearly with Markdown headers, bullet points, and code blocks where relevant.
+${isFirstMessage ? `- IMPORTANT: Start your very first response with a warm welcome to ${studentName}.` : ''}
+
 CRITICAL RULES:
-1. Your sole purpose is to help students understand the concepts strictly based on the provided AP Lab Curriculum Data below.
-2. Do NOT hallucinate or bring in outside information that isn't covered in the curriculum data.
-3. Keep your answers clear, supportive, and concise. Use markdown formatting to make answers readable.
-4. If a user asks something completely unrelated to the curriculum or course, politely steer them back.
-    
+1. Help students understand concepts from the AP Lab Curriculum Data below.
+2. Keep answers clear, supportive, and concise.
+3. If a user asks something unrelated, politely steer them back to the course.
+
 CURRICULUM DATA:
-${curriculumData}
+${JSON.stringify(courseData.units)}
 `;
       }
     }
@@ -60,7 +73,7 @@ ${curriculumData}
       contents,
       config: {
         systemInstruction,
-        temperature: 0.3,
+        temperature: 0.4,
       }
     });
 

@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Paperclip, ArrowUp, RefreshCw, Activity,
   Home, LayoutDashboard, BarChart2, Star, Award, Settings, LogOut,
-  LineChart, Code2, Layers, Cpu, Compass, BookOpen
+  LineChart, Code2, Layers, Cpu, Compass, BookOpen, ChevronDown
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -136,7 +136,10 @@ export default function AssistantPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAtBottom, setIsAtBottom] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+  const isFirstResponse = useRef(true);
 
   const xp = progress?.xp || 0;
   const level = getLevelForXp(xp);
@@ -151,9 +154,16 @@ export default function AssistantPage() {
     }
   };
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  }, []);
+
+  const handleScroll = useCallback(() => {
+    const el = scrollContainerRef.current;
+    if (!el) return;
+    const distFromBottom = el.scrollHeight - el.scrollTop - el.clientHeight;
+    setIsAtBottom(distFromBottom < 80);
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
@@ -183,10 +193,15 @@ export default function AssistantPage() {
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: apiMessages })
+        body: JSON.stringify({ 
+          messages: apiMessages,
+          isFirstMessage: isFirstResponse.current,
+          userName: firstName
+        })
       });
 
       const data = await res.json();
+      isFirstResponse.current = false;
 
       if (data.error) {
         throw new Error(data.error);
@@ -216,7 +231,7 @@ export default function AssistantPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060712] text-white flex flex-row relative z-0 overflow-x-hidden transition-all duration-500 selection:bg-neutral-800 selection:text-white">
+    <div className="min-h-screen bg-[#060712] text-white flex flex-row relative z-0 transition-all duration-500 selection:bg-neutral-800 selection:text-white">
       {/* ===== IDENTICAL DASHBOARD SIDEBAR (z-50) ===== */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
         <SidebarBody className="justify-between gap-10 z-50">
@@ -516,41 +531,120 @@ export default function AssistantPage() {
         </SidebarBody>
       </Sidebar>
 
-      {/* ===== MAIN WORKSPACE (SCROLLABLE & CENTERED INITIAL LANDING) ===== */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10]">
-        
-        {/* Workspace Centered Container */}
-        <div className={`w-full max-w-3xl mx-auto px-4 md:px-8 py-8 flex flex-col transition-all duration-500 ${
-          messages.length === 0 ? "min-h-[calc(100vh-4rem)] justify-center items-center" : "min-h-screen justify-between"
-        }`}>
-          
-          {/* Header Title (Only when no messages) */}
-          <AnimatePresence>
-            {messages.length === 0 && (
-              <motion.div
-                initial={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.3 }}
-                className="pb-8 text-center shrink-0"
-              >
-                <h1 className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight">
-                  What do you need help with, {firstName}?
-                </h1>
-              </motion.div>
-            )}
-          </AnimatePresence>
+      {/* ===== MAIN WORKSPACE ===== */}
+      <div
+        ref={scrollContainerRef}
+        onScroll={handleScroll}
+        className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10] ml-14"
+      >
+        {messages.length === 0 ? (
+          /* ── INITIAL LANDING: vertically + horizontally centered ── */
+          <div className="flex flex-col items-center justify-center min-h-screen w-full px-6 pb-10">
 
-          {/* Chat Messages Stream List */}
-          {messages.length > 0 && (
-            <div className="w-full flex-1 py-4 space-y-6">
+            {/* Welcome heading */}
+            <motion.h1
+              initial={{ opacity: 0, y: -12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight text-center mb-10"
+            >
+              What do you need help with, {firstName}?
+            </motion.h1>
+
+            {/* Input card + panda — all in a single centered flex column */}
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full max-w-2xl flex flex-col items-center"
+            >
+              {/* Panda peeking from behind card — flex-centered, overlaps card via -mb */}
+              <div className="w-20 h-20 pointer-events-none select-none z-0 -mb-5">
+                <img
+                  src="/images/panda-ai.png"
+                  alt="Peeking Panda"
+                  className="w-full h-full object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.6)]"
+                />
+              </div>
+
+              {/* Card — sits in FRONT of panda (z-10) */}
+              <div className="relative z-10 w-full bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[110px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
+
+                {/* Left Paw */}
+                <div className="absolute -left-5 top-7 pointer-events-none select-none z-20">
+                  <svg width="22" height="34" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#1a1c2e" strokeWidth="2" strokeLinejoin="round"/>
+                    <circle cx="7" cy="12" r="2" fill="#1a1c2e"/>
+                    <circle cx="7" cy="18" r="2" fill="#1a1c2e"/>
+                    <circle cx="10" cy="24" r="2" fill="#1a1c2e"/>
+                  </svg>
+                </div>
+
+                {/* Right Paw */}
+                <div className="absolute -right-5 top-7 pointer-events-none select-none z-20 scale-x-[-1]">
+                  <svg width="22" height="34" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#1a1c2e" strokeWidth="2" strokeLinejoin="round"/>
+                    <circle cx="7" cy="12" r="2" fill="#1a1c2e"/>
+                    <circle cx="7" cy="18" r="2" fill="#1a1c2e"/>
+                    <circle cx="10" cy="24" r="2" fill="#1a1c2e"/>
+                  </svg>
+                </div>
+
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  placeholder="Ask Panda AI a question..."
+                  className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[60px]"
+                />
+
+                <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
+                  <button type="button" className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]" title="Attach file (Coming Soon)">
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isLoading}
+                    className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
+                  >
+                    <ArrowUp className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Capability Badges */}
+              <div className="flex items-center justify-center flex-wrap gap-2 pt-5 select-none">
+                {CAPABILITY_BADGES.map((b, i) => {
+                  const Icon = b.icon;
+                  return (
+                    <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14161f]/80 border border-white/[0.08] text-white/50 text-xs font-manrope font-medium">
+                      <Icon className="w-3.5 h-3.5 text-white/40" />
+                      <span>{b.label}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          </div>
+        ) : (
+          /* ── CHAT MODE: scrollable messages + sticky bottom input ── */
+          <div className="flex flex-col min-h-screen">
+
+            {/* Messages list */}
+            <div className="flex-1 w-full max-w-3xl mx-auto px-6 pt-10 pb-6 space-y-6">
               {messages.map((msg) => (
                 <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
                   <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
-                    {msg.role === "user" ? "You" : "Panda AI"}
+                    {msg.role === "user" ? "You" : "Panda AI 🐼"}
                   </div>
                   <div className={`p-4 rounded-2xl text-sm leading-relaxed max-w-[90%] ${
-                    msg.role === "user" 
-                      ? "bg-white/10 text-white rounded-tr-none font-inter" 
+                    msg.role === "user"
+                      ? "bg-white/10 text-white rounded-tr-none font-inter"
                       : "bg-[#141622] border border-white/10 text-white/90 rounded-tl-none font-inter shadow-lg"
                   }`}>
                     <ReactMarkdown
@@ -582,138 +676,73 @@ export default function AssistantPage() {
                 </div>
               ))}
 
-              {/* AI Thinking Skeleton Loading Animation */}
+              {/* Skeleton loading */}
               {isLoading && (
                 <div className="flex flex-col items-start w-full max-w-[85%] space-y-2">
-                  <div className="text-[10px] font-mono text-white/30 px-1">Panda AI</div>
-                  <div className="p-5 rounded-2xl bg-[#141622] border border-white/10 w-full space-y-3 shadow-lg animate-pulse">
-                    <div className="h-4 bg-white/10 rounded-md w-3/4" />
-                    <div className="h-4 bg-white/10 rounded-md w-full" />
-                    <div className="h-4 bg-white/10 rounded-md w-5/6" />
-                    <div className="h-4 bg-white/10 rounded-md w-1/2" />
+                  <div className="text-[10px] font-mono text-white/30 px-1">Panda AI 🐼</div>
+                  <div className="p-5 rounded-2xl bg-[#141622] border border-white/10 w-full space-y-3 shadow-lg">
+                    <div className="h-3.5 bg-white/10 rounded-md w-3/4 animate-pulse" />
+                    <div className="h-3.5 bg-white/[0.07] rounded-md w-full animate-pulse" style={{animationDelay:'0.15s'}} />
+                    <div className="h-3.5 bg-white/10 rounded-md w-5/6 animate-pulse" style={{animationDelay:'0.3s'}} />
+                    <div className="h-3.5 bg-white/[0.05] rounded-md w-1/2 animate-pulse" style={{animationDelay:'0.45s'}} />
                   </div>
                 </div>
               )}
               <div ref={messagesEndRef} />
             </div>
-          )}
 
-          {/* Input Box Card with Centered Peeking Panda & Grabbing Paws */}
-          <div className="w-full relative pt-14 shrink-0 pb-6">
-            
-            {/* Panda Head Peeking from Behind top edge of message box (Positioned nicely under top edge) */}
-            <AnimatePresence>
-              {messages.length === 0 && (
-                <motion.div
-                  initial={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute -top-14 left-1/2 -translate-x-1/2 w-44 h-44 pointer-events-none select-none z-0 flex items-center justify-center"
-                >
-                  <img 
-                    src="/images/panda-ai.png" 
-                    alt="Peeking Panda" 
-                    className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* Input Box Wrapper */}
-            <div className="relative z-10 bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[110px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
-              
-              {/* Left Paw Grabbing Box Edge Cleanly Outside (Fade out when messages exist) */}
-              <AnimatePresence>
-                {messages.length === 0 && (
-                  <motion.div
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute -left-5 top-8 pointer-events-none select-none z-20"
+            {/* Sticky bottom input */}
+            <div className="sticky bottom-0 w-full bg-gradient-to-t from-[#0b0c10] via-[#0b0c10]/95 to-transparent pt-6 pb-8 px-6">
+              <div className="w-full max-w-3xl mx-auto relative z-10 bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[90px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
+                <textarea
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" && !e.shiftKey) {
+                      e.preventDefault();
+                      handleSend();
+                    }
+                  }}
+                  placeholder="Ask Panda AI a question..."
+                  className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[46px]"
+                />
+                <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
+                  <button type="button" className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]" title="Attach file (Coming Soon)">
+                    <Paperclip className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleSend()}
+                    disabled={!input.trim() || isLoading}
+                    className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
                   >
-                    <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
-                      <circle cx="7" cy="12" r="2" fill="black"/>
-                      <circle cx="7" cy="18" r="2" fill="black"/>
-                      <circle cx="10" cy="24" r="2" fill="black"/>
-                    </svg>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              {/* Right Paw Grabbing Box Edge Cleanly Outside (Fade out when messages exist) */}
-              <AnimatePresence>
-                {messages.length === 0 && (
-                  <motion.div
-                    initial={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute -right-5 top-8 pointer-events-none select-none z-20 transform scale-x-[-1]"
-                  >
-                    <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
-                      <circle cx="7" cy="12" r="2" fill="black"/>
-                      <circle cx="7" cy="18" r="2" fill="black"/>
-                      <circle cx="10" cy="24" r="2" fill="black"/>
-                    </svg>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend();
-                  }
-                }}
-                placeholder="Ask Panda AI a question..."
-                className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[60px]"
-              />
-
-              <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                <button
-                  type="button"
-                  className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]"
-                  title="Attach file (Coming Soon)"
-                >
-                  <Paperclip className="w-4 h-4" />
-                </button>
-
-                <button
-                  onClick={() => handleSend()}
-                  disabled={!input.trim() || isLoading}
-                  className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
-                >
-                  <ArrowUp className="w-4 h-4" />
-                </button>
+                    <ArrowUp className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
-
-            {/* Non-clickable Capability Badges */}
-            <div className="flex items-center justify-center flex-wrap gap-2 pt-4 select-none">
-              {CAPABILITY_BADGES.map((b, i) => {
-                const Icon = b.icon;
-                return (
-                  <div
-                    key={i}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14161f]/80 border border-white/[0.08] text-white/50 text-xs font-manrope font-medium"
-                  >
-                    <Icon className="w-3.5 h-3.5 text-white/40" />
-                    <span>{b.label}</span>
-                  </div>
-                );
-              })}
-            </div>
           </div>
-
-        </div>
+        )}
       </div>
 
-      {/* Bottom Blur Overlay for Page Footer Aesthetics */}
-      <div className="fixed bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-[#060712] via-[#060712]/80 to-transparent pointer-events-none z-40 backdrop-blur-[2px]" />
+      {/* Scroll-to-bottom floating button */}
+      <AnimatePresence>
+        {messages.length > 0 && !isAtBottom && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8, y: 10 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.8, y: 10 }}
+            transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            onClick={scrollToBottom}
+            className="fixed bottom-24 right-6 z-50 w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur flex items-center justify-center text-white/70 hover:bg-white/20 hover:text-white hover:border-white/40 transition-all shadow-lg cursor-pointer"
+            title="Scroll to bottom"
+          >
+            <ChevronDown className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Bottom Blur Overlay */}
+      <div className="fixed bottom-0 left-14 right-0 h-14 bg-gradient-to-t from-[#060712] via-[#060712]/80 to-transparent pointer-events-none z-40" />
 
       {/* Modals */}
       <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
