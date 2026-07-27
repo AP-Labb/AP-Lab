@@ -516,23 +516,25 @@ export default function AssistantPage() {
         </SidebarBody>
       </Sidebar>
 
-      {/* ===== MAIN WORKSPACE (v0 SIMPLISTIC UI WITH FADEABLE PANDA) ===== */}
-      <div className="flex-1 flex flex-col h-screen overflow-hidden relative bg-[#0b0c10]">
+      {/* ===== MAIN WORKSPACE (SCROLLABLE & CENTERED INITIAL STATE) ===== */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10]">
         
-        {/* Workspace Container */}
-        <div className="flex-1 overflow-hidden px-4 md:px-8 py-6 flex flex-col items-center justify-between max-w-3xl mx-auto w-full">
+        {/* Workspace Centered Container */}
+        <div className={`flex-1 w-full max-w-3xl mx-auto px-4 md:px-8 py-8 flex flex-col justify-between transition-all duration-500 ${
+          messages.length === 0 ? "my-auto min-h-[80vh]" : "min-h-0"
+        }`}>
           
-          {/* Header Title / Chat Stream Container */}
-          <div className="w-full flex-1 flex flex-col min-h-0 overflow-hidden">
+          {/* Chat Messages Stream */}
+          <div className="w-full flex-1 flex flex-col justify-start">
             
             {/* Header Title (Only when no messages) */}
             <AnimatePresence>
               {messages.length === 0 && (
                 <motion.div
-                  initial={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
+                  initial={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
-                  className="pt-8 pb-4 text-center shrink-0"
+                  className="py-6 text-center shrink-0 my-auto"
                 >
                   <h1 className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight">
                     What do you need help with, {firstName}?
@@ -541,9 +543,9 @@ export default function AssistantPage() {
               )}
             </AnimatePresence>
 
-            {/* Chat Messages Stream (Scrollable area) */}
+            {/* Chat Messages Stream List */}
             {messages.length > 0 && (
-              <div className="flex-1 overflow-y-auto w-full py-4 pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/15">
+              <div className="w-full py-4 space-y-6">
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
                     <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
@@ -583,12 +585,15 @@ export default function AssistantPage() {
                   </div>
                 ))}
 
+                {/* AI Thinking Skeleton Loading Animation */}
                 {isLoading && (
-                  <div className="flex flex-col items-start">
-                    <div className="text-[10px] font-mono text-white/30 mb-1 px-1">Panda AI</div>
-                    <div className="p-4 rounded-2xl bg-[#141622] border border-white/10 text-white/50 text-sm flex items-center gap-2">
-                      <span className="w-2 h-2 rounded-full bg-white/40 animate-ping" />
-                      Panda is thinking...
+                  <div className="flex flex-col items-start w-full max-w-[85%] space-y-2">
+                    <div className="text-[10px] font-mono text-white/30 px-1">Panda AI</div>
+                    <div className="p-5 rounded-2xl bg-[#141622] border border-white/10 w-full space-y-3 shadow-lg animate-pulse">
+                      <div className="h-4 bg-white/10 rounded-md w-3/4" />
+                      <div className="h-4 bg-white/10 rounded-md w-full" />
+                      <div className="h-4 bg-white/10 rounded-md w-5/6" />
+                      <div className="h-4 bg-white/10 rounded-md w-1/2" />
                     </div>
                   </div>
                 )}
@@ -597,8 +602,8 @@ export default function AssistantPage() {
             )}
           </div>
 
-          {/* Input Box Card with Peeking Panda & Grabbing Paws */}
-          <div className="w-full relative pt-14 shrink-0 pb-4">
+          {/* Input Box Card with Centered Peeking Panda & Grabbing Paws */}
+          <div className="w-full relative pt-20 shrink-0 pb-6 mt-auto">
             
             {/* Larger Panda Head Peeking from Behind top edge of message box (Fade out when messages exist) */}
             <AnimatePresence>
@@ -607,7 +612,7 @@ export default function AssistantPage() {
                   initial={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.3 }}
-                  className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-48 pointer-events-none select-none z-0"
+                  className="absolute -top-24 left-1/2 -translate-x-1/2 w-52 h-52 pointer-events-none select-none z-0 flex items-center justify-center"
                 >
                   <img 
                     src="/images/panda-ai.png" 
@@ -628,7 +633,7 @@ export default function AssistantPage() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute -left-5 top-8 pointer-events-none select-none z-20"
+                    className="absolute -left-6 top-8 pointer-events-none select-none z-20"
                   >
                     <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
@@ -647,7 +652,7 @@ export default function AssistantPage() {
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute -right-5 top-8 pointer-events-none select-none z-20 transform scale-x-[-1]"
+                    className="absolute -right-6 top-8 pointer-events-none select-none z-20 transform scale-x-[-1]"
                   >
                     <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
