@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { 
   Menu, X, Activity, Users, Mail, LayoutDashboard, LogIn, Newspaper,
   ChevronDown, Lightbulb, BookOpen, Code2, CheckSquare, Trophy, Play,
-  ArrowRight, Target, Globe, Heart, Zap, GraduationCap
+  ArrowRight, Compass, Globe, Heart, Cpu, GraduationCap
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -88,7 +88,7 @@ const aboutItems: AboutItem[] = [
     name: "Our Mission",
     subtitle: "Why we built AP Lab",
     description: "AP Lab was built to give every student — regardless of income or location — access to the highest-quality AP preparation. Free, always.",
-    icon: Target,
+    icon: Compass,
   },
   {
     id: "community",
@@ -109,7 +109,7 @@ const aboutItems: AboutItem[] = [
     name: "Our Technology",
     subtitle: "Built for real learning outcomes",
     description: "From AI tutors to Desmos integrations and adaptive XP systems, every tool is engineered around proven learning science principles.",
-    icon: Zap,
+    icon: Cpu,
   },
   {
     id: "team",
@@ -260,30 +260,33 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.99 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 pt-2.5 w-[560px] z-50 pointer-events-auto"
+                    className="absolute top-full left-0 pt-2.5 w-[710px] z-50 pointer-events-auto"
                   >
-                    <div className="bg-[#08090e] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.95)] backdrop-blur-3xl overflow-hidden text-left grid grid-cols-[200px_1fr]">
+                    <div className="bg-[#08090e] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.95)] backdrop-blur-3xl overflow-hidden text-left grid grid-cols-[240px_1fr]">
 
-                      {/* Left: Portrait gradient card */}
-                      <div className="relative flex flex-col justify-between p-4 overflow-hidden" style={{
-                        background: "linear-gradient(160deg, #1a1040 0%, #0d1a3a 35%, #0a2244 60%, #0c1530 100%)"
+                      {/* Left: Portrait gradient card — matches user image: white left-glow → violet → deep navy/black */}
+                      <div className="relative flex flex-col justify-between p-5 overflow-hidden" style={{
+                        background: "#06040f",
                       }}>
-                        {/* Texture dots */}
-                        <div className="absolute inset-0 opacity-[0.07]" style={{
-                          backgroundImage: "radial-gradient(circle 1px at 1px 1px, rgba(255,255,255,0.8) 100%, transparent 100%)",
-                          backgroundSize: "16px 16px",
+                        {/* Base gradient: white glow lower-left → violet centre → dark navy right */}
+                        <div className="absolute inset-0" style={{
+                          background: "radial-gradient(ellipse 90% 100% at -10% 80%, rgba(255,255,255,0.55) 0%, rgba(148,59,245,0.85) 30%, rgba(72,43,200,0.6) 55%, rgba(6,4,15,0) 80%)",
                         }} />
-                        {/* Gradient glow blobs */}
-                        <div className="absolute top-0 left-0 w-32 h-32 rounded-full opacity-30" style={{ background: "radial-gradient(circle, #7c3aed, transparent 70%)", transform: "translate(-30%, -30%)" }} />
-                        <div className="absolute bottom-0 right-0 w-28 h-28 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #1d4ed8, transparent 70%)", transform: "translate(30%, 30%)" }} />
-
-                        {/* Top label */}
-                        <div className="relative z-10">
-                          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">About AP Lab</span>
-                        </div>
+                        {/* Deep blue-violet sweep from top-right */}
+                        <div className="absolute inset-0" style={{
+                          background: "linear-gradient(135deg, transparent 40%, rgba(15,10,60,0.9) 70%, rgba(4,3,12,1) 100%)",
+                        }} />
+                        {/* SVG film grain texture */}
+                        <svg className="absolute inset-0 w-full h-full opacity-[0.32] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+                          <filter id="about-grain">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" stitchTiles="stitch" />
+                            <feColorMatrix type="saturate" values="0" />
+                          </filter>
+                          <rect width="100%" height="100%" filter="url(#about-grain)" opacity="1" />
+                        </svg>
 
                         {/* Dynamic description text - changes on hover */}
-                        <div className="relative z-10">
+                        <div className="relative z-10 mt-auto">
                           <AnimatePresence mode="wait">
                             <motion.div
                               key={activeAboutId}
@@ -306,7 +309,7 @@ export function Navbar() {
                         <Link
                           href="/join"
                           onClick={() => setIsAboutOpen(false)}
-                          className="relative z-10 flex items-center gap-1.5 text-white/60 hover:text-white text-[11px] font-manrope font-bold transition-colors group/join"
+                          className="relative z-10 mt-4 flex items-center gap-1.5 text-white/60 hover:text-white text-[11px] font-manrope font-bold transition-colors group/join"
                         >
                           <span>Want to Join?</span>
                           <ArrowRight className="w-3 h-3 group-hover/join:translate-x-1 transition-transform" />
