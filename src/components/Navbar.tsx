@@ -3,7 +3,8 @@
 import { useState, useEffect, useRef } from "react";
 import { 
   Menu, X, Activity, Users, Mail, LayoutDashboard, LogIn, Newspaper,
-  ChevronDown, Lightbulb, BookOpen, Code2, CheckSquare, Trophy, Play
+  ChevronDown, Lightbulb, BookOpen, Code2, CheckSquare, Trophy, Play,
+  ArrowRight, Target, Globe, Heart, Zap, GraduationCap
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -73,10 +74,59 @@ const featureItems: FeatureItem[] = [
   }
 ];
 
-interface NavLinkItem {
+interface AboutItem {
+  id: string;
   name: string;
-  href: string;
+  subtitle: string;
+  description: string;
   icon: React.ElementType;
+}
+
+const aboutItems: AboutItem[] = [
+  {
+    id: "mission",
+    name: "Our Mission",
+    subtitle: "Why we built AP Lab",
+    description: "AP Lab was built to give every student — regardless of income or location — access to the highest-quality AP preparation. Free, always.",
+    icon: Target,
+  },
+  {
+    id: "community",
+    name: "Our Community",
+    subtitle: "Students from around the world",
+    description: "Tens of thousands of students in 40+ countries use AP Lab to study together, compete on leaderboards, and celebrate real progress.",
+    icon: Globe,
+  },
+  {
+    id: "values",
+    name: "Our Values",
+    subtitle: "What we stand for",
+    description: "Transparency, accessibility, and student-first design. We never paywall content. Every feature is built to help students learn better, faster.",
+    icon: Heart,
+  },
+  {
+    id: "technology",
+    name: "Our Technology",
+    subtitle: "Built for real learning outcomes",
+    description: "From AI tutors to Desmos integrations and adaptive XP systems, every tool is engineered around proven learning science principles.",
+    icon: Zap,
+  },
+  {
+    id: "team",
+    name: "For Students, By Students",
+    subtitle: "A student-led platform",
+    description: "AP Lab was created and is maintained by AP students who know firsthand what great study tools should feel like. We eat our own cooking.",
+    icon: GraduationCap,
+  },
+];
+
+interface FeatureItem {
+  id: string;
+  name: string;
+  subtitle: string;
+  description: string;
+  icon: React.ElementType;
+  href: string;
 }
 
 export function Navbar() {
@@ -86,10 +136,17 @@ export function Navbar() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [hoveredHref, setHoveredHref] = useState<string | null>(null);
   
-  // Mega Menu State
+  // Mega Menu State — Features
   const [isFeaturesOpen, setIsFeaturesOpen] = useState(false);
   const [activeFeatureId, setActiveFeatureId] = useState<string>("guides");
   const megaMenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Mega Menu State — About
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [activeAboutId, setActiveAboutId] = useState<string>("mission");
+  const aboutMenuTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const activeAbout = aboutItems.find(a => a.id === activeAboutId) || aboutItems[0];
 
   const { currentUser } = useAuth();
   const { openAuthModal } = useUI();
@@ -120,11 +177,30 @@ export function Navbar() {
     }, 180);
   };
 
+  const handleMouseEnterAbout = () => {
+    if (aboutMenuTimeoutRef.current) clearTimeout(aboutMenuTimeoutRef.current);
+    setIsAboutOpen(true);
+    setIsFeaturesOpen(false);
+  };
+
+  const handleMouseLeaveAbout = () => {
+    aboutMenuTimeoutRef.current = setTimeout(() => {
+      setIsAboutOpen(false);
+    }, 180);
+  };
+
+  interface NavLinkItem {
+    name: string;
+    href: string;
+    icon: React.ElementType;
+  }
+
   const navLinks: NavLinkItem[] = [
     { name: "Blog", href: "/blog", icon: Newspaper },
     { name: "Join", href: "/join", icon: Users },
     { name: "Contact Us", href: "/contact", icon: Mail },
   ];
+
 
   return (
     <>
@@ -159,6 +235,120 @@ export function Navbar() {
 
           {/* Center Container: Desktop Navigation Links */}
           <div className="hidden md:flex items-center space-x-3 lg:space-x-5">
+
+            {/* About Hover Trigger Wrapper */}
+            <div
+              className="relative"
+              onMouseEnter={handleMouseEnterAbout}
+              onMouseLeave={handleMouseLeaveAbout}
+            >
+              <button
+                className={cn(
+                  "relative font-manrope font-semibold text-[13px] tracking-wide transition-all duration-200 flex items-center px-4 py-1.5 rounded-full select-none cursor-pointer",
+                  isAboutOpen ? "text-white bg-white/15 font-bold" : "text-white/80 hover:text-white hover:bg-white/10"
+                )}
+              >
+                <span>About</span>
+                <ChevronDown className={cn("w-3.5 h-3.5 ml-1 transition-transform duration-200", isAboutOpen ? "rotate-180" : "")} />
+              </button>
+
+              {/* About Mega-Menu Dropdown */}
+              <AnimatePresence>
+                {isAboutOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.99 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 6, scale: 0.99 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="absolute top-full left-0 pt-2.5 w-[560px] z-50 pointer-events-auto"
+                  >
+                    <div className="bg-[#08090e] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.95)] backdrop-blur-3xl overflow-hidden text-left grid grid-cols-[200px_1fr]">
+
+                      {/* Left: Portrait gradient card */}
+                      <div className="relative flex flex-col justify-between p-4 overflow-hidden" style={{
+                        background: "linear-gradient(160deg, #1a1040 0%, #0d1a3a 35%, #0a2244 60%, #0c1530 100%)"
+                      }}>
+                        {/* Texture dots */}
+                        <div className="absolute inset-0 opacity-[0.07]" style={{
+                          backgroundImage: "radial-gradient(circle 1px at 1px 1px, rgba(255,255,255,0.8) 100%, transparent 100%)",
+                          backgroundSize: "16px 16px",
+                        }} />
+                        {/* Gradient glow blobs */}
+                        <div className="absolute top-0 left-0 w-32 h-32 rounded-full opacity-30" style={{ background: "radial-gradient(circle, #7c3aed, transparent 70%)", transform: "translate(-30%, -30%)" }} />
+                        <div className="absolute bottom-0 right-0 w-28 h-28 rounded-full opacity-20" style={{ background: "radial-gradient(circle, #1d4ed8, transparent 70%)", transform: "translate(30%, 30%)" }} />
+
+                        {/* Top label */}
+                        <div className="relative z-10">
+                          <span className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-white/40">About AP Lab</span>
+                        </div>
+
+                        {/* Dynamic description text - changes on hover */}
+                        <div className="relative z-10">
+                          <AnimatePresence mode="wait">
+                            <motion.div
+                              key={activeAboutId}
+                              initial={{ opacity: 0, y: 6 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: -6 }}
+                              transition={{ duration: 0.18 }}
+                            >
+                              <h4 className="font-manrope font-extrabold text-sm text-white leading-tight mb-2">
+                                {activeAbout.name}
+                              </h4>
+                              <p className="font-sans text-[11px] text-white/55 leading-relaxed">
+                                {activeAbout.description}
+                              </p>
+                            </motion.div>
+                          </AnimatePresence>
+                        </div>
+
+                        {/* Bottom CTA */}
+                        <Link
+                          href="/join"
+                          onClick={() => setIsAboutOpen(false)}
+                          className="relative z-10 flex items-center gap-1.5 text-white/60 hover:text-white text-[11px] font-manrope font-bold transition-colors group/join"
+                        >
+                          <span>Want to Join?</span>
+                          <ArrowRight className="w-3 h-3 group-hover/join:translate-x-1 transition-transform" />
+                        </Link>
+                      </div>
+
+                      {/* Right: Hover items list */}
+                      <div className="flex flex-col py-3 px-2">
+                        {aboutItems.map((item) => {
+                          const Icon = item.icon;
+                          const isActive = activeAboutId === item.id;
+                          return (
+                            <button
+                              key={item.id}
+                              onMouseEnter={() => setActiveAboutId(item.id)}
+                              onClick={() => setIsAboutOpen(false)}
+                              className={cn(
+                                "flex items-center gap-3 px-3 py-2.5 rounded-xl w-full text-left transition-all duration-150",
+                                isActive ? "bg-white/[0.07] text-white" : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+                              )}
+                            >
+                              <div className={cn(
+                                "w-7 h-7 rounded-lg flex items-center justify-center shrink-0 transition-colors",
+                                isActive ? "bg-white/15 text-white" : "bg-white/5 text-white/40"
+                              )}>
+                                <Icon className="w-3.5 h-3.5" />
+                              </div>
+                              <div>
+                                <div className="font-manrope font-bold text-xs text-white">{item.name}</div>
+                                <div className="font-sans text-[10px] text-white/40 mt-0.5">{item.subtitle}</div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             {/* Features Hover Trigger Wrapper */}
             <div 
               className="relative"
