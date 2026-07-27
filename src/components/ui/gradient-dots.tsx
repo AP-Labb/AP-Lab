@@ -4,77 +4,113 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 type GradientDotsProps = React.ComponentProps<typeof motion.div> & {
-  /** Dot size (default: 8) */
-  dotSize?: number;
-  /** Spacing between dots (default: 10) */
+  /** Dot radius in px (default: 1) */
+  dotRadius?: number;
+  /** Spacing between dot centres in px (default: 20) */
   spacing?: number;
-  /** Animation duration (default: 30) */
-  duration?: number;
-  /** Color cycle duration (default: 6) */
+  /** How visible the dots are 0–1 (default: 0.18) */
+  dotOpacity?: number;
+  /** Colour shift cycle duration in seconds (default: 14) */
   colorCycleDuration?: number;
-  /** Background color (default: 'transparent') */
-  backgroundColor?: string;
+  /** Drift / position animation duration in seconds (default: 60) */
+  driftDuration?: number;
 };
 
+/**
+ * Premium dot-grid overlay with a slow-drifting site-palette colour wash.
+ * Place absolutely inside a relative container. Keep the wrapper opacity
+ * low (e.g. 0.55–0.75) for a subtle effect.
+ */
 export function GradientDots({
-  dotSize = 8,
-  spacing = 10,
-  duration = 30,
-  colorCycleDuration = 6,
-  backgroundColor = 'transparent',
+  dotRadius = 1,
+  spacing = 20,
+  dotOpacity = 0.18,
+  colorCycleDuration = 14,
+  driftDuration = 60,
   className,
+  style,
   ...props
 }: GradientDotsProps) {
-  const hexSpacing = spacing * 1.732; // Hexagonal spacing calculation
+  const d = dotRadius * 2;
+  const dotColor = `rgba(255,255,255,${dotOpacity})`;
 
   return (
-    <motion.div
-      className={`absolute inset-0 ${className ?? ''}`}
-      style={{
-        backgroundColor,
-        backgroundImage: `
-          radial-gradient(circle at 50% 50%, transparent 1.5px, ${backgroundColor === 'transparent' ? 'rgba(0,0,0,0)' : backgroundColor} 0 ${dotSize}px, transparent ${dotSize}px),
-          radial-gradient(circle at 50% 50%, transparent 1.5px, ${backgroundColor === 'transparent' ? 'rgba(0,0,0,0)' : backgroundColor} 0 ${dotSize}px, transparent ${dotSize}px),
-          radial-gradient(circle at 50% 50%, #f00, transparent 60%),
-          radial-gradient(circle at 50% 50%, #ff0, transparent 60%),
-          radial-gradient(circle at 50% 50%, #0f0, transparent 60%),
-          radial-gradient(ellipse at 50% 50%, #00f, transparent 60%)
-        `,
-        backgroundSize: `
-          ${spacing}px ${hexSpacing}px,
-          ${spacing}px ${hexSpacing}px,
-          200% 200%,
-          200% 200%,
-          200% 200%,
-          200% ${hexSpacing}px
-        `,
-        backgroundPosition: `
-          0px 0px, ${spacing / 2}px ${hexSpacing / 2}px,
-          0% 0%,
-          0% 0%,
-          0% 0px
-        `,
-      }}
-      animate={{
-        backgroundPosition: [
-          `0px 0px, ${spacing / 2}px ${hexSpacing / 2}px, 800% 400%, 1000% -400%, -1200% -600%, 400% ${hexSpacing}px`,
-          `0px 0px, ${spacing / 2}px ${hexSpacing / 2}px, 0% 0%, 0% 0%, 0% 0%, 0% 0%`,
-        ],
-        filter: ['hue-rotate(0deg)', 'hue-rotate(360deg)'],
-      }}
-      transition={{
-        backgroundPosition: {
-          duration: duration,
+    <div className={`absolute inset-0 overflow-hidden pointer-events-none select-none ${className ?? ''}`}>
+      {/* ── Layer 1: Static white hexagonal dot grid ────────────────── */}
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            radial-gradient(circle ${dotRadius}px at ${dotRadius}px ${dotRadius}px, ${dotColor} 100%, transparent 100%),
+            radial-gradient(circle ${dotRadius}px at ${spacing / 2 + dotRadius}px ${spacing * 0.866 + dotRadius}px, ${dotColor} 100%, transparent 100%)
+          `,
+          backgroundSize: `${spacing}px ${spacing * 1.732}px`,
+          backgroundPosition: '0 0',
+        }}
+      />
+
+      {/* ── Layer 2: Slow-drifting coloured blobs (site palette) ─────── */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `
+            radial-gradient(ellipse 60% 60% at 20% 30%, rgba(139,92,246,0.22), transparent),
+            radial-gradient(ellipse 55% 55% at 80% 70%, rgba(34,211,238,0.18), transparent),
+            radial-gradient(ellipse 50% 50% at 55% 20%, rgba(168,85,247,0.14), transparent),
+            radial-gradient(ellipse 45% 45% at 30% 80%, rgba(56,189,248,0.12), transparent)
+          `,
+          backgroundSize: '200% 200%',
+        }}
+        animate={{
+          backgroundPosition: [
+            '0% 0%',
+            '100% 50%',
+            '50% 100%',
+            '0% 50%',
+            '0% 0%',
+          ],
+          filter: ['hue-rotate(0deg)', 'hue-rotate(40deg)', 'hue-rotate(-20deg)', 'hue-rotate(0deg)'],
+        }}
+        transition={{
+          backgroundPosition: {
+            duration: driftDuration,
+            ease: 'linear',
+            repeat: Infinity,
+          },
+          filter: {
+            duration: colorCycleDuration,
+            ease: 'easeInOut',
+            repeat: Infinity,
+            repeatType: 'mirror',
+          },
+        }}
+        {...props}
+      />
+
+      {/* ── Layer 3: Slow diagonal shimmer sweep ──────────────────────── */}
+      <motion.div
+        className="absolute inset-0"
+        style={{
+          backgroundImage: `linear-gradient(
+            120deg,
+            transparent 0%,
+            rgba(255,255,255,0.03) 40%,
+            rgba(200,180,255,0.06) 50%,
+            rgba(255,255,255,0.03) 60%,
+            transparent 100%
+          )`,
+          backgroundSize: '200% 100%',
+        }}
+        animate={{
+          backgroundPosition: ['200% 0%', '-200% 0%'],
+        }}
+        transition={{
+          duration: 8,
           ease: 'linear',
-          repeat: Number.POSITIVE_INFINITY,
-        },
-        filter: {
-          duration: colorCycleDuration,
-          ease: 'linear',
-          repeat: Number.POSITIVE_INFINITY,
-        },
-      }}
-      {...props}
-    />
+          repeat: Infinity,
+          repeatDelay: 4,
+        }}
+      />
+    </div>
   );
 }

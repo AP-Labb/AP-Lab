@@ -355,16 +355,18 @@ export function HeroSection() {
         />
         {/* Dark Center Vignette Overlay */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.85)_0%,rgba(5,7,15,0.72)_38%,transparent_82%)]" />
+        {/* Left-side brightness equaliser — lifts the left to match the right */}
+        <div className="absolute inset-0 bg-gradient-to-r from-white/[0.10] via-white/[0.04] to-transparent" />
       </div>
 
-      {/* Animated Gradient Dot Overlay — subtle colour shimmer on the background */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" style={{ opacity: 0.08, mixBlendMode: "screen" }}>
+      {/* Premium Dot-Grid Overlay — hex dot pattern with site-palette colour wash */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none" style={{ opacity: 0.55, mixBlendMode: "overlay" }}>
         <GradientDots
-          dotSize={6}
-          spacing={12}
-          duration={40}
-          colorCycleDuration={8}
-          backgroundColor="transparent"
+          dotRadius={1}
+          spacing={18}
+          dotOpacity={0.25}
+          driftDuration={55}
+          colorCycleDuration={12}
         />
       </div>
 
