@@ -9,7 +9,7 @@ import {
   LogOut, Microscope, Library, Calculator, 
   Search, Dna, Beaker, Atom, History, Brain, BookOpen, Sigma, BarChart3, Binary,
   ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap,
-  Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings
+  Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings, Award, BookMarked
 } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
 import { LevelLeaderboard } from "@/components/LevelLeaderboard";
@@ -435,6 +435,7 @@ export default function Dashboard() {
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const [showAccountPopup, setShowAccountPopup] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [showQuestsModal, setShowQuestsModal] = useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [onboardCompleted, setOnboardCompleted] = useState(false);
@@ -899,6 +900,32 @@ export default function Dashboard() {
                 </motion.span>
               </motion.button>
 
+              {/* Quests — award icon with glow pulse on row hover */}
+              <motion.button
+                onClick={() => setShowQuestsModal(true)}
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                whileHover="hover"
+                initial="rest"
+              >
+                <motion.div
+                  className="flex-shrink-0"
+                  variants={{
+                    rest: { scale: 1, rotate: 0 },
+                    hover: { scale: 1.18, rotate: -8 },
+                  }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Award className="w-5 h-5" />
+                </motion.div>
+                <motion.span
+                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Quests
+                </motion.span>
+              </motion.button>
+
               {/* Settings */}
               <SidebarSettingsButton open={sidebarOpen} />
 
@@ -1090,29 +1117,116 @@ export default function Dashboard() {
             backgroundSize: "36px 36px"
           }}
         >
-          {/* Tab 1: Universal Wings Bento Grid - 3D Folders Grid */}
-          {dashboardTab === "courses" && (
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-3 gap-12 w-full max-w-6xl mt-10 sm:mt-16 mb-8 sm:mb-12"
-            >
-              {folders.map((folder, idx) => (
-                <motion.div
-                  key={folder.title}
-                  initial={{ opacity: 0, y: 40, scale: 0.94 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={{ duration: 0.6, delay: 0.38 + (idx * 0.12), ease: [0.22, 1, 0.36, 1] }}
-                >
-                  <FolderCard 
-                    {...folder} 
-                    progressData={classProgressMap}
-                  />
-                </motion.div>
-              ))}
-            </motion.div>
-          )}
+          {/* Tab 1: Course Image Cards Grid */}
+          {dashboardTab === "courses" && (() => {
+            // Course card data: images from Unsplash (subject-matched), descriptions, unit/topic counts
+            const COURSE_CARDS = [
+              { slug: "ap-biology",    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&q=80", desc: "Explore life's molecular machinery, genetics, ecology, and evolution through inquiry-based AP science.", units: 8, topics: 63 },
+              { slug: "ap-chemistry",  image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80", desc: "Master atomic structure, chemical reactions, thermodynamics, and electrochemistry at the AP level.", units: 9, topics: 52 },
+              { slug: "ap-physics-c",  image: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=600&q=80", desc: "Calculus-based mechanics and electricity & magnetism designed for the most rigorous AP physics exam.", units: 7, topics: 43 },
+              { slug: "ap-ush",        image: "https://images.unsplash.com/photo-1568393691622-c7ba131d63b4?w=600&q=80", desc: "Journey through American history from colonization to the present, analysing key events and primary sources.", units: 9, topics: 55 },
+              { slug: "ap-psych",      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80", desc: "Uncover the science of mind and behaviour: cognition, development, social psychology, and clinical concepts.", units: 8, topics: 46 },
+              { slug: "ap-eng-lang",   image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=600&q=80", desc: "Develop rhetoric analysis, argumentation, and synthesis writing skills for the AP Language exam.", units: 9, topics: 48 },
+              { slug: "ap-calc-bc",    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=600&q=80", desc: "Limits, derivatives, integrals, infinite series, and parametric equations covered to BC depth.", units: 10, topics: 58 },
+              { slug: "ap-stats",      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80", desc: "Statistical reasoning, data collection, probability models, and inference for the AP Statistics exam.", units: 9, topics: 44 },
+              { slug: "ap-csa",        image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80", desc: "Object-oriented programming in Java: data structures, algorithms, and software design principles.", units: 10, topics: 64 },
+            ];
+            return (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.4 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full max-w-7xl mt-8 mb-12"
+              >
+                {COURSE_CARDS.map((card, idx) => {
+                  const reg = courseRegistry[card.slug];
+                  if (!reg) return null;
+                  const Icon = (() => {
+                    const m: Record<string, React.ElementType> = {
+                      "ap-biology": Dna, "ap-chemistry": Beaker, "ap-physics-c": Atom,
+                      "ap-ush": History, "ap-psych": Brain, "ap-eng-lang": BookOpen,
+                      "ap-calc-bc": Sigma, "ap-stats": BarChart3, "ap-csa": Binary,
+                    };
+                    return m[card.slug] || GraduationCap;
+                  })();
+                  const courseProgress = classProgressMap?.[card.slug];
+                  const totalTopics = card.topics;
+                  const pct = typeof courseProgress === "number" ? Math.min(100, Math.round(courseProgress)) : 0;
+                  const completedTopics = Math.round((pct / 100) * totalTopics);
+
+                  return (
+                    <motion.div
+                      key={card.slug}
+                      initial={{ opacity: 0, y: 28 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                    >
+                      <Link href={`/dashboard/${card.slug}`} className="block group">
+                        <div className="bg-[#0b0d1a] border border-white/[0.07] rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.7)] hover:-translate-y-1">
+                          {/* Hero image */}
+                          <div className="relative h-36 overflow-hidden">
+                            <img
+                              src={card.image}
+                              alt={reg.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                            />
+                            {/* Dark bottom fade */}
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d1a] via-transparent to-transparent" />
+                            {/* Stable badge */}
+                            <span className="absolute top-2.5 right-2.5 flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
+                              STABLE
+                            </span>
+                          </div>
+
+                          {/* Card body */}
+                          <div className="p-4">
+                            {/* Course name + icon */}
+                            <div className="flex items-center gap-2 mb-1.5">
+                              <Icon className="w-4 h-4 shrink-0" style={{ color: reg.accentColor }} />
+                              <h3 className="font-manrope font-extrabold text-sm text-white truncate">{reg.name}</h3>
+                            </div>
+
+                            {/* Description */}
+                            <p className="font-sans text-[11px] text-white/45 leading-relaxed line-clamp-2 mb-3">
+                              {card.desc}
+                            </p>
+
+                            {/* Unit + topic pills */}
+                            <div className="flex items-center gap-2 mb-3">
+                              <span className="flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border" style={{ borderColor: `${reg.accentColor}55`, color: reg.accentColor, background: `${reg.accentColor}18` }}>
+                                <Layers className="w-2.5 h-2.5" /> {card.units} UNITS
+                              </span>
+                              <span className="flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-400">
+                                <BookMarked className="w-2.5 h-2.5" /> {card.topics} TOPICS
+                              </span>
+                            </div>
+
+                            {/* Progress */}
+                            <div>
+                              <div className="flex items-center justify-between mb-1">
+                                <span className="text-[10px] font-mono text-white/35">✦ {pct}% Progress</span>
+                              </div>
+                              <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  animate={{ width: `${pct}%` }}
+                                  transition={{ duration: 0.8, delay: idx * 0.05 + 0.3, ease: "easeOut" }}
+                                  className="h-full rounded-full"
+                                  style={{ background: reg.accentColor }}
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </Link>
+                    </motion.div>
+                  );
+                })}
+              </motion.div>
+            );
+          })()}
+
 
           {/* Tab 2: Course Statistics Previews Grid */}
           {dashboardTab === "previews" && (
@@ -1415,7 +1529,8 @@ export default function Dashboard() {
       </AnimatePresence>
 
       <DashboardContextMenu onOpenProfile={() => setShowAccountPopup(true)} />
-      <FloatingXPOperations />
+      <FloatingXPOperations externalOpen={showQuestsModal} onClose={() => setShowQuestsModal(false)} />
+
     </div>
   );
 }

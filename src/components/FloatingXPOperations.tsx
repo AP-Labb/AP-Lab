@@ -91,10 +91,23 @@ const SOCIAL_TASKS: Task[] = [
   },
 ];
 
-export function FloatingXPOperations() {
+export function FloatingXPOperations({
+  externalOpen,
+  onClose,
+}: {
+  externalOpen?: boolean;
+  onClose?: () => void;
+}) {
   const { currentUser } = useAuth();
   const { claimSocialXp } = useProgress();
-  const [isOpen, setIsOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
+
+  // When controlled externally, sync internal state
+  const isOpen = externalOpen !== undefined ? externalOpen : internalOpen;
+  const handleClose = () => {
+    setInternalOpen(false);
+    onClose?.();
+  };
 
   // Storage states
   const [clickedTasks, setClickedTasks] = useState<Record<string, boolean>>({});
@@ -198,18 +211,20 @@ export function FloatingXPOperations() {
 
   return (
     <>
-      {/* Floating XP Button on Bottom Right */}
-      <motion.button
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        whileHover={{ scale: 1.08 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full bg-neutral-950 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(255,255,255,0.12)] cursor-pointer border border-white/15 hover:border-white/30 hover:shadow-[0_8px_32px_rgba(255,255,255,0.22)] transition-all group select-none"
-      >
-        <div className="absolute inset-0 rounded-full bg-white/5 animate-ping pointer-events-none group-hover:animate-none" />
-        <Award className="w-7 h-7 text-white/90" />
-      </motion.button>
+      {/* Floating XP Button on Bottom Right — only show when NOT controlled externally */}
+      {externalOpen === undefined && (
+        <motion.button
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.95 }}
+          onClick={() => setInternalOpen(true)}
+          className="fixed bottom-6 right-6 z-[9999] w-14 h-14 rounded-full bg-neutral-950 flex items-center justify-center text-white shadow-[0_8px_32px_rgba(255,255,255,0.12)] cursor-pointer border border-white/15 hover:border-white/30 hover:shadow-[0_8px_32px_rgba(255,255,255,0.22)] transition-all group select-none"
+        >
+          <div className="absolute inset-0 rounded-full bg-white/5 animate-ping pointer-events-none group-hover:animate-none" />
+          <Award className="w-7 h-7 text-white/90" />
+        </motion.button>
+      )}
 
       {/* Quest Pop-up Drawer/Modal */}
       <AnimatePresence>
@@ -220,7 +235,7 @@ export function FloatingXPOperations() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setIsOpen(false)}
+              onClick={handleClose}
               className="absolute inset-0 bg-black/75 backdrop-blur-md"
             />
 
@@ -234,7 +249,8 @@ export function FloatingXPOperations() {
             >
               {/* Close Button */}
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
+
                 className="absolute top-4 right-4 p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white/60 hover:text-white transition-all cursor-pointer"
               >
                 <X className="w-4 h-4" />

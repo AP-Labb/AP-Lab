@@ -264,26 +264,12 @@ export function Navbar() {
                   >
                     <div className="bg-[#08090e] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.95)] backdrop-blur-3xl overflow-hidden text-left grid grid-cols-[240px_1fr]">
 
-                      {/* Left: Portrait gradient card — matches user image: white left-glow → violet → deep navy/black */}
+                      {/* Left: Portrait gradient card — exact uploaded image */}
                       <div className="relative flex flex-col justify-between p-5 overflow-hidden" style={{
-                        background: "#06040f",
+                        backgroundImage: "url('/images/about-gradient.jpg')",
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
                       }}>
-                        {/* Base gradient: white glow lower-left → violet centre → dark navy right */}
-                        <div className="absolute inset-0" style={{
-                          background: "radial-gradient(ellipse 90% 100% at -10% 80%, rgba(255,255,255,0.55) 0%, rgba(148,59,245,0.85) 30%, rgba(72,43,200,0.6) 55%, rgba(6,4,15,0) 80%)",
-                        }} />
-                        {/* Deep blue-violet sweep from top-right */}
-                        <div className="absolute inset-0" style={{
-                          background: "linear-gradient(135deg, transparent 40%, rgba(15,10,60,0.9) 70%, rgba(4,3,12,1) 100%)",
-                        }} />
-                        {/* SVG film grain texture */}
-                        <svg className="absolute inset-0 w-full h-full opacity-[0.32] pointer-events-none" xmlns="http://www.w3.org/2000/svg">
-                          <filter id="about-grain">
-                            <feTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" stitchTiles="stitch" />
-                            <feColorMatrix type="saturate" values="0" />
-                          </filter>
-                          <rect width="100%" height="100%" filter="url(#about-grain)" opacity="1" />
-                        </svg>
 
                         {/* Dynamic description text - changes on hover */}
                         <div className="relative z-10 mt-auto">

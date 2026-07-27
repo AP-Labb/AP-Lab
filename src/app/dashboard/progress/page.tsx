@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ArrowLeft, Flame, Calendar, Trophy, Mail, User, X, GraduationCap,
+  Flame, Calendar, Trophy, Mail, User, X, GraduationCap,
   Clock, Target, CheckCircle2, ChevronLeft, ChevronRight, Activity,
-  BookOpen, MessageSquare, Sparkles, LogOut
+  BookOpen, MessageSquare, Sparkles, LogOut, Home, LayoutDashboard, BarChart2, Star, Settings
 } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
@@ -18,6 +18,7 @@ import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 
 // Helper to determine weekday headers
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -37,6 +38,7 @@ export default function ProgressPage() {
   const [showAccountPopup, setShowAccountPopup] = useState(false);
   const [selectedDayInfo, setSelectedDayInfo] = useState<any | null>(null);
   const [hoveredDayIndex, setHoveredDayIndex] = useState<number | null>(null);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Calendar date view (defaults to current month)
   const [currentDate, setCurrentDate] = useState(() => new Date());
@@ -276,35 +278,95 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030408] text-white flex flex-col relative z-0 overflow-x-hidden transition-all duration-500 selection:bg-neutral-800 selection:text-white">
+    <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-hidden transition-all duration-500 selection:bg-neutral-800 selection:text-white">
+
+      {/* Left Sidebar — same as dashboard */}
+      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
+        <SidebarBody className="justify-between gap-10">
+          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden gap-1 pt-2">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 px-2 pb-4">
+              <Activity className="w-5 h-5 text-white shrink-0" />
+              <motion.span
+                animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                className="font-manrope font-bold text-white text-sm whitespace-pre"
+              >
+                AP Lab
+              </motion.span>
+            </Link>
+
+            {/* Nav items */}
+            {([
+              { icon: Home, label: "Home", href: "/" },
+              { icon: LayoutDashboard, label: "Dashboard", href: "/dashboard" },
+              { icon: BarChart2, label: "Progress", href: "/dashboard/progress", active: true },
+            ] as { icon: React.ElementType; label: string; href: string; active?: boolean }[]).map((item) => {
+              const Icon = item.icon;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 ${
+                    item.active
+                      ? "bg-white/10 text-white"
+                      : "text-white/50 hover:bg-white/[0.05] hover:text-white"
+                  }`}
+                >
+                  <Icon className="w-5 h-5 shrink-0" />
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    {item.label}
+                  </motion.span>
+                </Link>
+              );
+            })}
+          </div>
+
+          {/* Bottom: Sign out */}
+          <div className="flex flex-col gap-2 pb-6">
+            <button
+              onClick={() => setShowSignOutConfirm(true)}
+              className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/40 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200 w-full"
+            >
+              <LogOut className="w-5 h-5 shrink-0" />
+              <motion.span
+                animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                transition={{ duration: 0.15 }}
+                className="text-sm font-manrope font-semibold whitespace-pre"
+              >
+                Sign Out
+              </motion.span>
+            </button>
+          </div>
+        </SidebarBody>
+      </Sidebar>
+
+      {/* Main content */}
+      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto">
       
-      {/* Background elements (Clean, non-flashy dark theme) */}
+      {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/10 to-transparent pointer-events-none -z-10" />
 
       {/* Main Content Container */}
       <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 flex-1 flex flex-col space-y-8 pb-20">
-        
+
         {/* Header Block */}
         <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
-          <div className="flex items-center space-x-4">
-            <Link 
-              href="/dashboard"
-              className="p-3 bg-white/5 border border-white/5 hover:border-white/15 rounded-xl transition-all duration-200 hover:scale-[1.02] flex items-center justify-center text-white/50 hover:text-white"
-            >
-              <ArrowLeft className="w-4.5 h-4.5" />
-            </Link>
-            <div>
-              <div className="flex items-center space-x-2">
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/30 font-bold">Analytics</span>
-              </div>
-              <h1 className="font-instrument text-3xl font-bold tracking-tight text-white mt-1">
-                Progress
-              </h1>
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/30 font-bold">Analytics</span>
             </div>
+            <h1 className="font-instrument text-3xl font-bold tracking-tight text-white mt-1">
+              Progress
+            </h1>
           </div>
 
           <AccountNavbarWidget onOpenProfile={() => setShowAccountPopup(true)} />
         </div>
+
 
         {/* Level Progression Banner */}
         <motion.div 
@@ -933,6 +995,7 @@ export default function ProgressPage() {
       </AnimatePresence>
 
       <DashboardContextMenu onOpenProfile={() => setShowAccountPopup(true)} />
+      </div>
     </div>
   );
 }
