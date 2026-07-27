@@ -516,25 +516,34 @@ export default function AssistantPage() {
         </SidebarBody>
       </Sidebar>
 
-      {/* ===== MAIN WORKSPACE (CENTERED VERTICALLY WITH PEEKING PANDA) ===== */}
+      {/* ===== MAIN WORKSPACE (v0 SIMPLISTIC UI WITH FADEABLE PANDA) ===== */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden relative bg-[#0b0c10]">
         
-        {/* Messages / Hero Container - Centered Vertically */}
-        <div className="flex-1 overflow-y-auto px-4 md:px-8 py-6 flex flex-col items-center justify-center">
-          <div className="max-w-3xl w-full flex flex-col items-center justify-center my-auto py-6">
+        {/* Workspace Container */}
+        <div className="flex-1 overflow-hidden px-4 md:px-8 py-6 flex flex-col items-center justify-between max-w-3xl mx-auto w-full">
+          
+          {/* Header Title / Chat Stream Container */}
+          <div className="w-full flex-1 flex flex-col min-h-0 overflow-hidden">
             
-            {/* Header Title */}
-            <motion.h1 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight text-center mb-8"
-            >
-              What do you need help with, {firstName}?
-            </motion.h1>
+            {/* Header Title (Only when no messages) */}
+            <AnimatePresence>
+              {messages.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="pt-8 pb-4 text-center shrink-0"
+                >
+                  <h1 className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight">
+                    What do you need help with, {firstName}?
+                  </h1>
+                </motion.div>
+              )}
+            </AnimatePresence>
 
-            {/* Chat Messages Stream (If messages exist) */}
+            {/* Chat Messages Stream (Scrollable area) */}
             {messages.length > 0 && (
-              <div className="w-full space-y-6 mb-6 max-h-[350px] overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-white/10">
+              <div className="flex-1 overflow-y-auto w-full py-4 pr-2 space-y-6 scrollbar-thin scrollbar-thumb-white/15">
                 {messages.map((msg) => (
                   <div key={msg.id} className={`flex flex-col ${msg.role === "user" ? "items-end" : "items-start"}`}>
                     <div className="text-[10px] font-mono text-white/30 mb-1 px-1">
@@ -586,92 +595,119 @@ export default function AssistantPage() {
                 <div ref={messagesEndRef} />
               </div>
             )}
+          </div>
 
-            {/* Input Box Card with Peeking Panda & Grabbing Paws */}
-            <div className="w-full relative pt-20">
+          {/* Input Box Card with Peeking Panda & Grabbing Paws */}
+          <div className="w-full relative pt-14 shrink-0 pb-4">
+            
+            {/* Larger Panda Head Peeking from Behind top edge of message box (Fade out when messages exist) */}
+            <AnimatePresence>
+              {messages.length === 0 && (
+                <motion.div
+                  initial={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.3 }}
+                  className="absolute -top-16 left-1/2 -translate-x-1/2 w-48 h-48 pointer-events-none select-none z-0"
+                >
+                  <img 
+                    src="/images/panda-ai.png" 
+                    alt="Peeking Panda" 
+                    className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Input Box Wrapper */}
+            <div className="relative z-10 bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[110px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
               
-              {/* Larger Panda Head Peeking from Behind top edge of message box */}
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 w-48 h-48 pointer-events-none select-none z-0">
-                <img 
-                  src="/images/panda-ai.png" 
-                  alt="Peeking Panda" 
-                  className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(0,0,0,0.5)]" 
-                />
-              </div>
-
-              {/* Input Box Wrapper */}
-              <div className="relative z-10 bg-[#14161f] border border-white/10 rounded-2xl p-3 flex flex-col justify-between min-h-[110px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
-                
-                {/* Left Paw Grabbing Box Edge */}
-                <div className="absolute -left-3 top-12 pointer-events-none select-none z-20">
-                  <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
-                    <circle cx="7" cy="12" r="2" fill="black"/>
-                    <circle cx="7" cy="18" r="2" fill="black"/>
-                    <circle cx="10" cy="24" r="2" fill="black"/>
-                  </svg>
-                </div>
-
-                {/* Right Paw Grabbing Box Edge */}
-                <div className="absolute -right-3 top-12 pointer-events-none select-none z-20 transform scale-x-[-1]">
-                  <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
-                    <circle cx="7" cy="12" r="2" fill="black"/>
-                    <circle cx="7" cy="18" r="2" fill="black"/>
-                    <circle cx="10" cy="24" r="2" fill="black"/>
-                  </svg>
-                </div>
-
-                <textarea
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSend();
-                    }
-                  }}
-                  placeholder="Ask Panda AI a question..."
-                  className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[60px]"
-                />
-
-                <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
-                  <button
-                    type="button"
-                    className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]"
-                    title="Attach file (Coming Soon)"
+              {/* Left Paw Grabbing Box Edge Cleanly Outside (Fade out when messages exist) */}
+              <AnimatePresence>
+                {messages.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute -left-5 top-8 pointer-events-none select-none z-20"
                   >
-                    <Paperclip className="w-4 h-4" />
-                  </button>
+                    <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
+                      <circle cx="7" cy="12" r="2" fill="black"/>
+                      <circle cx="7" cy="18" r="2" fill="black"/>
+                      <circle cx="10" cy="24" r="2" fill="black"/>
+                    </svg>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-                  <button
-                    onClick={() => handleSend()}
-                    disabled={!input.trim() || isLoading}
-                    className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
+              {/* Right Paw Grabbing Box Edge Cleanly Outside (Fade out when messages exist) */}
+              <AnimatePresence>
+                {messages.length === 0 && (
+                  <motion.div
+                    initial={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="absolute -right-5 top-8 pointer-events-none select-none z-20 transform scale-x-[-1]"
                   >
-                    <ArrowUp className="w-4 h-4" />
-                  </button>
-                </div>
-              </div>
+                    <svg width="24" height="36" viewBox="0 0 24 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M22 6C22 6 16 2 10 5C4 8 2 15 2 20C2 25 5 30 11 30C17 30 22 24 22 24V6Z" fill="white" stroke="#000000" strokeWidth="2.5" strokeLinejoin="round"/>
+                      <circle cx="7" cy="12" r="2" fill="black"/>
+                      <circle cx="7" cy="18" r="2" fill="black"/>
+                      <circle cx="10" cy="24" r="2" fill="black"/>
+                    </svg>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
-              {/* Non-clickable Capability Badges */}
-              <div className="flex items-center justify-center flex-wrap gap-2 pt-4 select-none">
-                {CAPABILITY_BADGES.map((b, i) => {
-                  const Icon = b.icon;
-                  return (
-                    <div
-                      key={i}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14161f]/80 border border-white/[0.08] text-white/50 text-xs font-manrope font-medium"
-                    >
-                      <Icon className="w-3.5 h-3.5 text-white/40" />
-                      <span>{b.label}</span>
-                    </div>
-                  );
-                })}
+              <textarea
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend();
+                  }
+                }}
+                placeholder="Ask Panda AI a question..."
+                className="w-full bg-transparent text-sm text-white placeholder-white/30 focus:outline-none resize-none px-2 pt-1 font-inter min-h-[60px]"
+              />
+
+              <div className="flex items-center justify-between pt-2 border-t border-white/[0.04]">
+                <button
+                  type="button"
+                  className="p-1.5 text-white/40 hover:text-white/80 transition-colors rounded-lg hover:bg-white/[0.05]"
+                  title="Attach file (Coming Soon)"
+                >
+                  <Paperclip className="w-4 h-4" />
+                </button>
+
+                <button
+                  onClick={() => handleSend()}
+                  disabled={!input.trim() || isLoading}
+                  className="w-7 h-7 rounded-lg bg-white/15 hover:bg-white/25 text-white flex items-center justify-center disabled:opacity-20 transition-all cursor-pointer"
+                >
+                  <ArrowUp className="w-4 h-4" />
+                </button>
               </div>
             </div>
 
+            {/* Non-clickable Capability Badges */}
+            <div className="flex items-center justify-center flex-wrap gap-2 pt-4 select-none">
+              {CAPABILITY_BADGES.map((b, i) => {
+                const Icon = b.icon;
+                return (
+                  <div
+                    key={i}
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-[#14161f]/80 border border-white/[0.08] text-white/50 text-xs font-manrope font-medium"
+                  >
+                    <Icon className="w-3.5 h-3.5 text-white/40" />
+                    <span>{b.label}</span>
+                  </div>
+                );
+              })}
+            </div>
           </div>
+
         </div>
       </div>
 
