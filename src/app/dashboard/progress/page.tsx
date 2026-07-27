@@ -326,19 +326,29 @@ export default function ProgressPage() {
 
             {/* AI Assistant */}
             <Link href="/assistant" className="w-full">
-              <div className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/70 hover:bg-emerald-500/10 hover:text-emerald-300 w-full group cursor-pointer">
-                <div className="w-5 h-5 rounded-full overflow-hidden shrink-0 border border-emerald-500/50 group-hover:border-emerald-400 shadow-sm">
-                  <img src="/images/panda-mascot.png" alt="Panda AI" className="w-full h-full object-cover" />
-                </div>
+              <motion.div
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group cursor-pointer"
+                whileHover="hover"
+                initial="rest"
+              >
+                <motion.div
+                  className="w-5 h-5 shrink-0 flex items-center justify-center"
+                  variants={{
+                    rest: { scale: 1, rotate: 0, y: 0 },
+                    hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0], y: -1 },
+                  }}
+                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                >
+                  <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain filter invert contrast-125" />
+                </motion.div>
                 <motion.span
                   animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
                   transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre flex items-center gap-1.5"
+                  className="text-sm font-manrope font-semibold whitespace-pre"
                 >
                   AI Assistant
-                  <span className="text-[9px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">NEW</span>
                 </motion.span>
-              </div>
+              </motion.div>
             </Link>
           </div>
 
