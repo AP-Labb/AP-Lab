@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { SVGProps } from "react";
 import { ArrowRight, X, BookOpen, Video, Clock, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
@@ -9,6 +10,36 @@ import { BiologyDNA3D } from "./BiologyDNA3D";
 import { ChemistryMolecule3D } from "./ChemistryMolecule3D";
 import { PhysicsOrbit3D } from "./PhysicsOrbit3D";
 import { courseRegistry } from "@/lib/courses/course-registry";
+import { Cursor } from "@/components/ui/cursor";
+
+const MouseIcon = ({ color, ...props }: SVGProps<SVGSVGElement> & { color: string }) => {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width={26}
+      height={31}
+      fill="none"
+      {...props}
+    >
+      <g clipPath="url(#a)">
+        <path
+          fill={color}
+          fillRule="evenodd"
+          stroke={"#fff"}
+          strokeLinecap="square"
+          strokeWidth={2}
+          d="M21.993 14.425 2.549 2.935l4.444 23.108 4.653-10.002z"
+          clipRule="evenodd"
+        />
+      </g>
+      <defs>
+        <clipPath id="a">
+          <path fill={color} d="M0 0h26v31H0z" />
+        </clipPath>
+      </defs>
+    </svg>
+  );
+};
 
 interface CoursePreview {
   id: string;
@@ -269,6 +300,26 @@ export function SubjectLabs() {
             whileHover={{ y: -6 }}
             className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
+            <Cursor
+              attachToParent
+              variants={{
+                initial: { scale: 0.3, opacity: 0 },
+                animate: { scale: 1, opacity: 1 },
+                exit: { scale: 0.3, opacity: 0 },
+              }}
+              transition={{
+                ease: "easeInOut",
+                duration: 0.15,
+              }}
+              className="left-4 top-4"
+            >
+              <div>
+                <MouseIcon color="#22c55e" className="h-6 w-6" />
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#22c55e] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
+                  AP® Biology
+                </div>
+              </div>
+            </Cursor>
             {/* Card Content (Left) */}
             <div className="flex flex-col justify-between relative z-10 w-full md:w-1/2 min-h-[200px] md:min-h-0">
               <div>
@@ -314,6 +365,26 @@ export function SubjectLabs() {
             whileHover={{ y: -6 }}
             className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
+            <Cursor
+              attachToParent
+              variants={{
+                initial: { scale: 0.3, opacity: 0 },
+                animate: { scale: 1, opacity: 1 },
+                exit: { scale: 0.3, opacity: 0 },
+              }}
+              transition={{
+                ease: "easeInOut",
+                duration: 0.15,
+              }}
+              className="left-4 top-4"
+            >
+              <div>
+                <MouseIcon color="#ec4899" className="h-6 w-6" />
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#ec4899] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
+                  AP® Calculus
+                </div>
+              </div>
+            </Cursor>
             {/* Background SVG Curve Animation */}
             <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-50 transition-opacity duration-150 pointer-events-none mt-28">
               <svg width="280" height="180" viewBox="0 0 280 180" className="w-full h-full max-w-[280px]">
@@ -394,6 +465,26 @@ export function SubjectLabs() {
             whileHover={{ y: -6 }}
             className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
+            <Cursor
+              attachToParent
+              variants={{
+                initial: { scale: 0.3, opacity: 0 },
+                animate: { scale: 1, opacity: 1 },
+                exit: { scale: 0.3, opacity: 0 },
+              }}
+              transition={{
+                ease: "easeInOut",
+                duration: 0.15,
+              }}
+              className="left-4 top-4"
+            >
+              <div>
+                <MouseIcon color="#0ea5e9" className="h-6 w-6" />
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#0ea5e9] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
+                  AP® Physics
+                </div>
+              </div>
+            </Cursor>
             {/* 3D Visual Section */}
             <div className="absolute inset-x-0 bottom-12 flex items-center justify-center h-[200px] pointer-events-none z-0">
               <div className="absolute inset-0 bg-radial-gradient from-purple-500/5 to-transparent pointer-events-none" />
@@ -434,6 +525,26 @@ export function SubjectLabs() {
             whileHover={{ y: -6 }}
             className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-hidden group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
           >
+            <Cursor
+              attachToParent
+              variants={{
+                initial: { scale: 0.3, opacity: 0 },
+                animate: { scale: 1, opacity: 1 },
+                exit: { scale: 0.3, opacity: 0 },
+              }}
+              transition={{
+                ease: "easeInOut",
+                duration: 0.15,
+              }}
+              className="left-4 top-4"
+            >
+              <div>
+                <MouseIcon color="#14b8a6" className="h-6 w-6" />
+                <div className="ml-4 mt-1 rounded-[4px] bg-[#14b8a6] px-2 py-0.5 text-xs text-white font-manrope font-semibold whitespace-nowrap shadow-md">
+                  AP® Chemistry
+                </div>
+              </div>
+            </Cursor>
             {/* Card Content (Right/Left depending on orientation, here it is md:flex-row-reverse) */}
             <div className="flex flex-col justify-between relative z-10 w-full md:w-1/2 min-h-[200px] md:min-h-0">
               <div>
