@@ -1087,8 +1087,9 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     if (inv.includes(itemId)) return true; // already owned
     const newCreds = currentCreds - cost;
     const newInv = [...inv, itemId];
-    const activeFrame = itemType === "frame" ? itemId : progress.activeAvatarFrame;
-    const activeGrad = itemType === "gradient" ? itemId : progress.activeNameGradient;
+    const isGradient = itemType === "gradient";
+    const activeFrame = !isGradient && itemType !== "powerup" ? itemId : progress.activeAvatarFrame;
+    const activeGrad = isGradient ? itemId : progress.activeNameGradient;
     const updated: UserProgress = {
       ...progress,
       credits: newCreds,
@@ -1111,10 +1112,11 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   const equipItem = async (itemType: string, itemId: string) => {
+    const isGradient = itemType === "gradient";
     const updated: UserProgress = {
       ...progress,
-      activeAvatarFrame: itemType === "frame" ? itemId : progress.activeAvatarFrame,
-      activeNameGradient: itemType === "gradient" ? itemId : progress.activeNameGradient,
+      activeAvatarFrame: !isGradient ? itemId : progress.activeAvatarFrame,
+      activeNameGradient: isGradient ? itemId : progress.activeNameGradient,
     };
     setProgress(updated);
     if (currentUser) {

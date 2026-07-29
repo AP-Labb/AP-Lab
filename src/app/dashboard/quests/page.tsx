@@ -449,8 +449,16 @@ export default function QuestsPage() {
                   <div key={quest.id} className="bg-[#0a0c16] border border-white/10 rounded-3xl p-6 flex flex-col justify-between space-y-6 shadow-xl">
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-white/60 bg-white/5 border border-white/10 px-3 py-1 rounded-full uppercase">
-                          +{quest.xpReward} XP & +{quest.coinReward} Coins
+                        <span className="text-[10px] font-mono font-bold text-white/80 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full uppercase flex items-center gap-2">
+                          <span className="flex items-center gap-1">
+                            <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-4 h-4 object-contain inline" />
+                            +{quest.xpReward}
+                          </span>
+                          <span className="text-white/30">•</span>
+                          <span className="flex items-center gap-1 text-amber-400">
+                            <img src="/images/coin-zoomed.png" alt="Coins" className="w-4 h-4 object-contain inline" />
+                            +{quest.coinReward}
+                          </span>
                         </span>
                         <span className="text-xs font-mono font-bold text-white/40">
                           {quest.current}/{quest.target}
@@ -520,8 +528,9 @@ export default function QuestsPage() {
                           <p className="text-[10px] text-white/40 font-inter mt-0.5">Earn bonus levels instantly</p>
                         </div>
                       </div>
-                      <span className="font-mono font-bold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg">
-                        +{task.xp} XP
+                      <span className="font-mono font-bold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-1 rounded-lg flex items-center gap-1">
+                        <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-4 h-4 object-contain inline" />
+                        +{task.xp}
                       </span>
                     </div>
 
