@@ -261,11 +261,11 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                       {credits.toLocaleString()}
                     </span>
                   </div>
-                  <div className="w-16 h-16 flex items-center justify-center shrink-0">
+                  <div className="w-24 h-24 flex items-center justify-center shrink-0 -mr-2">
                     <img 
                       src="/images/coin-zoomed.png" 
                       alt="Coins" 
-                      className="w-full h-full object-contain" 
+                      className="w-full h-full object-contain transform scale-125 drop-shadow-xl" 
                     />
                   </div>
                 </div>

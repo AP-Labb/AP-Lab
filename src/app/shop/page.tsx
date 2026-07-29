@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ShoppingBag, Sparkles, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
-  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench
+  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench, RefreshCw
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -55,14 +55,60 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Shop Gear Items
+// Store Items including Streak Powerups, Hats, Accessories, Auras & Name Gradients
 const GEAR_ITEMS = [
+  // Streak Powerups as Store Items with Custom Displays
+  { 
+    id: "streak-freeze", 
+    name: "Streak Freeze", 
+    desc: "Pause your study streak for up to 30 days without losing progress", 
+    cost: 50, 
+    bgColor: "bg-neutral-900 border-neutral-800",
+    innerBg: "bg-rose-100/90 border-rose-300",
+    type: "powerup",
+    renderAccessory: () => (
+      <div className="relative w-20 h-20 rounded-full bg-rose-500/20 border-2 border-rose-500 flex items-center justify-center text-rose-500 shadow-md">
+        <PauseCircle className="w-12 h-12 drop-shadow-md" />
+      </div>
+    )
+  },
+  { 
+    id: "streak-repair", 
+    name: "Streak Repair", 
+    desc: "Instantly repair and restore a missed study streak day", 
+    cost: 100, 
+    bgColor: "bg-neutral-900 border-neutral-800",
+    innerBg: "bg-amber-100/90 border-amber-300",
+    type: "powerup",
+    renderAccessory: () => (
+      <div className="relative w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center text-amber-500 shadow-md">
+        <Wrench className="w-11 h-11 drop-shadow-md" />
+      </div>
+    )
+  },
+  { 
+    id: "streak-revive", 
+    name: "Streak Revive", 
+    desc: "Complete phoenix revival for broken study streaks", 
+    cost: 150, 
+    bgColor: "bg-neutral-900 border-neutral-800",
+    innerBg: "bg-orange-100/90 border-orange-300",
+    type: "powerup",
+    renderAccessory: () => (
+      <div className="relative w-20 h-20 rounded-full bg-orange-500/20 border-2 border-orange-500 flex items-center justify-center text-orange-500 shadow-md">
+        <Flame className="w-12 h-12 fill-orange-500 drop-shadow-md" />
+      </div>
+    )
+  },
+
+  // Avatar Wearables
   { 
     id: "gear-sunglasses", 
     name: "Sunglasses", 
     desc: "Glasses for the sun", 
     cost: 35, 
-    bgColor: "bg-emerald-100/90 text-neutral-900 border-emerald-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-emerald-100/90 border-emerald-300",
     type: "sunglasses",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900 overflow-hidden">
@@ -73,7 +119,6 @@ const GEAR_ITEMS = [
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
-        {/* Sunglasses Overlay */}
         <div className="absolute top-6 left-1/2 -translate-x-1/2 w-14 flex items-center justify-between z-10 pointer-events-none drop-shadow-md">
           <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
           <div className="w-2 h-0.5 bg-black" />
@@ -87,7 +132,8 @@ const GEAR_ITEMS = [
     name: "Football Helmet", 
     desc: "Protective sports helmet for your avatar", 
     cost: 100, 
-    bgColor: "bg-red-100/90 text-neutral-900 border-red-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-red-100/90 border-red-300",
     type: "helmet",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
@@ -98,7 +144,6 @@ const GEAR_ITEMS = [
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
-        {/* Curved Helmet Dome & Visor */}
         <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-22 h-16 bg-red-600 rounded-t-full border-2 border-red-900 z-10 pointer-events-none flex flex-col items-center justify-between p-1 drop-shadow-lg overflow-hidden">
           <div className="w-18 h-1 bg-white rounded-full mt-1 opacity-80" />
           <div className="w-20 h-5 bg-neutral-900/90 rounded-b-lg border-t-2 border-red-900 flex justify-around items-center px-1">
@@ -115,7 +160,8 @@ const GEAR_ITEMS = [
     name: "Party Hat", 
     desc: "Festive party cone hat with pom pom", 
     cost: 50, 
-    bgColor: "bg-amber-100/90 text-neutral-900 border-amber-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-amber-100/90 border-amber-300",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
@@ -126,7 +172,6 @@ const GEAR_ITEMS = [
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
-        {/* Soft Cone Party Hat */}
         <div className="absolute -top-7 left-1/2 -translate-x-1/2 z-10 pointer-events-none drop-shadow-md flex flex-col items-center">
           <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm" />
           <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[38px] border-b-amber-500" />
@@ -139,7 +184,8 @@ const GEAR_ITEMS = [
     name: "Golden Crown", 
     desc: "Royal 24k gold scholar crown", 
     cost: 150, 
-    bgColor: "bg-[#fef9c3]/90 text-neutral-900 border-yellow-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#fef9c3]/90 border-yellow-300",
     type: "crown",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
@@ -150,7 +196,6 @@ const GEAR_ITEMS = [
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
-        {/* Crown with Curved Jewels */}
         <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-7 bg-amber-400 border-2 border-yellow-600 rounded-t-md z-10 pointer-events-none drop-shadow-md flex justify-between items-end px-1">
           <div className="w-3 h-3 rounded-full bg-rose-500 border border-yellow-700 -mt-2" />
           <div className="w-3 h-3 rounded-full bg-cyan-500 border border-yellow-700 -mt-3" />
@@ -164,11 +209,11 @@ const GEAR_ITEMS = [
     name: "Imperial Gold Aura", 
     desc: "Golden glowing aura ring around your avatar", 
     cost: 150, 
-    bgColor: "bg-yellow-100/90 text-neutral-900 border-yellow-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-yellow-100/90 border-yellow-300",
     type: "frame",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-        {/* Soft Rounded Aura Ring */}
         <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 blur-sm opacity-80 animate-pulse" />
         <div className="absolute -inset-1.5 rounded-full border-4 border-amber-400 z-10" />
         {userPhoto ? (
@@ -186,11 +231,11 @@ const GEAR_ITEMS = [
     name: "Cyber Cyan Aura", 
     desc: "High-tech energetic neon cyan glow ring", 
     cost: 250, 
-    bgColor: "bg-cyan-100/90 text-neutral-900 border-cyan-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-cyan-100/90 border-cyan-300",
     type: "frame",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-        {/* Soft Cyan Aura Ring */}
         <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 blur-sm opacity-80 animate-pulse" />
         <div className="absolute -inset-1.5 rounded-full border-4 border-cyan-400 z-10" />
         {userPhoto ? (
@@ -208,14 +253,14 @@ const GEAR_ITEMS = [
     name: "Phoenix Fire Gradient", 
     desc: "Fiery red & orange leaderboard name glow", 
     cost: 100, 
-    bgColor: "bg-orange-100/90 text-neutral-900 border-orange-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-orange-100/90 border-orange-300",
     type: "gradient",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="flex flex-col items-center space-y-2">
-        <span className="font-manrope font-extrabold text-base bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+      <div className="flex flex-col items-center justify-center h-full w-full">
+        <span className="font-manrope font-extrabold text-lg bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 bg-clip-text text-transparent drop-shadow-md text-center">
           {userName || "Scholar"}
         </span>
-        <span className="text-[10px] font-mono text-neutral-500">Preview Name Text</span>
       </div>
     )
   },
@@ -224,14 +269,14 @@ const GEAR_ITEMS = [
     name: "Holographic Gradient", 
     desc: "Multi-chromatic rainbow holographic text", 
     cost: 500, 
-    bgColor: "bg-purple-100/90 text-neutral-900 border-purple-300", 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-purple-100/90 border-purple-300",
     type: "gradient",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="flex flex-col items-center space-y-2">
-        <span className="font-manrope font-extrabold text-base bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
+      <div className="flex flex-col items-center justify-center h-full w-full">
+        <span className="font-manrope font-extrabold text-lg bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent drop-shadow-md text-center">
           {userName || "Scholar"}
         </span>
-        <span className="text-[10px] font-mono text-neutral-500">Preview Name Text</span>
       </div>
     )
   },
@@ -256,11 +301,7 @@ export default function ShopPage() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [powerupStatusMsg, setPowerupStatusMsg] = useState<string | null>(null);
 
-  // Power-up Inventory Counts
-  const [longPauseCount, setLongPauseCount] = useState<number>(4);
-  const [streakRepairCount, setStreakRepairCount] = useState<number>(1);
-  
-  // Slot Machine State with Pull Handle Animation
+  // Slot Machine State with Mechanical Lever Animation
   const [betAmount, setBetAmount] = useState<number>(10);
   const [spinning, setSpinning] = useState(false);
   const [handlePulled, setHandlePulled] = useState(false);
@@ -284,34 +325,13 @@ export default function ShopPage() {
     }
   };
 
-  // Streak Power-up Handlers
-  const handleUseStreakFreeze = () => {
-    if (longPauseCount <= 0) {
-      alert("No Streak Freeze charges remaining!");
-      return;
-    }
-    setLongPauseCount(prev => Math.max(0, prev - 1));
-    setPowerupStatusMsg("Streak Freeze Activated! Your study streak is paused & protected for 30 days.");
-    setTimeout(() => setPowerupStatusMsg(null), 4000);
-  };
-
-  const handleUseStreakRepair = async () => {
-    if (streakRepairCount <= 0) {
-      alert("No Streak Repair charges remaining!");
-      return;
-    }
-    setStreakRepairCount(prev => Math.max(0, prev - 1));
-    setPowerupStatusMsg("Streak Repaired! Your missed study streak day has been restored!");
-    setTimeout(() => setPowerupStatusMsg(null), 4000);
-  };
-
   // Slot Machine Handle Pull & Spin
   const handleSpinSlots = async () => {
     if (betAmount <= 0 || betAmount > credits || spinning) return;
     
     // Animate handle pull down
     setHandlePulled(true);
-    setTimeout(() => setHandlePulled(false), 400);
+    setTimeout(() => setHandlePulled(false), 450);
 
     const success = await spendCredits?.(betAmount);
     if (!success) return;
@@ -568,7 +588,7 @@ export default function ShopPage() {
             </div>
             <div>
               <h1 className="font-instrument text-2xl font-bold tracking-tight text-white">Store</h1>
-              <p className="text-xs text-white/40 font-manrope">Redeem coins for exclusive gear, hats & cosmetics</p>
+              <p className="text-xs text-white/40 font-manrope">Redeem coins for exclusive gear, power ups & cosmetics</p>
             </div>
           </div>
 
@@ -579,13 +599,13 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner using SHOPbanner.png with shifted text to the right */}
+          {/* Top Banner using SHOPbanner.png with text positioned cleanly in the left blank space */}
           <div 
             className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            {/* Shifted text container to right so it doesn't cover shopping bag graphics */}
-            <div className="relative z-10 max-w-lg ml-auto sm:mr-8 space-y-3.5 text-left">
+            {/* Positioned text container on the left clear space */}
+            <div className="relative z-10 max-w-sm sm:max-w-md mr-auto space-y-3.5 text-left pl-2 sm:pl-4">
               <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
@@ -610,60 +630,7 @@ export default function ShopPage() {
             </motion.div>
           )}
 
-          {/* "My Items" Row */}
-          <section className="space-y-4">
-            <h3 className="font-manrope text-xl font-bold text-white">My Items</h3>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Streak Freeze */}
-              <div className="bg-[#12141e] border border-white/10 rounded-2xl p-5 flex items-center justify-between space-x-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0">
-                    <PauseCircle className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-white font-manrope">Streak Freeze</h4>
-                    <p className="text-xs text-white/50 mt-0.5 max-w-xs">Pause your study streak for up to 30 days without losing your progress.</p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-2 shrink-0">
-                  <span className="text-xs font-mono font-bold text-white/50">{longPauseCount}/4</span>
-                  <button 
-                    onClick={handleUseStreakFreeze}
-                    disabled={longPauseCount <= 0}
-                    className="px-3 py-1.5 rounded-full bg-rose-500 hover:bg-rose-600 disabled:bg-white/5 disabled:text-white/30 text-white font-bold text-xs transition-all cursor-pointer"
-                  >
-                    Use Freeze
-                  </button>
-                </div>
-              </div>
-
-              {/* Streak Repair */}
-              <div className="bg-[#12141e] border border-white/10 rounded-2xl p-5 flex items-center justify-between space-x-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
-                    <Wrench className="w-8 h-8" />
-                  </div>
-                  <div>
-                    <h4 className="font-bold text-sm text-white font-manrope">Streak Repair</h4>
-                    <p className="text-xs text-white/50 mt-0.5 max-w-xs">Instantly repair and restore a missed study streak day.</p>
-                  </div>
-                </div>
-                <div className="flex flex-col items-end gap-2 shrink-0">
-                  <span className="text-xs font-mono font-bold text-white/50">{streakRepairCount}/1</span>
-                  <button 
-                    onClick={handleUseStreakRepair}
-                    disabled={streakRepairCount <= 0}
-                    className="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 disabled:bg-white/5 disabled:text-white/30 text-black font-bold text-xs transition-all cursor-pointer"
-                  >
-                    Repair Day
-                  </button>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Store Items Grid with Pastel Card Backgrounds & Visual Renderings */}
+          {/* Store Items Grid with Dark Card Outer Frame & Light Inner Preview Rectangle */}
           <section className="space-y-6 pt-4">
             <h3 className="font-manrope text-xl font-bold text-white">Store Items</h3>
 
@@ -675,35 +642,32 @@ export default function ShopPage() {
                 return (
                   <div 
                     key={item.id}
-                    className={cn(
-                      "relative rounded-3xl border p-6 flex flex-col justify-between space-y-5 transition-all group shadow-lg",
-                      item.bgColor
-                    )}
+                    className="relative rounded-3xl bg-[#12141e] border border-white/10 p-6 flex flex-col justify-between space-y-5 transition-all group shadow-xl hover:border-white/20"
                   >
-                    {/* Visual Card Display Box */}
-                    <div className="w-full h-36 rounded-2xl bg-white/80 border border-black/10 flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                    {/* Visual Card Display Box (Light Inner Pastel Rectangle) */}
+                    <div className={cn("w-full h-36 rounded-2xl border flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform p-3", item.innerBg)}>
                       {item.renderAccessory(currentUser?.photoURL || undefined, userName)}
                     </div>
 
                     {/* Title & Simple Description */}
                     <div>
                       <div className="flex items-center justify-between">
-                        <h4 className="font-extrabold text-sm text-neutral-900 font-manrope">{item.name}</h4>
-                        <span className="text-[10px] font-mono font-bold text-neutral-500">{isOwned ? "1/1" : "0/1"}</span>
+                        <h4 className="font-extrabold text-sm text-white font-manrope">{item.name}</h4>
+                        <span className="text-[10px] font-mono font-bold text-white/40">{isOwned ? "1/1" : "0/1"}</span>
                       </div>
-                      <p className="text-xs text-neutral-600 font-medium mt-1">{item.desc}</p>
+                      <p className="text-xs text-white/50 font-medium mt-1">{item.desc}</p>
                     </div>
 
                     {/* Action Button */}
-                    <div className="pt-2 border-t border-black/10">
+                    <div className="pt-2 border-t border-white/10">
                       {isOwned ? (
                         <button
                           onClick={() => equipItem?.(item.type as any, isEquipped ? "" : item.id)}
                           className={cn(
                             "w-full py-2.5 rounded-full font-bold text-xs transition-all cursor-pointer shadow-md",
                             isEquipped 
-                              ? "bg-neutral-900 text-white font-extrabold" 
-                              : "bg-neutral-800/20 hover:bg-neutral-800/30 text-neutral-900"
+                              ? "bg-amber-400 text-black font-extrabold" 
+                              : "bg-white/10 hover:bg-white/20 text-white"
                           )}
                         >
                           {isEquipped ? "Equipped ✓" : "Equip Item"}
@@ -716,14 +680,16 @@ export default function ShopPage() {
                           }}
                           disabled={credits < item.cost}
                           className={cn(
-                            "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-md",
+                            "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2 cursor-pointer shadow-md",
                             credits >= item.cost 
-                              ? "bg-neutral-900 hover:bg-neutral-800 text-white font-extrabold" 
-                              : "bg-neutral-300 text-neutral-500 cursor-not-allowed border border-neutral-300"
+                              ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold" 
+                              : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                           )}
                         >
-                          <img src="/images/coin-zoomed.png" alt="Coin" className="w-5 h-5 object-contain inline" />
-                          <span>{item.cost}</span>
+                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
+                            <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain transform scale-125" />
+                          </div>
+                          <span className="text-sm">{item.cost}</span>
                         </button>
                       )}
                     </div>
@@ -732,29 +698,36 @@ export default function ShopPage() {
               })}
             </div>
 
-            {/* HIGH QUALITY CASINO SLOT MACHINE WITH PULL HANDLE */}
-            <div className="pt-8">
-              <div className="bg-gradient-to-b from-[#181a28] to-[#10121d] border-2 border-amber-500/40 rounded-[36px] p-8 sm:p-10 shadow-2xl flex flex-col items-center space-y-8 text-center max-w-2xl mx-auto relative overflow-hidden">
+            {/* REALISTIC CASINO SLOT MACHINE UI WITH SHINY CHROME FRAME & PULL LEVER */}
+            <div className="pt-10">
+              <div className="bg-gradient-to-b from-[#1c1d2e] via-[#121320] to-[#0a0b12] border-4 border-amber-500/50 rounded-[42px] p-8 sm:p-12 shadow-[0_0_50px_rgba(245,158,11,0.2)] flex flex-col items-center space-y-8 text-center max-w-2xl mx-auto relative">
                 
-                <div className="space-y-1">
-                  <h3 className="font-instrument text-3xl sm:text-4xl font-bold text-white tracking-tight">Vegas Coin Slot Machine</h3>
-                  <p className="text-xs text-amber-200/60 font-manrope">Pull the lever to spin reels and multiply your coin stash!</p>
+                {/* Top Casino Marquee Box */}
+                <div className="w-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 p-1 rounded-2xl shadow-xl">
+                  <div className="bg-[#0e0f18] py-3 px-6 rounded-xl border border-amber-400/40">
+                    <h3 className="font-instrument text-3xl sm:text-4xl font-extrabold text-amber-400 tracking-wider uppercase drop-shadow-md">
+                      🎰 VEGAS SLOTS 🎰
+                    </h3>
+                    <p className="text-[11px] font-mono font-bold text-amber-200/70 tracking-widest uppercase mt-0.5">
+                      PULL LEVER TO SPIN & WIN COINS
+                    </p>
+                  </div>
                 </div>
 
-                {/* Slot Machine Main Frame with Pull Handle on the Right */}
-                <div className="w-full flex items-center justify-center space-x-6 relative">
+                {/* Slot Machine Main Body with Pull Lever on the Right */}
+                <div className="w-full flex items-center justify-center space-x-6 relative py-4">
                   
-                  {/* Reels Box */}
-                  <div className="flex-1 bg-[#0a0b12] border-4 border-amber-500/60 rounded-3xl p-6 flex items-center justify-between shadow-2xl relative">
-                    <div className="absolute inset-0 rounded-3xl border-2 border-yellow-300/20 pointer-events-none" />
+                  {/* Chrome Reels Display Housing */}
+                  <div className="flex-1 bg-[#05060b] border-4 border-[#333852] rounded-3xl p-6 flex items-center justify-between shadow-[inset_0_0_20px_rgba(0,0,0,0.9)] relative overflow-hidden">
+                    <div className="absolute inset-0 rounded-2xl border-2 border-amber-400/30 pointer-events-none z-20" />
                     {reels.map((item, idx) => (
                       <motion.div 
                         key={idx}
-                        animate={spinning ? { y: [-8, 8, -8] } : { y: 0 }}
+                        animate={spinning ? { y: [-12, 12, -12] } : { y: 0 }}
                         transition={{ repeat: Infinity, duration: 0.08 }}
-                        className="w-24 sm:w-28 h-36 rounded-2xl bg-gradient-to-b from-[#1b1c2b] to-[#131422] border-2 border-white/10 flex flex-col items-center justify-center shadow-2xl select-none space-y-1"
+                        className="w-24 sm:w-28 h-36 rounded-2xl bg-gradient-to-b from-[#181926] via-[#10111c] to-[#0c0d17] border-2 border-amber-500/30 flex flex-col items-center justify-center shadow-2xl select-none space-y-2 relative z-10"
                       >
-                        <span className="text-4xl sm:text-5xl drop-shadow-lg">{item.symbol}</span>
+                        <span className="text-4xl sm:text-5xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">{item.symbol}</span>
                         <span className={cn("text-[10px] font-extrabold font-mono uppercase tracking-wider", item.color)}>
                           {item.name}
                         </span>
@@ -762,31 +735,31 @@ export default function ShopPage() {
                     ))}
                   </div>
 
-                  {/* Animated Slot Machine Pull Lever/Handle */}
+                  {/* Mechanical Pull Lever Handle */}
                   <div 
                     onClick={handleSpinSlots}
-                    className="flex flex-col items-center cursor-pointer group"
+                    className="flex flex-col items-center cursor-pointer group select-none"
                     title="Pull Lever to Spin!"
                   >
-                    {/* Top Knob */}
+                    {/* Red Sphere Ball Knob */}
                     <motion.div 
-                      animate={handlePulled ? { y: 45 } : { y: 0 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                      className="w-8 h-8 rounded-full bg-red-600 border-2 border-red-800 shadow-xl group-hover:scale-110 transition-transform flex items-center justify-center"
+                      animate={handlePulled ? { y: 55 } : { y: 0 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                      className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-red-800 border-2 border-red-900 shadow-[0_0_15px_rgba(239,68,68,0.6)] group-hover:scale-110 transition-transform flex items-center justify-center z-30"
                     >
-                      <div className="w-2.5 h-2.5 rounded-full bg-white/40" />
+                      <div className="w-3 h-3 rounded-full bg-white/50" />
                     </motion.div>
 
-                    {/* Mechanical Rod */}
+                    {/* Chrome Rod Shaft */}
                     <motion.div 
-                      animate={handlePulled ? { height: 20 } : { height: 60 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
-                      className="w-3 bg-gradient-to-b from-neutral-400 via-neutral-200 to-neutral-500 rounded-full border border-neutral-600 shadow-inner"
+                      animate={handlePulled ? { height: 18 } : { height: 70 }}
+                      transition={{ type: "spring", stiffness: 350, damping: 15 }}
+                      className="w-4 bg-gradient-to-b from-neutral-300 via-neutral-100 to-neutral-400 rounded-full border border-neutral-600 shadow-inner z-20"
                     />
 
-                    {/* Lever Base Socket */}
-                    <div className="w-10 h-10 rounded-xl bg-neutral-800 border-2 border-amber-500/50 flex items-center justify-center shadow-lg">
-                      <div className="w-4 h-4 rounded-full bg-black border border-neutral-600" />
+                    {/* Lever Socket Mount */}
+                    <div className="w-12 h-12 rounded-2xl bg-neutral-900 border-2 border-amber-500/60 flex items-center justify-center shadow-2xl z-10">
+                      <div className="w-5 h-5 rounded-full bg-neutral-950 border border-neutral-700 shadow-inner" />
                     </div>
                   </div>
                 </div>
@@ -797,7 +770,7 @@ export default function ShopPage() {
                     initial={{ scale: 0.95, opacity: 0 }} 
                     animate={{ scale: 1, opacity: 1 }}
                     className={cn(
-                      "w-full p-4 rounded-2xl text-center text-xs font-bold font-manrope border shadow-xl",
+                      "w-full p-4 rounded-2xl text-center text-xs font-bold font-manrope border shadow-2xl",
                       gambleResult.won 
                         ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-300" 
                         : "bg-red-500/10 border-red-500/40 text-red-300"
@@ -844,7 +817,7 @@ export default function ShopPage() {
                 </button>
 
                 {/* Multiplier Table */}
-                <div className="w-full pt-4 border-t border-white/10 flex justify-around text-xs font-mono font-bold text-amber-300/70">
+                <div className="w-full pt-4 border-t border-white/10 flex justify-around text-xs font-mono font-bold text-amber-300/80">
                   <span>🎰🎰🎰 10x</span>
                   <span>💎💎💎 7x</span>
                   <span>👑👑👑 5x</span>
