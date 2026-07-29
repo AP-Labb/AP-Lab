@@ -334,8 +334,8 @@ export default function MeshDriftShader() {
     // Packed Uniform Values matching exact specification
     // u_shape = vec4(1.90, 0.10, 0.47, 0.04) -> scale, intensity, paramA, warp
     gl.uniform4f(uShapeLoc, 1.90, 0.10, 0.47, 0.04);
-    // u_surface = vec4(1.54, 0.65, 0.00, 1.00) -> detail, contrast (5/100 -> 0.65), brightness (50/100), saturation (50/100)
-    gl.uniform4f(uSurfaceLoc, 1.54, 0.65, 0.00, 1.00);
+    // u_surface = vec4(1.54, 0.65, 0.15, 1.00) -> detail, contrast, brightness, saturation
+    gl.uniform4f(uSurfaceLoc, 1.54, 0.65, 0.15, 1.00);
     // u_finish = vec4(0.00, 0.21, 0.002, 0.10) -> hue (0), vignette (21/100), blur, grain (29/100)
     gl.uniform4f(uFinishLoc, 0.00, 0.21, 0.002, 0.10);
     // u_transform = vec4(4012.0, 5.65, 0.12, 0.0) -> seed, rotation, drift, OKLab toggle
@@ -395,7 +395,7 @@ export default function MeshDriftShader() {
   return (
     <canvas
       ref={canvasRef}
-      className="absolute inset-0 w-full h-full pointer-events-none opacity-20 z-0"
+      className="absolute inset-0 w-full h-full pointer-events-none opacity-75 z-0"
     />
   );
 }

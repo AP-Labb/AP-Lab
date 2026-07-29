@@ -55,20 +55,30 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Gear Items with Realistic Visual Avatar Previews & Light Pastel Card Backgrounds
+// Custom Shop Gear Items
 const GEAR_ITEMS = [
   { 
     id: "gear-sunglasses", 
     name: "Sunglasses", 
     desc: "Glasses for the sun", 
     cost: 35, 
-    bgColor: "bg-emerald-100/90 text-neutral-900 border-emerald-200", 
+    bgColor: "bg-emerald-100/90 text-neutral-900 border-emerald-300", 
     type: "sunglasses",
-    renderAccessory: () => (
-      <div className="absolute top-7 left-1/2 -translate-x-1/2 w-14 flex items-center justify-between z-10 pointer-events-none drop-shadow-md">
-        <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
-        <div className="w-2 h-0.5 bg-black" />
-        <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900 overflow-hidden">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-cyan-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        {/* Sunglasses Overlay */}
+        <div className="absolute top-6 left-1/2 -translate-x-1/2 w-14 flex items-center justify-between z-10 pointer-events-none drop-shadow-md">
+          <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
+          <div className="w-2 h-0.5 bg-black" />
+          <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
+        </div>
       </div>
     )
   },
@@ -77,15 +87,25 @@ const GEAR_ITEMS = [
     name: "Football Helmet", 
     desc: "Protective sports helmet for your avatar", 
     cost: 100, 
-    bgColor: "bg-red-100/90 text-neutral-900 border-red-200", 
+    bgColor: "bg-red-100/90 text-neutral-900 border-red-300", 
     type: "helmet",
-    renderAccessory: () => (
-      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-20 h-14 bg-red-600 rounded-t-full border-2 border-red-800 z-10 pointer-events-none flex flex-col items-center justify-between p-1 drop-shadow-md">
-        <div className="w-16 h-1 bg-[#1e293b] rounded-full mt-1" />
-        <div className="w-18 h-4 bg-[#1e293b]/90 rounded-b-md border-t border-red-900 flex justify-around items-center px-1">
-          <div className="w-1 h-3 bg-white" />
-          <div className="w-1 h-3 bg-white" />
-          <div className="w-1 h-3 bg-white" />
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-red-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        {/* Curved Helmet Dome & Visor */}
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-22 h-16 bg-red-600 rounded-t-full border-2 border-red-900 z-10 pointer-events-none flex flex-col items-center justify-between p-1 drop-shadow-lg overflow-hidden">
+          <div className="w-18 h-1 bg-white rounded-full mt-1 opacity-80" />
+          <div className="w-20 h-5 bg-neutral-900/90 rounded-b-lg border-t-2 border-red-900 flex justify-around items-center px-1">
+            <div className="w-1 h-3 bg-neutral-400" />
+            <div className="w-1 h-3 bg-neutral-400" />
+            <div className="w-1 h-3 bg-neutral-400" />
+          </div>
         </div>
       </div>
     )
@@ -95,11 +115,22 @@ const GEAR_ITEMS = [
     name: "Party Hat", 
     desc: "Festive party cone hat with pom pom", 
     cost: 50, 
-    bgColor: "bg-amber-100/90 text-neutral-900 border-amber-200", 
+    bgColor: "bg-amber-100/90 text-neutral-900 border-amber-300", 
     type: "hat",
-    renderAccessory: () => (
-      <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[16px] border-l-transparent border-r-[16px] border-r-transparent border-b-[36px] border-b-amber-500 z-10 pointer-events-none drop-shadow-md flex items-center justify-center">
-        <div className="absolute -top-1.5 w-3 h-3 rounded-full bg-rose-500" />
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        {/* Soft Cone Party Hat */}
+        <div className="absolute -top-7 left-1/2 -translate-x-1/2 z-10 pointer-events-none drop-shadow-md flex flex-col items-center">
+          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm" />
+          <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[38px] border-b-amber-500" />
+        </div>
       </div>
     )
   },
@@ -108,13 +139,23 @@ const GEAR_ITEMS = [
     name: "Golden Crown", 
     desc: "Royal 24k gold scholar crown", 
     cost: 150, 
-    bgColor: "bg-[#fef9c3]/90 text-neutral-900 border-yellow-200", 
+    bgColor: "bg-[#fef9c3]/90 text-neutral-900 border-yellow-300", 
     type: "crown",
-    renderAccessory: () => (
-      <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-7 bg-amber-400 border-2 border-yellow-600 rounded-t-sm z-10 pointer-events-none drop-shadow-md flex justify-between items-end px-1">
-        <div className="w-2 h-4 bg-amber-400 rotate-45 border-t border-l border-yellow-600 -mt-2" />
-        <div className="w-2 h-5 bg-amber-400 border-t border-yellow-600 -mt-3" />
-        <div className="w-2 h-4 bg-amber-400 -rotate-45 border-t border-r border-yellow-600 -mt-2" />
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        {/* Crown with Curved Jewels */}
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-7 bg-amber-400 border-2 border-yellow-600 rounded-t-md z-10 pointer-events-none drop-shadow-md flex justify-between items-end px-1">
+          <div className="w-3 h-3 rounded-full bg-rose-500 border border-yellow-700 -mt-2" />
+          <div className="w-3 h-3 rounded-full bg-cyan-500 border border-yellow-700 -mt-3" />
+          <div className="w-3 h-3 rounded-full bg-emerald-500 border border-yellow-700 -mt-2" />
+        </div>
       </div>
     )
   },
@@ -125,8 +166,19 @@ const GEAR_ITEMS = [
     cost: 150, 
     bgColor: "bg-yellow-100/90 text-neutral-900 border-yellow-300", 
     type: "frame",
-    renderAccessory: () => (
-      <div className="absolute inset-0 rounded-full border-4 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.8)] z-10 pointer-events-none" />
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
+        {/* Soft Rounded Aura Ring */}
+        <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 blur-sm opacity-80 animate-pulse" />
+        <div className="absolute -inset-1.5 rounded-full border-4 border-amber-400 z-10" />
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full relative z-20" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-amber-100 flex items-center justify-center font-bold text-xl text-neutral-900 relative z-20">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+      </div>
     )
   },
   { 
@@ -136,8 +188,19 @@ const GEAR_ITEMS = [
     cost: 250, 
     bgColor: "bg-cyan-100/90 text-neutral-900 border-cyan-300", 
     type: "frame",
-    renderAccessory: () => (
-      <div className="absolute inset-0 rounded-full border-4 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)] z-10 pointer-events-none" />
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
+        {/* Soft Cyan Aura Ring */}
+        <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 blur-sm opacity-80 animate-pulse" />
+        <div className="absolute -inset-1.5 rounded-full border-4 border-cyan-400 z-10" />
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full relative z-20" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-cyan-100 flex items-center justify-center font-bold text-xl text-neutral-900 relative z-20">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+      </div>
     )
   },
   { 
@@ -147,7 +210,14 @@ const GEAR_ITEMS = [
     cost: 100, 
     bgColor: "bg-orange-100/90 text-neutral-900 border-orange-300", 
     type: "gradient",
-    renderAccessory: () => null
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="flex flex-col items-center space-y-2">
+        <span className="font-manrope font-extrabold text-base bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 bg-clip-text text-transparent drop-shadow-sm">
+          {userName || "Scholar"}
+        </span>
+        <span className="text-[10px] font-mono text-neutral-500">Preview Name Text</span>
+      </div>
+    )
   },
   { 
     id: "grad-holographic", 
@@ -156,7 +226,14 @@ const GEAR_ITEMS = [
     cost: 500, 
     bgColor: "bg-purple-100/90 text-neutral-900 border-purple-300", 
     type: "gradient",
-    renderAccessory: () => null
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="flex flex-col items-center space-y-2">
+        <span className="font-manrope font-extrabold text-base bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent drop-shadow-sm">
+          {userName || "Scholar"}
+        </span>
+        <span className="text-[10px] font-mono text-neutral-500">Preview Name Text</span>
+      </div>
+    )
   },
 ];
 
@@ -182,10 +259,11 @@ export default function ShopPage() {
   // Power-up Inventory Counts
   const [longPauseCount, setLongPauseCount] = useState<number>(4);
   const [streakRepairCount, setStreakRepairCount] = useState<number>(1);
-
-  // Slot Machine State
+  
+  // Slot Machine State with Pull Handle Animation
   const [betAmount, setBetAmount] = useState<number>(10);
   const [spinning, setSpinning] = useState(false);
+  const [handlePulled, setHandlePulled] = useState(false);
   const [reels, setReels] = useState([SLOT_SYMBOLS[0], SLOT_SYMBOLS[1], SLOT_SYMBOLS[2]]);
   const [gambleResult, setGambleResult] = useState<{ message: string; won: boolean; amount: number } | null>(null);
 
@@ -195,6 +273,7 @@ export default function ShopPage() {
   const inventory = progress?.inventory || [];
   const activeFrame = progress?.activeAvatarFrame || "";
   const activeGrad = progress?.activeNameGradient || "";
+  const userName = progress?.displayName || currentUser?.displayName || "Scholar";
 
   const handleSignOut = async () => {
     try {
@@ -226,10 +305,14 @@ export default function ShopPage() {
     setTimeout(() => setPowerupStatusMsg(null), 4000);
   };
 
-  // Slot Machine Spin Handler
+  // Slot Machine Handle Pull & Spin
   const handleSpinSlots = async () => {
     if (betAmount <= 0 || betAmount > credits || spinning) return;
     
+    // Animate handle pull down
+    setHandlePulled(true);
+    setTimeout(() => setHandlePulled(false), 400);
+
     const success = await spendCredits?.(betAmount);
     if (!success) return;
 
@@ -432,7 +515,7 @@ export default function ShopPage() {
                   />
                 ) : (
                   <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
-                    {(currentUser?.displayName || "A").charAt(0).toUpperCase()}
+                    {(userName).charAt(0).toUpperCase()}
                   </div>
                 )}
               </div>
@@ -447,7 +530,7 @@ export default function ShopPage() {
                     className="flex flex-col items-start text-left overflow-hidden"
                   >
                     <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
-                      {progress?.displayName || currentUser?.displayName || "Scholar"}
+                      {userName}
                     </span>
                     <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
                       Lvl {level} • {xp.toLocaleString()} XP
@@ -496,22 +579,23 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner using SHOPbanner.png */}
+          {/* Top Banner using SHOPbanner.png with shifted text to the right */}
           <div 
-            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-10 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[220px]"
+            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            <div className="relative z-10 max-w-xl space-y-3">
+            {/* Shifted text container to right so it doesn't cover shopping bag graphics */}
+            <div className="relative z-10 max-w-lg ml-auto sm:mr-8 space-y-3.5 text-left">
               <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
-              <p className="text-sm font-medium text-neutral-800 font-manrope">
+              <p className="text-sm font-semibold text-neutral-800 font-manrope">
                 Get power ups, avatars, and customization hats & glasses.
               </p>
-              <div className="pt-2">
+              <div className="pt-1">
                 <button 
                   onClick={() => setShowHowToEarnModal(true)}
-                  className="px-6 py-3 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-lg"
+                  className="px-7 py-3.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-xl"
                 >
                   How to earn
                 </button>
@@ -531,7 +615,7 @@ export default function ShopPage() {
             <h3 className="font-manrope text-xl font-bold text-white">My Items</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Streak Freeze / Long Pause */}
+              {/* Streak Freeze */}
               <div className="bg-[#12141e] border border-white/10 rounded-2xl p-5 flex items-center justify-between space-x-4">
                 <div className="flex items-center space-x-4">
                   <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0">
@@ -597,18 +681,8 @@ export default function ShopPage() {
                     )}
                   >
                     {/* Visual Card Display Box */}
-                    <div className="w-full h-36 rounded-2xl bg-white/70 border border-black/10 flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform">
-                      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md">
-                        {currentUser?.photoURL ? (
-                          <img src={currentUser.photoURL} alt="User Avatar" className="w-full h-full object-cover rounded-full border-2 border-neutral-900" />
-                        ) : (
-                          <div className="w-full h-full rounded-full bg-neutral-900 border-2 border-neutral-800 flex items-center justify-center font-bold text-xl text-white">
-                            {(currentUser?.displayName || "A").charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                        {/* Render Item Accessory directly over avatar */}
-                        {item.renderAccessory()}
-                      </div>
+                    <div className="w-full h-36 rounded-2xl bg-white/80 border border-black/10 flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                      {item.renderAccessory(currentUser?.photoURL || undefined, userName)}
                     </div>
 
                     {/* Title & Simple Description */}
@@ -658,30 +732,63 @@ export default function ShopPage() {
               })}
             </div>
 
-            {/* MINI GAMES / SLOT MACHINE SECTION */}
-            <div className="pt-6">
-              <div className="bg-[#12141e] border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center space-y-7 text-center max-w-xl mx-auto">
+            {/* HIGH QUALITY CASINO SLOT MACHINE WITH PULL HANDLE */}
+            <div className="pt-8">
+              <div className="bg-gradient-to-b from-[#181a28] to-[#10121d] border-2 border-amber-500/40 rounded-[36px] p-8 sm:p-10 shadow-2xl flex flex-col items-center space-y-8 text-center max-w-2xl mx-auto relative overflow-hidden">
                 
                 <div className="space-y-1">
-                  <h3 className="font-instrument text-3xl font-bold text-white">Coin Slot Machine</h3>
-                  <p className="text-xs text-white/40">Spin to match symbols and multiply your coins!</p>
+                  <h3 className="font-instrument text-3xl sm:text-4xl font-bold text-white tracking-tight">Vegas Coin Slot Machine</h3>
+                  <p className="text-xs text-amber-200/60 font-manrope">Pull the lever to spin reels and multiply your coin stash!</p>
                 </div>
 
-                {/* Reels Container */}
-                <div className="w-full bg-[#0a0b10] border border-white/10 rounded-2xl p-6 flex items-center justify-center space-x-4">
-                  {reels.map((item, idx) => (
+                {/* Slot Machine Main Frame with Pull Handle on the Right */}
+                <div className="w-full flex items-center justify-center space-x-6 relative">
+                  
+                  {/* Reels Box */}
+                  <div className="flex-1 bg-[#0a0b12] border-4 border-amber-500/60 rounded-3xl p-6 flex items-center justify-between shadow-2xl relative">
+                    <div className="absolute inset-0 rounded-3xl border-2 border-yellow-300/20 pointer-events-none" />
+                    {reels.map((item, idx) => (
+                      <motion.div 
+                        key={idx}
+                        animate={spinning ? { y: [-8, 8, -8] } : { y: 0 }}
+                        transition={{ repeat: Infinity, duration: 0.08 }}
+                        className="w-24 sm:w-28 h-36 rounded-2xl bg-gradient-to-b from-[#1b1c2b] to-[#131422] border-2 border-white/10 flex flex-col items-center justify-center shadow-2xl select-none space-y-1"
+                      >
+                        <span className="text-4xl sm:text-5xl drop-shadow-lg">{item.symbol}</span>
+                        <span className={cn("text-[10px] font-extrabold font-mono uppercase tracking-wider", item.color)}>
+                          {item.name}
+                        </span>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Animated Slot Machine Pull Lever/Handle */}
+                  <div 
+                    onClick={handleSpinSlots}
+                    className="flex flex-col items-center cursor-pointer group"
+                    title="Pull Lever to Spin!"
+                  >
+                    {/* Top Knob */}
                     <motion.div 
-                      key={idx}
-                      animate={spinning ? { y: [-6, 6, -6] } : { y: 0 }}
-                      transition={{ repeat: Infinity, duration: 0.1 }}
-                      className="w-24 h-32 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center justify-center shadow-inner select-none space-y-1"
+                      animate={handlePulled ? { y: 45 } : { y: 0 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      className="w-8 h-8 rounded-full bg-red-600 border-2 border-red-800 shadow-xl group-hover:scale-110 transition-transform flex items-center justify-center"
                     >
-                      <span className="text-4xl">{item.symbol}</span>
-                      <span className={cn("text-[10px] font-bold font-mono uppercase tracking-wider", item.color)}>
-                        {item.name}
-                      </span>
+                      <div className="w-2.5 h-2.5 rounded-full bg-white/40" />
                     </motion.div>
-                  ))}
+
+                    {/* Mechanical Rod */}
+                    <motion.div 
+                      animate={handlePulled ? { height: 20 } : { height: 60 }}
+                      transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                      className="w-3 bg-gradient-to-b from-neutral-400 via-neutral-200 to-neutral-500 rounded-full border border-neutral-600 shadow-inner"
+                    />
+
+                    {/* Lever Base Socket */}
+                    <div className="w-10 h-10 rounded-xl bg-neutral-800 border-2 border-amber-500/50 flex items-center justify-center shadow-lg">
+                      <div className="w-4 h-4 rounded-full bg-black border border-neutral-600" />
+                    </div>
+                  </div>
                 </div>
 
                 {/* Result Notification */}
@@ -690,10 +797,10 @@ export default function ShopPage() {
                     initial={{ scale: 0.95, opacity: 0 }} 
                     animate={{ scale: 1, opacity: 1 }}
                     className={cn(
-                      "w-full p-3.5 rounded-2xl text-center text-xs font-bold border",
+                      "w-full p-4 rounded-2xl text-center text-xs font-bold font-manrope border shadow-xl",
                       gambleResult.won 
-                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
-                        : "bg-red-500/10 border-red-500/30 text-red-400"
+                        ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-300" 
+                        : "bg-red-500/10 border-red-500/40 text-red-300"
                     )}
                   >
                     {gambleResult.message}
@@ -701,17 +808,17 @@ export default function ShopPage() {
                 )}
 
                 {/* Bet Selector */}
-                <div className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
-                  <span className="text-xs font-mono text-white/50 font-bold">BET AMOUNT</span>
+                <div className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 p-3.5 rounded-2xl">
+                  <span className="text-xs font-mono text-white/60 font-bold tracking-wider">BET COINS</span>
                   <div className="flex items-center space-x-2">
                     {[10, 25, 50, 100].map((amt) => (
                       <button
                         key={amt}
                         onClick={() => setBetAmount(amt)}
                         className={cn(
-                          "px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer",
+                          "px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer",
                           betAmount === amt 
-                            ? "bg-amber-400 text-black shadow-md" 
+                            ? "bg-amber-400 text-black shadow-md font-extrabold" 
                             : "bg-white/5 hover:bg-white/10 text-white/60"
                         )}
                       >
@@ -726,17 +833,18 @@ export default function ShopPage() {
                   onClick={handleSpinSlots}
                   disabled={spinning || betAmount > credits || betAmount <= 0}
                   className={cn(
-                    "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-lg",
+                    "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-xl",
                     spinning || betAmount > credits 
                       ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5" 
                       : "bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black"
                   )}
                 >
                   <RotateCw className={`w-4 h-4 ${spinning ? "animate-spin" : ""}`} />
-                  <span>{spinning ? "Spinning..." : `SPIN SLOTS (${betAmount} COINS)`}</span>
+                  <span>{spinning ? "Spinning..." : `PULL LEVER TO SPIN (${betAmount} COINS)`}</span>
                 </button>
 
-                <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[10px] font-mono text-white/40">
+                {/* Multiplier Table */}
+                <div className="w-full pt-4 border-t border-white/10 flex justify-around text-xs font-mono font-bold text-amber-300/70">
                   <span>🎰🎰🎰 10x</span>
                   <span>💎💎💎 7x</span>
                   <span>👑👑👑 5x</span>
