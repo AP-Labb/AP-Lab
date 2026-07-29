@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Flame, X, Trophy, Award, Sparkles, CheckCircle2 } from "lucide-react";
+import { Flame, X, Award, Sparkles, CheckCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/ProgressContext";
 import { getXpThresholdForLevel } from "@/lib/xpProgression";
@@ -46,6 +46,22 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
   const daysOfWeek = ["S", "M", "T", "W", "T", "F", "S"];
   const currentDayIndex = new Date().getDay(); // 0 is Sunday
 
+  // Streak last active calculation for realistic hours remaining
+  const lastActiveStr = progress?.streakLastActive || "";
+  let hoursRemaining = 17;
+  let minsRemaining = 38;
+  if (lastActiveStr) {
+    const lastActiveDate = new Date(lastActiveStr);
+    const now = new Date();
+    const diffMs = now.getTime() - lastActiveDate.getTime();
+    const hoursPassed = diffMs / (1000 * 60 * 60);
+    if (hoursPassed < 24) {
+      const remainingTotalMins = Math.max(0, Math.floor((24 - hoursPassed) * 60));
+      hoursRemaining = Math.floor(remainingTotalMins / 60);
+      minsRemaining = remainingTotalMins % 60;
+    }
+  }
+
   return (
     <>
       <div className="flex items-center space-x-2.5 font-manrope select-none relative z-50">
@@ -58,18 +74,18 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
         >
           <div 
             className={cn(
-              "flex items-center space-x-2.5 px-4 py-2 rounded-full transition-all cursor-pointer shadow-lg group border",
+              "h-10 flex items-center space-x-2.5 px-4 rounded-full transition-all cursor-pointer border",
               hasStreak 
-                ? "bg-[#2b170e] hover:bg-[#381e11] border-orange-500/50" 
-                : "bg-[#14151f] hover:bg-[#1a1c2a] border-white/10"
+                ? "bg-[#2b170e] hover:bg-[#381e11] border-orange-500/40 text-orange-400" 
+                : "bg-[#14151f] hover:bg-[#1a1c2a] border-white/10 text-white/60"
             )}
             title={`${streak} Day Study Streak`}
           >
             <Flame className={cn(
-              "w-6 h-6 group-hover:scale-110 transition-transform",
-              hasStreak ? "text-orange-400 fill-orange-400 drop-shadow-[0_0_8px_rgba(251,146,60,0.8)]" : "text-white/40 fill-white/40"
+              "w-5 h-5 transition-transform",
+              hasStreak ? "text-orange-400 fill-orange-400" : "text-white/40 fill-white/40"
             )} />
-            <span className={cn("font-manrope font-extrabold text-base", hasStreak ? "text-orange-400" : "text-white/60")}>
+            <span className="font-manrope font-extrabold text-sm leading-none">
               {streak}
             </span>
           </div>
@@ -83,7 +99,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
                 className={cn(
-                  "absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 rounded-[28px] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-[9999] text-center text-white",
+                  "absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 rounded-[28px] p-6 shadow-2xl z-[9999] text-center text-white",
                   hasStreak ? "border-orange-500/50" : "border-white/15"
                 )}
               >
@@ -94,7 +110,9 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 </div>
 
                 <p className="text-xs font-manrope font-medium text-white/60 mb-5">
-                  {hasStreak ? "Great job! Keep up your daily study streak!" : "17h 58m remaining to start your streak!"}
+                  {hasStreak 
+                    ? "Great job! Keep up your daily study streak!" 
+                    : `${hoursRemaining}h ${minsRemaining}m remaining to start your streak!`}
                 </p>
 
                 {/* Weekday Circles Box */}
@@ -109,7 +127,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                           <div className={cn(
                             "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all",
                             isCompleted 
-                              ? "bg-orange-500 text-black shadow-[0_0_10px_rgba(249,115,22,0.6)]" 
+                              ? "bg-orange-500 text-black" 
                               : (isToday ? "border-2 border-dashed border-orange-400 text-orange-400" : "bg-white/5 text-white/20")
                           )}>
                             {isCompleted ? "✓" : ""}
@@ -142,16 +160,16 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
           onMouseLeave={() => setActiveMenu("none")}
         >
           <div 
-            className="flex items-center space-x-2.5 bg-[#1b172e] hover:bg-[#231e3d] border border-purple-500/30 px-4 py-2 rounded-full transition-all cursor-pointer shadow-lg group"
+            className="h-10 flex items-center space-x-2.5 bg-[#1b172e] hover:bg-[#231e3d] border border-purple-500/30 px-4 rounded-full transition-all cursor-pointer border"
           >
-            <div className="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-6 h-6 flex items-center justify-center shrink-0">
               <img 
                 src="/images/xp-shield-zoomed.png" 
                 alt="XP Shield" 
-                className="w-full h-full object-contain group-hover:scale-115 transition-transform drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]" 
+                className="w-full h-full object-contain" 
               />
             </div>
-            <span className="font-manrope font-extrabold text-base text-purple-300">{level}</span>
+            <span className="font-manrope font-extrabold text-sm text-purple-300 leading-none">{level}</span>
           </div>
 
           {/* XP Hover Popup matching uploaded screenshot */}
@@ -162,7 +180,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 border-purple-500/50 rounded-[28px] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-[9999] text-left text-white"
+                className="absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 border-purple-500/50 rounded-[28px] p-6 shadow-2xl z-[9999] text-left text-white"
               >
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-manrope font-bold text-xl text-white">Level {level}</span>
@@ -172,7 +190,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 <div className="relative mb-3">
                   <div className="h-4 w-full bg-[#0a0b12] rounded-full overflow-hidden p-0.5 border border-white/10 relative">
                     <div 
-                      className="h-full bg-purple-500 rounded-full transition-all duration-500 shadow-[0_0_15px_rgba(168,85,247,0.8)]" 
+                      className="h-full bg-purple-500 rounded-full transition-all duration-500" 
                       style={{ width: `${progressPercent}%` }} 
                     />
                   </div>
@@ -214,16 +232,16 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
         >
           <div 
             onClick={() => router.push("/shop")}
-            className="flex items-center space-x-2.5 bg-[#2b2114] hover:bg-[#382b1a] border border-amber-500/30 px-4 py-2 rounded-full transition-all cursor-pointer shadow-lg group"
+            className="h-10 flex items-center space-x-2.5 bg-[#2b2114] hover:bg-[#382b1a] border border-amber-500/30 px-4 rounded-full transition-all cursor-pointer border"
           >
-            <div className="w-8 h-8 flex items-center justify-center shrink-0 overflow-hidden">
+            <div className="w-6 h-6 flex items-center justify-center shrink-0">
               <img 
                 src="/images/coin-zoomed.png" 
                 alt="Coins" 
-                className="w-full h-full object-contain group-hover:rotate-12 transition-transform drop-shadow-[0_0_12px_rgba(245,158,11,0.8)]" 
+                className="w-full h-full object-contain" 
               />
             </div>
-            <span className="font-manrope font-extrabold text-base text-amber-400 tracking-tight">{credits.toLocaleString()}</span>
+            <span className="font-manrope font-extrabold text-sm text-amber-400 tracking-tight leading-none">{credits.toLocaleString()}</span>
           </div>
 
           {/* Coins Hover Popup matching exact uploaded screenshot */}
@@ -234,7 +252,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 border-amber-500/50 rounded-[28px] p-6 shadow-[0_20px_60px_rgba(0,0,0,0.9)] z-[9999] text-left text-white"
+                className="absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 border-amber-500/50 rounded-[28px] p-6 shadow-2xl z-[9999] text-left text-white"
               >
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -247,7 +265,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                     <img 
                       src="/images/coin-zoomed.png" 
                       alt="Coins" 
-                      className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(245,158,11,0.7)]" 
+                      className="w-full h-full object-contain" 
                     />
                   </div>
                 </div>
@@ -284,12 +302,11 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
               exit={{ opacity: 0, scale: 0.95 }}
               className="relative w-full max-w-4xl bg-[#0f1019] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col max-h-[85vh] text-left text-white"
             >
-              {/* Modal Header */}
+              {/* Modal Header without trophy icon */}
               <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-6">
                 <div>
-                  <h3 className="font-instrument text-3xl font-bold text-white flex items-center gap-3">
-                    <Trophy className="w-7 h-7 text-purple-400" />
-                    <span>Academic Badges (Levels 1 - 100)</span>
+                  <h3 className="font-instrument text-3xl font-bold text-white">
+                    Academic Badges (Levels 1 - 100)
                   </h3>
                   <p className="text-xs text-white/50 font-manrope mt-1">
                     Earn XP by mastering AP subjects and solving practice questions to unlock higher tier badges!
@@ -303,27 +320,33 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 </button>
               </div>
 
-              {/* Scrollable Badges Grid */}
+              {/* Scrollable Badges Grid with white outline on current level badge */}
               <div 
                 data-lenis-prevent="true"
                 className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 pr-2"
               >
                 {Array.from({ length: 100 }, (_, i) => i + 1).map((lvl) => {
                   const isUnlocked = level >= lvl;
+                  const isCurrent = level === lvl;
+
                   return (
                     <div
                       key={lvl}
                       className={cn(
-                        "p-4 rounded-2xl border flex flex-col items-center justify-center space-y-2 text-center transition-all",
-                        isUnlocked 
-                          ? "bg-purple-950/20 border-purple-500/40 shadow-[0_0_15px_rgba(168,85,247,0.15)]" 
-                          : "bg-white/[0.02] border-white/5 opacity-40 grayscale"
+                        "p-4 rounded-2xl border flex flex-col items-center justify-center space-y-2 text-center transition-all relative",
+                        isCurrent 
+                          ? "bg-purple-950/40 border-2 border-white ring-4 ring-white/20 shadow-2xl scale-105 z-10" 
+                          : (isUnlocked 
+                              ? "bg-purple-950/20 border-purple-500/40" 
+                              : "bg-white/[0.02] border-white/5 opacity-40 grayscale")
                       )}
                     >
                       <LevelBadge level={lvl} size="md" />
-                      <span className="font-manrope font-bold text-xs text-white block mt-1">Level {lvl}</span>
+                      <span className="font-manrope font-bold text-xs text-white block mt-1">
+                        Level {lvl} {isCurrent && "(Current)"}
+                      </span>
                       <span className="text-[10px] font-mono text-white/40">
-                        {isUnlocked ? "Unlocked ✓" : `Locked`}
+                        {isCurrent ? "Active Badge ✓" : (isUnlocked ? "Unlocked ✓" : "Locked")}
                       </span>
                     </div>
                   );
