@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Paperclip, ArrowUp, RefreshCw, Activity,
   Home, LayoutDashboard, BarChart2, Star, Award, Settings, LogOut,
-  LineChart, Code2, Layers, Cpu, Compass, BookOpen, ChevronDown
+  LineChart, Code2, Layers, Cpu, Compass, BookOpen, ChevronDown, ShoppingBag
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkMath from "remark-math";
@@ -423,6 +423,33 @@ export default function AssistantPage() {
                 </motion.div>
               </Link>
 
+              {/* Shop */}
+              <Link href="/shop" className="w-full">
+                <motion.div
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-amber-400 w-full group cursor-pointer"
+                  whileHover="hover"
+                  initial="rest"
+                >
+                  <motion.div
+                    className="w-5 h-5 shrink-0 flex items-center justify-center text-amber-400"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.2, rotate: 12 },
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre text-amber-400"
+                  >
+                    Shop
+                  </motion.span>
+                </motion.div>
+              </Link>
+
               {/* Settings */}
               <SidebarSettingsButton open={sidebarOpen} />
             </div>
@@ -502,7 +529,7 @@ export default function AssistantPage() {
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
-        className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10] ml-14"
+        className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10] md:pl-16"
       >
         {messages.length === 0 ? (
           /* ── INITIAL LANDING: vertically + horizontally centered ── */
@@ -526,11 +553,11 @@ export default function AssistantPage() {
               className="w-full max-w-2xl flex flex-col items-center"
             >
               {/* Panda peeking from behind card — flex-centered, overlaps card via -mb */}
-              <div className="w-32 h-32 pointer-events-none select-none z-0 -mb-10">
+              <div className="w-44 h-44 pointer-events-none select-none z-0 -mb-14">
                 <img
                   src="/images/panda-ai.png"
                   alt="Peeking Panda"
-                  className="w-full h-full object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.6)]"
+                  className="w-full h-full object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.7)]"
                 />
               </div>
 

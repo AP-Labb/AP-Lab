@@ -20,6 +20,12 @@ interface UserProgress {
   dailyTutorMessagesDate?: string;
   xp?: number;
   level?: number;
+  credits?: number;
+  totalCreditsEarned?: number;
+  earnedCreditIds?: string[];
+  activeAvatarFrame?: string;
+  activeNameGradient?: string;
+  inventory?: string[];
   displayName?: string;
   photoURL?: string;
   email?: string;
@@ -48,6 +54,10 @@ interface ProgressContextType {
   recordMockExamAttempt: (correctCount: number, totalQuestions: number) => Promise<void>;
   claimSocialXp?: (taskName: string, xpAmount: number) => Promise<void>;
   updatePreferences?: (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string }) => Promise<void>;
+  spendCredits?: (amount: number) => Promise<boolean>;
+  addCredits?: (amount: number, reason?: string) => Promise<void>;
+  equipItem?: (itemType: "frame" | "gradient", itemId: string) => Promise<void>;
+  buyItem?: (itemId: string, cost: number, itemType: "frame" | "gradient") => Promise<boolean>;
 }
 
 const defaultProgress: UserProgress = {
@@ -327,13 +337,13 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
   const { currentUser } = useAuth();
   const [progress, setProgress] = useState<UserProgress>(defaultProgress);
   const [loading, setLoading] = useState(true);
-  const [xpToasts, setXpToasts] = useState<{ id: number; amount: number; message: string; type: "question" | "section" }[]>([]);
+  const [xpToasts, setXpToasts] = useState<{ id: number; amount: number; message: string; type: "question" | "section"; creditAmount?: number }[]>([]);
   const [levelUpData, setLevelUpData] = useState<{ oldLevel: number; newLevel: number } | null>(null);
 
-  const triggerXpToast = (amount: number, message: string, type: "question" | "section") => {
-    console.log("AP Lab XP Toast triggered:", { amount, message, type });
+  const triggerXpToast = (amount: number, message: string, type: "question" | "section", creditAmount?: number) => {
+    console.log("AP Lab Toast triggered:", { amount, message, type, creditAmount });
     const id = Date.now() + Math.random();
-    setXpToasts((prev) => [...prev, { id, amount, message, type }]);
+    setXpToasts((prev) => [...prev, { id, amount, message, type, creditAmount }]);
     setTimeout(() => {
       setXpToasts((prev) => prev.filter((t) => t.id !== id));
     }, 3500);
@@ -602,10 +612,19 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       const currentScore = progress.masteryScores[topicId] || 0;
       const newScore = Math.max(currentScore, score);
       const isFirstTime = !progress.completedTopics.includes(topicId);
+      const earnedIds = progress.earnedCreditIds || [];
+      const topicCreditId = `topic-${topicId}`;
+      const canEarnCredits = isFirstTime && !earnedIds.includes(topicCreditId);
 
       const xpEarned = isFirstTime ? 100 : 0;
+      const creditsEarned = canEarnCredits ? 50 : 0;
       const currentXp = progress.xp || 0;
       const newXp = currentXp + xpEarned;
+      const currentCredits = progress.credits || 0;
+      const newCredits = currentCredits + creditsEarned;
+      const newTotalCredits = (progress.totalCreditsEarned || 0) + creditsEarned;
+      const newEarnedIds = canEarnCredits ? [...earnedIds, topicCreditId] : earnedIds;
+
       const oldLevel = progress.level || 1;
       const newLevel = getLevelForXp(newXp);
       const isLevelUp = newLevel > oldLevel;
@@ -621,6 +640,9 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         },
         xp: newXp,
         level: newLevel,
+        credits: newCredits,
+        totalCreditsEarned: newTotalCredits,
+        earnedCreditIds: newEarnedIds,
         lastAccessed: new Date()
       };
 
@@ -634,8 +656,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         15
       );
 
-      if (xpEarned > 0) {
-        triggerXpToast(xpEarned, "Section Completed!", "section");
+      if (xpEarned > 0 || creditsEarned > 0) {
+        triggerXpToast(xpEarned, creditsEarned > 0 ? "Section Completed + 50 Credits!" : "Section Completed!", "section", creditsEarned);
       }
 
       if (isLevelUp) {
@@ -659,6 +681,9 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           masteryScores: updatedProgress.masteryScores,
           xp: updatedProgress.xp,
           level: updatedProgress.level,
+          credits: updatedProgress.credits,
+          totalCreditsEarned: updatedProgress.totalCreditsEarned,
+          earnedCreditIds: updatedProgress.earnedCreditIds,
           lastAccessed: serverTimestamp(),
           streakCount: updatedProgress.streakCount,
           maxStreak: updatedProgress.maxStreak,
@@ -679,12 +704,22 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
 
     try {
       const isCompleted = masteryKey ? progress.completedTopics.includes(masteryKey) : false;
-      const xpEarned = isCorrect ? (isCompleted ? 5 : 10) : 0;
+      const earnedIds = progress.earnedCreditIds || [];
+      const qCreditId = masteryKey ? `q-${masteryKey}` : undefined;
+      const canEarnQCredits = isCorrect && (!qCreditId || !earnedIds.includes(qCreditId));
       
+      const xpEarned = isCorrect ? (isCompleted ? 5 : 10) : 0;
+      const creditsEarned = canEarnQCredits ? 5 : 0;
+
       const updatedAnswered = (progress.totalQuestionsAnswered || 0) + 1;
       const updatedCorrect = (progress.totalQuestionsCorrect || 0) + (isCorrect ? 1 : 0);
       const currentXp = progress.xp || 0;
       const newXp = currentXp + xpEarned;
+      const currentCredits = progress.credits || 0;
+      const newCredits = currentCredits + creditsEarned;
+      const newTotalCredits = (progress.totalCreditsEarned || 0) + creditsEarned;
+      const newEarnedIds = (canEarnQCredits && qCreditId) ? [...earnedIds, qCreditId] : earnedIds;
+
       const oldLevel = progress.level || 1;
       const newLevel = getLevelForXp(newXp);
       const isLevelUp = newLevel > oldLevel;
@@ -695,6 +730,9 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         totalQuestionsCorrect: updatedCorrect,
         xp: newXp,
         level: newLevel,
+        credits: newCredits,
+        totalCreditsEarned: newTotalCredits,
+        earnedCreditIds: newEarnedIds,
         lastAccessed: new Date()
       };
 
@@ -716,8 +754,13 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         );
       }
 
-      if (xpEarned > 0) {
-        triggerXpToast(xpEarned, isCompleted ? "Practice Repeated (Halved XP)" : "Question Correct!", "question");
+      if (xpEarned > 0 || creditsEarned > 0) {
+        triggerXpToast(
+          xpEarned, 
+          creditsEarned > 0 ? "Correct Answer (+5 Credits!)" : (isCompleted ? "Practice Repeated (Halved XP)" : "Question Correct!"), 
+          "question", 
+          creditsEarned
+        );
       }
       if (isLevelUp) {
         setTimeout(() => {
@@ -741,6 +784,9 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           totalQuestionsCorrect: updatedProgress.totalQuestionsCorrect,
           xp: updatedProgress.xp,
           level: updatedProgress.level,
+          credits: updatedProgress.credits,
+          totalCreditsEarned: updatedProgress.totalCreditsEarned,
+          earnedCreditIds: updatedProgress.earnedCreditIds,
           lastAccessed: serverTimestamp(),
           streakCount: updatedProgress.streakCount,
           maxStreak: updatedProgress.maxStreak,
@@ -993,8 +1039,86 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
+  const spendCredits = async (amount: number): Promise<boolean> => {
+    const currentCreds = progress.credits || 0;
+    if (currentCreds < amount) return false;
+    const newCreds = currentCreds - amount;
+    const updated = { ...progress, credits: newCreds };
+    setProgress(updated);
+    if (currentUser) {
+      const localKey = `ap-lab-progress-${currentUser.uid}`;
+      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+      setDoc(doc(db, "userProgress", currentUser.uid), { credits: newCreds }, { merge: true }).catch(() => {});
+    }
+    return true;
+  };
+
+  const addCredits = async (amount: number, reason?: string) => {
+    const currentCreds = progress.credits || 0;
+    const totalEarned = (progress.totalCreditsEarned || 0) + amount;
+    const newCreds = currentCreds + amount;
+    const updated = { ...progress, credits: newCreds, totalCreditsEarned: totalEarned };
+    setProgress(updated);
+    if (reason) triggerXpToast(0, reason, "question", amount);
+    if (currentUser) {
+      const localKey = `ap-lab-progress-${currentUser.uid}`;
+      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+      setDoc(doc(db, "userProgress", currentUser.uid), { credits: newCreds, totalCreditsEarned: totalEarned }, { merge: true }).catch(() => {});
+    }
+  };
+
+  const buyItem = async (itemId: string, cost: number, itemType: "frame" | "gradient"): Promise<boolean> => {
+    const currentCreds = progress.credits || 0;
+    if (currentCreds < cost) return false;
+    const inv = progress.inventory || [];
+    if (inv.includes(itemId)) return true; // already owned
+    const newCreds = currentCreds - cost;
+    const newInv = [...inv, itemId];
+    const activeFrame = itemType === "frame" ? itemId : progress.activeAvatarFrame;
+    const activeGrad = itemType === "gradient" ? itemId : progress.activeNameGradient;
+    const updated: UserProgress = {
+      ...progress,
+      credits: newCreds,
+      inventory: newInv,
+      activeAvatarFrame: activeFrame,
+      activeNameGradient: activeGrad
+    };
+    setProgress(updated);
+    if (currentUser) {
+      const localKey = `ap-lab-progress-${currentUser.uid}`;
+      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+      setDoc(doc(db, "userProgress", currentUser.uid), {
+        credits: newCreds,
+        inventory: newInv,
+        activeAvatarFrame: activeFrame,
+        activeNameGradient: activeGrad
+      }, { merge: true }).catch(() => {});
+    }
+    return true;
+  };
+
+  const equipItem = async (itemType: "frame" | "gradient", itemId: string) => {
+    const updated: UserProgress = {
+      ...progress,
+      activeAvatarFrame: itemType === "frame" ? itemId : progress.activeAvatarFrame,
+      activeNameGradient: itemType === "gradient" ? itemId : progress.activeNameGradient,
+    };
+    setProgress(updated);
+    if (currentUser) {
+      const localKey = `ap-lab-progress-${currentUser.uid}`;
+      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+      setDoc(doc(db, "userProgress", currentUser.uid), {
+        activeAvatarFrame: updated.activeAvatarFrame,
+        activeNameGradient: updated.activeNameGradient
+      }, { merge: true }).catch(() => {});
+    }
+  };
+
   return (
-    <ProgressContext.Provider value={{ progress, loading, completeTopic, recordQuestionAttempt, recordTutorMessage, recordMockExamAttempt, claimSocialXp, updatePreferences }}>
+    <ProgressContext.Provider value={{
+      progress, loading, completeTopic, recordQuestionAttempt, recordTutorMessage,
+      recordMockExamAttempt, claimSocialXp, updatePreferences, spendCredits, addCredits, buyItem, equipItem
+    }}>
       {children}
       
       {/* Level Up Modal */}
@@ -1008,7 +1132,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         )}
       </AnimatePresence>
 
-      {/* Top-Center XP Earned Toasts */}
+      {/* Top-Center XP / Credit Earned Toasts */}
       <div className="fixed top-24 left-0 right-0 pointer-events-none z-[99999] flex flex-col items-center justify-start space-y-3">
         <AnimatePresence>
           {xpToasts.map((toast) => (
@@ -1018,16 +1142,21 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.9, transition: { duration: 0.2 } }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="flex items-center space-x-3 pointer-events-auto bg-black/85 backdrop-blur-md border border-white/10 text-white px-4 py-3 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.5)] border-l-4 border-l-green-400"
+              className="flex items-center space-x-3 pointer-events-auto bg-black/90 backdrop-blur-md border border-amber-500/30 text-white px-4 py-3 rounded-2xl shadow-[0_8px_32px_rgba(234,179,8,0.2)] border-l-4 border-l-amber-400"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-green-500/20 text-green-400 shadow-[0_0_15px_rgba(74,222,128,0.2)]">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.3)]">
+                <span className="font-extrabold text-sm font-manrope">C</span>
               </div>
               <div className="flex flex-col">
                 <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">{toast.message}</span>
-                <span className="text-sm font-black text-white font-mono tracking-wide">+{toast.amount} XP</span>
+                <div className="flex items-center gap-2">
+                  {toast.amount > 0 && <span className="text-sm font-black text-white font-mono tracking-wide">+{toast.amount} XP</span>}
+                  {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
+                    <span className="text-sm font-black text-amber-300 font-mono tracking-wide flex items-center gap-1">
+                      +{toast.creditAmount} Credits
+                    </span>
+                  )}
+                </div>
               </div>
             </motion.div>
           ))}

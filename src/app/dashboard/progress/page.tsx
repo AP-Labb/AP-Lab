@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Flame, Calendar, Trophy, Mail, User, X, GraduationCap,
   Clock, Target, CheckCircle2, ChevronLeft, ChevronRight, Activity,
-  BookOpen, MessageSquare, Sparkles, LogOut, Home, LayoutDashboard, BarChart2, Star, Settings, Award
+  BookOpen, MessageSquare, Sparkles, LogOut, Home, LayoutDashboard, BarChart2, Star, Settings, Award, ShoppingBag
 } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
@@ -521,6 +521,33 @@ export default function ProgressPage() {
                 </motion.div>
               </Link>
 
+              {/* Shop */}
+              <Link href="/shop" className="w-full">
+                <motion.div
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-amber-400 w-full group cursor-pointer"
+                  whileHover="hover"
+                  initial="rest"
+                >
+                  <motion.div
+                    className="w-5 h-5 shrink-0 flex items-center justify-center text-amber-400"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.2, rotate: 12 },
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre text-amber-400"
+                  >
+                    Shop
+                  </motion.span>
+                </motion.div>
+              </Link>
+
               {/* Settings */}
               <SidebarSettingsButton open={sidebarOpen} />
 
@@ -598,7 +625,7 @@ export default function ProgressPage() {
       </Sidebar>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:ml-14">
+      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16">
       
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/10 to-transparent pointer-events-none -z-10" />
@@ -1159,8 +1186,9 @@ export default function ProgressPage() {
                   <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                     <div className="h-full bg-white/50 transition-all duration-300" style={{ width: `${progressPercent}%` }} />
                   </div>
-                  <div className="text-center text-[10px] text-white/30 tracking-wider">
-                    Total XP Earned: <span className="text-white font-bold">{xp.toLocaleString()} XP</span>
+                  <div className="flex justify-between items-center text-[10px] font-mono text-white/40 pt-1 border-t border-white/5">
+                    <span>Total XP Earned: <strong className="text-white">{xp.toLocaleString()} XP</strong></span>
+                    <span className="text-amber-400 font-bold">Total Credits: {(progress?.totalCreditsEarned || 0).toLocaleString()} C</span>
                   </div>
                 </div>
 

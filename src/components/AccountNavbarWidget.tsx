@@ -58,14 +58,19 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
             )}
           </div>
 
-          {/* Account Name & Total XP */}
+          {/* Account Name & Total XP + Credits */}
           <div className="flex flex-col items-start text-left min-w-0">
             <span className={cn("font-manrope font-extrabold text-xs sm:text-sm tracking-tight leading-none transition-colors truncate max-w-[90px] sm:max-w-[120px]", isLightMode ? "text-slate-900 group-hover:text-emerald-600" : "text-white group-hover:text-emerald-400")}>
               {displayName}
             </span>
-            <span className={cn("font-mono font-bold text-[9px] sm:text-[10px] tracking-wider mt-0.5 whitespace-nowrap", isLightMode ? "text-slate-600 font-semibold" : "text-white/50")}>
-              Lvl {level} • {totalXp.toLocaleString()} XP
-            </span>
+            <div className="flex items-center gap-1.5 mt-0.5 whitespace-nowrap font-mono font-bold text-[9px] sm:text-[10px]">
+              <span className={isLightMode ? "text-slate-600" : "text-white/50"}>
+                Lvl {level} • {totalXp.toLocaleString()} XP
+              </span>
+              <span className="text-amber-400 bg-amber-400/10 px-1.5 py-0.2 rounded border border-amber-400/20 font-manrope font-extrabold">
+                {(progress?.credits || 0).toLocaleString()} C
+              </span>
+            </div>
           </div>
         </button>
 
