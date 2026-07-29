@@ -74,7 +74,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
         >
           <div 
             className={cn(
-              "h-10 flex items-center space-x-2.5 px-4 rounded-full transition-all cursor-pointer border",
+              "h-11 flex items-center space-x-2 px-3.5 rounded-full transition-all cursor-pointer border",
               hasStreak 
                 ? "bg-[#2b170e] hover:bg-[#381e11] border-orange-500/40 text-orange-400" 
                 : "bg-[#14151f] hover:bg-[#1a1c2a] border-white/10 text-white/60"
@@ -82,10 +82,10 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
             title={`${streak} Day Study Streak`}
           >
             <Flame className={cn(
-              "w-5 h-5 transition-transform",
+              "w-6 h-6 transition-transform",
               hasStreak ? "text-orange-400 fill-orange-400" : "text-white/40 fill-white/40"
             )} />
-            <span className="font-manrope font-extrabold text-sm leading-none">
+            <span className="font-manrope font-extrabold text-base leading-none">
               {streak}
             </span>
           </div>
@@ -160,16 +160,16 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
           onMouseLeave={() => setActiveMenu("none")}
         >
           <div 
-            className="h-10 flex items-center space-x-2.5 bg-[#1b172e] hover:bg-[#231e3d] border border-purple-500/30 px-4 rounded-full transition-all cursor-pointer border"
+            className="h-11 flex items-center space-x-2 bg-[#1b172e] hover:bg-[#231e3d] border border-purple-500/30 px-3.5 rounded-full transition-all cursor-pointer border"
           >
-            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 flex items-center justify-center shrink-0">
               <img 
                 src="/images/xp-shield-zoomed.png" 
                 alt="XP Shield" 
                 className="w-full h-full object-contain" 
               />
             </div>
-            <span className="font-manrope font-extrabold text-sm text-purple-300 leading-none">{level}</span>
+            <span className="font-manrope font-extrabold text-base text-purple-300 leading-none">{level}</span>
           </div>
 
           {/* XP Hover Popup matching uploaded screenshot */}
@@ -232,16 +232,16 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
         >
           <div 
             onClick={() => router.push("/shop")}
-            className="h-10 flex items-center space-x-2.5 bg-[#2b2114] hover:bg-[#382b1a] border border-amber-500/30 px-4 rounded-full transition-all cursor-pointer border"
+            className="h-11 flex items-center space-x-2 bg-[#2b2114] hover:bg-[#382b1a] border border-amber-500/30 px-3.5 rounded-full transition-all cursor-pointer border"
           >
-            <div className="w-6 h-6 flex items-center justify-center shrink-0">
+            <div className="w-9 h-9 flex items-center justify-center shrink-0">
               <img 
                 src="/images/coin-zoomed.png" 
                 alt="Coins" 
                 className="w-full h-full object-contain" 
               />
             </div>
-            <span className="font-manrope font-extrabold text-sm text-amber-400 tracking-tight leading-none">{credits.toLocaleString()}</span>
+            <span className="font-manrope font-extrabold text-base text-amber-400 tracking-tight leading-none">{credits.toLocaleString()}</span>
           </div>
 
           {/* Coins Hover Popup matching exact uploaded screenshot */}

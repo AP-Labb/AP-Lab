@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ShoppingBag, Sparkles, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
-  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Search, Flame, Tag, Layers, Glasses, HardHat, Shield, X
+  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -55,23 +55,109 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Gear Items Data with Avatars, Glasses, Hats, and Cosmetics
+// Gear Items with Realistic Visual Avatar Previews & Light Pastel Card Backgrounds
 const GEAR_ITEMS = [
-  { id: "gear-mr-brightside", category: "Customization", name: "Mr. Brightside", desc: "Kai with sunglasses on", cost: 35, icon: "🕶️", color: "from-cyan-500/20 to-blue-500/20", type: "sunglasses" },
-  { id: "gear-[#1-scholar]", category: "Customization", name: "Man of the Match", desc: "Football Kai helmet", cost: 100, icon: "🏈", color: "from-red-500/20 to-orange-500/20", type: "helmet" },
-  { id: "gear-casanova", category: "Customization", name: "Casanova", desc: "Kai winking avatar style", cost: 25, icon: "😉", color: "from-[#152e25] to-[#0f241d]", type: "avatar" },
-  { id: "gear-frat-boy", category: "Customization", name: "Frat Boy", desc: "Party Kai avatar style", cost: 75, icon: "🥳", color: "from-purple-500/20 to-pink-500/20", type: "avatar" },
-  
-  // Aura Frames & Gradients
-  { id: "frame-gold", category: "Customization", name: "Imperial Gold Aura", desc: "Golden glowing aura ring around your avatar", cost: 150, icon: "👑", color: "from-amber-500/20 to-yellow-500/20", type: "frame" },
-  { id: "frame-neon-cyan", category: "Customization", name: "Cyber Cyan Aura", desc: "High-tech energetic neon glow ring", cost: 250, icon: "⚡", color: "from-cyan-500/20 to-teal-500/20", type: "frame" },
-  { id: "grad-fire", category: "Customization", name: "Phoenix Fire Gradient", desc: "Fiery red & orange leaderboard name glow", cost: 100, icon: "🔥", color: "from-orange-500/20 to-red-500/20", type: "gradient" },
-  { id: "grad-holographic", category: "Customization", name: "Holographic Gradient", desc: "Multi-chromatic rainbow holographic name text", cost: 500, icon: "✨", color: "from-indigo-500/20 to-purple-500/20", type: "gradient" },
-];
-
-const STREAK_POWERUPS = [
-  { id: "streak-freeze", category: "Streak", name: "Long Pause", desc: "Need a break? Pause your streak for up to 30 days.", count: "4/4", cost: 50, icon: "⏸️" },
-  { id: "streak-repair", category: "Streak", name: "Streak Repair", desc: "Instantly restore a missed streak day", count: "1/1", cost: 150, icon: "🩹" },
+  { 
+    id: "gear-sunglasses", 
+    name: "Sunglasses", 
+    desc: "Glasses for the sun", 
+    cost: 35, 
+    bgColor: "bg-emerald-100/90 text-neutral-900 border-emerald-200", 
+    type: "sunglasses",
+    renderAccessory: () => (
+      <div className="absolute top-7 left-1/2 -translate-x-1/2 w-14 flex items-center justify-between z-10 pointer-events-none drop-shadow-md">
+        <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
+        <div className="w-2 h-0.5 bg-black" />
+        <div className="w-6 h-4 bg-black rounded-md border border-neutral-700" />
+      </div>
+    )
+  },
+  { 
+    id: "gear-helmet", 
+    name: "Football Helmet", 
+    desc: "Protective sports helmet for your avatar", 
+    cost: 100, 
+    bgColor: "bg-red-100/90 text-neutral-900 border-red-200", 
+    type: "helmet",
+    renderAccessory: () => (
+      <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-20 h-14 bg-red-600 rounded-t-full border-2 border-red-800 z-10 pointer-events-none flex flex-col items-center justify-between p-1 drop-shadow-md">
+        <div className="w-16 h-1 bg-[#1e293b] rounded-full mt-1" />
+        <div className="w-18 h-4 bg-[#1e293b]/90 rounded-b-md border-t border-red-900 flex justify-around items-center px-1">
+          <div className="w-1 h-3 bg-white" />
+          <div className="w-1 h-3 bg-white" />
+          <div className="w-1 h-3 bg-white" />
+        </div>
+      </div>
+    )
+  },
+  { 
+    id: "gear-party-hat", 
+    name: "Party Hat", 
+    desc: "Festive party cone hat with pom pom", 
+    cost: 50, 
+    bgColor: "bg-amber-100/90 text-neutral-900 border-amber-200", 
+    type: "hat",
+    renderAccessory: () => (
+      <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[16px] border-l-transparent border-r-[16px] border-r-transparent border-b-[36px] border-b-amber-500 z-10 pointer-events-none drop-shadow-md flex items-center justify-center">
+        <div className="absolute -top-1.5 w-3 h-3 rounded-full bg-rose-500" />
+      </div>
+    )
+  },
+  { 
+    id: "gear-crown", 
+    name: "Golden Crown", 
+    desc: "Royal 24k gold scholar crown", 
+    cost: 150, 
+    bgColor: "bg-[#fef9c3]/90 text-neutral-900 border-yellow-200", 
+    type: "crown",
+    renderAccessory: () => (
+      <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-16 h-7 bg-amber-400 border-2 border-yellow-600 rounded-t-sm z-10 pointer-events-none drop-shadow-md flex justify-between items-end px-1">
+        <div className="w-2 h-4 bg-amber-400 rotate-45 border-t border-l border-yellow-600 -mt-2" />
+        <div className="w-2 h-5 bg-amber-400 border-t border-yellow-600 -mt-3" />
+        <div className="w-2 h-4 bg-amber-400 -rotate-45 border-t border-r border-yellow-600 -mt-2" />
+      </div>
+    )
+  },
+  { 
+    id: "frame-gold", 
+    name: "Imperial Gold Aura", 
+    desc: "Golden glowing aura ring around your avatar", 
+    cost: 150, 
+    bgColor: "bg-yellow-100/90 text-neutral-900 border-yellow-300", 
+    type: "frame",
+    renderAccessory: () => (
+      <div className="absolute inset-0 rounded-full border-4 border-amber-400 shadow-[0_0_15px_rgba(245,158,11,0.8)] z-10 pointer-events-none" />
+    )
+  },
+  { 
+    id: "frame-neon-cyan", 
+    name: "Cyber Cyan Aura", 
+    desc: "High-tech energetic neon cyan glow ring", 
+    cost: 250, 
+    bgColor: "bg-cyan-100/90 text-neutral-900 border-cyan-300", 
+    type: "frame",
+    renderAccessory: () => (
+      <div className="absolute inset-0 rounded-full border-4 border-cyan-400 shadow-[0_0_15px_rgba(34,211,238,0.8)] z-10 pointer-events-none" />
+    )
+  },
+  { 
+    id: "grad-fire", 
+    name: "Phoenix Fire Gradient", 
+    desc: "Fiery red & orange leaderboard name glow", 
+    cost: 100, 
+    bgColor: "bg-orange-100/90 text-neutral-900 border-orange-300", 
+    type: "gradient",
+    renderAccessory: () => null
+  },
+  { 
+    id: "grad-holographic", 
+    name: "Holographic Gradient", 
+    desc: "Multi-chromatic rainbow holographic text", 
+    cost: 500, 
+    bgColor: "bg-purple-100/90 text-neutral-900 border-purple-300", 
+    type: "gradient",
+    renderAccessory: () => null
+  },
 ];
 
 // Slot Machine Symbols
@@ -88,12 +174,15 @@ export default function ShopPage() {
   const { currentUser } = useAuth();
   const { progress, spendCredits, addCredits, buyItem, equipItem } = useProgress();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>("All");
-  const [searchQuery, setSearchQuery] = useState("");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [showHowToEarnModal, setShowHowToEarnModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
-  
+  const [powerupStatusMsg, setPowerupStatusMsg] = useState<string | null>(null);
+
+  // Power-up Inventory Counts
+  const [longPauseCount, setLongPauseCount] = useState<number>(4);
+  const [streakRepairCount, setStreakRepairCount] = useState<number>(1);
+
   // Slot Machine State
   const [betAmount, setBetAmount] = useState<number>(10);
   const [spinning, setSpinning] = useState(false);
@@ -116,12 +205,26 @@ export default function ShopPage() {
     }
   };
 
-  // Filtered items
-  const filteredGear = GEAR_ITEMS.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || item.desc.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCat = activeCategory === "All" || activeCategory === "Customization";
-    return matchesSearch && matchesCat;
-  });
+  // Streak Power-up Handlers
+  const handleUseStreakFreeze = () => {
+    if (longPauseCount <= 0) {
+      alert("No Streak Freeze charges remaining!");
+      return;
+    }
+    setLongPauseCount(prev => Math.max(0, prev - 1));
+    setPowerupStatusMsg("Streak Freeze Activated! Your study streak is paused & protected for 30 days.");
+    setTimeout(() => setPowerupStatusMsg(null), 4000);
+  };
+
+  const handleUseStreakRepair = async () => {
+    if (streakRepairCount <= 0) {
+      alert("No Streak Repair charges remaining!");
+      return;
+    }
+    setStreakRepairCount(prev => Math.max(0, prev - 1));
+    setPowerupStatusMsg("Streak Repaired! Your missed study streak day has been restored!");
+    setTimeout(() => setPowerupStatusMsg(null), 4000);
+  };
 
   // Slot Machine Spin Handler
   const handleSpinSlots = async () => {
@@ -172,10 +275,9 @@ export default function ShopPage() {
   return (
     <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
       
-      {/* STICKY Left Sidebar Navigation matching Progress page */}
+      {/* STICKY Left Sidebar Navigation */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
         <SidebarBody className="justify-between gap-6 sticky top-0 h-screen overflow-y-auto">
-          {/* Top: Logo + Nav Links */}
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             <Link
               href="/"
@@ -417,248 +519,238 @@ export default function ShopPage() {
             </div>
           </div>
 
+          {/* Powerup status message */}
+          {powerupStatusMsg && (
+            <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} className="p-4 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold font-manrope text-center">
+              {powerupStatusMsg}
+            </motion.div>
+          )}
+
           {/* "My Items" Row */}
           <section className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-manrope text-xl font-bold text-white">My Items</h3>
-              <button 
-                onClick={() => setActiveCategory("All")}
-                className="text-xs font-bold font-manrope text-white/50 hover:text-white flex items-center gap-1 bg-white/5 border border-white/10 px-4 py-1.5 rounded-full transition-all cursor-pointer"
-              >
-                <span>View all</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-            </div>
+            <h3 className="font-manrope text-xl font-bold text-white">My Items</h3>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {STREAK_POWERUPS.map((item) => (
-                <div key={item.id} className="bg-[#12141e] border border-white/10 rounded-2xl p-5 flex items-center justify-between space-x-4">
-                  <div className="flex items-center space-x-4">
-                    <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border border-rose-500/30 flex items-center justify-center text-2xl shrink-0">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-sm text-white font-manrope">{item.name}</h4>
-                      <p className="text-xs text-white/50 mt-0.5 max-w-xs">{item.desc}</p>
-                    </div>
+              {/* Streak Freeze / Long Pause */}
+              <div className="bg-[#12141e] border border-white/10 rounded-2xl p-5 flex items-center justify-between space-x-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 shrink-0">
+                    <PauseCircle className="w-8 h-8" />
                   </div>
-                  <span className="text-xs font-mono font-bold text-white/40 shrink-0">{item.count}</span>
+                  <div>
+                    <h4 className="font-bold text-sm text-white font-manrope">Streak Freeze</h4>
+                    <p className="text-xs text-white/50 mt-0.5 max-w-xs">Pause your study streak for up to 30 days without losing your progress.</p>
+                  </div>
                 </div>
-              ))}
+                <div className="flex flex-col items-end gap-2 shrink-0">
+                  <span className="text-xs font-mono font-bold text-white/50">{longPauseCount}/4</span>
+                  <button 
+                    onClick={handleUseStreakFreeze}
+                    disabled={longPauseCount <= 0}
+                    className="px-3 py-1.5 rounded-full bg-rose-500 hover:bg-rose-600 disabled:bg-white/5 disabled:text-white/30 text-white font-bold text-xs transition-all cursor-pointer"
+                  >
+                    Use Freeze
+                  </button>
+                </div>
+              </div>
+
+              {/* Streak Repair */}
+              <div className="bg-[#12141e] border border-white/10 rounded-2xl p-5 flex items-center justify-between space-x-4">
+                <div className="flex items-center space-x-4">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+                    <Wrench className="w-8 h-8" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-white font-manrope">Streak Repair</h4>
+                    <p className="text-xs text-white/50 mt-0.5 max-w-xs">Instantly repair and restore a missed study streak day.</p>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end gap-2 shrink-0">
+                  <span className="text-xs font-mono font-bold text-white/50">{streakRepairCount}/1</span>
+                  <button 
+                    onClick={handleUseStreakRepair}
+                    disabled={streakRepairCount <= 0}
+                    className="px-3 py-1.5 rounded-full bg-amber-500 hover:bg-amber-600 disabled:bg-white/5 disabled:text-white/30 text-black font-bold text-xs transition-all cursor-pointer"
+                  >
+                    Repair Day
+                  </button>
+                </div>
+              </div>
             </div>
           </section>
 
-          {/* Store Items Header & Search/Filter Controls */}
+          {/* Store Items Grid with Pastel Card Backgrounds & Visual Renderings */}
           <section className="space-y-6 pt-4">
             <h3 className="font-manrope text-xl font-bold text-white">Store Items</h3>
 
-            {/* Filter Pills Bar */}
-            <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-4">
-              <div className="relative flex-1 max-w-xs">
-                <Search className="w-4 h-4 text-white/40 absolute left-3.5 top-1/2 -translate-y-1/2" />
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search an item" 
-                  className="w-full bg-[#12141e] border border-white/10 rounded-full pl-9 pr-4 py-2 text-xs text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400/50"
-                />
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {GEAR_ITEMS.map((item) => {
+                const isOwned = inventory.includes(item.id);
+                const isEquipped = activeFrame === item.id || activeGrad === item.id;
 
-              {["All", "Streak", "Customization", "Mini Games"].map((cat) => (
-                <button
-                  key={cat}
-                  onClick={() => setActiveCategory(cat)}
-                  className={cn(
-                    "px-4 py-2 rounded-full text-xs font-manrope font-bold transition-all cursor-pointer border flex items-center space-x-1.5",
-                    activeCategory === cat 
-                      ? "bg-white text-black border-white shadow-md" 
-                      : "bg-[#12141e] text-white/60 border-white/10 hover:bg-white/10 hover:text-white"
-                  )}
-                >
-                  {cat === "Streak" && <Flame className="w-3.5 h-3.5 text-orange-400" />}
-                  {cat === "Customization" && <Sparkles className="w-3.5 h-3.5 text-purple-400" />}
-                  {cat === "Mini Games" && <Dices className="w-3.5 h-3.5 text-cyan-400" />}
-                  <span>{cat}</span>
-                </button>
-              ))}
-            </div>
-
-            {/* GEAR & CUSTOMIZATION ITEMS GRID displaying over user avatar */}
-            {(activeCategory === "All" || activeCategory === "Customization") && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {filteredGear.map((item) => {
-                  const isOwned = inventory.includes(item.id);
-                  const isEquipped = activeFrame === item.id || activeGrad === item.id;
-
-                  return (
-                    <div 
-                      key={item.id}
-                      className={cn(
-                        "relative rounded-3xl bg-[#12141e] border p-6 flex flex-col justify-between space-y-5 transition-all group hover:border-white/20",
-                        isEquipped ? "border-amber-400 ring-2 ring-amber-400/20" : "border-white/10"
-                      )}
-                    >
-                      {/* Avatar Item Box displaying the gear over the user photo */}
-                      <div className={`w-full h-36 rounded-2xl bg-gradient-to-br ${item.color} border border-white/10 flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform`}>
-                        <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-                          {currentUser?.photoURL ? (
-                            <img src={currentUser.photoURL} alt="User Avatar" className="w-full h-full object-cover rounded-full border-2 border-white/20" />
-                          ) : (
-                            <div className="w-full h-full rounded-full bg-cyan-500/20 border-2 border-cyan-400 flex items-center justify-center font-bold text-xl text-white">
-                              {(currentUser?.displayName || "A").charAt(0).toUpperCase()}
-                            </div>
-                          )}
-                          {/* Item Graphic Overlay */}
-                          <div className="absolute inset-0 flex items-center justify-center text-3xl pointer-events-none drop-shadow-lg">
-                            {item.icon}
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Title & Details */}
-                      <div>
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-bold text-sm text-white font-manrope">{item.name}</h4>
-                          <span className="text-[10px] font-mono text-white/40">{isOwned ? "1/1" : "0/1"}</span>
-                        </div>
-                        <p className="text-xs text-white/40 mt-1 line-clamp-2">{item.desc}</p>
-                      </div>
-
-                      {/* Action Button */}
-                      <div className="pt-2 border-t border-white/5">
-                        {isOwned ? (
-                          <button
-                            onClick={() => equipItem?.(item.type as any, isEquipped ? "" : item.id)}
-                            className={cn(
-                              "w-full py-2.5 rounded-full font-bold text-xs transition-all cursor-pointer",
-                              isEquipped 
-                                ? "bg-amber-400 text-black font-extrabold" 
-                                : "bg-white/10 hover:bg-white/20 text-white"
-                            )}
-                          >
-                            {isEquipped ? "Equipped ✓" : "Equip Item"}
-                          </button>
-                        ) : (
-                          <button
-                            onClick={async () => {
-                              const success = await buyItem?.(item.id, item.cost, item.type as any);
-                              if (!success) alert("Not enough coins!");
-                            }}
-                            disabled={credits < item.cost}
-                            className={cn(
-                              "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer",
-                              credits >= item.cost 
-                                ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold shadow-md" 
-                                : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
-                            )}
-                          >
-                            <img src="/images/coin-zoomed.png" alt="Coin" className="w-4 h-4 object-contain inline" />
-                            <span>{item.cost}</span>
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-
-            {/* MINI GAMES / SLOT MACHINE SECTION */}
-            {(activeCategory === "All" || activeCategory === "Mini Games") && (
-              <div className="pt-6">
-                <div className="bg-[#12141e] border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center space-y-7 text-center max-w-xl mx-auto">
-                  
-                  <div className="space-y-1">
-                    <h3 className="font-instrument text-3xl font-bold text-white">Coin Slot Machine</h3>
-                    <p className="text-xs text-white/40">Spin to match symbols and multiply your coins!</p>
-                  </div>
-
-                  {/* Reels Container */}
-                  <div className="w-full bg-[#0a0b10] border border-white/10 rounded-2xl p-6 flex items-center justify-center space-x-4">
-                    {reels.map((item, idx) => (
-                      <motion.div 
-                        key={idx}
-                        animate={spinning ? { y: [-6, 6, -6] } : { y: 0 }}
-                        transition={{ repeat: Infinity, duration: 0.1 }}
-                        className="w-24 h-32 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center justify-center shadow-inner select-none space-y-1"
-                      >
-                        <span className="text-4xl">{item.symbol}</span>
-                        <span className={cn("text-[10px] font-bold font-mono uppercase tracking-wider", item.color)}>
-                          {item.name}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Result Notification */}
-                  {gambleResult && (
-                    <motion.div 
-                      initial={{ scale: 0.95, opacity: 0 }} 
-                      animate={{ scale: 1, opacity: 1 }}
-                      className={cn(
-                        "w-full p-3.5 rounded-2xl text-center text-xs font-bold border",
-                        gambleResult.won 
-                          ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
-                          : "bg-red-500/10 border-red-500/30 text-red-400"
-                      )}
-                    >
-                      {gambleResult.message}
-                    </motion.div>
-                  )}
-
-                  {/* Bet Selector */}
-                  <div className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
-                    <span className="text-xs font-mono text-white/50 font-bold">BET AMOUNT</span>
-                    <div className="flex items-center space-x-2">
-                      {[10, 25, 50, 100].map((amt) => (
-                        <button
-                          key={amt}
-                          onClick={() => setBetAmount(amt)}
-                          className={cn(
-                            "px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer",
-                            betAmount === amt 
-                              ? "bg-amber-400 text-black shadow-md" 
-                              : "bg-white/5 hover:bg-white/10 text-white/60"
-                          )}
-                        >
-                          {amt} C
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Spin Button */}
-                  <button
-                    onClick={handleSpinSlots}
-                    disabled={spinning || betAmount > credits || betAmount <= 0}
+                return (
+                  <div 
+                    key={item.id}
                     className={cn(
-                      "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-lg",
-                      spinning || betAmount > credits 
-                        ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5" 
-                        : "bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black"
+                      "relative rounded-3xl border p-6 flex flex-col justify-between space-y-5 transition-all group shadow-lg",
+                      item.bgColor
                     )}
                   >
-                    <RotateCw className={`w-4 h-4 ${spinning ? "animate-spin" : ""}`} />
-                    <span>{spinning ? "Spinning..." : `SPIN SLOTS (${betAmount} COINS)`}</span>
-                  </button>
+                    {/* Visual Card Display Box */}
+                    <div className="w-full h-36 rounded-2xl bg-white/70 border border-black/10 flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform">
+                      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md">
+                        {currentUser?.photoURL ? (
+                          <img src={currentUser.photoURL} alt="User Avatar" className="w-full h-full object-cover rounded-full border-2 border-neutral-900" />
+                        ) : (
+                          <div className="w-full h-full rounded-full bg-neutral-900 border-2 border-neutral-800 flex items-center justify-center font-bold text-xl text-white">
+                            {(currentUser?.displayName || "A").charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        {/* Render Item Accessory directly over avatar */}
+                        {item.renderAccessory()}
+                      </div>
+                    </div>
 
-                  <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[10px] font-mono text-white/40">
-                    <span>🎰🎰🎰 10x</span>
-                    <span>💎💎💎 7x</span>
-                    <span>👑👑👑 5x</span>
-                    <span>⚡⚡⚡ 3x</span>
+                    {/* Title & Simple Description */}
+                    <div>
+                      <div className="flex items-center justify-between">
+                        <h4 className="font-extrabold text-sm text-neutral-900 font-manrope">{item.name}</h4>
+                        <span className="text-[10px] font-mono font-bold text-neutral-500">{isOwned ? "1/1" : "0/1"}</span>
+                      </div>
+                      <p className="text-xs text-neutral-600 font-medium mt-1">{item.desc}</p>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="pt-2 border-t border-black/10">
+                      {isOwned ? (
+                        <button
+                          onClick={() => equipItem?.(item.type as any, isEquipped ? "" : item.id)}
+                          className={cn(
+                            "w-full py-2.5 rounded-full font-bold text-xs transition-all cursor-pointer shadow-md",
+                            isEquipped 
+                              ? "bg-neutral-900 text-white font-extrabold" 
+                              : "bg-neutral-800/20 hover:bg-neutral-800/30 text-neutral-900"
+                          )}
+                        >
+                          {isEquipped ? "Equipped ✓" : "Equip Item"}
+                        </button>
+                      ) : (
+                        <button
+                          onClick={async () => {
+                            const success = await buyItem?.(item.id, item.cost, item.type as any);
+                            if (!success) alert("Not enough coins!");
+                          }}
+                          disabled={credits < item.cost}
+                          className={cn(
+                            "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer shadow-md",
+                            credits >= item.cost 
+                              ? "bg-neutral-900 hover:bg-neutral-800 text-white font-extrabold" 
+                              : "bg-neutral-300 text-neutral-500 cursor-not-allowed border border-neutral-300"
+                          )}
+                        >
+                          <img src="/images/coin-zoomed.png" alt="Coin" className="w-5 h-5 object-contain inline" />
+                          <span>{item.cost}</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* MINI GAMES / SLOT MACHINE SECTION */}
+            <div className="pt-6">
+              <div className="bg-[#12141e] border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center space-y-7 text-center max-w-xl mx-auto">
+                
+                <div className="space-y-1">
+                  <h3 className="font-instrument text-3xl font-bold text-white">Coin Slot Machine</h3>
+                  <p className="text-xs text-white/40">Spin to match symbols and multiply your coins!</p>
+                </div>
+
+                {/* Reels Container */}
+                <div className="w-full bg-[#0a0b10] border border-white/10 rounded-2xl p-6 flex items-center justify-center space-x-4">
+                  {reels.map((item, idx) => (
+                    <motion.div 
+                      key={idx}
+                      animate={spinning ? { y: [-6, 6, -6] } : { y: 0 }}
+                      transition={{ repeat: Infinity, duration: 0.1 }}
+                      className="w-24 h-32 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center justify-center shadow-inner select-none space-y-1"
+                    >
+                      <span className="text-4xl">{item.symbol}</span>
+                      <span className={cn("text-[10px] font-bold font-mono uppercase tracking-wider", item.color)}>
+                        {item.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Result Notification */}
+                {gambleResult && (
+                  <motion.div 
+                    initial={{ scale: 0.95, opacity: 0 }} 
+                    animate={{ scale: 1, opacity: 1 }}
+                    className={cn(
+                      "w-full p-3.5 rounded-2xl text-center text-xs font-bold border",
+                      gambleResult.won 
+                        ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
+                        : "bg-red-500/10 border-red-500/30 text-red-400"
+                    )}
+                  >
+                    {gambleResult.message}
+                  </motion.div>
+                )}
+
+                {/* Bet Selector */}
+                <div className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
+                  <span className="text-xs font-mono text-white/50 font-bold">BET AMOUNT</span>
+                  <div className="flex items-center space-x-2">
+                    {[10, 25, 50, 100].map((amt) => (
+                      <button
+                        key={amt}
+                        onClick={() => setBetAmount(amt)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer",
+                          betAmount === amt 
+                            ? "bg-amber-400 text-black shadow-md" 
+                            : "bg-white/5 hover:bg-white/10 text-white/60"
+                        )}
+                      >
+                        {amt} C
+                      </button>
+                    ))}
                   </div>
                 </div>
+
+                {/* Spin Button */}
+                <button
+                  onClick={handleSpinSlots}
+                  disabled={spinning || betAmount > credits || betAmount <= 0}
+                  className={cn(
+                    "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-lg",
+                    spinning || betAmount > credits 
+                      ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5" 
+                      : "bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black"
+                  )}
+                >
+                  <RotateCw className={`w-4 h-4 ${spinning ? "animate-spin" : ""}`} />
+                  <span>{spinning ? "Spinning..." : `SPIN SLOTS (${betAmount} COINS)`}</span>
+                </button>
+
+                <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[10px] font-mono text-white/40">
+                  <span>🎰🎰🎰 10x</span>
+                  <span>💎💎💎 7x</span>
+                  <span>👑👑👑 5x</span>
+                  <span>⚡⚡⚡ 3x</span>
+                </div>
               </div>
-            )}
+            </div>
 
           </section>
 
         </main>
       </div>
 
-      {/* HOW TO EARN COINS MODAL matching reference screenshot */}
+      {/* HOW TO EARN COINS MODAL */}
       <AnimatePresence>
         {showHowToEarnModal && (
           <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
@@ -675,7 +767,6 @@ export default function ShopPage() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Large Gold Coin Image */}
               <div className="w-28 h-28 mx-auto mb-6">
                 <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain" />
               </div>
@@ -687,7 +778,6 @@ export default function ShopPage() {
                 Collect coins and redeem them for cool in-game items.
               </p>
 
-              {/* Truthful AP Lab Coin Earning Actions Grid matching reference */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left font-manrope font-bold text-sm text-white max-w-md mx-auto">
                 <div className="flex items-center space-x-3 bg-white/5 border border-white/10 p-3 rounded-2xl">
                   <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-xs shrink-0">✓</div>
