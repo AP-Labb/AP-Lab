@@ -2,7 +2,10 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, User, Calendar, LogOut, Compass, BookOpen } from "lucide-react";
+import { 
+  Search, User, Calendar, LogOut, Compass, BookOpen, 
+  Home, LayoutDashboard, BarChart2, Star, Award, Bot, FileText, Folder, Sparkles, ArrowRight
+} from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
@@ -13,18 +16,18 @@ interface ContextMenuProps {
 }
 
 const SEARCHABLE_PAGES = [
-  { name: "Dashboard", url: "/dashboard", desc: "Your personal study hub & registered courses", category: "Core" },
-  { name: "Progress Analytics", url: "/dashboard/progress", desc: "XP breakdown, calendar, streaks, and study stats", category: "Core" },
-  { name: "AP Biology", url: "/dashboard/ap-biology", desc: "Cell communications, mitosis, and genetics study guides", category: "Classes" },
-  { name: "AP Chemistry", url: "/dashboard/ap-chemistry", desc: "Chemical structures, thermodynamics, and kinetics database", category: "Classes" },
-  { name: "AP Physics C", url: "/dashboard/ap-physics", desc: "Classical mechanics and electricity/magnetism review", category: "Classes" },
-  { name: "AP Psychology", url: "/dashboard/ap-psychology", desc: "Neuroanatomy, behavioral bases, and diagnostic treatment", category: "Classes" },
-  { name: "AP US History", url: "/dashboard/ap-ush", desc: "Colonial era, historical analysis, and exam review", category: "Classes" },
-  { name: "Home Page", url: "/", desc: "AP Lab landing page & core accelerators", category: "General" },
-  { name: "Join Network", url: "/join", desc: "Register a new account or view elite pricing tiers", category: "General" },
-  { name: "Contact Us", url: "/contact", desc: "Get in touch with support or medical mentors", category: "General" },
-  { name: "About Us", url: "/about", desc: "Learn about the mission of the Pre-Med Accelerator", category: "General" },
-  { name: "Live Analytics", url: "/live-analytics", desc: "Active scholar counts and real-time study patterns", category: "General" },
+  { name: "Home", url: "/", desc: "/app", category: "Core", icon: Home },
+  { name: "Dashboard", url: "/dashboard", desc: "/app/dashboard", category: "Core", icon: LayoutDashboard },
+  { name: "Progress Analytics", url: "/dashboard/progress", desc: "/app/progress", category: "Core", icon: BarChart2 },
+  { name: "AI Assistant", url: "/assistant", desc: "/app/assistant", category: "Core", icon: Bot },
+  { name: "Review", url: "/dashboard", desc: "/app/review", category: "Core", icon: Star },
+  { name: "Quests", url: "/dashboard", desc: "/app/quests", category: "Core", icon: Award },
+  { name: "AP® Biology", url: "/dashboard/ap-biology", desc: "/app/courses/ap-biology", category: "Courses", icon: BookOpen },
+  { name: "AP® Chemistry", url: "/dashboard/ap-chemistry", desc: "/app/courses/ap-chemistry", category: "Courses", icon: BookOpen },
+  { name: "AP® Physics C", url: "/dashboard/ap-physics", desc: "/app/courses/ap-physics", category: "Courses", icon: BookOpen },
+  { name: "AP® Psychology", url: "/dashboard/ap-psychology", desc: "/app/courses/ap-psychology", category: "Courses", icon: BookOpen },
+  { name: "AP® US History", url: "/dashboard/ap-ush", desc: "/app/courses/ap-ush", category: "Courses", icon: BookOpen },
+  { name: "Portfolio Tools", url: "/dashboard", desc: "/app/ap-portfolios", category: "Tools", icon: Folder },
 ];
 
 export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
@@ -272,53 +275,52 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
               className="absolute inset-0 bg-black/80 backdrop-blur-md"
             />
 
-            {/* Floating Container */}
+            {/* Sleek Black-themed Stellar Search Card */}
             <motion.div
-              initial={{ opacity: 0, y: -20, scale: 0.98 }}
+              initial={{ opacity: 0, y: -16, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.98 }}
+              exit={{ opacity: 0, y: -16, scale: 0.98 }}
               transition={{ type: "spring", stiffness: 350, damping: 28 }}
-              className="relative w-full max-w-xl flex flex-col space-y-3 z-10"
+              className="relative w-full max-w-xl bg-[#090a10]/95 backdrop-blur-3xl border border-white/10 rounded-2xl shadow-[0_30px_90px_rgba(0,0,0,0.9)] overflow-hidden z-10 text-white font-manrope flex flex-col"
             >
-              {/* Simplistic White Capsule Search Bar matching uploaded image */}
-              <div className="relative w-full bg-white rounded-full shadow-[0_25px_70px_rgba(0,0,0,0.6)] flex items-center px-6 py-4">
-                <Search className="w-5 h-5 text-neutral-400 mr-3.5 shrink-0" />
+              {/* Top Search Header */}
+              <div className="relative w-full flex items-center px-5 py-4 border-b border-white/[0.08]">
+                <Search className="w-5 h-5 text-white/40 mr-3.5 shrink-0" />
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search..."
+                  placeholder="Search AP® Lab..."
                   value={searchQuery}
                   onChange={(e) => {
                     setSearchQuery(e.target.value);
                     setSelectedIndex(0);
                   }}
                   onKeyDown={handleSearchKeyDown}
-                  className="w-full bg-transparent border-0 outline-none text-black text-lg font-manrope font-medium placeholder-neutral-400 focus:ring-0"
+                  className="w-full bg-transparent border-0 outline-none text-white text-base font-manrope font-medium placeholder-white/30 focus:ring-0"
                 />
                 <button
                   onClick={() => setSearchOpen(false)}
-                  className="text-[10px] font-mono font-bold tracking-widest text-neutral-400 hover:text-black bg-neutral-100 hover:bg-neutral-200 px-2.5 py-1 rounded-full transition-all shrink-0 ml-2"
+                  className="text-[10px] font-mono font-bold text-white/30 hover:text-white bg-white/5 hover:bg-white/10 px-2 py-0.5 rounded transition-all shrink-0 ml-2"
                 >
                   ESC
                 </button>
               </div>
 
-              {/* Minimalist Floating Results Dropdown - Always Scrollable */}
-              <motion.div
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 8 }}
+              {/* Scrollable Results List */}
+              <div
                 data-lenis-prevent="true"
                 tabIndex={0}
-                className="w-full bg-[#0c0d14]/95 backdrop-blur-2xl border border-white/12 rounded-3xl shadow-2xl p-2 max-h-[55vh] overflow-y-auto custom-scrollbar space-y-1 pointer-events-auto outline-none"
+                className="w-full p-2.5 max-h-[60vh] overflow-y-auto custom-scrollbar space-y-1.5 outline-none"
               >
                 {filteredPages.length === 0 ? (
-                  <div className="py-8 text-center text-white/40 font-manrope text-sm">
+                  <div className="py-10 text-center text-white/30 font-manrope text-sm">
                     No matching results found.
                   </div>
                 ) : (
                   filteredPages.map((page, index) => {
                     const isSelected = index === selectedIndex;
+                    const IconComponent = page.icon || Compass;
+
                     return (
                       <button
                         key={page.url}
@@ -333,38 +335,52 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
                         }}
                         onMouseEnter={() => setSelectedIndex(index)}
                         className={cn(
-                          "w-full flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all text-left pointer-events-auto cursor-pointer",
+                          "w-full flex items-center justify-between px-3.5 py-3 rounded-xl transition-all duration-150 text-left cursor-pointer group/item relative border",
                           isSelected 
-                            ? "bg-white text-black shadow-md font-semibold scale-[1.005]" 
-                            : "text-white/70 hover:bg-white/5 hover:text-white"
+                            ? "bg-blue-600/15 border-blue-500/40 text-white" 
+                            : "bg-transparent border-transparent text-white/70 hover:bg-white/[0.04] hover:text-white"
                         )}
                       >
                         <div className="flex items-center space-x-3.5 min-w-0 mr-3">
+                          {/* Icon Container matching Stellar screenshot */}
                           <div className={cn(
-                            "w-8 h-8 rounded-xl flex items-center justify-center shrink-0 border transition-colors",
-                            isSelected ? "bg-black/5 border-black/10 text-black" : "bg-white/5 border-white/10 text-white/60"
+                            "w-10 h-10 rounded-xl flex items-center justify-center shrink-0 border transition-all duration-200",
+                            isSelected 
+                              ? "bg-blue-500/20 border-blue-400/30 text-blue-400" 
+                              : "bg-white/[0.04] border-white/10 text-white/50 group-hover/item:text-white group-hover/item:border-white/20"
                           )}>
-                            {page.category === "Classes" ? <BookOpen className="w-4 h-4" /> : <Compass className="w-4 h-4" />}
+                            <IconComponent className="w-5 h-5" />
                           </div>
+
                           <div className="min-w-0">
-                            <span className="text-sm font-manrope block leading-tight truncate">{page.name}</span>
                             <span className={cn(
-                              "text-xs block mt-0.5 truncate font-medium",
-                              isSelected ? "text-neutral-600" : "text-white/40"
-                            )}>{page.desc}</span>
+                              "text-sm font-bold block leading-tight truncate transition-colors",
+                              isSelected ? "text-white" : "text-white/90"
+                            )}>
+                              {page.name}
+                            </span>
+                            <span className="text-xs font-mono text-white/40 block mt-1 truncate">
+                              {page.desc}
+                            </span>
                           </div>
                         </div>
-                        <span className={cn(
-                          "text-[10px] font-mono tracking-widest uppercase shrink-0 font-bold px-2.5 py-1 rounded-full border",
-                          isSelected ? "bg-black/10 border-black/20 text-black" : "bg-white/5 border-white/10 text-white/40"
-                        )}>
-                          {page.category}
-                        </span>
+
+                        {/* Arrow Right Indicator matching Stellar screenshot */}
+                        <ArrowRight className={cn(
+                          "w-4 h-4 shrink-0 transition-transform duration-200",
+                          isSelected ? "text-blue-400 translate-x-0.5 opacity-100" : "text-white/20 opacity-0 group-hover/item:opacity-40"
+                        )} />
                       </button>
                     );
                   })
                 )}
-              </motion.div>
+              </div>
+
+              {/* Bottom Footer Info Bar matching Stellar screenshot */}
+              <div className="px-5 py-2.5 border-t border-white/[0.06] bg-white/[0.01] flex items-center justify-between text-[11px] font-mono text-white/30">
+                <span>{filteredPages.length} results</span>
+                <span className="text-[10px]">Use ↑ ↓ to navigate, ↵ to select</span>
+              </div>
             </motion.div>
           </div>
         )}

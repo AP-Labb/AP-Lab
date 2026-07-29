@@ -598,7 +598,7 @@ export default function ProgressPage() {
       </Sidebar>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto">
+      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:ml-14">
       
       {/* Background elements */}
       <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/10 to-transparent pointer-events-none -z-10" />

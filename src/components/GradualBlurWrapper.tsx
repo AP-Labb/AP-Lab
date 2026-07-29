@@ -14,7 +14,7 @@ export function GradualBlurWrapper() {
 
   const isAssistantPage = pathname === "/assistant";
 
-  if (isCoursePage || isAssistantPage) {
+  if (isCoursePage || isAssistantPage || isDashboardPage) {
     return null;
   }
 

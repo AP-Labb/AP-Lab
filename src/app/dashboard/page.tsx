@@ -1000,7 +1000,7 @@ export default function Dashboard() {
 
 
       {/* ===== MAIN CONTENT ===== */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden">
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:ml-14">
         {/* Mobile top bar spacer */}
         <div className="h-14 md:hidden" />
 
