@@ -924,8 +924,8 @@ export default function Dashboard() {
             </div>
           </div>
 
-          {/* Bottom: Profile Widget + Sign Out — pb-24 clears the bottom blur */}
-          <div className="flex flex-col gap-2 pb-24">
+          {/* Bottom: Profile Widget + Sign Out */}
+          <div className="flex flex-col gap-2 pb-6">
             <div className="h-px bg-white/[0.06] mx-2 mb-2" />
 
             {/* Profile — compact circle when closed, full widget when open */}

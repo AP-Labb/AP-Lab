@@ -12,7 +12,9 @@ export function GradualBlurWrapper() {
   const isCoursePage = pathname.startsWith("/dashboard/") && pathname !== "/dashboard";
   const isDashboardPage = pathname === "/dashboard";
 
-  if (isCoursePage) {
+  const isAssistantPage = pathname === "/assistant";
+
+  if (isCoursePage || isAssistantPage) {
     return null;
   }
 

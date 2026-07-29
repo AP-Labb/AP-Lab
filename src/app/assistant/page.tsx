@@ -428,8 +428,8 @@ export default function AssistantPage() {
             </div>
           </div>
 
-          {/* Bottom: Profile Widget + Sign Out (pb-24 to clear bottom blur) */}
-          <div className="flex flex-col gap-2 pb-24">
+          {/* Bottom: Profile Widget + Sign Out */}
+          <div className="flex flex-col gap-2 pb-6">
             <div className="h-px bg-white/[0.06] mx-2 mb-2" />
 
             <button
@@ -700,16 +700,15 @@ export default function AssistantPage() {
             exit={{ opacity: 0, scale: 0.8, y: 10 }}
             transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
             onClick={scrollToBottom}
-            className="fixed bottom-24 right-6 z-50 w-9 h-9 rounded-full bg-white/10 border border-white/20 backdrop-blur flex items-center justify-center text-white/70 hover:bg-white/20 hover:text-white hover:border-white/40 transition-all shadow-lg cursor-pointer"
-            title="Scroll to bottom"
+            className="fixed bottom-32 left-[52%] -translate-x-1/2 z-50 w-10 h-10 rounded-full bg-[#181a26]/90 border border-white/20 backdrop-blur-md flex items-center justify-center text-white/80 hover:bg-white/20 hover:text-white hover:border-white/40 transition-all shadow-[0_8px_25px_rgba(0,0,0,0.6)] cursor-pointer group"
+            title="Return to bottom"
           >
-            <ChevronDown className="w-4 h-4" />
+            <ChevronDown className="w-5 h-5 group-hover:translate-y-0.5 transition-transform" />
           </motion.button>
         )}
       </AnimatePresence>
 
-      {/* Bottom Blur Overlay */}
-      <div className="fixed bottom-0 left-14 right-0 h-14 bg-gradient-to-t from-[#060712] via-[#060712]/80 to-transparent pointer-events-none z-40" />
+
 
       {/* Modals */}
       <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />

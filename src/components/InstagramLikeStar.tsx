@@ -13,7 +13,7 @@ export function InstagramLikeStar() {
       {rays.map((angle, i) => (
         <motion.div
           key={angle}
-          className="absolute rounded-full bg-amber-300 pointer-events-none"
+          className="absolute rounded-full bg-white pointer-events-none"
           style={{
             width: "2px",
             height: "6px",
