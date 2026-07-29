@@ -23,6 +23,7 @@ import { SettingsModal } from "@/components/SettingsModal";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
+import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 
 interface Message {
   id: string;
@@ -355,45 +356,11 @@ export default function AssistantPage() {
               {/* Review */}
               <motion.button
                 onClick={() => setIsReviewModalOpen(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
                 whileHover="hover"
                 initial="rest"
               >
-                <div className="flex-shrink-0 relative w-5 h-5">
-                  {[0, 45, 90, 135, 180, 225, 270, 315].map((angle, i) => (
-                    <motion.div
-                      key={angle}
-                      className="absolute rounded-full bg-yellow-300"
-                      style={{
-                        width: "1.5px",
-                        height: "5px",
-                        top: "50%",
-                        left: "50%",
-                        transformOrigin: "center bottom",
-                        transform: `rotate(${angle}deg) translateX(-50%) translateY(-140%)`,
-                      }}
-                      variants={{
-                        rest: { opacity: 0, scaleY: 0.3, translateY: 0 },
-                        hover: {
-                          opacity: [0, 0.9, 0],
-                          scaleY: [0.3, 1.2, 0.8],
-                          translateY: [0, -4, -6],
-                        },
-                      }}
-                      transition={{ duration: 0.5, delay: i * 0.03, ease: "easeOut" }}
-                    />
-                  ))}
-                  <motion.div
-                    className="absolute inset-0 flex items-center justify-center"
-                    variants={{
-                      rest: { scale: 1 },
-                      hover: { scale: 1.2 },
-                    }}
-                    transition={{ duration: 0.25 }}
-                  >
-                    <Star className="w-4 h-4" />
-                  </motion.div>
-                </div>
+                <InstagramLikeStar />
                 <motion.span
                   animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
                   transition={{ duration: 0.15 }}
@@ -559,7 +526,7 @@ export default function AssistantPage() {
               className="w-full max-w-2xl flex flex-col items-center"
             >
               {/* Panda peeking from behind card — flex-centered, overlaps card via -mb */}
-              <div className="w-20 h-20 pointer-events-none select-none z-0 -mb-5">
+              <div className="w-32 h-32 pointer-events-none select-none z-0 -mb-10">
                 <img
                   src="/images/panda-ai.png"
                   alt="Peeking Panda"

@@ -31,7 +31,7 @@ const DEFAULT_CONFIG: Required<Omit<GradualBlurProps, 'width' | 'hoverIntensity'
   height: '6rem',
   divCount: 5,
   exponential: false,
-  zIndex: 1000,
+  zIndex: 40,
   animated: false,
   duration: '0.3s',
   easing: 'ease-out',
@@ -197,7 +197,7 @@ export function GradualBlur(props: GradualBlurProps) {
       pointerEvents: config.hoverIntensity ? 'auto' : 'none',
       opacity: isVisible ? 1 : 0,
       transition: config.animated ? `opacity ${config.duration} ${config.easing}` : undefined,
-      zIndex: isPageTarget ? config.zIndex + 100 : config.zIndex,
+      zIndex: config.zIndex,
       ...config.style
     };
 
