@@ -24,6 +24,7 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
+import MeshDriftShader from "@/components/MeshDriftShader";
 
 interface Message {
   id: string;
@@ -232,7 +233,10 @@ export default function AssistantPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060712] text-white flex flex-row relative z-0 transition-all duration-500 selection:bg-neutral-800 selection:text-white">
+    <div className="min-h-screen bg-[#060712] text-white flex flex-row relative z-0 transition-all duration-500 selection:bg-neutral-800 selection:text-white overflow-hidden">
+      {/* WebGL Mesh Drift Shader Background */}
+      <MeshDriftShader />
+
       {/* ===== IDENTICAL DASHBOARD SIDEBAR (z-50) ===== */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
         <SidebarBody className="justify-between gap-10 z-50">
