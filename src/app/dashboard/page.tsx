@@ -1029,15 +1029,8 @@ export default function Dashboard() {
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
-        {/* Top Right Header Capsules */}
-        <div className="absolute top-6 right-8 z-50 hidden md:block">
-          <HeaderUserCapsules onOpenProfile={() => setShowAccountPopup(true)} />
-        </div>
-
         {/* Mobile top bar spacer */}
-        <div className="h-14 md:hidden flex items-center justify-end px-4 pt-2">
-          <HeaderUserCapsules onOpenProfile={() => setShowAccountPopup(true)} />
-        </div>
+        <div className="h-4 md:hidden" />
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
         
@@ -1151,8 +1144,8 @@ export default function Dashboard() {
               { slug: "ap-biology",    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&q=80", desc: "Explore life's molecular machinery, genetics, ecology, and evolution through inquiry-based AP science.", units: 8, topics: 63 },
               { slug: "ap-chemistry",  image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80", desc: "Master atomic structure, chemical reactions, thermodynamics, and electrochemistry at the AP level.", units: 9, topics: 52 },
               { slug: "ap-physics-c",  image: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=600&q=80", desc: "Calculus-based mechanics and electricity & magnetism designed for the most rigorous AP physics exam.", units: 7, topics: 43 },
-              { slug: "ap-ush",        image: "https://images.unsplash.com/photo-1568393691622-c7ba131d63b4?w=600&q=80", desc: "Journey through American history from colonization to the present, analysing key events and primary sources.", units: 9, topics: 55 },
-              { slug: "ap-psych",      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80", desc: "Uncover the science of mind and behaviour: cognition, development, social psychology, and clinical concepts.", units: 8, topics: 46 },
+              { slug: "ap-ush",        image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600&q=80", desc: "Journey through American history from colonization to the present, analysing key events and primary sources.", units: 9, topics: 55 },
+              { slug: "ap-psych",      image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&q=80", desc: "Uncover the science of mind and behaviour: cognition, development, social psychology, and clinical concepts.", units: 8, topics: 46 },
               { slug: "ap-eng-lang",   image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=600&q=80", desc: "Develop rhetoric analysis, argumentation, and synthesis writing skills for the AP Language exam.", units: 9, topics: 48 },
               { slug: "ap-calc-bc",    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=600&q=80", desc: "Limits, derivatives, integrals, infinite series, and parametric equations covered to BC depth.", units: 10, topics: 58 },
               { slug: "ap-stats",      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80", desc: "Statistical reasoning, data collection, probability models, and inference for the AP Statistics exam.", units: 9, topics: 44 },
@@ -1199,11 +1192,6 @@ export default function Dashboard() {
                             />
                             {/* Dark bottom fade */}
                             <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d1a] via-transparent to-transparent" />
-                            {/* Stable badge */}
-                            <span className="absolute top-2.5 right-2.5 flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-400">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 inline-block" />
-                              STABLE
-                            </span>
                           </div>
 
                           {/* Card body */}
@@ -1509,14 +1497,14 @@ export default function Dashboard() {
                   <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                     <div className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500" style={{ width: `${progressPercent}%` }} />
                   </div>
-                  <div className="flex justify-between items-center text-[11px] font-mono text-white/50 pt-2 border-t border-white/5">
-                    <span className="flex items-center gap-1.5">
-                      <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 inline object-contain" />
-                      Total XP: <strong className="text-purple-300">{xp.toLocaleString()} XP</strong>
+                  <div className="flex justify-between items-center text-xs font-mono text-white/60 pt-3 border-t border-white/5">
+                    <span className="flex items-center gap-2">
+                      <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-8 h-8 inline object-contain transform scale-125" />
+                      Total XP: <strong className="text-purple-300 text-sm">{xp.toLocaleString()} XP</strong>
                     </span>
-                    <span className="flex items-center gap-1.5 text-amber-400 font-bold">
-                      <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 inline object-contain" />
-                      Coins: {(progress?.credits || 0).toLocaleString()}
+                    <span className="flex items-center gap-2 text-amber-400 font-bold">
+                      <img src="/images/coin-zoomed.png" alt="Coins" className="w-8 h-8 inline object-contain transform scale-125" />
+                      Coins: <strong className="text-amber-400 text-sm">{(progress?.credits || 0).toLocaleString()}</strong>
                     </span>
                   </div>
                 </div>

@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ShoppingBag, Sparkles, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
-  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench, RefreshCw
+  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench, RefreshCw, Zap, Stars
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -55,19 +55,19 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Store Items including Streak Powerups, Hats, Accessories, Auras & Name Gradients
+// Custom Premium Shop Items
 const GEAR_ITEMS = [
-  // Streak Powerups as Store Items with Custom Displays
+  // Streak Powerups as Functional Store Items
   { 
     id: "streak-freeze", 
     name: "Streak Freeze", 
     desc: "Pause your study streak for up to 30 days without losing progress", 
     cost: 50, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-rose-100/90 border-rose-300",
+    innerBg: "bg-gradient-to-br from-rose-500/20 to-pink-500/20 border-rose-400/40",
     type: "powerup",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-rose-500/20 border-2 border-rose-500 flex items-center justify-center text-rose-500 shadow-md">
+      <div className="relative w-20 h-20 rounded-full bg-rose-500/20 border-2 border-rose-500 flex items-center justify-center text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.4)]">
         <PauseCircle className="w-12 h-12 drop-shadow-md" />
       </div>
     )
@@ -78,10 +78,10 @@ const GEAR_ITEMS = [
     desc: "Instantly repair and restore a missed study streak day", 
     cost: 100, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-amber-100/90 border-amber-300",
+    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
     type: "powerup",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center text-amber-500 shadow-md">
+      <div className="relative w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.4)]">
         <Wrench className="w-11 h-11 drop-shadow-md" />
       </div>
     )
@@ -92,11 +92,11 @@ const GEAR_ITEMS = [
     desc: "Complete phoenix revival for broken study streaks", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-orange-100/90 border-orange-300",
+    innerBg: "bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-400/40",
     type: "powerup",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-orange-500/20 border-2 border-orange-500 flex items-center justify-center text-orange-500 shadow-md">
-        <Flame className="w-12 h-12 fill-orange-500 drop-shadow-md" />
+      <div className="relative w-20 h-20 rounded-full bg-orange-500/20 border-2 border-orange-500 flex items-center justify-center text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.4)]">
+        <Flame className="w-12 h-12 fill-orange-400 drop-shadow-md" />
       </div>
     )
   },
@@ -108,14 +108,14 @@ const GEAR_ITEMS = [
     desc: "Glasses for the sun", 
     cost: 35, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-emerald-100/90 border-emerald-300",
+    innerBg: "bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border-emerald-400/40",
     type: "sunglasses",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900 overflow-hidden">
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-emerald-400 overflow-hidden">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-cyan-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+          <div className="w-full h-full rounded-full bg-cyan-500/20 flex items-center justify-center font-bold text-xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -133,23 +133,23 @@ const GEAR_ITEMS = [
     desc: "Protective sports helmet for your avatar", 
     cost: 100, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-red-100/90 border-red-300",
+    innerBg: "bg-gradient-to-br from-red-500/20 to-rose-500/20 border-red-400/40",
     type: "helmet",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-red-500">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-red-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+          <div className="w-full h-full rounded-full bg-red-500/20 flex items-center justify-center font-bold text-xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-22 h-16 bg-red-600 rounded-t-full border-2 border-red-900 z-10 pointer-events-none flex flex-col items-center justify-between p-1 drop-shadow-lg overflow-hidden">
-          <div className="w-18 h-1 bg-white rounded-full mt-1 opacity-80" />
-          <div className="w-20 h-5 bg-neutral-900/90 rounded-b-lg border-t-2 border-red-900 flex justify-around items-center px-1">
-            <div className="w-1 h-3 bg-neutral-400" />
-            <div className="w-1 h-3 bg-neutral-400" />
-            <div className="w-1 h-3 bg-neutral-400" />
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 w-22 h-16 bg-gradient-to-b from-red-500 to-red-700 rounded-t-full border-2 border-red-900 z-10 pointer-events-none flex flex-col items-center justify-between p-1 drop-shadow-lg overflow-hidden">
+          <div className="w-18 h-1 bg-white rounded-full mt-1 opacity-90 shadow-sm" />
+          <div className="w-20 h-5 bg-neutral-950/90 rounded-b-lg border-t-2 border-red-900 flex justify-around items-center px-1">
+            <div className="w-1 h-3 bg-neutral-300" />
+            <div className="w-1 h-3 bg-neutral-300" />
+            <div className="w-1 h-3 bg-neutral-300" />
           </div>
         </div>
       </div>
@@ -161,20 +161,20 @@ const GEAR_ITEMS = [
     desc: "Festive party cone hat with pom pom", 
     cost: 50, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-amber-100/90 border-amber-300",
+    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-amber-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+          <div className="w-full h-full rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
         <div className="absolute -top-7 left-1/2 -translate-x-1/2 z-10 pointer-events-none drop-shadow-md flex flex-col items-center">
-          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-sm" />
-          <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[38px] border-b-amber-500" />
+          <div className="w-3.5 h-3.5 rounded-full bg-rose-500 shadow-md" />
+          <div className="w-0 h-0 border-l-[14px] border-l-transparent border-r-[14px] border-r-transparent border-b-[38px] border-b-amber-400" />
         </div>
       </div>
     )
@@ -185,41 +185,43 @@ const GEAR_ITEMS = [
     desc: "Royal 24k gold scholar crown", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fef9c3]/90 border-yellow-300",
+    innerBg: "bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border-yellow-400/40",
     type: "crown",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-md bg-white border-2 border-neutral-900">
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-yellow-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-xl text-neutral-900">
+          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
-        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-7 bg-amber-400 border-2 border-yellow-600 rounded-t-md z-10 pointer-events-none drop-shadow-md flex justify-between items-end px-1">
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-16 h-7 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 border-2 border-yellow-600 rounded-t-md z-10 pointer-events-none drop-shadow-lg flex justify-between items-end px-1">
           <div className="w-3 h-3 rounded-full bg-rose-500 border border-yellow-700 -mt-2" />
-          <div className="w-3 h-3 rounded-full bg-cyan-500 border border-yellow-700 -mt-3" />
-          <div className="w-3 h-3 rounded-full bg-emerald-500 border border-yellow-700 -mt-2" />
+          <div className="w-3 h-3 rounded-full bg-cyan-400 border border-yellow-700 -mt-3" />
+          <div className="w-3 h-3 rounded-full bg-emerald-400 border border-yellow-700 -mt-2" />
         </div>
       </div>
     )
   },
+
+  // Premium Animated Auras & Effects
   { 
     id: "frame-gold", 
     name: "Imperial Gold Aura", 
     desc: "Golden glowing aura ring around your avatar", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-yellow-100/90 border-yellow-300",
+    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
     type: "frame",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-        <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 blur-sm opacity-80 animate-pulse" />
-        <div className="absolute -inset-1.5 rounded-full border-4 border-amber-400 z-10" />
+        <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 blur-md opacity-90 animate-pulse" />
+        <div className="absolute -inset-1.5 rounded-full border-4 border-amber-400 z-10 shadow-[0_0_15px_rgba(245,158,11,0.9)]" />
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full relative z-20" />
         ) : (
-          <div className="w-full h-full rounded-full bg-amber-100 flex items-center justify-center font-bold text-xl text-neutral-900 relative z-20">
+          <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center font-bold text-xl text-white relative z-20">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -232,16 +234,16 @@ const GEAR_ITEMS = [
     desc: "High-tech energetic neon cyan glow ring", 
     cost: 250, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-cyan-100/90 border-cyan-300",
+    innerBg: "bg-gradient-to-br from-cyan-500/20 to-teal-500/20 border-cyan-400/40",
     type: "frame",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-        <div className="absolute -inset-2.5 rounded-full bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 blur-sm opacity-80 animate-pulse" />
-        <div className="absolute -inset-1.5 rounded-full border-4 border-cyan-400 z-10" />
+        <div className="absolute -inset-3 rounded-full bg-gradient-to-r from-cyan-400 via-teal-300 to-cyan-500 blur-md opacity-90 animate-pulse" />
+        <div className="absolute -inset-1.5 rounded-full border-4 border-cyan-400 z-10 shadow-[0_0_15px_rgba(34,211,238,0.9)]" />
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full relative z-20" />
         ) : (
-          <div className="w-full h-full rounded-full bg-cyan-100 flex items-center justify-center font-bold text-xl text-neutral-900 relative z-20">
+          <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center font-bold text-xl text-white relative z-20">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -249,16 +251,40 @@ const GEAR_ITEMS = [
     )
   },
   { 
+    id: "frame-cosmic-purple", 
+    name: "Cosmic Nebula Aura", 
+    desc: "Spinning deep space purple particle glow aura", 
+    cost: 350, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-400/40",
+    type: "frame",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
+        <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 8, ease: "linear" }} className="absolute -inset-3 rounded-full bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 blur-md opacity-90" />
+        <div className="absolute -inset-1.5 rounded-full border-4 border-purple-400 z-10 shadow-[0_0_20px_rgba(168,85,247,0.9)]" />
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full relative z-20" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-neutral-900 flex items-center justify-center font-bold text-xl text-white relative z-20">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+      </div>
+    )
+  },
+
+  // Animated Text Gradients
+  { 
     id: "grad-fire", 
     name: "Phoenix Fire Gradient", 
     desc: "Fiery red & orange leaderboard name glow", 
     cost: 100, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-orange-100/90 border-orange-300",
+    innerBg: "bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-400/40",
     type: "gradient",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">
-        <span className="font-manrope font-extrabold text-lg bg-gradient-to-r from-red-600 via-orange-500 to-amber-500 bg-clip-text text-transparent drop-shadow-md text-center">
+        <span className="font-manrope font-extrabold text-xl bg-gradient-to-r from-red-500 via-orange-400 to-amber-400 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(249,115,22,0.6)] text-center animate-pulse">
           {userName || "Scholar"}
         </span>
       </div>
@@ -270,11 +296,11 @@ const GEAR_ITEMS = [
     desc: "Multi-chromatic rainbow holographic text", 
     cost: 500, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-purple-100/90 border-purple-300",
+    innerBg: "bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-400/40",
     type: "gradient",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">
-        <span className="font-manrope font-extrabold text-lg bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 bg-clip-text text-transparent drop-shadow-md text-center">
+        <span className="font-manrope font-extrabold text-xl bg-gradient-to-r from-indigo-400 via-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-[0_2px_10px_rgba(192,132,252,0.6)] text-center">
           {userName || "Scholar"}
         </span>
       </div>
@@ -322,6 +348,33 @@ export default function ShopPage() {
       router.push("/");
     } catch (e) {
       console.error("Sign out error:", e);
+    }
+  };
+
+  // Functional Store Item Trigger (Handles powerups, wearables & gradients)
+  const handleItemClick = async (item: typeof GEAR_ITEMS[0], isOwned: boolean, isEquipped: boolean) => {
+    if (item.type === "powerup") {
+      const success = await spendCredits?.(item.cost);
+      if (!success) {
+        alert("Not enough coins!");
+        return;
+      }
+      if (item.id === "streak-freeze") {
+        setPowerupStatusMsg("Streak Freeze Activated! Your study streak is paused & protected for 30 days.");
+      } else if (item.id === "streak-repair") {
+        setPowerupStatusMsg("Streak Repaired! Your missed study streak day has been restored!");
+      } else if (item.id === "streak-revive") {
+        setPowerupStatusMsg("Streak Revived! Phoenix power has completely restored your study streak!");
+      }
+      setTimeout(() => setPowerupStatusMsg(null), 4500);
+      return;
+    }
+
+    if (isOwned) {
+      equipItem?.(item.type, isEquipped ? "" : item.id);
+    } else {
+      const success = await buyItem?.(item.id, item.cost, item.type);
+      if (!success) alert("Not enough coins!");
     }
   };
 
@@ -599,13 +652,12 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner using SHOPbanner.png with text positioned cleanly in the left blank space */}
+          {/* Top Banner using SHOPbanner.png with text positioned slightly right into clear space */}
           <div 
             className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            {/* Positioned text container on the left clear space */}
-            <div className="relative z-10 max-w-sm sm:max-w-md mr-auto space-y-3.5 text-left pl-2 sm:pl-4">
+            <div className="relative z-10 max-w-sm sm:max-w-md mr-auto space-y-3.5 text-left pl-16 sm:pl-28">
               <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
@@ -653,16 +705,16 @@ export default function ShopPage() {
                     <div>
                       <div className="flex items-center justify-between">
                         <h4 className="font-extrabold text-sm text-white font-manrope">{item.name}</h4>
-                        <span className="text-[10px] font-mono font-bold text-white/40">{isOwned ? "1/1" : "0/1"}</span>
+                        <span className="text-[10px] font-mono font-bold text-white/40">{item.type === "powerup" ? "Unlimited" : isOwned ? "1/1" : "0/1"}</span>
                       </div>
                       <p className="text-xs text-white/50 font-medium mt-1">{item.desc}</p>
                     </div>
 
                     {/* Action Button */}
                     <div className="pt-2 border-t border-white/10">
-                      {isOwned ? (
+                      {isOwned && item.type !== "powerup" ? (
                         <button
-                          onClick={() => equipItem?.(item.type as any, isEquipped ? "" : item.id)}
+                          onClick={() => equipItem?.(item.type, isEquipped ? "" : item.id)}
                           className={cn(
                             "w-full py-2.5 rounded-full font-bold text-xs transition-all cursor-pointer shadow-md",
                             isEquipped 
@@ -674,22 +726,19 @@ export default function ShopPage() {
                         </button>
                       ) : (
                         <button
-                          onClick={async () => {
-                            const success = await buyItem?.(item.id, item.cost, item.type as any);
-                            if (!success) alert("Not enough coins!");
-                          }}
+                          onClick={() => handleItemClick(item, isOwned, isEquipped)}
                           disabled={credits < item.cost}
                           className={cn(
-                            "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2 cursor-pointer shadow-md",
+                            "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-md",
                             credits >= item.cost 
                               ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold" 
                               : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                           )}
                         >
-                          <div className="w-6 h-6 flex items-center justify-center shrink-0">
-                            <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain transform scale-125" />
+                          <div className="w-7 h-7 flex items-center justify-center shrink-0">
+                            <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain transform scale-150 drop-shadow-md" />
                           </div>
-                          <span className="text-sm">{item.cost}</span>
+                          <span className="text-base font-extrabold font-mono">{item.cost}</span>
                         </button>
                       )}
                     </div>

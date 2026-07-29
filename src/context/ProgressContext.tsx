@@ -56,8 +56,8 @@ interface ProgressContextType {
   updatePreferences?: (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string }) => Promise<void>;
   spendCredits?: (amount: number) => Promise<boolean>;
   addCredits?: (amount: number, reason?: string) => Promise<void>;
-  equipItem?: (itemType: "frame" | "gradient", itemId: string) => Promise<void>;
-  buyItem?: (itemId: string, cost: number, itemType: "frame" | "gradient") => Promise<boolean>;
+  equipItem?: (itemType: string, itemId: string) => Promise<void>;
+  buyItem?: (itemId: string, cost: number, itemType: string) => Promise<boolean>;
 }
 
 const defaultProgress: UserProgress = {
@@ -1080,7 +1080,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
-  const buyItem = async (itemId: string, cost: number, itemType: "frame" | "gradient"): Promise<boolean> => {
+  const buyItem = async (itemId: string, cost: number, itemType: string): Promise<boolean> => {
     const currentCreds = progress.credits || 0;
     if (currentCreds < cost) return false;
     const inv = progress.inventory || [];
@@ -1110,7 +1110,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     return true;
   };
 
-  const equipItem = async (itemType: "frame" | "gradient", itemId: string) => {
+  const equipItem = async (itemType: string, itemId: string) => {
     const updated: UserProgress = {
       ...progress,
       activeAvatarFrame: itemType === "frame" ? itemId : progress.activeAvatarFrame,
