@@ -429,7 +429,7 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-row relative z-0 overflow-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
       
       {/* STICKY Left Sidebar Navigation */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
@@ -659,7 +659,7 @@ export default function ShopPage() {
       </Sidebar>
 
       {/* Main Workspace Layout */}
-      <div className="flex-1 flex flex-col h-screen overflow-y-auto md:pl-16">
+      <div className="flex-1 flex flex-col min-h-screen md:pl-16">
         
         {/* Top Header Bar */}
         <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#0a0b10]/90 border-b border-white/[0.08] px-8 py-5 flex items-center justify-between">

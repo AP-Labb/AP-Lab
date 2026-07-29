@@ -723,11 +723,11 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="h-screen w-screen flex flex-row relative z-0 overflow-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
 
       {/* ===== LEFT SIDEBAR ===== */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
-        <SidebarBody className="justify-between gap-6 sticky top-0 h-screen overflow-y-auto">
+        <SidebarBody className="justify-between gap-6 sticky top-0">
 
           {/* Top: Logo + Nav Links */}
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -1029,7 +1029,7 @@ export default function Dashboard() {
 
 
       {/* ===== MAIN CONTENT ===== */}
-      <div className="flex-1 flex flex-col h-screen overflow-y-auto md:pl-16 relative">
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
         {/* Mobile top bar spacer */}
         <div className="h-4 md:hidden" />
 
