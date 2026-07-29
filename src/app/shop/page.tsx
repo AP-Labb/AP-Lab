@@ -429,7 +429,7 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
+    <div className="h-screen w-screen flex flex-row relative z-0 overflow-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
       
       {/* STICKY Left Sidebar Navigation */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
@@ -528,6 +528,8 @@ export default function ShopPage() {
               <motion.button
                 onClick={() => setIsReviewModalOpen(true)}
                 className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
+                whileHover="hover"
+                initial="rest"
               >
                 <InstagramLikeStar />
                 <motion.span
@@ -538,6 +540,32 @@ export default function ShopPage() {
                   Review
                 </motion.span>
               </motion.button>
+
+              <Link href="/dashboard/quests" className="w-full">
+                <motion.div
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                  whileHover="hover"
+                  initial="rest"
+                >
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.18, rotate: -8 },
+                    }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Award className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Quests
+                  </motion.span>
+                </motion.div>
+              </Link>
 
               <Link href="/assistant" className="w-full">
                 <motion.div className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full">
@@ -631,7 +659,7 @@ export default function ShopPage() {
       </Sidebar>
 
       {/* Main Workspace Layout */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16">
+      <div className="flex-1 flex flex-col h-screen overflow-y-auto md:pl-16">
         
         {/* Top Header Bar */}
         <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#0a0b10]/90 border-b border-white/[0.08] px-8 py-5 flex items-center justify-between">

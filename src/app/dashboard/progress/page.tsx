@@ -468,31 +468,32 @@ export default function ProgressPage() {
                 </motion.span>
               </motion.button>
 
-              {/* Quests */}
-              <motion.button
-                onClick={() => setShowQuestsModal(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
-                whileHover="hover"
-                initial="rest"
-              >
+              {/* Quests — link to /dashboard/quests */}
+              <Link href="/dashboard/quests" className="w-full">
                 <motion.div
-                  className="flex-shrink-0"
-                  variants={{
-                    rest: { scale: 1, rotate: 0 },
-                    hover: { scale: 1.18, rotate: -8 },
-                  }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                  whileHover="hover"
+                  initial="rest"
                 >
-                  <Award className="w-5 h-5" />
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.18, rotate: -8 },
+                    }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Award className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Quests
+                  </motion.span>
                 </motion.div>
-                <motion.span
-                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Quests
-                </motion.span>
-              </motion.button>
+              </Link>
 
               {/* AI Assistant */}
               <Link href="/assistant" className="w-full">

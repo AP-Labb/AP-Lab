@@ -723,11 +723,11 @@ export default function Dashboard() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
+    <div className="h-screen w-screen flex flex-row relative z-0 overflow-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
 
       {/* ===== LEFT SIDEBAR ===== */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
-        <SidebarBody className="justify-between gap-6 sticky top-0">
+        <SidebarBody className="justify-between gap-6 sticky top-0 h-screen overflow-y-auto">
 
           {/* Top: Logo + Nav Links */}
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
@@ -866,31 +866,32 @@ export default function Dashboard() {
                 </motion.span>
               </motion.button>
 
-              {/* Quests — award icon with glow pulse on row hover */}
-              <motion.button
-                onClick={() => setShowQuestsModal(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
-                whileHover="hover"
-                initial="rest"
-              >
+              {/* Quests — link to /dashboard/quests */}
+              <Link href="/dashboard/quests" className="w-full">
                 <motion.div
-                  className="flex-shrink-0"
-                  variants={{
-                    rest: { scale: 1, rotate: 0 },
-                    hover: { scale: 1.18, rotate: -8 },
-                  }}
-                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                  whileHover="hover"
+                  initial="rest"
                 >
-                  <Award className="w-5 h-5" />
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.18, rotate: -8 },
+                    }}
+                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Award className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Quests
+                  </motion.span>
                 </motion.div>
-                <motion.span
-                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Quests
-                </motion.span>
-              </motion.button>
+              </Link>
 
               {/* AI Assistant — Panda Mascot Icon */}
               <Link href="/assistant" className="w-full">
@@ -1028,7 +1029,7 @@ export default function Dashboard() {
 
 
       {/* ===== MAIN CONTENT ===== */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
+      <div className="flex-1 flex flex-col h-screen overflow-y-auto md:pl-16 relative">
         {/* Mobile top bar spacer */}
         <div className="h-4 md:hidden" />
 
