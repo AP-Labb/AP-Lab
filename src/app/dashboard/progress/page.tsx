@@ -1186,9 +1186,15 @@ export default function ProgressPage() {
                   <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden">
                     <div className="h-full bg-white/50 transition-all duration-300" style={{ width: `${progressPercent}%` }} />
                   </div>
-                  <div className="flex justify-between items-center text-[10px] font-mono text-white/40 pt-1 border-t border-white/5">
-                    <span>Total XP Earned: <strong className="text-white">{xp.toLocaleString()} XP</strong></span>
-                    <span className="text-amber-400 font-bold">Total Credits: {(progress?.totalCreditsEarned || 0).toLocaleString()} C</span>
+                  <div className="flex justify-between items-center text-[11px] font-mono text-white/50 pt-2 border-t border-white/5">
+                    <span className="flex items-center gap-1.5">
+                      <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 inline object-contain" />
+                      Total XP: <strong className="text-purple-300">{xp.toLocaleString()} XP</strong>
+                    </span>
+                    <span className="flex items-center gap-1.5 text-amber-400 font-bold">
+                      <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 inline object-contain" />
+                      Coins: {(progress?.credits || 0).toLocaleString()}
+                    </span>
                   </div>
                 </div>
 

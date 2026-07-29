@@ -65,11 +65,11 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
             </span>
             <div className="flex items-center gap-2 mt-0.5 whitespace-nowrap font-mono font-bold text-[9px] sm:text-[10px]">
               <span className={cn("flex items-center gap-1", isLightMode ? "text-slate-600" : "text-white/50")}>
-                <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 inline object-contain" />
+                <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 inline object-contain" />
                 Lvl {level} • {totalXp.toLocaleString()}
               </span>
               <span className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-full border border-amber-400/20 font-manrope font-extrabold flex items-center gap-1">
-                <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 inline object-contain" />
+                <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 inline object-contain" />
                 {(progress?.credits || 0).toLocaleString()}
               </span>
             </div>

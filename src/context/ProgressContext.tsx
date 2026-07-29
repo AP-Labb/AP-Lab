@@ -498,6 +498,12 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           streakCount: Math.max(firestoreData.streakCount || 0, localProgress?.streakCount || 0, guestProgress?.streakCount || 0),
           maxStreak: Math.max(firestoreData.maxStreak || 0, localProgress?.maxStreak || 0, guestProgress?.maxStreak || 0),
           streakLastActive: firestoreData.streakLastActive || localProgress?.streakLastActive || guestProgress?.streakLastActive || "",
+          credits: Math.max(firestoreData.credits || 0, localProgress?.credits || 0, guestProgress?.credits || 0),
+          totalCreditsEarned: Math.max(firestoreData.totalCreditsEarned || 0, localProgress?.totalCreditsEarned || 0, guestProgress?.totalCreditsEarned || 0),
+          earnedCreditIds: Array.from(new Set([...(firestoreData.earnedCreditIds || []), ...(localProgress?.earnedCreditIds || []), ...(guestProgress?.earnedCreditIds || [])])),
+          inventory: Array.from(new Set([...(firestoreData.inventory || []), ...(localProgress?.inventory || []), ...(guestProgress?.inventory || [])])),
+          activeAvatarFrame: firestoreData.activeAvatarFrame || localProgress?.activeAvatarFrame || "",
+          activeNameGradient: firestoreData.activeNameGradient || localProgress?.activeNameGradient || "",
           activityLogs: firestoreData.activityLogs || localProgress?.activityLogs || guestProgress?.activityLogs || [],
           studyTimeLogs: firestoreData.studyTimeLogs || localProgress?.studyTimeLogs || guestProgress?.studyTimeLogs || {},
           isOnboarded: firestoreData.isOnboarded || localProgress?.isOnboarded || false,
@@ -514,6 +520,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         const needsFirestoreWrite = 
           firestoreData.xp !== merged.xp || 
           firestoreData.level !== merged.level || 
+          firestoreData.credits !== merged.credits ||
           (firestoreData.completedTopics || []).length !== merged.completedTopics.length ||
           firestoreData.streakCount !== merged.streakCount;
 
@@ -526,6 +533,12 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
             totalQuestionsCorrect: merged.totalQuestionsCorrect,
             xp: merged.xp,
             level: merged.level,
+            credits: merged.credits,
+            totalCreditsEarned: merged.totalCreditsEarned,
+            earnedCreditIds: merged.earnedCreditIds,
+            inventory: merged.inventory,
+            activeAvatarFrame: merged.activeAvatarFrame,
+            activeNameGradient: merged.activeNameGradient,
             lastAccessed: serverTimestamp(),
             streakCount: merged.streakCount,
             maxStreak: merged.maxStreak,

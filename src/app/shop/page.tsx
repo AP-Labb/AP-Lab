@@ -12,7 +12,45 @@ import { useProgress } from "@/context/ProgressContext";
 import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
+import { ReviewModal } from "@/components/ReviewModal";
+import { InstagramLikeStar } from "@/components/InstagramLikeStar";
+import { SettingsModal } from "@/components/SettingsModal";
+import { Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+
+function SidebarSettingsButton({ open }: { open: boolean }) {
+  const [isOpen, setIsOpen] = useState(false);
+
+  return (
+    <>
+      <motion.button
+        onClick={() => setIsOpen(true)}
+        className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+        whileHover="hover"
+        initial="rest"
+      >
+        <motion.div
+          className="flex-shrink-0"
+          variants={{
+            rest: { rotate: 0 },
+            hover: { rotate: 90 },
+          }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+        >
+          <Settings className="w-5 h-5" />
+        </motion.div>
+        <motion.span
+          animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
+          transition={{ duration: 0.15 }}
+          className="text-sm font-manrope font-semibold whitespace-pre"
+        >
+          Settings
+        </motion.span>
+      </motion.button>
+      {isOpen && <SettingsModal isOpen={isOpen} onClose={() => setIsOpen(false)} />}
+    </>
+  );
+}
 
 // Cosmetic Items Data with Clean Styling
 const AVATAR_FRAMES = [
@@ -29,11 +67,13 @@ const NAME_GRADIENTS = [
   { id: "grad-holographic", name: "Holographic", cost: 500, style: "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent font-extrabold animate-pulse", desc: "Multi-chromatic rainbow holographic luster" },
 ];
 
-// Slot Machine Symbols using exact PNG icons
+// Unique Slot Machine Symbols
 const SLOT_SYMBOLS = [
-  { img: "/images/coin-exact.png", name: "Coin", multiplier: 10 },
-  { img: "/images/xp-shield-exact.png", name: "XP Shield", multiplier: 5 },
-  { img: "/images/panda-ai.png", name: "Panda", multiplier: 3 },
+  { symbol: "🎰", name: "Lucky 7", multiplier: 10, color: "text-amber-400" },
+  { symbol: "💎", name: "Diamond Gem", multiplier: 7, color: "text-cyan-400" },
+  { symbol: "👑", name: "Golden Crown", multiplier: 5, color: "text-yellow-400" },
+  { symbol: "⚡", name: "Lightning Bolt", multiplier: 3, color: "text-purple-400" },
+  { symbol: "🍒", name: "Cherry Pair", multiplier: 2, color: "text-rose-400" },
 ];
 
 export default function ShopPage() {
@@ -41,11 +81,13 @@ export default function ShopPage() {
   const { progress, spendCredits, addCredits, buyItem, equipItem } = useProgress();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"cosmetics" | "gamble">("cosmetics");
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [showQuestsModal, setShowQuestsModal] = useState(false);
   
   // Slot Machine State
   const [betAmount, setBetAmount] = useState<number>(10);
   const [spinning, setSpinning] = useState(false);
-  const [reels, setReels] = useState([SLOT_SYMBOLS[0].img, SLOT_SYMBOLS[1].img, SLOT_SYMBOLS[0].img]);
+  const [reels, setReels] = useState([SLOT_SYMBOLS[0], SLOT_SYMBOLS[1], SLOT_SYMBOLS[2]]);
   const [gambleResult, setGambleResult] = useState<{ message: string; won: boolean; amount: number } | null>(null);
 
   const credits = progress?.credits || 0;
@@ -69,9 +111,9 @@ export default function ShopPage() {
     const interval = setInterval(() => {
       spinCount++;
       setReels([
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].img,
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].img,
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].img,
+        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
+        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
+        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
       ]);
 
       if (spinCount >= 22) {
@@ -84,7 +126,7 @@ export default function ShopPage() {
           SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
         ];
 
-        setReels(finalReels.map(r => r.img));
+        setReels(finalReels);
         setSpinning(false);
 
         // Check wins
@@ -92,7 +134,7 @@ export default function ShopPage() {
           // Jackpot 3 matching!
           const winnings = Math.round(betAmount * finalReels[0].multiplier);
           addCredits?.(winnings, `JACKPOT! 3x ${finalReels[0].name}!`);
-          setGambleResult({ message: `JACKPOT! Matched 3x ${finalReels[0].name}! Won ${winnings} Coins!`, won: true, amount: winnings });
+          setGambleResult({ message: `JACKPOT! Matched 3x ${finalReels[0].symbol} ${finalReels[0].name}! Won ${winnings} Coins!`, won: true, amount: winnings });
         } else if (finalReels[0].name === finalReels[1].name || finalReels[1].name === finalReels[2].name || finalReels[0].name === finalReels[2].name) {
           // 2 matching
           const winnings = Math.round(betAmount * 1.5);
@@ -111,35 +153,217 @@ export default function ShopPage() {
       {/* Sidebar Navigation */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
         <SidebarBody className="justify-between gap-6 sticky top-0">
+          {/* Top: Logo + Nav Links */}
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
-              <Activity className="w-5 h-5 text-white flex-shrink-0" />
-              <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="font-bold text-white text-sm">
+            <Link
+              href="/"
+              className="flex items-center gap-3 px-2 py-2.5 mb-4 group"
+            >
+              <motion.div
+                whileHover={{ rotate: [0, -10, 10, -6, 6, 0] }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+              >
+                <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
+              </motion.div>
+              <motion.span
+                animate={{
+                  display: sidebarOpen ? "inline-block" : "none",
+                  opacity: sidebarOpen ? 1 : 0,
+                }}
+                transition={{ duration: 0.15 }}
+                className="font-manrope font-bold text-white tracking-tight whitespace-pre text-sm"
+              >
                 AP Lab
               </motion.span>
             </Link>
+
+            {/* Divider */}
             <div className="h-px bg-white/[0.06] mb-4 mx-2" />
+
+            {/* Nav Links */}
             <div className="flex flex-col gap-1">
-              <Link href="/" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <Home className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Home</motion.span>
+              <motion.div whileHover="hover" initial="rest">
+                <Link
+                  href="/"
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
+                >
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { y: 0, scale: 1 },
+                      hover: { y: -3, scale: 1.1 },
+                    }}
+                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <Home className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Home
+                  </motion.span>
+                </Link>
+              </motion.div>
+
+              <motion.div whileHover="hover" initial="rest">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
+                >
+                  <motion.div
+                    className="flex-shrink-0"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.15, rotate: 8 },
+                    }}
+                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <LayoutDashboard className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Dashboard
+                  </motion.span>
+                </Link>
+              </motion.div>
+
+              <motion.div whileHover="hover" initial="rest">
+                <Link
+                  href="/dashboard/progress"
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
+                >
+                  <div className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]">
+                    {[
+                      { height: "40%", delay: 0 },
+                      { height: "70%", delay: 0.05 },
+                      { height: "55%", delay: 0.1 },
+                      { height: "90%", delay: 0.15 },
+                    ].map((bar, i) => (
+                      <motion.div
+                        key={i}
+                        className="flex-1 rounded-sm bg-current"
+                        style={{ height: bar.height }}
+                        variants={{
+                          rest: { scaleY: 1, originY: 1 },
+                          hover: { scaleY: [1, 1.5, 1.2, 1.35, 1], originY: 1 },
+                        }}
+                        transition={{ duration: 0.5, delay: bar.delay, ease: "easeInOut" }}
+                      />
+                    ))}
+                  </div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    Progress
+                  </motion.span>
+                </Link>
+              </motion.div>
+
+              {/* Review */}
+              <motion.button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
+                whileHover="hover"
+                initial="rest"
+              >
+                <InstagramLikeStar />
+                <motion.span
+                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Review
+                </motion.span>
+              </motion.button>
+
+              {/* Quests */}
+              <motion.button
+                onClick={() => setShowQuestsModal(true)}
+                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
+                whileHover="hover"
+                initial="rest"
+              >
+                <motion.div
+                  className="flex-shrink-0"
+                  variants={{
+                    rest: { scale: 1, rotate: 0 },
+                    hover: { scale: 1.18, rotate: -8 },
+                  }}
+                  transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  <Award className="w-5 h-5" />
+                </motion.div>
+                <motion.span
+                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="text-sm font-manrope font-semibold whitespace-pre"
+                >
+                  Quests
+                </motion.span>
+              </motion.button>
+
+              {/* AI Assistant */}
+              <Link href="/assistant" className="w-full">
+                <motion.div
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group cursor-pointer"
+                  whileHover="hover"
+                  initial="rest"
+                >
+                  <motion.div
+                    className="w-5 h-5 shrink-0 flex items-center justify-center"
+                    variants={{
+                      rest: { scale: 1, rotate: 0, y: 0 },
+                      hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0], y: -1 },
+                    }}
+                    transition={{ duration: 0.4, ease: "easeInOut" }}
+                  >
+                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-semibold whitespace-pre"
+                  >
+                    AI Assistant
+                  </motion.span>
+                </motion.div>
               </Link>
-              <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <LayoutDashboard className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Dashboard</motion.span>
+
+              {/* Shop (Active) */}
+              <Link href="/shop" className="w-full">
+                <motion.div
+                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white w-full group cursor-pointer"
+                  whileHover="hover"
+                  initial="rest"
+                >
+                  <motion.div
+                    className="w-5 h-5 shrink-0 flex items-center justify-center text-amber-400"
+                    variants={{
+                      rest: { scale: 1, rotate: 0 },
+                      hover: { scale: 1.2, rotate: 12 },
+                    }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <ShoppingBag className="w-5 h-5" />
+                  </motion.div>
+                  <motion.span
+                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-sm font-manrope font-bold whitespace-pre text-amber-400"
+                  >
+                    Shop
+                  </motion.span>
+                </motion.div>
               </Link>
-              <Link href="/dashboard/progress" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <BarChart2 className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Progress</motion.span>
-              </Link>
-              <Link href="/assistant" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <img src="/images/panda-ai.png" alt="Panda AI" className="w-5 h-5 shrink-0 object-contain" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">AI Assistant</motion.span>
-              </Link>
-              <Link href="/shop" className="flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/10 text-amber-400 font-bold border border-amber-400/20">
-                <ShoppingBag className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-bold">Shop</motion.span>
-              </Link>
+
+              <SidebarSettingsButton open={sidebarOpen} />
             </div>
           </div>
         </SidebarBody>
@@ -357,14 +581,17 @@ export default function ShopPage() {
 
                 {/* Reels Container */}
                 <div className="w-full bg-[#07080e] border border-white/10 rounded-2xl p-6 flex items-center justify-center space-x-4">
-                  {reels.map((imgUrl, idx) => (
+                  {reels.map((item, idx) => (
                     <motion.div 
                       key={idx}
                       animate={spinning ? { y: [-6, 6, -6] } : { y: 0 }}
                       transition={{ repeat: Infinity, duration: 0.1 }}
-                      className="w-20 h-28 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-inner"
+                      className="w-24 h-32 rounded-2xl bg-white/[0.03] border border-white/10 flex flex-col items-center justify-center shadow-inner select-none space-y-1"
                     >
-                      <img src={imgUrl} alt="Slot" className="w-12 h-12 object-contain drop-shadow-md" />
+                      <span className="text-4xl drop-shadow-[0_0_12px_rgba(255,255,255,0.4)]">{item.symbol}</span>
+                      <span className={cn("text-[10px] font-bold font-mono uppercase tracking-wider", item.color)}>
+                        {item.name}
+                      </span>
                     </motion.div>
                   ))}
                 </div>
@@ -422,10 +649,11 @@ export default function ShopPage() {
                 </button>
 
                 {/* Paytable */}
-                <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[11px] font-mono text-white/40">
-                  <span>3x Coins: 10x</span>
-                  <span>3x XP Shield: 5x</span>
-                  <span>3x Panda: 3x</span>
+                <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[10px] font-mono text-white/40">
+                  <span>🎰🎰🎰 10x</span>
+                  <span>💎💎💎 7x</span>
+                  <span>👑👑👑 5x</span>
+                  <span>⚡⚡⚡ 3x</span>
                 </div>
               </div>
             </div>
@@ -435,6 +663,7 @@ export default function ShopPage() {
       </div>
 
       <DashboardContextMenu onOpenProfile={() => {}} />
+      <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
     </div>
   );
 }

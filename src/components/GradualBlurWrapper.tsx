@@ -13,8 +13,9 @@ export function GradualBlurWrapper() {
   const isDashboardPage = pathname === "/dashboard";
 
   const isAssistantPage = pathname === "/assistant";
+  const isShopPage = pathname === "/shop";
 
-  if (isCoursePage || isAssistantPage || isDashboardPage) {
+  if (isCoursePage || isAssistantPage || isDashboardPage || isShopPage) {
     return null;
   }
 
