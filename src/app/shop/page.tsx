@@ -29,10 +29,10 @@ const NAME_GRADIENTS = [
   { id: "grad-holographic", name: "Holographic", cost: 500, style: "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent font-extrabold animate-pulse", desc: "Multi-chromatic rainbow holographic luster" },
 ];
 
-// Slot Machine Symbols using Clean PNG icons
+// Slot Machine Symbols using exact PNG icons
 const SLOT_SYMBOLS = [
-  { img: "/images/coin-icon-clean.png", name: "Coin", multiplier: 10 },
-  { img: "/images/xp-shield-clean.png", name: "XP Shield", multiplier: 5 },
+  { img: "/images/coin-exact.png", name: "Coin", multiplier: 10 },
+  { img: "/images/xp-shield-exact.png", name: "XP Shield", multiplier: 5 },
   { img: "/images/panda-ai.png", name: "Panda", multiplier: 3 },
 ];
 
@@ -263,7 +263,7 @@ export default function ShopPage() {
                                   : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                               )}
                             >
-                              <img src="/images/coin-icon-clean.png" alt="Coin" className="w-4 h-4 object-contain inline" />
+                              <img src="/images/coin-exact.png" alt="Coin" className="w-5 h-5 object-contain inline" />
                               <span>{item.cost} Coins</span>
                             </button>
                           )}
@@ -330,7 +330,7 @@ export default function ShopPage() {
                                   : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                               )}
                             >
-                              <img src="/images/coin-icon-clean.png" alt="Coin" className="w-4 h-4 object-contain inline" />
+                              <img src="/images/coin-exact.png" alt="Coin" className="w-5 h-5 object-contain inline" />
                               <span>{item.cost} Coins</span>
                             </button>
                           )}

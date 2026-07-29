@@ -1144,25 +1144,25 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
               className="flex items-center space-x-3.5 pointer-events-auto bg-[#0b0d17]/95 backdrop-blur-2xl border border-white/12 text-white px-5 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
             >
-              <div className="flex h-10 w-10 items-center justify-center shrink-0">
+              <div className="flex h-12 w-12 items-center justify-center shrink-0">
                 {toast.creditAmount ? (
-                  <img src="/images/coin-icon-clean.png" alt="Coins" className="w-8 h-8 object-contain drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
+                  <img src="/images/coin-exact.png" alt="Coins" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
                 ) : (
-                  <img src="/images/xp-shield-clean.png" alt="XP" className="w-8 h-8 object-contain drop-shadow-[0_0_12px_rgba(168,85,247,0.5)]" />
+                  <img src="/images/xp-shield-exact.png" alt="XP" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(168,85,247,0.5)]" />
                 )}
               </div>
               <div className="flex flex-col">
                 <span className="text-xs font-manrope font-bold text-white/60">{toast.message}</span>
                 <div className="flex items-center gap-2 mt-0.5">
                   {toast.amount > 0 && (
-                    <span className="text-sm font-black text-purple-300 font-mono tracking-wide flex items-center gap-1">
-                      <img src="/images/xp-shield-clean.png" alt="XP" className="w-3.5 h-3.5 inline object-contain" />
+                    <span className="text-sm font-black text-purple-300 font-mono tracking-wide flex items-center gap-1.5">
+                      <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 inline object-contain" />
                       +{toast.amount} XP
                     </span>
                   )}
                   {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
-                    <span className="text-sm font-black text-amber-300 font-mono tracking-wide flex items-center gap-1">
-                      <img src="/images/coin-icon-clean.png" alt="Coin" className="w-3.5 h-3.5 inline object-contain" />
+                    <span className="text-sm font-black text-amber-300 font-mono tracking-wide flex items-center gap-1.5">
+                      <img src="/images/coin-exact.png" alt="Coin" className="w-5 h-5 inline object-contain" />
                       +{toast.creditAmount} Coins
                     </span>
                   )}

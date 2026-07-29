@@ -1031,12 +1031,12 @@ export default function Dashboard() {
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
         {/* Top Right Header Capsules */}
         <div className="absolute top-6 right-8 z-50 hidden md:block">
-          <HeaderUserCapsules />
+          <HeaderUserCapsules onOpenProfile={() => setShowAccountPopup(true)} />
         </div>
 
         {/* Mobile top bar spacer */}
         <div className="h-14 md:hidden flex items-center justify-end px-4 pt-2">
-          <HeaderUserCapsules />
+          <HeaderUserCapsules onOpenProfile={() => setShowAccountPopup(true)} />
         </div>
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
