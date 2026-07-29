@@ -63,12 +63,14 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
             <span className={cn("font-manrope font-extrabold text-xs sm:text-sm tracking-tight leading-none transition-colors truncate max-w-[90px] sm:max-w-[120px]", isLightMode ? "text-slate-900 group-hover:text-emerald-600" : "text-white group-hover:text-emerald-400")}>
               {displayName}
             </span>
-            <div className="flex items-center gap-1.5 mt-0.5 whitespace-nowrap font-mono font-bold text-[9px] sm:text-[10px]">
-              <span className={isLightMode ? "text-slate-600" : "text-white/50"}>
-                Lvl {level} • {totalXp.toLocaleString()} XP
+            <div className="flex items-center gap-2 mt-0.5 whitespace-nowrap font-mono font-bold text-[9px] sm:text-[10px]">
+              <span className={cn("flex items-center gap-1", isLightMode ? "text-slate-600" : "text-white/50")}>
+                <img src="/images/xp-shield-clean.png" alt="XP" className="w-3.5 h-3.5 inline object-contain" />
+                Lvl {level} • {totalXp.toLocaleString()}
               </span>
-              <span className="text-amber-400 bg-amber-400/10 px-1.5 py-0.2 rounded border border-amber-400/20 font-manrope font-extrabold">
-                {(progress?.credits || 0).toLocaleString()} C
+              <span className="text-amber-400 bg-amber-400/10 px-1.5 py-0.5 rounded-full border border-amber-400/20 font-manrope font-extrabold flex items-center gap-1">
+                <img src="/images/coin-icon-clean.png" alt="Coins" className="w-3.5 h-3.5 inline object-contain" />
+                {(progress?.credits || 0).toLocaleString()}
               </span>
             </div>
           </div>

@@ -23,6 +23,7 @@ import { courseRegistry } from "@/lib/courses/course-registry";
 import { ReviewModal } from "@/components/ReviewModal";
 import { Onboarding } from "@/components/Onboarding";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { SettingsModal } from "@/components/SettingsModal";
 import { getLevelForXp, getXpThresholdForLevel } from "@/lib/xpProgression";
@@ -1027,9 +1028,16 @@ export default function Dashboard() {
 
 
       {/* ===== MAIN CONTENT ===== */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16">
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
+        {/* Top Right Header Capsules */}
+        <div className="absolute top-6 right-8 z-50 hidden md:block">
+          <HeaderUserCapsules />
+        </div>
+
         {/* Mobile top bar spacer */}
-        <div className="h-14 md:hidden" />
+        <div className="h-14 md:hidden flex items-center justify-end px-4 pt-2">
+          <HeaderUserCapsules />
+        </div>
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
         

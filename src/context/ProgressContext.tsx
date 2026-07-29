@@ -1142,18 +1142,28 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -20, scale: 0.9, transition: { duration: 0.2 } }}
               transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="flex items-center space-x-3 pointer-events-auto bg-black/90 backdrop-blur-md border border-amber-500/30 text-white px-4 py-3 rounded-2xl shadow-[0_8px_32px_rgba(234,179,8,0.2)] border-l-4 border-l-amber-400"
+              className="flex items-center space-x-3.5 pointer-events-auto bg-[#0b0d17]/95 backdrop-blur-2xl border border-white/12 text-white px-5 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
             >
-              <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-500/20 text-amber-400 shadow-[0_0_15px_rgba(251,191,36,0.3)]">
-                <span className="font-extrabold text-sm font-manrope">C</span>
+              <div className="flex h-10 w-10 items-center justify-center shrink-0">
+                {toast.creditAmount ? (
+                  <img src="/images/coin-icon-clean.png" alt="Coins" className="w-8 h-8 object-contain drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
+                ) : (
+                  <img src="/images/xp-shield-clean.png" alt="XP" className="w-8 h-8 object-contain drop-shadow-[0_0_12px_rgba(168,85,247,0.5)]" />
+                )}
               </div>
               <div className="flex flex-col">
-                <span className="text-xs font-semibold text-neutral-400 uppercase tracking-wider">{toast.message}</span>
-                <div className="flex items-center gap-2">
-                  {toast.amount > 0 && <span className="text-sm font-black text-white font-mono tracking-wide">+{toast.amount} XP</span>}
+                <span className="text-xs font-manrope font-bold text-white/60">{toast.message}</span>
+                <div className="flex items-center gap-2 mt-0.5">
+                  {toast.amount > 0 && (
+                    <span className="text-sm font-black text-purple-300 font-mono tracking-wide flex items-center gap-1">
+                      <img src="/images/xp-shield-clean.png" alt="XP" className="w-3.5 h-3.5 inline object-contain" />
+                      +{toast.amount} XP
+                    </span>
+                  )}
                   {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
                     <span className="text-sm font-black text-amber-300 font-mono tracking-wide flex items-center gap-1">
-                      +{toast.creditAmount} Credits
+                      <img src="/images/coin-icon-clean.png" alt="Coin" className="w-3.5 h-3.5 inline object-contain" />
+                      +{toast.creditAmount} Coins
                     </span>
                   )}
                 </div>

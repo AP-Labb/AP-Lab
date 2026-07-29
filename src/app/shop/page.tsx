@@ -1,19 +1,20 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  ShoppingBag, Sparkles, Dna, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
-  Flame, CheckCircle2, RotateCw, ShieldAlert, Zap, Compass, BookOpen, Crown, Palette, Dices, Activity
+  ShoppingBag, Sparkles, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
+  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Sparkle
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
-import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
+import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
+import { cn } from "@/lib/utils";
 
-// Cosmetic Items Data
+// Cosmetic Items Data with Clean Styling
 const AVATAR_FRAMES = [
   { id: "frame-gold", name: "Imperial Gold", cost: 150, color: "from-amber-400 to-yellow-600", desc: "Golden glowing aura ring around your avatar" },
   { id: "frame-neon-cyan", name: "Cyber Cyan", cost: 250, color: "from-cyan-400 to-blue-600", desc: "High-tech energetic neon glow ring" },
@@ -28,13 +29,11 @@ const NAME_GRADIENTS = [
   { id: "grad-holographic", name: "Holographic", cost: 500, style: "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent font-extrabold animate-pulse", desc: "Multi-chromatic rainbow holographic luster" },
 ];
 
-// Slot Machine Symbols
+// Slot Machine Symbols using Clean PNG icons
 const SLOT_SYMBOLS = [
-  { char: "💎", name: "Diamond", multiplier: 10 },
-  { char: "⭐", name: "Star", multiplier: 5 },
-  { char: "⚡", name: "Bolt", multiplier: 3 },
-  { char: "🍀", name: "Clover", multiplier: 2 },
-  { char: "🍒", name: "Cherry", multiplier: 1.5 },
+  { img: "/images/coin-icon-clean.png", name: "Coin", multiplier: 10 },
+  { img: "/images/xp-shield-clean.png", name: "XP Shield", multiplier: 5 },
+  { img: "/images/panda-ai.png", name: "Panda", multiplier: 3 },
 ];
 
 export default function ShopPage() {
@@ -43,15 +42,13 @@ export default function ShopPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"cosmetics" | "gamble">("cosmetics");
   
-  // Gambling State
+  // Slot Machine State
   const [betAmount, setBetAmount] = useState<number>(10);
   const [spinning, setSpinning] = useState(false);
-  const [reels, setReels] = useState(["💎", "⭐", "⚡"]);
+  const [reels, setReels] = useState([SLOT_SYMBOLS[0].img, SLOT_SYMBOLS[1].img, SLOT_SYMBOLS[0].img]);
   const [gambleResult, setGambleResult] = useState<{ message: string; won: boolean; amount: number } | null>(null);
 
   const credits = progress?.credits || 0;
-  const xp = progress?.xp || 0;
-  const level = progress?.level || 1;
   const inventory = progress?.inventory || [];
   const activeFrame = progress?.activeAvatarFrame || "";
   const activeGrad = progress?.activeNameGradient || "";
@@ -67,17 +64,17 @@ export default function ShopPage() {
     setSpinning(true);
     setGambleResult(null);
 
-    // Spin animation intervals
+    // Spin animation loop
     let spinCount = 0;
     const interval = setInterval(() => {
       spinCount++;
       setReels([
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].char,
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].char,
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].char,
+        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].img,
+        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].img,
+        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)].img,
       ]);
 
-      if (spinCount >= 20) {
+      if (spinCount >= 22) {
         clearInterval(interval);
         
         // Final outcomes
@@ -87,29 +84,29 @@ export default function ShopPage() {
           SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
         ];
 
-        setReels(finalReels.map(r => r.char));
+        setReels(finalReels.map(r => r.img));
         setSpinning(false);
 
         // Check wins
-        if (finalReels[0].char === finalReels[1].char && finalReels[1].char === finalReels[2].char) {
+        if (finalReels[0].name === finalReels[1].name && finalReels[1].name === finalReels[2].name) {
           // Jackpot 3 matching!
           const winnings = Math.round(betAmount * finalReels[0].multiplier);
           addCredits?.(winnings, `JACKPOT! 3x ${finalReels[0].name}!`);
-          setGambleResult({ message: `JACKPOT! Matched 3x ${finalReels[0].name}! Won ${winnings} Credits!`, won: true, amount: winnings });
-        } else if (finalReels[0].char === finalReels[1].char || finalReels[1].char === finalReels[2].char || finalReels[0].char === finalReels[2].char) {
+          setGambleResult({ message: `JACKPOT! Matched 3x ${finalReels[0].name}! Won ${winnings} Coins!`, won: true, amount: winnings });
+        } else if (finalReels[0].name === finalReels[1].name || finalReels[1].name === finalReels[2].name || finalReels[0].name === finalReels[2].name) {
           // 2 matching
           const winnings = Math.round(betAmount * 1.5);
           addCredits?.(winnings, "Double Match!");
-          setGambleResult({ message: `Nice! Matched 2 symbols! Won ${winnings} Credits!`, won: true, amount: winnings });
+          setGambleResult({ message: `Matched 2 symbols! Won ${winnings} Coins!`, won: true, amount: winnings });
         } else {
-          setGambleResult({ message: `No match! Lost ${betAmount} Credits. Spin again!`, won: false, amount: 0 });
+          setGambleResult({ message: `No match! Lost ${betAmount} Coins. Spin again!`, won: false, amount: 0 });
         }
       }
-    }, 90);
+    }, 80);
   };
 
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] text-white selection:bg-amber-500 selection:text-black font-manrope">
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#07080e] text-white selection:bg-amber-400 selection:text-black font-manrope">
       
       {/* Sidebar Navigation */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
@@ -139,7 +136,7 @@ export default function ShopPage() {
                 <img src="/images/panda-ai.png" alt="Panda AI" className="w-5 h-5 shrink-0 object-contain" />
                 <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">AI Assistant</motion.span>
               </Link>
-              <Link href="/shop" className="flex items-center gap-3 px-2 py-2.5 rounded-xl bg-amber-500/15 text-amber-400 border border-amber-500/30">
+              <Link href="/shop" className="flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/10 text-amber-400 font-bold border border-amber-400/20">
                 <ShoppingBag className="w-5 h-5 shrink-0" />
                 <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-bold">Shop</motion.span>
               </Link>
@@ -151,97 +148,66 @@ export default function ShopPage() {
       {/* Main Workspace Layout */}
       <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16">
         
-        {/* Top Header Bar */}
-        <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#03040a]/80 border-b border-white/[0.08] px-6 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        {/* Top Header Bar matching website navbar design */}
+        <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#07080e]/90 border-b border-white/[0.08] px-8 py-5 flex items-center justify-between">
+          <div className="flex items-center space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-400">
               <ShoppingBag className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="font-instrument text-2xl font-bold tracking-tight text-white">Academic Marketplace</h1>
-              <p className="text-xs text-white/40 font-mono">Unlock Avatar Effects, Name Styles & Slot Machine Gambling</p>
+              <h1 className="font-instrument text-2xl font-bold tracking-tight text-white">Store</h1>
+              <p className="text-xs text-white/40 font-manrope">Spend earned coins on cosmetics and mini-games</p>
             </div>
           </div>
 
-          {/* Top Left/Right Stats Capsules */}
-          <div className="flex items-center space-x-3">
-            <div className="flex items-center space-x-2 bg-white/[0.04] border border-white/10 px-4 py-2 rounded-2xl">
-              <Zap className="w-4 h-4 text-cyan-400" />
-              <div className="flex flex-col text-left">
-                <span className="text-[9px] font-mono text-white/40 uppercase">Level {level}</span>
-                <span className="text-xs font-bold font-mono text-white">{xp.toLocaleString()} XP</span>
-              </div>
-            </div>
-
-            <div className="flex items-center space-x-2 bg-amber-500/10 border border-amber-500/30 px-4 py-2 rounded-2xl">
-              <span className="w-5 h-5 rounded-lg bg-amber-500/20 text-amber-400 font-extrabold flex items-center justify-center text-xs">C</span>
-              <div className="flex flex-col text-left">
-                <span className="text-[9px] font-mono text-amber-400/60 uppercase">Credits</span>
-                <span className="text-xs font-black font-mono text-amber-300">{credits.toLocaleString()} C</span>
-              </div>
-            </div>
-          </div>
+          {/* Top Right Header Capsules */}
+          <HeaderUserCapsules />
         </header>
 
         {/* Shop Main Content Area */}
-        <main className="max-w-6xl mx-auto w-full px-6 py-10 space-y-10 flex-1">
+        <main className="max-w-6xl mx-auto w-full px-8 py-10 space-y-10 flex-1 text-left">
           
-          {/* Hero Banner */}
-          <div className="relative w-full rounded-3xl bg-gradient-to-r from-amber-500/10 via-purple-500/10 to-blue-500/10 border border-amber-500/20 p-8 overflow-hidden flex flex-col md:flex-row items-center justify-between">
-            <div className="space-y-3 max-w-lg z-10 text-left">
-              <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-amber-400 font-bold bg-amber-500/10 px-3 py-1 rounded-full border border-amber-500/20 inline-block">
-                Exclusive Marketplace
-              </span>
-              <h2 className="font-instrument text-4xl font-extrabold tracking-tight text-white">
-                Customize Your Scholar Identity
-              </h2>
-              <p className="text-sm text-white/60 leading-relaxed">
-                Spend your earned AP Lab Credits to unlock glowing avatar frames, rare custom name gradients for the leaderboards, or test your luck in the Scholar Casino!
-              </p>
-            </div>
-
-            {/* Tab Switches */}
-            <div className="flex items-center space-x-2 bg-black/40 border border-white/10 p-1.5 rounded-2xl mt-6 md:mt-0 z-10">
-              <button
-                onClick={() => setActiveTab("cosmetics")}
-                className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center space-x-2 ${
-                  activeTab === "cosmetics" 
-                    ? "bg-amber-500 text-black shadow-[0_0_20px_rgba(245,158,11,0.4)]" 
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                <Palette className="w-4 h-4" />
-                <span>Avatar Cosmetics</span>
-              </button>
-              <button
-                onClick={() => setActiveTab("gamble")}
-                className={`px-5 py-2.5 rounded-xl font-bold text-xs transition-all flex items-center space-x-2 ${
-                  activeTab === "gamble" 
-                    ? "bg-purple-600 text-white shadow-[0_0_20px_rgba(147,51,234,0.4)]" 
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                <Dices className="w-4 h-4" />
-                <span>Slot Machine</span>
-              </button>
-            </div>
+          {/* Simplistic Tab Switcher matching sleek dark theme */}
+          <div className="flex items-center space-x-3 border-b border-white/10 pb-4">
+            <button
+              onClick={() => setActiveTab("cosmetics")}
+              className={cn(
+                "px-6 py-2.5 rounded-2xl font-manrope font-bold text-sm transition-all flex items-center space-x-2.5 cursor-pointer border",
+                activeTab === "cosmetics"
+                  ? "bg-white text-black border-white shadow-lg"
+                  : "bg-white/[0.03] text-white/60 border-white/10 hover:bg-white/[0.08] hover:text-white"
+              )}
+            >
+              <Palette className="w-4 h-4" />
+              <span>Avatar & Name Items</span>
+            </button>
+            
+            <button
+              onClick={() => setActiveTab("gamble")}
+              className={cn(
+                "px-6 py-2.5 rounded-2xl font-manrope font-bold text-sm transition-all flex items-center space-x-2.5 cursor-pointer border",
+                activeTab === "gamble"
+                  ? "bg-purple-600 text-white border-purple-500 shadow-[0_0_25px_rgba(168,85,247,0.4)]"
+                  : "bg-white/[0.03] text-white/60 border-white/10 hover:bg-white/[0.08] hover:text-white"
+              )}
+            >
+              <Dices className="w-4 h-4" />
+              <span>Coin Slots</span>
+            </button>
           </div>
 
           {/* TAB 1: COSMETICS SHOP */}
           {activeTab === "cosmetics" && (
             <div className="space-y-12">
               
-              {/* Avatar Glowing Frames Section */}
-              <section className="space-y-6 text-left">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div>
-                    <h3 className="font-instrument text-2xl font-bold text-white">Avatar Aura Frames</h3>
-                    <p className="text-xs text-white/40">Displays glowing rings around your profile photo across all leaderboards</p>
-                  </div>
-                  <Crown className="w-5 h-5 text-amber-400" />
+              {/* Avatar Aura Frames Section */}
+              <section className="space-y-5">
+                <div className="flex items-center space-x-2 text-white/80">
+                  <Crown className="w-4 h-4 text-amber-400" />
+                  <h2 className="font-manrope text-lg font-bold text-white">Avatar Glowing Frames</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                   {AVATAR_FRAMES.map((item) => {
                     const isOwned = inventory.includes(item.id);
                     const isEquipped = activeFrame === item.id;
@@ -249,14 +215,15 @@ export default function ShopPage() {
                     return (
                       <div 
                         key={item.id}
-                        className={`relative rounded-3xl bg-[#090b14] border p-6 flex flex-col justify-between space-y-6 transition-all group hover:border-amber-500/50 ${
-                          isEquipped ? "border-amber-500 ring-2 ring-amber-500/30" : "border-white/10"
-                        }`}
+                        className={cn(
+                          "relative rounded-3xl bg-[#0e101a] border p-6 flex flex-col justify-between space-y-6 transition-all group",
+                          isEquipped ? "border-amber-400/80 shadow-[0_0_30px_rgba(245,158,11,0.15)]" : "border-white/10 hover:border-white/20"
+                        )}
                       >
                         {/* Preview Circle */}
-                        <div className="flex flex-col items-center justify-center py-4">
-                          <div className={`relative w-20 h-20 rounded-full p-1 bg-gradient-to-tr ${item.color} shadow-[0_0_25px_rgba(245,158,11,0.3)]`}>
-                            <div className="w-full h-full rounded-full bg-neutral-900 border border-black/40 flex items-center justify-center font-bold text-white text-lg overflow-hidden">
+                        <div className="flex flex-col items-center justify-center py-2 text-center">
+                          <div className={`relative w-20 h-20 rounded-full p-1 bg-gradient-to-tr ${item.color} shadow-[0_0_20px_rgba(255,255,255,0.15)]`}>
+                            <div className="w-full h-full rounded-full bg-[#121422] border border-black/40 flex items-center justify-center font-bold text-white text-lg overflow-hidden">
                               {currentUser?.photoURL ? (
                                 <img src={currentUser.photoURL} alt="Avatar" className="w-full h-full object-cover rounded-full" />
                               ) : (
@@ -265,19 +232,20 @@ export default function ShopPage() {
                             </div>
                           </div>
                           <span className="text-sm font-bold text-white mt-4">{item.name}</span>
-                          <span className="text-[11px] text-white/40 text-center mt-1 px-2">{item.desc}</span>
+                          <span className="text-xs text-white/40 mt-1">{item.desc}</span>
                         </div>
 
                         {/* Action Button */}
-                        <div className="pt-4 border-t border-white/5 flex flex-col gap-2">
+                        <div className="pt-4 border-t border-white/5">
                           {isOwned ? (
                             <button
                               onClick={() => equipItem?.("frame", isEquipped ? "" : item.id)}
-                              className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
+                              className={cn(
+                                "w-full py-2.5 rounded-2xl font-bold text-xs transition-all cursor-pointer",
                                 isEquipped 
-                                  ? "bg-amber-500 text-black font-extrabold" 
+                                  ? "bg-amber-400 text-black font-extrabold" 
                                   : "bg-white/10 hover:bg-white/20 text-white"
-                              }`}
+                              )}
                             >
                               {isEquipped ? "Equipped ✓" : "Equip Frame"}
                             </button>
@@ -285,16 +253,18 @@ export default function ShopPage() {
                             <button
                               onClick={async () => {
                                 const success = await buyItem?.(item.id, item.cost, "frame");
-                                if (!success) alert("Not enough credits!");
+                                if (!success) alert("Not enough coins!");
                               }}
                               disabled={credits < item.cost}
-                              className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center space-x-2 ${
+                              className={cn(
+                                "w-full py-2.5 rounded-2xl font-bold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer",
                                 credits >= item.cost 
-                                  ? "bg-gradient-to-r from-amber-500 to-amber-600 text-black font-extrabold hover:brightness-110 shadow-lg" 
+                                  ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold shadow-lg" 
                                   : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
-                              }`}
+                              )}
                             >
-                              <span>Unlock for {item.cost} Credits</span>
+                              <img src="/images/coin-icon-clean.png" alt="Coin" className="w-4 h-4 object-contain inline" />
+                              <span>{item.cost} Coins</span>
                             </button>
                           )}
                         </div>
@@ -305,16 +275,13 @@ export default function ShopPage() {
               </section>
 
               {/* Leaderboard Name Gradients Section */}
-              <section className="space-y-6 text-left">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div>
-                    <h3 className="font-instrument text-2xl font-bold text-white">Leaderboard Name Gradients</h3>
-                    <p className="text-xs text-white/40">Apply rich glowing text gradients to your username everywhere</p>
-                  </div>
-                  <Sparkles className="w-5 h-5 text-purple-400" />
+              <section className="space-y-5">
+                <div className="flex items-center space-x-2 text-white/80">
+                  <Sparkles className="w-4 h-4 text-purple-400" />
+                  <h2 className="font-manrope text-lg font-bold text-white">Name Gradients</h2>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
                   {NAME_GRADIENTS.map((item) => {
                     const isOwned = inventory.includes(item.id);
                     const isEquipped = activeGrad === item.id;
@@ -322,28 +289,30 @@ export default function ShopPage() {
                     return (
                       <div 
                         key={item.id}
-                        className={`relative rounded-3xl bg-[#090b14] border p-6 flex flex-col justify-between space-y-6 transition-all group hover:border-purple-500/50 ${
-                          isEquipped ? "border-purple-500 ring-2 ring-purple-500/30" : "border-white/10"
-                        }`}
+                        className={cn(
+                          "relative rounded-3xl bg-[#0e101a] border p-6 flex flex-col justify-between space-y-6 transition-all group",
+                          isEquipped ? "border-purple-500/80 shadow-[0_0_30px_rgba(168,85,247,0.15)]" : "border-white/10 hover:border-white/20"
+                        )}
                       >
                         {/* Name Gradient Preview */}
-                        <div className="flex flex-col items-center justify-center py-6 text-center">
+                        <div className="flex flex-col items-center justify-center py-5 text-center">
                           <span className={`text-xl ${item.style}`}>
                             {currentUser?.displayName || "Scholar Name"}
                           </span>
-                          <span className="text-[11px] text-white/40 mt-3 px-2">{item.desc}</span>
+                          <span className="text-xs text-white/40 mt-3">{item.desc}</span>
                         </div>
 
                         {/* Action Button */}
-                        <div className="pt-4 border-t border-white/5 flex flex-col gap-2">
+                        <div className="pt-4 border-t border-white/5">
                           {isOwned ? (
                             <button
                               onClick={() => equipItem?.("gradient", isEquipped ? "" : item.id)}
-                              className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all ${
+                              className={cn(
+                                "w-full py-2.5 rounded-2xl font-bold text-xs transition-all cursor-pointer",
                                 isEquipped 
                                   ? "bg-purple-600 text-white font-extrabold" 
                                   : "bg-white/10 hover:bg-white/20 text-white"
-                              }`}
+                              )}
                             >
                               {isEquipped ? "Equipped ✓" : "Equip Gradient"}
                             </button>
@@ -351,16 +320,18 @@ export default function ShopPage() {
                             <button
                               onClick={async () => {
                                 const success = await buyItem?.(item.id, item.cost, "gradient");
-                                if (!success) alert("Not enough credits!");
+                                if (!success) alert("Not enough coins!");
                               }}
                               disabled={credits < item.cost}
-                              className={`w-full py-2.5 rounded-xl font-bold text-xs transition-all flex items-center justify-center space-x-2 ${
+                              className={cn(
+                                "w-full py-2.5 rounded-2xl font-bold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer",
                                 credits >= item.cost 
-                                  ? "bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-extrabold hover:brightness-110 shadow-lg" 
+                                  ? "bg-purple-600 hover:bg-purple-500 text-white font-extrabold shadow-lg" 
                                   : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
-                              }`}
+                              )}
                             >
-                              <span>Unlock for {item.cost} Credits</span>
+                              <img src="/images/coin-icon-clean.png" alt="Coin" className="w-4 h-4 object-contain inline" />
+                              <span>{item.cost} Coins</span>
                             </button>
                           )}
                         </div>
@@ -373,31 +344,27 @@ export default function ShopPage() {
             </div>
           )}
 
-          {/* TAB 2: SLOT MACHINE GAMBLING */}
+          {/* TAB 2: COIN SLOTS */}
           {activeTab === "gamble" && (
-            <div className="max-w-2xl mx-auto space-y-8">
-              <div className="bg-[#090b16] border border-purple-500/30 rounded-3xl p-8 shadow-[0_20px_80px_rgba(147,51,234,0.15)] flex flex-col items-center space-y-8">
+            <div className="max-w-xl mx-auto py-4">
+              <div className="bg-[#0e101a] border border-white/10 rounded-3xl p-8 shadow-2xl flex flex-col items-center space-y-7 text-center">
                 
                 {/* Header */}
-                <div className="text-center space-y-2">
-                  <div className="inline-flex items-center space-x-2 bg-purple-500/10 border border-purple-500/30 px-3 py-1 rounded-full text-purple-300 font-mono text-xs font-bold">
-                    <Dices className="w-4 h-4" />
-                    <span>AP Scholar Casino</span>
-                  </div>
-                  <h3 className="font-instrument text-3xl font-bold text-white">Credit Slot Machine</h3>
-                  <p className="text-xs text-white/40">Risk your credits for a chance to win up to 10x multiplier!</p>
+                <div className="space-y-1">
+                  <h2 className="font-instrument text-3xl font-bold text-white">Coin Slot Machine</h2>
+                  <p className="text-xs text-white/40">Spin to match symbols and multiply your coins!</p>
                 </div>
 
-                {/* Reels Cabinet */}
-                <div className="w-full bg-[#05060b] border-4 border-purple-600/40 rounded-3xl p-6 shadow-inner flex items-center justify-center space-x-4">
-                  {reels.map((symbol, idx) => (
+                {/* Reels Container */}
+                <div className="w-full bg-[#07080e] border border-white/10 rounded-2xl p-6 flex items-center justify-center space-x-4">
+                  {reels.map((imgUrl, idx) => (
                     <motion.div 
                       key={idx}
-                      animate={spinning ? { y: [-10, 10, -10] } : { y: 0 }}
+                      animate={spinning ? { y: [-6, 6, -6] } : { y: 0 }}
                       transition={{ repeat: Infinity, duration: 0.1 }}
-                      className="w-24 h-32 rounded-2xl bg-gradient-to-b from-white/10 to-white/5 border border-white/10 flex items-center justify-center text-5xl shadow-2xl select-none"
+                      className="w-20 h-28 rounded-2xl bg-white/[0.03] border border-white/10 flex items-center justify-center shadow-inner"
                     >
-                      {symbol}
+                      <img src={imgUrl} alt="Slot" className="w-12 h-12 object-contain drop-shadow-md" />
                     </motion.div>
                   ))}
                 </div>
@@ -405,13 +372,14 @@ export default function ShopPage() {
                 {/* Result Notification */}
                 {gambleResult && (
                   <motion.div 
-                    initial={{ scale: 0.9, opacity: 0 }} 
+                    initial={{ scale: 0.95, opacity: 0 }} 
                     animate={{ scale: 1, opacity: 1 }}
-                    className={`w-full p-4 rounded-2xl text-center text-sm font-bold border ${
+                    className={cn(
+                      "w-full p-3.5 rounded-2xl text-center text-xs font-bold border",
                       gambleResult.won 
                         ? "bg-emerald-500/10 border-emerald-500/30 text-emerald-400" 
                         : "bg-red-500/10 border-red-500/30 text-red-400"
-                    }`}
+                    )}
                   >
                     {gambleResult.message}
                   </motion.div>
@@ -419,17 +387,18 @@ export default function ShopPage() {
 
                 {/* Bet Selector */}
                 <div className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 p-3 rounded-2xl">
-                  <span className="text-xs font-mono text-white/60 font-bold">SELECT BET AMOUNT</span>
+                  <span className="text-xs font-mono text-white/50 font-bold">BET AMOUNT</span>
                   <div className="flex items-center space-x-2">
                     {[10, 25, 50, 100].map((amt) => (
                       <button
                         key={amt}
                         onClick={() => setBetAmount(amt)}
-                        className={`px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold transition-all ${
+                        className={cn(
+                          "px-3 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer",
                           betAmount === amt 
-                            ? "bg-purple-600 text-white shadow-md" 
+                            ? "bg-amber-400 text-black shadow-md" 
                             : "bg-white/5 hover:bg-white/10 text-white/60"
-                        }`}
+                        )}
                       >
                         {amt} C
                       </button>
@@ -441,22 +410,22 @@ export default function ShopPage() {
                 <button
                   onClick={handleSpinSlots}
                   disabled={spinning || betAmount > credits || betAmount <= 0}
-                  className={`w-full py-4 rounded-2xl font-extrabold text-base tracking-wider uppercase transition-all shadow-xl flex items-center justify-center space-x-3 ${
+                  className={cn(
+                    "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-lg",
                     spinning || betAmount > credits 
                       ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5" 
-                      : "bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:brightness-115 text-white cursor-pointer shadow-[0_0_30px_rgba(147,51,234,0.4)]"
-                  }`}
+                      : "bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black"
+                  )}
                 >
-                  <RotateCw className={`w-5 h-5 ${spinning ? "animate-spin" : ""}`} />
-                  <span>{spinning ? "Spinning Reels..." : `SPIN SLOTS (${betAmount} CREDITS)`}</span>
+                  <RotateCw className={`w-4 h-4 ${spinning ? "animate-spin" : ""}`} />
+                  <span>{spinning ? "Spinning..." : `SPIN SLOTS (${betAmount} COINS)`}</span>
                 </button>
 
                 {/* Paytable */}
-                <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[10px] font-mono text-white/40">
-                  <span>💎💎💎 10x</span>
-                  <span>⭐⭐⭐ 5x</span>
-                  <span>⚡⚡⚡ 3x</span>
-                  <span>2 Matching 1.5x</span>
+                <div className="w-full pt-4 border-t border-white/5 flex justify-around text-[11px] font-mono text-white/40">
+                  <span>3x Coins: 10x</span>
+                  <span>3x XP Shield: 5x</span>
+                  <span>3x Panda: 3x</span>
                 </div>
               </div>
             </div>
