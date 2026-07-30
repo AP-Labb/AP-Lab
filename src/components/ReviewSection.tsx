@@ -47,6 +47,33 @@ const ReviewCard = ({ review }: { review: Review }) => (
   </div>
 );
 
+function LaurelBranch({ flip = false }: { flip?: boolean }) {
+  return (
+    <svg 
+      className={`w-10 h-16 sm:w-14 sm:h-22 md:w-16 md:h-24 text-amber-400 shrink-0 ${flip ? "scale-x-[-1]" : ""}`} 
+      viewBox="0 0 100 150" 
+      fill="currentColor"
+    >
+      {/* Laurel Stem */}
+      <path d="M 60 145 C 52 100, 25 55, 82 12" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" />
+      {/* Outer Leaves */}
+      <path d="M 55 138 C 38 132, 24 122, 28 112 C 40 118, 50 128, 55 138 Z" />
+      <path d="M 48 120 C 28 114, 16 100, 22 90 C 35 98, 44 108, 48 120 Z" />
+      <path d="M 40 102 C 20 95, 10 78, 18 68 C 30 77, 37 89, 40 102 Z" />
+      <path d="M 35 83 C 15 74, 8 57, 18 47 C 28 58, 33 70, 35 83 Z" />
+      <path d="M 36 63 C 18 50, 15 32, 28 24 C 35 36, 37 50, 36 63 Z" />
+      <path d="M 43 44 C 28 30, 30 12, 45 6 C 48 20, 46 33, 43 44 Z" />
+      <path d="M 56 27 C 46 12, 52 -2, 66 -4 C 65 10, 60 21, 56 27 Z" />
+      {/* Inner Leaves */}
+      <path d="M 58 128 C 72 122, 78 110, 70 104 C 62 112, 59 120, 58 128 Z" />
+      <path d="M 52 108 C 66 100, 72 87, 64 80 C 56 90, 53 100, 52 108 Z" />
+      <path d="M 46 88 C 60 78, 64 64, 56 58 C 48 68, 46 78, 46 88 Z" />
+      <path d="M 46 68 C 58 56, 62 42, 55 36 C 48 46, 46 57, 46 68 Z" />
+      <path d="M 52 48 C 62 34, 65 20, 58 14 C 52 24, 51 37, 52 48 Z" />
+    </svg>
+  );
+}
+
 export function ReviewSection() {
   // Duplicate arrays to allow seamless infinite looping
   const row1 = [...reviews.slice(0, 4), ...reviews.slice(0, 4)];
@@ -55,26 +82,43 @@ export function ReviewSection() {
   return (
     <section className="relative w-full py-[120px] bg-transparent overflow-hidden flex flex-col items-center z-10">
       
-      {/* Header */}
-      <div className="text-center mb-20 relative z-20 px-6">
-        <motion.h2 
+      {/* Header with Golden Laurel Wreaths matching Knowt design */}
+      <div className="text-center mb-20 relative z-20 px-6 flex items-center justify-center space-x-4 sm:space-x-8">
+        {/* Left Golden Laurel Branch */}
+        <motion.div
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+        >
+          <LaurelBranch flip={false} />
+        </motion.div>
+
+        {/* Center Title & Rating Subtext */}
+        <motion.div 
           initial={{ opacity: 0, y: 15 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.1 }}
-          className="font-inter font-extrabold text-neutral-900 text-3xl md:text-5xl tracking-tight mb-4 select-none"
+          className="flex flex-col items-center select-none"
         >
-          Included Reviews
-        </motion.h2>
-        <motion.p 
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          <h2 className="font-inter font-black text-neutral-900 text-4xl sm:text-5xl md:text-6xl tracking-tight mb-2">
+            4.8 Stars
+          </h2>
+          <p className="font-inter font-bold text-neutral-800 text-lg sm:text-xl md:text-2xl tracking-wide">
+            1,000+ Reviews
+          </p>
+        </motion.div>
+
+        {/* Right Golden Laurel Branch */}
+        <motion.div
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="font-inter text-neutral-500 text-sm md:text-base max-w-lg mx-auto leading-relaxed select-none"
+          transition={{ duration: 0.6 }}
         >
-          The verdict is in. See how our cognitive tools are actively shaping the next generation of top performers.
-        </motion.p>
+          <LaurelBranch flip={true} />
+        </motion.div>
       </div>
 
       {/* Infinite Marquee Container */}
