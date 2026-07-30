@@ -6,11 +6,13 @@ import { SVGProps } from "react";
 import { ArrowRight, X, BookOpen, Video, Clock, Star } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { useProgress } from "@/context/ProgressContext";
 import { BiologyDNA3D } from "./BiologyDNA3D";
 import { ChemistryMolecule3D } from "./ChemistryMolecule3D";
 import { PhysicsOrbit3D } from "./PhysicsOrbit3D";
 import { courseRegistry } from "@/lib/courses/course-registry";
 import { Cursor } from "@/components/ui/cursor";
+import { cn } from "@/lib/utils";
 
 const MouseIcon = ({ color, ...props }: SVGProps<SVGSVGElement> & { color: string }) => {
   return (
@@ -242,6 +244,7 @@ export function SubjectLabs() {
   const [activeCourse, setActiveCourse] = useState<string | null>(null);
   const router = useRouter();
   const { currentUser } = useAuth();
+  const { progress } = useProgress();
 
   useEffect(() => {
     if (activeCourse) {
@@ -289,17 +292,31 @@ export function SubjectLabs() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           
           {/* Card 1: AP Biology (Large, Hero Card) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7 }}
-            onMouseEnter={() => setHoveredCard("biology")}
-            onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => setActiveCourse("biology")}
-            whileHover={{ y: -6 }}
-            className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
-          >
+          {(() => {
+            const isSelected = progress?.selectedClasses?.some((c: string) => c.toLowerCase().includes("bio"));
+            return (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7 }}
+                onMouseEnter={() => setHoveredCard("biology")}
+                onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => setActiveCourse("biology")}
+                whileHover={{ y: -6 }}
+                className={cn(
+                  "lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)]",
+                  isSelected 
+                    ? "border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.25)] bg-gradient-to-br from-[#121212] via-[#121212] to-emerald-950/20" 
+                    : "border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
+                )}
+              >
+                {isSelected && (
+                  <div className="absolute top-4 right-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-manrope font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm z-20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Enrolled Course
+                  </div>
+                )}
             <Cursor
               attachToParent
               variants={{
@@ -352,19 +369,35 @@ export function SubjectLabs() {
               <BiologyDNA3D isHovered={hoveredCard === "biology"} />
             </div>
           </motion.div>
+            );
+          })()}
 
           {/* Card 2: AP Calculus (Small Card) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            onMouseEnter={() => setHoveredCard("calculus")}
-            onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => setActiveCourse("calculus")}
-            whileHover={{ y: -6 }}
-            className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
-          >
+          {(() => {
+            const isSelected = progress?.selectedClasses?.some((c: string) => c.toLowerCase().includes("calc"));
+            return (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, delay: 0.15 }}
+                onMouseEnter={() => setHoveredCard("calculus")}
+                onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => setActiveCourse("calculus")}
+                whileHover={{ y: -6 }}
+                className={cn(
+                  "lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)]",
+                  isSelected 
+                    ? "border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.25)] bg-gradient-to-br from-[#121212] via-[#121212] to-emerald-950/20" 
+                    : "border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
+                )}
+              >
+                {isSelected && (
+                  <div className="absolute top-4 right-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-manrope font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm z-20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Enrolled Course
+                  </div>
+                )}
             <Cursor
               attachToParent
               variants={{
@@ -452,19 +485,35 @@ export function SubjectLabs() {
               </span>
             </div>
           </motion.div>
+            );
+          })()}
 
           {/* Card 3: AP Physics (Small Card) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7, delay: 0.15 }}
-            onMouseEnter={() => setHoveredCard("physics")}
-            onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => setActiveCourse("physics")}
-            whileHover={{ y: -6 }}
-            className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
-          >
+          {(() => {
+            const isSelected = progress?.selectedClasses?.some((c: string) => c.toLowerCase().includes("physics"));
+            return (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, delay: 0.15 }}
+                onMouseEnter={() => setHoveredCard("physics")}
+                onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => setActiveCourse("physics")}
+                whileHover={{ y: -6 }}
+                className={cn(
+                  "lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)]",
+                  isSelected 
+                    ? "border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.25)] bg-gradient-to-br from-[#121212] via-[#121212] to-emerald-950/20" 
+                    : "border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
+                )}
+              >
+                {isSelected && (
+                  <div className="absolute top-4 right-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-manrope font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm z-20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Enrolled Course
+                  </div>
+                )}
             <Cursor
               attachToParent
               variants={{
@@ -512,19 +561,35 @@ export function SubjectLabs() {
               </span>
             </div>
           </motion.div>
+            );
+          })()}
 
           {/* Card 4: AP Chemistry (Large, Hero Card) */}
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.7 }}
-            onMouseEnter={() => setHoveredCard("chemistry")}
-            onMouseLeave={() => setHoveredCard(null)}
-            onClick={() => setActiveCourse("chemistry")}
-            whileHover={{ y: -6 }}
-            className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] border border-white/[0.03] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 hover:bg-[#1a1a1a] hover:border-white/[0.08] shadow-[0_20px_40px_rgba(0,0,0,0.4)]"
-          >
+          {(() => {
+            const isSelected = progress?.selectedClasses?.some((c: string) => c.toLowerCase().includes("chem"));
+            return (
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7 }}
+                onMouseEnter={() => setHoveredCard("chemistry")}
+                onMouseLeave={() => setHoveredCard(null)}
+                onClick={() => setActiveCourse("chemistry")}
+                whileHover={{ y: -6 }}
+                className={cn(
+                  "lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)]",
+                  isSelected 
+                    ? "border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.25)] bg-gradient-to-br from-[#121212] via-[#121212] to-emerald-950/20" 
+                    : "border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
+                )}
+              >
+                {isSelected && (
+                  <div className="absolute top-4 right-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-manrope font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm z-20">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                    Enrolled Course
+                  </div>
+                )}
             <Cursor
               attachToParent
               variants={{
@@ -575,6 +640,8 @@ export function SubjectLabs() {
               <ChemistryMolecule3D isHovered={hoveredCard === "chemistry"} />
             </div>
           </motion.div>
+            );
+          })()}
 
         </div>
       </div>

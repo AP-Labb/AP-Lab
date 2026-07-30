@@ -626,13 +626,7 @@ export default function ProgressPage() {
       </Sidebar>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16">
-      
-      {/* Background elements */}
-      <div className="absolute top-0 left-0 w-full h-[500px] bg-gradient-to-b from-neutral-900/10 to-transparent pointer-events-none -z-10" />
-
-      {/* Main Content Container */}
-      <div className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 flex-1 flex flex-col space-y-8 pb-20">
+      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16 max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8 pb-20">
 
         {/* Header Block */}
         <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
@@ -1113,6 +1107,115 @@ export default function ProgressPage() {
 
         </div>
 
+        {/* Multi-Line Course Velocity & Quest Completion Trends Chart */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className="bg-neutral-950/80 rounded-2xl border border-white/5 p-6 flex flex-col space-y-6 shadow-md"
+        >
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/50">
+                <BarChart2 className="w-4.5 h-4.5 text-cyan-400" />
+              </div>
+              <div>
+                <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Learning Velocity Trends</h3>
+                <p className="text-xs text-white/40">Multi-course study time & quest milestone velocity over time</p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-cyan-400" />
+                <span className="text-white/70 font-semibold">AP® Biology & Chemistry</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-purple-400" />
+                <span className="text-white/70 font-semibold">AP® Calculus</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-amber-400" />
+                <span className="text-white/70 font-semibold">Quests Completed</span>
+              </div>
+            </div>
+          </div>
+
+          {/* SVG Multi-Line Chart (Matching reference screenshot styling) */}
+          <div className="w-full h-64 relative bg-[#07080f] rounded-xl border border-white/5 p-4 flex flex-col justify-between overflow-hidden">
+            {/* Horizontal Grid lines */}
+            <div className="absolute inset-x-0 top-8 border-b border-white/[0.04]" />
+            <div className="absolute inset-x-0 top-20 border-b border-white/[0.04]" />
+            <div className="absolute inset-x-0 top-32 border-b border-white/[0.04]" />
+            <div className="absolute inset-x-0 top-44 border-b border-white/[0.04]" />
+            <div className="absolute inset-x-0 top-56 border-b border-white/[0.04]" />
+
+            <svg viewBox="0 0 600 180" className="w-full h-full overflow-visible z-10">
+              <defs>
+                <linearGradient id="cyanLineGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="purpleLineGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="#c084fc" stopOpacity="0.3" />
+                  <stop offset="100%" stopColor="#c084fc" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+
+              {/* Cyan Line Area Fill */}
+              <polygon 
+                points="10,140 60,110 110,130 160,80 210,100 260,50 310,70 360,40 410,90 460,60 510,75 560,30 590,45 590,170 10,170" 
+                fill="url(#cyanLineGrad)" 
+              />
+              {/* Cyan Smooth Multi-Point Curve */}
+              <motion.path 
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5, ease: "easeInOut" }}
+                d="M 10 140 L 60 110 L 110 130 L 160 80 L 210 100 L 260 50 L 310 70 L 360 40 L 410 90 L 460 60 L 510 75 L 560 30 L 590 45" 
+                fill="none" 
+                stroke="#22d3ee" 
+                strokeWidth="2.5" 
+                strokeLinecap="round"
+              />
+
+              {/* Purple Line Smooth Curve */}
+              <motion.path 
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
+                d="M 10 70 L 60 90 L 110 75 L 160 120 L 210 85 L 260 110 L 310 65 L 360 95 L 410 70 L 460 105 L 510 60 L 560 85 L 590 55" 
+                fill="none" 
+                stroke="#c084fc" 
+                strokeWidth="2.5" 
+                strokeLinecap="round"
+              />
+
+              {/* Amber Line Smooth Curve */}
+              <motion.path 
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: 1 }}
+                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.4 }}
+                d="M 10 160 L 60 145 L 110 155 L 160 130 L 210 140 L 260 120 L 310 135 L 360 110 L 410 125 L 460 95 L 510 115 L 560 90 L 590 80" 
+                fill="none" 
+                stroke="#fbbf24" 
+                strokeWidth="2.5" 
+                strokeLinecap="round"
+              />
+            </svg>
+
+            <div className="flex justify-between items-center text-[10px] font-mono text-white/30 pt-2 border-t border-white/5">
+              <span>Week 1</span>
+              <span>Week 2</span>
+              <span>Week 3</span>
+              <span>Week 4</span>
+              <span>Week 5</span>
+              <span>Week 6</span>
+              <span>Current Week</span>
+            </div>
+          </div>
+        </motion.div>
+
       </div>
 
       {/* Account Profile Stats Modal */}
@@ -1286,7 +1389,6 @@ export default function ProgressPage() {
       <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
       <FloatingXPOperations externalOpen={showQuestsModal} onClose={() => setShowQuestsModal(false)} />
       <DashboardContextMenu onOpenProfile={() => setShowAccountPopup(true)} />
-      </div>
     </div>
   );
 }
