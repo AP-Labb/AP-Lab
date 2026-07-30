@@ -1163,7 +1163,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         )}
       </AnimatePresence>
 
-      {/* Top-Center XP / Credit Earned Toasts */}
+      {/* Top-Center XP / Credit Earned Toasts (Classic Green Accent Style) */}
       <div className="fixed top-20 left-0 right-0 pointer-events-none z-[99999] flex flex-col items-center justify-start space-y-3">
         <AnimatePresence>
           {xpToasts.map((toast) => {
@@ -1171,31 +1171,31 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
             return (
               <motion.div
                 key={toast.id}
-                initial={{ opacity: 0, y: -40, scale: 0.94 }}
+                initial={{ opacity: 0, y: -50, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -20, scale: 0.94, transition: { duration: 0.15 } }}
-                transition={{ type: "spring", stiffness: 350, damping: 28 }}
-                className="flex items-center space-x-4 pointer-events-auto bg-[#0b0c16]/95 backdrop-blur-2xl border border-white/15 text-white px-6 py-4 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.85)]"
+                exit={{ opacity: 0, y: -20, scale: 0.95, transition: { duration: 0.15 } }}
+                transition={{ type: "spring", stiffness: 350, damping: 26 }}
+                className="flex items-center space-x-4 pointer-events-auto bg-[#0a0d18]/95 backdrop-blur-2xl border border-emerald-500/40 text-white px-6 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9),0_0_20px_rgba(16,185,129,0.15)]"
               >
-                <div className="flex items-center justify-center shrink-0 space-x-[-8px]">
+                <div className="flex items-center justify-center shrink-0 space-x-[-6px]">
                   {toast.amount > 0 && (
-                    <img src="/images/xp-shield-exact.png" alt="XP" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.6)]" />
+                    <img src="/images/xp-shield-exact.png" alt="XP" className="w-9 h-9 object-contain drop-shadow-[0_0_12px_rgba(168,85,247,0.8)]" />
                   )}
                   {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
-                    <img src="/images/coin-exact.png" alt="Coins" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.6)]" />
+                    <img src="/images/coin-exact.png" alt="Coins" className="w-9 h-9 object-contain drop-shadow-[0_0_12px_rgba(245,158,11,0.8)]" />
                   )}
                 </div>
                 <div className="flex flex-col text-left">
-                  <span className="text-[11px] font-manrope font-bold text-white/50 uppercase tracking-wider">{toast.message}</span>
+                  <span className="text-xs font-manrope font-extrabold text-emerald-400 tracking-wide uppercase">{toast.message}</span>
                   <div className="flex items-center space-x-3 mt-0.5 font-mono font-extrabold text-sm">
                     {toast.amount > 0 && (
-                      <span className="text-purple-300 flex items-center gap-1">
+                      <span className="text-purple-300 flex items-center gap-1.5">
                         +{toast.amount} XP
                       </span>
                     )}
-                    {hasBoth && <span className="text-white/20">•</span>}
+                    {hasBoth && <span className="text-white/30">•</span>}
                     {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
-                      <span className="text-amber-400 flex items-center gap-1">
+                      <span className="text-amber-400 flex items-center gap-1.5">
                         +{toast.creditAmount} Coins
                       </span>
                     )}

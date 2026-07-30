@@ -99,7 +99,7 @@ const RankBadge = ({ variant, color = "gold" }: { variant: "chevron-1" | "chevro
   );
 };
 
-// Social Brand SVG Icons with EXACT Official Brand Colors
+// Social Brand SVG Icons with Official Company Brand Colors
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
@@ -188,9 +188,9 @@ export default function QuestsPage() {
 
   const userId = currentUser?.uid || "guest";
   const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-  const dailyStorageKey = `ap-lab-daily-quests-v3-${userId}-${todayStr}`;
-  const weeklyStorageKey = `ap-lab-weekly-quests-v3-${userId}`;
-  const specialStorageKey = `ap-lab-special-quests-v3-${userId}`;
+  const dailyStorageKey = `ap-lab-daily-quests-v4-${userId}-${todayStr}`;
+  const weeklyStorageKey = `ap-lab-weekly-quests-v4-${userId}`;
+  const specialStorageKey = `ap-lab-special-quests-v4-${userId}`;
   const socialStorageKey = `ap-lab-social-quests-${userId}`;
   const bonusStorageKey = `ap-lab-daily-bonus-${userId}-${todayStr}`;
 
@@ -251,41 +251,25 @@ export default function QuestsPage() {
     return () => clearInterval(timer);
   }, []);
 
-  // Filter Today's & This Week's Activity Logs for Strict Period-Based Progress Calculation
-  const activityLogs = progress?.activityLogs || [];
-  
-  const todayLogs = activityLogs.filter(log => log.date === todayStr);
-
-  const now = new Date();
-  const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); // Sunday
-  const startOfWeekStr = startOfWeek.toISOString().split('T')[0];
-  const weekLogs = activityLogs.filter(log => log.date >= startOfWeekStr);
-
-  const startOfMonthStr = `${todayStr.substring(0, 7)}-01`;
-  const monthLogs = activityLogs.filter(log => log.date >= startOfMonthStr);
-
-  // Today's specific metrics
-  const todayCorrectCount = todayLogs.filter(log => log.title?.includes("Correct") || log.type === "quiz" || log.type === "question").reduce((acc, l) => acc + (l.xp > 0 ? 1 : 0), 0);
-  const todayCompletedSubtopics = todayLogs.filter(log => log.type === "section" || log.type === "topic").length;
-  
-  // Weekly specific metrics
-  const weeklyAnsweredCount = weekLogs.length * 5; // scaled metrics for weekly questions
-  const weeklyCompletedSubtopics = weekLogs.filter(log => log.type === "section" || log.type === "topic").length;
-
-  // Monthly / Special metrics
-  const monthlyMockAttempts = monthLogs.filter(log => log.title?.includes("Mock Exam") || log.type === "mock_exam").length;
-
+  // Reliable Real Progress Tracking from Progress Context
+  const totalCorrect = progress?.totalQuestionsCorrect || 0;
+  const totalAnswered = progress?.totalQuestionsAnswered || 0;
+  const completedTopicsCount = progress?.completedTopics?.length || 0;
   const streakCount = progress?.streakCount || 0;
+  const userName = progress?.displayName || currentUser?.displayName || "Scholar";
+  const userPhoto = progress?.photoURL || currentUser?.photoURL || "";
+  const userLevel = progress?.level || 1;
+  const userXp = progress?.xp || 0;
 
-  // Real Quests Data with custom military rank badges & strict period-based progress
+  // Real Quests Data
   const DAILY_QUESTS = [
     {
       id: "daily-practice",
       badge: <RankBadge variant="chevron-1" color="green" />,
       title: "Practice Master",
-      desc: "Answer 25 questions correctly in any AP lab today",
+      desc: "Answer 25 questions correctly in any AP lab",
       difficulty: "Medium",
-      current: Math.min(25, todayCorrectCount > 0 ? todayCorrectCount : Math.min(25, progress?.totalQuestionsCorrect || 0)),
+      current: Math.min(25, totalCorrect),
       target: 25,
       xpReward: 250,
       coinReward: 100,
@@ -296,7 +280,7 @@ export default function QuestsPage() {
       title: "Subtopic Scholar",
       desc: "Complete 2 full subtopic units today",
       difficulty: "Easy",
-      current: Math.min(2, todayCompletedSubtopics > 0 ? todayCompletedSubtopics : Math.min(2, (progress?.completedTopics?.length || 0))),
+      current: Math.min(2, completedTopicsCount),
       target: 2,
       xpReward: 300,
       coinReward: 150,
@@ -321,7 +305,7 @@ export default function QuestsPage() {
       title: "Centurion Scholar",
       desc: "Answer 100 practice questions this week",
       difficulty: "Hard",
-      current: Math.min(100, weeklyAnsweredCount > 0 ? weeklyAnsweredCount : Math.min(100, progress?.totalQuestionsAnswered || 0)),
+      current: Math.min(100, totalAnswered),
       target: 100,
       xpReward: 1000,
       coinReward: 400,
@@ -332,7 +316,7 @@ export default function QuestsPage() {
       title: "Topic Mastery",
       desc: "Reach 80%+ mastery across 5 subtopics this week",
       difficulty: "Hard",
-      current: Math.min(5, weeklyCompletedSubtopics > 0 ? weeklyCompletedSubtopics : Math.min(5, (progress?.completedTopics?.length || 0))),
+      current: Math.min(5, completedTopicsCount),
       target: 5,
       xpReward: 800,
       coinReward: 350,
@@ -346,7 +330,7 @@ export default function QuestsPage() {
       title: "Monthly Exam Readiness",
       desc: "Complete a full 55-question diagnostic mock test this month",
       difficulty: "Expert",
-      current: Math.min(1, monthlyMockAttempts > 0 ? monthlyMockAttempts : (progress?.totalQuestionsAnswered || 0) >= 55 ? 1 : 0),
+      current: totalAnswered >= 55 ? 1 : 0,
       target: 1,
       xpReward: 1500,
       coinReward: 500,
@@ -431,7 +415,7 @@ export default function QuestsPage() {
     } catch (e) {}
   };
 
-  // Interactive 3D Gift Box Opening Animation
+  // Interactive High-Res Giftbox Image Opening Animation
   const handleClaimDailyBonus = async () => {
     if (dailyBonusClaimed || isGiftOpening) return;
     setIsGiftOpening(true);
@@ -442,7 +426,7 @@ export default function QuestsPage() {
       setDailyBonusClaimed(true);
       setIsGiftOpening(false);
       try { localStorage.setItem(bonusStorageKey, JSON.stringify(true)); } catch (e) {}
-    }, 900);
+    }, 800);
   };
 
   const handleSignOut = async () => {
@@ -461,17 +445,15 @@ export default function QuestsPage() {
   return (
     <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] text-white selection:bg-white selection:text-black font-manrope">
       
-      {/* STICKY Left Sidebar Navigation */}
+      {/* STICKY Left Sidebar Navigation (Matching exact sidebar markup from shop/dashboard) */}
       <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
         <SidebarBody className="justify-between gap-6 sticky top-0 h-screen overflow-y-auto">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
               <Activity className="w-5 h-5 text-white flex-shrink-0" />
-              {sidebarOpen && (
-                <span className="font-bold text-white text-sm">
-                  AP Lab
-                </span>
-              )}
+              <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="font-bold text-white text-sm">
+                AP Lab
+              </motion.span>
             </Link>
 
             <div className="h-px bg-white/[0.06] mb-4 mx-2" />
@@ -479,15 +461,17 @@ export default function QuestsPage() {
             <div className="flex flex-col gap-1">
               <Link href="/" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
                 <Home className="w-5 h-5 shrink-0" />
-                {sidebarOpen && <span className="text-sm font-semibold">Home</span>}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Home</motion.span>
               </Link>
+
               <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
                 <LayoutDashboard className="w-5 h-5 shrink-0" />
-                {sidebarOpen && <span className="text-sm font-semibold">Dashboard</span>}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Dashboard</motion.span>
               </Link>
+
               <Link href="/dashboard/progress" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
                 <BarChart2 className="w-5 h-5 shrink-0" />
-                {sidebarOpen && <span className="text-sm font-semibold">Progress</span>}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Progress</motion.span>
               </Link>
 
               <button
@@ -495,28 +479,26 @@ export default function QuestsPage() {
                 className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-150 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
               >
                 <InstagramLikeStar />
-                {sidebarOpen && (
-                  <span className="text-sm font-manrope font-semibold whitespace-pre">
-                    Review
-                  </span>
-                )}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">
+                  Review
+                </motion.span>
               </button>
 
               {/* Active Quests Sidebar Item */}
               <Link href="/dashboard/quests" className="relative flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/[0.06] text-white font-bold border border-white/10">
                 <div className="absolute left-0 top-2 bottom-2 w-1 bg-white rounded-r-full" />
                 <Award className="w-5 h-5 shrink-0 text-white ml-1" />
-                {sidebarOpen && <span className="text-sm font-bold text-white">Quests</span>}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-bold text-white">Quests</motion.span>
               </Link>
 
               <Link href="/assistant" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
                 <div className="w-5 h-5 shrink-0 flex items-center justify-center font-bold text-xs bg-white/10 rounded-full text-white">A</div>
-                {sidebarOpen && <span className="text-sm font-semibold">AI Assistant</span>}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">AI Assistant</motion.span>
               </Link>
 
               <Link href="/shop" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
                 <ShoppingBag className="w-5 h-5 shrink-0 text-amber-400" />
-                {sidebarOpen && <span className="text-sm font-semibold text-amber-400">Shop</span>}
+                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold text-amber-400">Shop</motion.span>
               </Link>
 
               <SidebarSettingsButton open={sidebarOpen} />
@@ -527,16 +509,40 @@ export default function QuestsPage() {
             <div className="h-px bg-white/[0.06] mx-2 mb-2" />
             <button
               onClick={() => setShowProfileModal(true)}
-              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl text-white/60 hover:bg-white/[0.05]"
+              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.05] hover:text-white"
             >
-              <div className="w-7 h-7 rounded-full bg-white/10 border border-white/20 flex items-center justify-center font-bold text-xs text-white shrink-0">
-                {(currentUser?.displayName || "A").charAt(0).toUpperCase()}
+              <div className="flex-shrink-0">
+                {userPhoto ? (
+                  <img
+                    src={userPhoto}
+                    alt="Avatar"
+                    className="w-7 h-7 rounded-full object-cover border border-white/20 flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
+                    {(userName).charAt(0).toUpperCase()}
+                  </div>
+                )}
               </div>
-              {sidebarOpen && (
-                <span className="font-bold text-xs text-white truncate max-w-[120px]">
-                  {progress?.displayName || currentUser?.displayName || "Scholar"}
-                </span>
-              )}
+
+              <AnimatePresence>
+                {sidebarOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex flex-col items-start text-left overflow-hidden"
+                  >
+                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
+                      {userName}
+                    </span>
+                    <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
+                      Lvl {userLevel} • {userXp.toLocaleString()} XP
+                    </span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </button>
 
             <button
@@ -544,7 +550,7 @@ export default function QuestsPage() {
               className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl text-white/30 hover:bg-red-500/10 hover:text-red-400"
             >
               <LogOut className="w-5 h-5 shrink-0" />
-              {sidebarOpen && <span className="text-sm font-semibold">Sign Out</span>}
+              <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Sign Out</motion.span>
             </button>
           </div>
         </SidebarBody>
@@ -603,15 +609,15 @@ export default function QuestsPage() {
             </div>
           </div>
 
-          {/* Hero Banner: Height min-h-[280px], Timer Shifted LEFT into Empty Cream Space */}
+          {/* Hero Banner: Height min-h-[300px], Refresh Countdown Moved EVEN FURTHER LEFT into Cream Space */}
           <div 
-            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-14 text-neutral-950 overflow-hidden shadow-2xl flex items-center min-h-[280px]"
+            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-14 text-neutral-950 overflow-hidden shadow-2xl flex items-center min-h-[300px]"
             style={{ backgroundImage: `url('/images/QUESTbanner.png')` }}
           >
-            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6 pl-2 sm:pl-6 pr-4">
+            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6 pl-2 sm:pl-4 pr-4">
               
               {/* Left Title & Description in Clean Black Text */}
-              <div className="space-y-2 max-w-xs sm:max-w-sm text-left">
+              <div className="space-y-2 max-w-xs text-left">
                 <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-black tracking-tight leading-tight">
                   Daily Quests
                 </h2>
@@ -620,8 +626,8 @@ export default function QuestsPage() {
                 </p>
               </div>
 
-              {/* Large Refresh Countdown Box (Positioned Left in the Empty Cream Space, avoiding graphics on right) */}
-              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto md:ml-4">
+              {/* Refresh Countdown Box (Shifted FAR LEFT into Cream Space, completely avoiding clipboard graphic on right) */}
+              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto md:ml-2">
                 <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-white" />
                   REFRESH COUNTDOWN
@@ -681,14 +687,14 @@ export default function QuestsPage() {
                             </div>
                           </div>
 
-                          {/* Reward Chips (Large High-Res XP & Coin Symbols) */}
+                          {/* Reward Chips (Extra Large High-Res XP & Coin Symbols) */}
                           <div className="flex items-center space-x-2 shrink-0">
-                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain" />
+                            <span className="text-xs font-mono font-extrabold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-7 h-7 object-contain" />
                               +{quest.xpReward}
                             </span>
-                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/coin-exact.png" alt="Coins" className="w-6 h-6 object-contain" />
+                            <span className="text-xs font-mono font-extrabold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-7 h-7 object-contain" />
                               +{quest.coinReward}
                             </span>
                           </div>
@@ -770,12 +776,12 @@ export default function QuestsPage() {
                           </div>
 
                           <div className="flex items-center space-x-2 shrink-0">
-                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain" />
+                            <span className="text-xs font-mono font-extrabold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-7 h-7 object-contain" />
                               +{quest.xpReward}
                             </span>
-                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/coin-exact.png" alt="Coins" className="w-6 h-6 object-contain" />
+                            <span className="text-xs font-mono font-extrabold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-7 h-7 object-contain" />
                               +{quest.coinReward}
                             </span>
                           </div>
@@ -855,12 +861,12 @@ export default function QuestsPage() {
                           </div>
 
                           <div className="flex items-center space-x-2 shrink-0">
-                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain" />
+                            <span className="text-xs font-mono font-extrabold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-7 h-7 object-contain" />
                               +{quest.xpReward}
                             </span>
-                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/coin-exact.png" alt="Coins" className="w-6 h-6 object-contain" />
+                            <span className="text-xs font-mono font-extrabold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-7 h-7 object-contain" />
                               +{quest.coinReward}
                             </span>
                           </div>
@@ -910,7 +916,7 @@ export default function QuestsPage() {
 
             </div>
 
-            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Yellow/Purple Gift Box, Social Quests with Official Brand Colors) */}
+            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Exact Uploaded Giftbox Images, Social Quests) */}
             <div className="space-y-6">
               
               {/* Widget 1: Streak Card */}
@@ -940,59 +946,33 @@ export default function QuestsPage() {
                 <p className="text-xs text-white/40 font-manrope">72% of weekly milestone completed</p>
               </div>
 
-              {/* Widget 3: 3D Yellow Gift Box with Purple Ribbon (Exact Matching User Reference Screenshot) */}
+              {/* Widget 3: Daily Gift Box (Using Exact High-Res User Uploaded Closed/Open Giftbox Images) */}
               <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
-                <div className="flex items-center space-x-2 text-white">
-                  <Gift className="w-5 h-5 text-amber-400" />
-                  <h4 className="font-manrope font-bold text-sm">Daily Gift Box</h4>
-                </div>
+                <h4 className="font-manrope font-bold text-sm text-white">Daily Gift Box</h4>
 
-                {/* Vector 3D Gift Box Graphic matching Reference Image (Yellow Body, Purple Ribbon, Opening Lid) */}
-                <div className="relative w-36 h-32 my-1 flex items-center justify-center">
+                {/* High-Res 3D Gift Box Image smoothly shifting from Closed to Open */}
+                <div className="relative w-36 h-36 my-1 flex items-center justify-center">
                   <motion.div
-                    animate={isGiftOpening ? { rotate: [0, -8, 8, -5, 5, 0], scale: [1, 1.1, 1.18, 1] } : { y: [0, -4, 0] }}
-                    transition={{ duration: isGiftOpening ? 0.9 : 3.5, repeat: isGiftOpening ? 0 : Infinity, ease: "easeInOut" }}
+                    animate={isGiftOpening ? { scale: [1, 1.12, 1.05, 1], rotate: [0, -5, 5, 0] } : { y: [0, -4, 0] }}
+                    transition={{ duration: isGiftOpening ? 0.8 : 3.5, repeat: isGiftOpening ? 0 : Infinity, ease: "easeInOut" }}
                     className="relative w-full h-full flex items-center justify-center"
                   >
-                    <svg viewBox="0 0 120 110" className="w-32 h-28 drop-shadow-[0_12px_24px_rgba(245,158,11,0.4)]">
-                      {/* Box Base (Yellow Body) */}
-                      <path d="M25 50 L95 50 L90 95 L30 95 Z" fill="#facc15" stroke="#eab308" strokeWidth="2" />
-                      {/* Vertical Purple Ribbon on Base */}
-                      <path d="M54 50 L66 50 L64 95 L52 95 Z" fill="#7e22ce" stroke="#6b21a8" strokeWidth="1.5" />
-                      
-                      {/* Box Lid (Yellow Top with Purple Ribbon & Bow, Animates Open) */}
-                      <motion.g
-                        animate={isGiftOpening || dailyBonusClaimed ? { rotate: -42, y: -22 } : { rotate: 0, y: 0 }}
-                        transition={{ type: "spring", stiffness: 160, damping: 14 }}
-                        style={{ transformOrigin: "20px 50px" }}
-                      >
-                        <rect x="20" y="40" width="80" height="15" rx="3" fill="#fde047" stroke="#eab308" strokeWidth="2" />
-                        <rect x="54" y="40" width="12" height="15" fill="#7e22ce" />
-                        
-                        {/* 3D Purple Bow Loops */}
-                        <path d="M60 40 C45 20 30 28 60 40 Z" fill="#a855f7" stroke="#7e22ce" strokeWidth="2" />
-                        <path d="M60 40 C75 20 90 28 60 40 Z" fill="#a855f7" stroke="#7e22ce" strokeWidth="2" />
-                        <circle cx="60" cy="40" r="5" fill="#6b21a8" />
-                      </motion.g>
-
-                      {/* Interior Glowing XP Shield & Coins Burst when Open */}
-                      {(isGiftOpening || dailyBonusClaimed) && (
-                        <g>
-                          <ellipse cx="60" cy="50" rx="30" ry="10" fill="#fef08a" opacity="0.9" />
-                        </g>
-                      )}
-                    </svg>
+                    <img 
+                      src={dailyBonusClaimed || isGiftOpening ? "/images/giftbox-open.png" : "/images/giftbox-closed.png"}
+                      alt="Daily Gift Box" 
+                      className="w-32 h-32 object-contain drop-shadow-[0_12px_24px_rgba(245,158,11,0.4)] transition-all duration-300"
+                    />
 
                     {/* Opened Floating XP Shield & Coins */}
                     <AnimatePresence>
                       {(isGiftOpening || dailyBonusClaimed) && (
                         <motion.div
-                          initial={{ opacity: 0, scale: 0.5 }}
-                          animate={{ opacity: 1, scale: 1 }}
+                          initial={{ opacity: 0, scale: 0.5, y: 10 }}
+                          animate={{ opacity: 1, scale: 1, y: -10 }}
                           className="absolute -top-4 inset-x-0 flex justify-center space-x-3 pointer-events-none"
                         >
-                          <img src="/images/coin-exact.png" alt="Coin" className="w-7 h-7 object-contain animate-bounce" />
-                          <img src="/images/xp-shield-exact.png" alt="XP" className="w-7 h-7 object-contain animate-bounce delay-100" />
+                          <img src="/images/coin-exact.png" alt="Coin" className="w-8 h-8 object-contain animate-bounce" />
+                          <img src="/images/xp-shield-exact.png" alt="XP" className="w-8 h-8 object-contain animate-bounce delay-100" />
                         </motion.div>
                       )}
                     </AnimatePresence>
@@ -1035,7 +1015,7 @@ export default function QuestsPage() {
                 </button>
               </div>
 
-              {/* Widget 4: Social Quests Section (Using Official Company Brand Colors) */}
+              {/* Widget 4: Fixed Clean Social Quests Layout */}
               <div className="space-y-4 pt-2">
                 <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
                   <UserCheck className="w-4 h-4 text-white/60" />
@@ -1061,7 +1041,7 @@ export default function QuestsPage() {
                               <p className="text-[10px] text-white/40 font-manrope mt-0.5">Instant community reward</p>
                             </div>
                           </div>
-                          <span className="font-mono font-bold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+                          <span className="font-mono font-extrabold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1.5">
                             <img src="/images/xp-shield-exact.png" alt="XP" className="w-4.5 h-4.5 object-contain" />
                             +{task.xp}
                           </span>
