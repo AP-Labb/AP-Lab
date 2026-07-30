@@ -120,7 +120,8 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                   <div className="flex items-center justify-between">
                     {daysOfWeek.map((day, idx) => {
                       const isToday = idx === currentDayIndex;
-                      const isCompleted = hasStreak && idx <= currentDayIndex;
+                      // Mark completed if user has active streak and it falls within streakCount up to today
+                      const isCompleted = hasStreak && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
 
                       return (
                         <div key={idx} className="flex flex-col items-center space-y-2">

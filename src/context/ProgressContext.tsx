@@ -196,9 +196,9 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
                 key="old-badge"
                 initial={{ scale: 1, rotate: 0, opacity: 1 }}
                 animate={{ 
-                  scale: [1, 1.15, 0.9, 0],
-                  rotate: [0, 90, 720, 1800],
-                  opacity: [1, 1, 1, 0]
+                  scale: [1, 1.1, 0.95, 0],
+                  rotate: [0, 90, 360],
+                  opacity: [1, 1, 0.8, 0]
                 }}
                 transition={{ 
                   duration: 1.8,
@@ -210,9 +210,9 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
                 <LevelBadge level={oldLevel} size="lg" />
                 {/* Glowing charged energy overlay */}
                 <motion.div 
-                  className="absolute inset-0 bg-white rounded-full mix-blend-screen blur-sm pointer-events-none"
+                  className="absolute inset-0 bg-amber-400 rounded-full mix-blend-screen blur-md pointer-events-none"
                   initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: [0, 0.3, 0.8, 1], scale: [0.8, 1.0, 1.2, 1.3] }}
+                  animate={{ opacity: [0, 0.3, 0.6, 0.9], scale: [0.8, 1.0, 1.15, 1.25] }}
                   transition={{ duration: 1.8, times: [0, 0.4, 0.8, 1], ease: "easeInOut" }}
                 />
               </motion.div>

@@ -626,8 +626,8 @@ export default function QuestsPage() {
                 </p>
               </div>
 
-              {/* Refresh Countdown Box (Shifted FAR LEFT into Cream Space, completely avoiding clipboard graphic on right) */}
-              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto md:ml-2">
+              {/* Refresh Countdown Box (Shifted ALL THE WAY LEFT into Cream Space, completely avoiding clipboard graphic on right) */}
+              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto -ml-4 md:-ml-8">
                 <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-white" />
                   REFRESH COUNTDOWN
@@ -690,11 +690,11 @@ export default function QuestsPage() {
                           {/* Reward Chips (Extra Large High-Res XP & Coin Symbols) */}
                           <div className="flex items-center space-x-2 shrink-0">
                             <span className="text-xs font-mono font-extrabold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-7 h-7 object-contain" />
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(168,85,247,0.5)]" />
                               +{quest.xpReward}
                             </span>
                             <span className="text-xs font-mono font-extrabold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/coin-exact.png" alt="Coins" className="w-7 h-7 object-contain" />
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-8 h-8 object-contain drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />
                               +{quest.coinReward}
                             </span>
                           </div>
@@ -727,9 +727,9 @@ export default function QuestsPage() {
                                 onClick={() => handleClaimDailyQuest(quest)}
                                 disabled={!isComplete}
                                 className={cn(
-                                  "w-full py-2.5 rounded-xl text-xs font-manrope font-bold transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2 shadow-sm",
+                                  "w-full py-3 rounded-xl text-xs font-manrope font-extrabold transition-all duration-150 flex items-center justify-center space-x-2 shadow-md",
                                   isComplete 
-                                    ? "bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold" 
+                                    ? "bg-[#10b981] hover:bg-[#059669] text-black font-extrabold shadow-[0_0_20px_rgba(16,185,129,0.5)] cursor-pointer" 
                                     : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                                 )}
                               >
@@ -962,20 +962,6 @@ export default function QuestsPage() {
                       alt="Daily Gift Box" 
                       className="w-32 h-32 object-contain drop-shadow-[0_12px_24px_rgba(245,158,11,0.4)] transition-all duration-300"
                     />
-
-                    {/* Opened Floating XP Shield & Coins */}
-                    <AnimatePresence>
-                      {(isGiftOpening || dailyBonusClaimed) && (
-                        <motion.div
-                          initial={{ opacity: 0, scale: 0.5, y: 10 }}
-                          animate={{ opacity: 1, scale: 1, y: -10 }}
-                          className="absolute -top-4 inset-x-0 flex justify-center space-x-3 pointer-events-none"
-                        >
-                          <img src="/images/coin-exact.png" alt="Coin" className="w-8 h-8 object-contain animate-bounce" />
-                          <img src="/images/xp-shield-exact.png" alt="XP" className="w-8 h-8 object-contain animate-bounce delay-100" />
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
                   </motion.div>
                 </div>
 
@@ -1015,7 +1001,7 @@ export default function QuestsPage() {
                 </button>
               </div>
 
-              {/* Widget 4: Fixed Clean Social Quests Layout */}
+              {/* Widget 4: Clean Social Quests Layout */}
               <div className="space-y-4 pt-2">
                 <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
                   <UserCheck className="w-4 h-4 text-white/60" />
@@ -1033,7 +1019,7 @@ export default function QuestsPage() {
                       <div key={task.id} className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-4 flex flex-col justify-between space-y-3 shadow-sm">
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-3">
-                            <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                            <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
                               <task.icon className={cn("w-5 h-5", task.iconColor)} />
                             </div>
                             <div>
@@ -1041,7 +1027,7 @@ export default function QuestsPage() {
                               <p className="text-[10px] text-white/40 font-manrope mt-0.5">Instant community reward</p>
                             </div>
                           </div>
-                          <span className="font-mono font-extrabold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                          <span className="font-mono font-extrabold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0">
                             <img src="/images/xp-shield-exact.png" alt="XP" className="w-4.5 h-4.5 object-contain" />
                             +{task.xp}
                           </span>
