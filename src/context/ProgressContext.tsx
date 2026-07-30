@@ -342,11 +342,27 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
 
   const triggerXpToast = (amount: number, message: string, type: "question" | "section", creditAmount?: number) => {
     console.log("AP Lab Toast triggered:", { amount, message, type, creditAmount });
-    const id = Date.now() + Math.random();
-    setXpToasts((prev) => [...prev, { id, amount, message, type, creditAmount }]);
-    setTimeout(() => {
-      setXpToasts((prev) => prev.filter((t) => t.id !== id));
-    }, 3500);
+    setXpToasts((prev) => {
+      const now = Date.now();
+      // If there's an active toast added in the last 400ms, merge into it
+      const recentIndex = prev.findIndex((t) => now - t.id < 400);
+      if (recentIndex !== -1) {
+        const updated = [...prev];
+        const existing = updated[recentIndex];
+        updated[recentIndex] = {
+          ...existing,
+          amount: existing.amount + amount,
+          creditAmount: (existing.creditAmount || 0) + (creditAmount || 0),
+          message: existing.message.includes("Claimed") || message.includes("Claimed") ? "Rewards Claimed!" : message,
+        };
+        return updated;
+      }
+      const id = now;
+      setTimeout(() => {
+        setXpToasts((p) => p.filter((t) => t.id !== id));
+      }, 3800);
+      return [...prev, { id, amount, message, type, creditAmount }];
+    });
   };
 
   // Sync profile details to Firestore in background whenever user loads in
@@ -1148,43 +1164,46 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       </AnimatePresence>
 
       {/* Top-Center XP / Credit Earned Toasts */}
-      <div className="fixed top-24 left-0 right-0 pointer-events-none z-[99999] flex flex-col items-center justify-start space-y-3">
+      <div className="fixed top-20 left-0 right-0 pointer-events-none z-[99999] flex flex-col items-center justify-start space-y-3">
         <AnimatePresence>
-          {xpToasts.map((toast) => (
-            <motion.div
-              key={toast.id}
-              initial={{ opacity: 0, y: -50, scale: 0.9 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.9, transition: { duration: 0.2 } }}
-              transition={{ type: "spring", stiffness: 300, damping: 25 }}
-              className="flex items-center space-x-3.5 pointer-events-auto bg-[#0b0d17]/95 backdrop-blur-2xl border border-white/12 text-white px-5 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
-            >
-              <div className="flex h-12 w-12 items-center justify-center shrink-0">
-                {toast.creditAmount ? (
-                  <img src="/images/coin-exact.png" alt="Coins" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(245,158,11,0.5)]" />
-                ) : (
-                  <img src="/images/xp-shield-exact.png" alt="XP" className="w-10 h-10 object-contain drop-shadow-[0_0_12px_rgba(168,85,247,0.5)]" />
-                )}
-              </div>
-              <div className="flex flex-col">
-                <span className="text-xs font-manrope font-bold text-white/60">{toast.message}</span>
-                <div className="flex items-center gap-2 mt-0.5">
+          {xpToasts.map((toast) => {
+            const hasBoth = toast.amount > 0 && toast.creditAmount !== undefined && toast.creditAmount > 0;
+            return (
+              <motion.div
+                key={toast.id}
+                initial={{ opacity: 0, y: -40, scale: 0.94 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.94, transition: { duration: 0.15 } }}
+                transition={{ type: "spring", stiffness: 350, damping: 28 }}
+                className="flex items-center space-x-4 pointer-events-auto bg-[#0b0c16]/95 backdrop-blur-2xl border border-white/15 text-white px-6 py-4 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.85)]"
+              >
+                <div className="flex items-center justify-center shrink-0 space-x-[-8px]">
                   {toast.amount > 0 && (
-                    <span className="text-sm font-black text-purple-300 font-mono tracking-wide flex items-center gap-1.5">
-                      <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 inline object-contain" />
-                      +{toast.amount} XP
-                    </span>
+                    <img src="/images/xp-shield-exact.png" alt="XP" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.6)]" />
                   )}
                   {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
-                    <span className="text-sm font-black text-amber-300 font-mono tracking-wide flex items-center gap-1.5">
-                      <img src="/images/coin-exact.png" alt="Coin" className="w-5 h-5 inline object-contain" />
-                      +{toast.creditAmount} Coins
-                    </span>
+                    <img src="/images/coin-exact.png" alt="Coins" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.6)]" />
                   )}
                 </div>
-              </div>
-            </motion.div>
-          ))}
+                <div className="flex flex-col text-left">
+                  <span className="text-[11px] font-manrope font-bold text-white/50 uppercase tracking-wider">{toast.message}</span>
+                  <div className="flex items-center space-x-3 mt-0.5 font-mono font-extrabold text-sm">
+                    {toast.amount > 0 && (
+                      <span className="text-purple-300 flex items-center gap-1">
+                        +{toast.amount} XP
+                      </span>
+                    )}
+                    {hasBoth && <span className="text-white/20">•</span>}
+                    {toast.creditAmount !== undefined && toast.creditAmount > 0 && (
+                      <span className="text-amber-400 flex items-center gap-1">
+                        +{toast.creditAmount} Coins
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
         </AnimatePresence>
       </div>
     </ProgressContext.Provider>

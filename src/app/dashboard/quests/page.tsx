@@ -43,6 +43,82 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
+// Custom Rank Symbols (Military / Chess Insignia Badges matching reference image)
+const RankBadge = ({ variant, color = "gold" }: { variant: "chevron-1" | "chevron-2" | "chevron-3" | "star-1" | "star-2" | "star-3" | "pawn" | "rook" | "knight" | "crown"; color?: "gold" | "silver" | "green" }) => {
+  const borderClass = color === "gold" ? "border-[#d9a036] bg-[#14120c]" : color === "silver" ? "border-[#a3a3a3] bg-[#121316]" : "border-[#15803d] bg-[#0b1a10]";
+  const fillClass = color === "gold" ? "text-[#f59e0b]" : color === "silver" ? "text-[#e5e5e5]" : "text-[#22c55e]";
+
+  return (
+    <div className={cn("w-10 h-10 rounded-xl border-2 flex items-center justify-center shadow-md shrink-0 relative overflow-hidden", borderClass)}>
+      {variant === "chevron-1" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M12 15L4 8h16l-8 7z" />
+        </svg>
+      )}
+      {variant === "chevron-2" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current space-y-1", fillClass)}>
+          <path d="M12 11L5 5h14l-7 6zM12 19L5 13h14l-7 6z" />
+        </svg>
+      )}
+      {variant === "chevron-3" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M12 8L6 3h12l-6 5zm0 7L6 10h12l-6 5zm0 7L6 17h12l-6 5z" />
+        </svg>
+      )}
+      {variant === "star-1" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+        </svg>
+      )}
+      {variant === "star-2" && (
+        <div className="flex space-x-0.5">
+          <svg viewBox="0 0 24 24" className={cn("w-4 h-4 fill-current", fillClass)}>
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+          <svg viewBox="0 0 24 24" className={cn("w-4 h-4 fill-current", fillClass)}>
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        </div>
+      )}
+      {variant === "star-3" && (
+        <div className="flex flex-col items-center">
+          <svg viewBox="0 0 24 24" className={cn("w-3.5 h-3.5 fill-current", fillClass)}>
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+          <div className="flex space-x-0.5 -mt-1">
+            <svg viewBox="0 0 24 24" className={cn("w-3 h-3 fill-current", fillClass)}>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+            <svg viewBox="0 0 24 24" className={cn("w-3 h-3 fill-current", fillClass)}>
+              <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+            </svg>
+          </div>
+        </div>
+      )}
+      {variant === "pawn" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M12 4a3 3 0 100 6 3 3 0 000-6zm-3 7a1 1 0 00-1 1v2h8v-2a1 1 0 00-1-1H9zm-2 5a1 1 0 00-1 1v3h12v-3a1 1 0 00-1-1H7z" />
+        </svg>
+      )}
+      {variant === "rook" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M5 4v3h2V5h3v2h4V5h3v2h2V4H5zm2 5v5h10V9H7zm-2 7v4h14v-4H5z" />
+        </svg>
+      )}
+      {variant === "knight" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M19 22H5v-2h14v2zm-2-4H7v-2h10v2zm-1-4h-2.5c0-1.5-1-2.5-2.5-3v-1c2 0 4-1.5 4-4 0-1.5-.5-2.5-1-3 2 0 4 1 5 3 1.5 3 1 6-3 8z" />
+        </svg>
+      )}
+      {variant === "crown" && (
+        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
+          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-2h14v2z" />
+        </svg>
+      )}
+    </div>
+  );
+};
+
 // Social Brand SVG Icons
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
@@ -136,6 +212,7 @@ export default function QuestsPage() {
   const [claimedTasks, setClaimedTasks] = useState<Record<string, boolean>>({});
   const [timeRemaining, setTimeRemaining] = useState<Record<string, number>>({});
   const [dailyBonusClaimed, setDailyBonusClaimed] = useState<boolean>(false);
+  const [isChestOpening, setIsChestOpening] = useState<boolean>(false);
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
@@ -183,11 +260,11 @@ export default function QuestsPage() {
   const completedTopics = progress?.completedTopics?.length || 0;
   const streakCount = progress?.streakCount || 0;
 
-  // Real Quests Data with verified live progress
+  // Real Quests Data with custom rank symbols
   const DAILY_QUESTS = [
     {
       id: "daily-practice",
-      icon: "🧪",
+      badge: <RankBadge variant="chevron-1" color="green" />,
       title: "Practice Master",
       desc: "Answer 25 questions correctly in any AP lab",
       difficulty: "Medium",
@@ -198,7 +275,7 @@ export default function QuestsPage() {
     },
     {
       id: "daily-subtopic",
-      icon: "📚",
+      badge: <RankBadge variant="chevron-2" color="silver" />,
       title: "Subtopic Scholar",
       desc: "Complete 2 full subtopic units today",
       difficulty: "Easy",
@@ -208,8 +285,8 @@ export default function QuestsPage() {
       coinReward: 150,
     },
     {
-      id: "daily-[#streak]",
-      icon: "🔥",
+      id: "daily-streak",
+      badge: <RankBadge variant="star-1" color="gold" />,
       title: "Daily Study Ritual",
       desc: "Maintain your continuous daily study streak",
       difficulty: "Easy",
@@ -223,7 +300,7 @@ export default function QuestsPage() {
   const WEEKLY_QUESTS = [
     {
       id: "weekly-100-q",
-      icon: "🎯",
+      badge: <RankBadge variant="rook" color="gold" />,
       title: "Centurion Scholar",
       desc: "Answer 100 practice questions this week",
       difficulty: "Hard",
@@ -234,7 +311,7 @@ export default function QuestsPage() {
     },
     {
       id: "weekly-mastery",
-      icon: "⚡",
+      badge: <RankBadge variant="knight" color="silver" />,
       title: "Topic Mastery",
       desc: "Reach 80%+ mastery across 5 subtopics",
       difficulty: "Hard",
@@ -248,7 +325,7 @@ export default function QuestsPage() {
   const SPECIAL_QUESTS = [
     {
       id: "special-exam-ready",
-      icon: "🏆",
+      badge: <RankBadge variant="crown" color="gold" />,
       title: "Exam Readiness",
       desc: "Complete a full 55-question diagnostic mock test",
       difficulty: "Expert",
@@ -264,9 +341,10 @@ export default function QuestsPage() {
   const totalDailyQuests = DAILY_QUESTS.length;
   const totalDailyProgressPct = Math.round((completedDailyCount / totalDailyQuests) * 100);
 
-  // Handlers
+  // Handlers (Simultaneous XP & Coin claim in single unified toast)
   const handleClaimDailyQuest = async (quest: typeof DAILY_QUESTS[0]) => {
     if (claimedDailies[quest.id] || quest.current < quest.target) return;
+    
     if (claimSocialXp) await claimSocialXp(quest.title, quest.xpReward);
     if (addCredits) await addCredits(quest.coinReward, `Completed Quest: ${quest.title}`);
 
@@ -315,12 +393,18 @@ export default function QuestsPage() {
     } catch (e) {}
   };
 
+  // Interactive Treasure Chest Opening Animation
   const handleClaimDailyBonus = async () => {
-    if (dailyBonusClaimed) return;
-    if (claimSocialXp) await claimSocialXp("Daily Login Bonus", 150);
-    if (addCredits) await addCredits(50, "Daily Login Bonus");
-    setDailyBonusClaimed(true);
-    try { localStorage.setItem(bonusStorageKey, JSON.stringify(true)); } catch (e) {}
+    if (dailyBonusClaimed || isChestOpening) return;
+    setIsChestOpening(true);
+
+    setTimeout(async () => {
+      if (claimSocialXp) await claimSocialXp("Daily Login Bonus", 150);
+      if (addCredits) await addCredits(50, "Daily Login Bonus");
+      setDailyBonusClaimed(true);
+      setIsChestOpening(false);
+      try { localStorage.setItem(bonusStorageKey, JSON.stringify(true)); } catch (e) {}
+    }, 900);
   };
 
   const handleSignOut = async () => {
@@ -380,7 +464,7 @@ export default function QuestsPage() {
                 )}
               </button>
 
-              {/* Active Quests Sidebar Item with Subtle Indicator Line (No Glow) */}
+              {/* Active Quests Sidebar Item */}
               <Link href="/dashboard/quests" className="relative flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/[0.06] text-white font-bold border border-white/10">
                 <div className="absolute left-0 top-2 bottom-2 w-1 bg-white rounded-r-full" />
                 <Award className="w-5 h-5 shrink-0 text-white ml-1" />
@@ -443,7 +527,6 @@ export default function QuestsPage() {
             </div>
           </div>
 
-          {/* Currency Widgets (Flat Symbols) */}
           <HeaderUserCapsules onOpenProfile={() => setShowProfileModal(true)} />
         </header>
 
@@ -482,53 +565,54 @@ export default function QuestsPage() {
             </div>
           </div>
 
-          {/* Hero Section: Proper Daily Quest Hub Card */}
-          <div className="bg-[#0b0d18] border border-white/[0.08] rounded-3xl p-6 sm:p-8 shadow-md flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
-            {/* Left side: Overview & progress */}
-            <div className="space-y-3 max-w-md w-full">
-              <div>
-                <h2 className="font-manrope text-2xl font-extrabold text-white">Daily Quests</h2>
-                <p className="text-xs text-white/50 font-manrope mt-1">Complete daily study challenges to earn XP and Coins.</p>
-              </div>
+          {/* Hero Section: QUESTbanner.png Background Banner (Mostly Empty with Countdown & Title) */}
+          <div className="relative w-full rounded-3xl border border-white/10 p-8 sm:p-10 shadow-2xl overflow-hidden min-h-[220px] flex items-center">
+            {/* Background Image QUESTbanner.png */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
+              style={{ backgroundImage: "url('/images/QUESTbanner.png')" }}
+            />
+            {/* Subtle Overlay to maintain text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-0" />
 
-              <div className="space-y-2 pt-1">
-                <div className="flex justify-between items-center text-xs font-mono font-bold">
-                  <span className="text-white/60">Completion Rate</span>
-                  <span className="text-white">{completedDailyCount} / {totalDailyQuests} Completed ({totalDailyProgressPct}%)</span>
+            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6">
+              {/* Title & Simple Subtitle on clear background space */}
+              <div className="space-y-2 max-w-lg">
+                <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-mono font-bold text-white/90 uppercase tracking-wider">
+                  <Calendar className="w-3.5 h-3.5 text-amber-400" />
+                  <span>DAILY QUEST HUB</span>
                 </div>
-                <div className="h-2.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <motion.div 
-                    initial={{ width: 0 }} 
-                    animate={{ width: `${totalDailyProgressPct}%` }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="h-full bg-white rounded-full" 
-                  />
+                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
+                  Daily Quests
+                </h2>
+                <p className="text-sm text-white/80 font-manrope max-w-md drop-shadow">
+                  Complete daily study objectives before the timer resets to earn XP and coins.
+                </p>
+              </div>
+
+              {/* Large Refresh Countdown Box */}
+              <div className="bg-[#03040a]/80 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[240px]">
+                <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                  REFRESH COUNTDOWN
+                </span>
+
+                <div className="flex items-center space-x-2 font-mono font-extrabold text-2xl sm:text-3xl text-white">
+                  <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
+                  <span className="text-white/30">:</span>
+                  <span>{String(timeLeft.minutes).padStart(2, '0')}m</span>
+                  <span className="text-white/30">:</span>
+                  <span>{String(timeLeft.seconds).padStart(2, '0')}s</span>
                 </div>
-              </div>
-            </div>
 
-            {/* Right side: Countdown timer with calendar icon */}
-            <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-5 flex flex-col items-center justify-center shrink-0 w-full md:w-auto min-w-[220px]">
-              <div className="flex items-center space-x-2 text-white/40 text-xs font-mono mb-2">
-                <Calendar className="w-4 h-4 text-white/60" />
-                <span>REFRESH COUNTDOWN</span>
+                <span className="text-[11px] font-manrope font-semibold text-white/50 mt-2">
+                  Refreshes in {timeLeft.hours}h {timeLeft.minutes}m
+                </span>
               </div>
-
-              <div className="flex items-center space-x-2 font-mono font-extrabold text-2xl text-white">
-                <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
-                <span className="text-white/30">:</span>
-                <span>{String(timeLeft.minutes).padStart(2, '0')}m</span>
-                <span className="text-white/30">:</span>
-                <span>{String(timeLeft.seconds).padStart(2, '0')}s</span>
-              </div>
-
-              <span className="text-[11px] font-manrope text-white/40 mt-2">
-                Refreshes in {timeLeft.hours}h {timeLeft.minutes}m
-              </span>
             </div>
           </div>
 
-          {/* Main Grid: Left Quests Column (Daily, Weekly, Special, Social) & Right Sidebar (Streak, Weekly Summary, Achievements, Bonus) */}
+          {/* Main Grid: Left Quests Column (Daily, Weekly, Special, Social) & Right Sidebar (Streak, Weekly Summary, Chest Bonus) */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
             {/* Left 2 Columns: Quests Categorized */}
@@ -553,8 +637,8 @@ export default function QuestsPage() {
                       >
                         {/* Top row */}
                         <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-3">
-                            <span className="text-2xl">{quest.icon}</span>
+                          <div className="flex items-center space-x-3.5">
+                            {quest.badge}
                             <div>
                               <div className="flex items-center space-x-2">
                                 <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
@@ -637,8 +721,8 @@ export default function QuestsPage() {
                       className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-4 transition-all duration-150 hover:-translate-y-[2px] hover:border-white/20 shadow-sm"
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{quest.icon}</span>
+                        <div className="flex items-center space-x-3.5">
+                          {quest.badge}
                           <div>
                             <div className="flex items-center space-x-2">
                               <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
@@ -695,8 +779,8 @@ export default function QuestsPage() {
                       className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-4 transition-all duration-150 hover:-translate-y-[2px] hover:border-white/20 shadow-sm"
                     >
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <span className="text-2xl">{quest.icon}</span>
+                        <div className="flex items-center space-x-3.5">
+                          {quest.badge}
                           <div>
                             <div className="flex items-center space-x-2">
                               <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
@@ -724,7 +808,7 @@ export default function QuestsPage() {
                 </div>
               </section>
 
-              {/* Category 4: Social Quests (Exact Original FloatingXPOperations Logic & Timers) */}
+              {/* Category 4: Social Quests */}
               <section className="space-y-4">
                 <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
                   <UserCheck className="w-4 h-4 text-white/60" />
@@ -805,7 +889,7 @@ export default function QuestsPage() {
 
             </div>
 
-            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Achievements, Daily Bonus) */}
+            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Animated Treasure Chest Bonus) */}
             <div className="space-y-6">
               
               {/* Widget 1: Streak Card */}
@@ -835,59 +919,73 @@ export default function QuestsPage() {
                 <p className="text-xs text-white/40 font-manrope">72% of weekly milestone completed</p>
               </div>
 
-              {/* Widget 3: Achievement Unlocks (Tiny Cards) */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
-                <h4 className="font-manrope font-bold text-sm text-white">Recent Unlocks</h4>
-                <div className="space-y-2">
-                  <div className="bg-white/[0.03] border border-white/5 rounded-xl p-2.5 flex items-center space-x-3">
-                    <span className="text-base">🏆</span>
-                    <div>
-                      <h5 className="font-bold text-xs text-white">Practice Master</h5>
-                      <span className="text-[10px] text-white/40 font-mono">Unlocked yesterday</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white/[0.03] border border-white/5 rounded-xl p-2.5 flex items-center space-x-3">
-                    <span className="text-base">⭐</span>
-                    <div>
-                      <h5 className="font-bold text-xs text-white">Week Warrior</h5>
-                      <span className="text-[10px] text-white/40 font-mono">Unlocked 3 days ago</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-white/[0.03] border border-white/5 rounded-xl p-2.5 flex items-center space-x-3">
-                    <span className="text-base">🎉</span>
-                    <div>
-                      <h5 className="font-bold text-xs text-white">7 Day Streak</h5>
-                      <span className="text-[10px] text-white/40 font-mono">Unlocked this week</span>
-                    </div>
-                  </div>
+              {/* Widget 3: Interactive Animated Treasure Chest Daily Bonus */}
+              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+                <div className="flex items-center space-x-2 text-white">
+                  <Gift className="w-5 h-5 text-amber-400" />
+                  <h4 className="font-manrope font-bold text-sm">Daily Treasure Bonus</h4>
                 </div>
-              </div>
 
-              {/* Widget 4: Daily Bonus Card */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
-                <div className="flex items-center space-x-2">
-                  <Gift className="w-5 h-5 text-purple-400" />
-                  <h4 className="font-manrope font-bold text-sm text-white">Daily Login Bonus</h4>
+                {/* Animated Treasure Chest Graphics */}
+                <div className="relative w-28 h-24 my-2 flex items-center justify-center">
+                  <motion.div
+                    animate={isChestOpening ? { rotate: [0, -8, 8, -5, 5, 0], scale: [1, 1.1, 1.2, 1] } : { y: [0, -4, 0] }}
+                    transition={{ duration: isChestOpening ? 0.9 : 3, repeat: isChestOpening ? 0 : Infinity, ease: "easeInOut" }}
+                    className="relative z-10 text-6xl drop-shadow-[0_10px_20px_rgba(245,158,11,0.3)]"
+                  >
+                    {dailyBonusClaimed || isChestOpening ? "👑" : "🧰"}
+                  </motion.div>
+
+                  {/* Opened Jewels Burst Effect */}
+                  <AnimatePresence>
+                    {(isChestOpening || dailyBonusClaimed) && (
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.3 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                      >
+                        <div className="absolute -top-3 -left-2 text-xl animate-bounce">💎</div>
+                        <div className="absolute -top-4 right-0 text-xl animate-bounce delay-100">🪙</div>
+                        <div className="absolute top-2 -right-3 text-lg animate-bounce delay-200">✨</div>
+                        <div className="absolute -bottom-2 -left-3 text-lg animate-bounce delay-150">🌟</div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
-                <p className="text-xs text-white/50 font-manrope">Study today to claim instant XP & coins boost:</p>
-                <div className="flex items-center space-x-2 text-xs font-mono font-bold text-purple-300">
-                  <span>+150 XP</span>
-                  <span>•</span>
-                  <span className="text-amber-400">+50 Coins</span>
+
+                <p className="text-xs text-white/50 font-manrope">Unlock daily jewels for instant XP and Coin boosts:</p>
+
+                <div className="flex items-center space-x-2 text-xs font-mono font-bold">
+                  <span className="text-purple-300 flex items-center gap-1">
+                    <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-3.5 h-3.5 object-contain" />
+                    +150 XP
+                  </span>
+                  <span className="text-white/20">•</span>
+                  <span className="text-amber-400 flex items-center gap-1">
+                    <img src="/images/coin-zoomed.png" alt="Coins" className="w-3.5 h-3.5 object-contain" />
+                    +50 Coins
+                  </span>
                 </div>
+
                 <button
                   onClick={handleClaimDailyBonus}
-                  disabled={dailyBonusClaimed}
+                  disabled={dailyBonusClaimed || isChestOpening}
                   className={cn(
-                    "w-full py-2.5 rounded-xl font-manrope font-bold text-xs transition-all duration-150 cursor-pointer shadow-sm",
+                    "w-full py-3 rounded-xl font-manrope font-extrabold text-xs transition-all duration-150 cursor-pointer shadow-md flex items-center justify-center space-x-2",
                     dailyBonusClaimed 
                       ? "bg-white/5 text-white/30 cursor-default border border-white/5" 
-                      : "bg-white text-black hover:bg-neutral-200 font-extrabold"
+                      : isChestOpening
+                        ? "bg-amber-500 text-black animate-pulse"
+                        : "bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold shadow-[0_0_20px_rgba(245,158,11,0.3)]"
                   )}
                 >
-                  {dailyBonusClaimed ? "Claimed Today ✓" : "Claim Daily Bonus"}
+                  {dailyBonusClaimed ? (
+                    <span>Chest Opened ✓</span>
+                  ) : isChestOpening ? (
+                    <span>Opening Chest...</span>
+                  ) : (
+                    <span>Open Daily Chest</span>
+                  )}
                 </button>
               </div>
 
