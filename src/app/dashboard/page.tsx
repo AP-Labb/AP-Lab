@@ -531,126 +531,6 @@ export default function Dashboard() {
     );
   }
 
-  const coursePreviewsData = [
-    {
-      name: "AP® Biology",
-      slug: "ap-biology",
-      category: "Life Sciences",
-      videos: 48,
-      articles: 36,
-      topics: 12,
-      subtopics: 42,
-      estTime: "32 Hours",
-      questions: "850+ Items",
-      difficulty: "Advanced",
-      color: "border-emerald-500/30 bg-emerald-500/5 text-emerald-400"
-    },
-    {
-      name: "AP® Chemistry",
-      slug: "ap-chemistry",
-      category: "Physical Sciences",
-      videos: 52,
-      articles: 40,
-      topics: 14,
-      subtopics: 48,
-      estTime: "38 Hours",
-      questions: "920+ Items",
-      difficulty: "Expert",
-      color: "border-cyan-500/30 bg-cyan-500/5 text-cyan-400"
-    },
-    {
-      name: "AP® Physics C",
-      slug: "ap-physics-c",
-      category: "Physical Sciences",
-      videos: 45,
-      articles: 35,
-      topics: 11,
-      subtopics: 38,
-      estTime: "30 Hours",
-      questions: "800+ Items",
-      difficulty: "Expert",
-      color: "border-blue-500/30 bg-blue-500/5 text-blue-400"
-    },
-    {
-      name: "AP® Calculus BC",
-      slug: "ap-calc-bc",
-      category: "Mathematics",
-      videos: 60,
-      articles: 45,
-      topics: 15,
-      subtopics: 54,
-      estTime: "42 Hours",
-      questions: "1,050+ Items",
-      difficulty: "Expert",
-      color: "border-amber-500/30 bg-amber-500/5 text-amber-400"
-    },
-    {
-      name: "AP® Statistics",
-      slug: "ap-stats",
-      category: "Mathematics",
-      videos: 38,
-      articles: 30,
-      topics: 10,
-      subtopics: 34,
-      estTime: "25 Hours",
-      questions: "720+ Items",
-      difficulty: "Intermediate",
-      color: "border-pink-500/30 bg-pink-500/5 text-pink-400"
-    },
-    {
-      name: "AP® Computer Science A",
-      slug: "ap-csa",
-      category: "Technology",
-      videos: 42,
-      articles: 34,
-      topics: 11,
-      subtopics: 38,
-      estTime: "28 Hours",
-      questions: "800+ Items",
-      difficulty: "Advanced",
-      color: "border-blue-500/30 bg-blue-500/5 text-blue-400"
-    },
-    {
-      name: "AP® Psychology",
-      slug: "ap-psych",
-      category: "Social Sciences",
-      videos: 36,
-      articles: 30,
-      topics: 9,
-      subtopics: 32,
-      estTime: "24 Hours",
-      questions: "680+ Items",
-      difficulty: "Intermediate",
-      color: "border-rose-500/30 bg-rose-500/5 text-rose-400"
-    },
-    {
-      name: "AP® Macroeconomics",
-      slug: "ap-macroeconomics",
-      category: "Social Sciences",
-      videos: 28,
-      articles: 24,
-      topics: 7,
-      subtopics: 24,
-      estTime: "18 Hours",
-      questions: "520+ Items",
-      difficulty: "Intermediate",
-      color: "border-teal-500/30 bg-teal-500/5 text-teal-400"
-    },
-    {
-      name: "AP® US History",
-      slug: "ap-ush",
-      category: "History & Social",
-      videos: 56,
-      articles: 48,
-      topics: 14,
-      subtopics: 50,
-      estTime: "40 Hours",
-      questions: "980+ Items",
-      difficulty: "Advanced",
-      color: "border-red-500/30 bg-red-500/5 text-red-400"
-    }
-  ];
-
   const handleSignOut = () => {
     setShowSignOutConfirm(true);
   };
@@ -808,215 +688,93 @@ export default function Dashboard() {
           </div>
         </motion.div>
 
-        {/* LOWER REGION: Folders Grid / Previews Grid / Leaderboard with Grid Background Pattern */}
+        {/* LOWER REGION: Folders Grid with Grid Background Pattern */}
         <div 
-          className="w-full flex-1 relative z-20 flex flex-col items-center -mt-7 pt-12 pb-12 px-6 md:px-12 bg-[#060712]"
+          className="w-full flex-1 relative z-20 flex flex-col items-center pt-8 pb-12 px-6 md:px-12 bg-[#060712]"
           style={{
             backgroundImage: "linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
             backgroundSize: "36px 36px"
           }}
         >
-          {/* Tab 1: Course Image Cards Grid */}
-          {dashboardTab === "courses" && (() => {
-            // Course card data: images from Unsplash (subject-matched), descriptions, unit/topic counts
-            const COURSE_CARDS = [
-              { slug: "ap-biology",    image: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=600&q=80", desc: "Explore life's molecular machinery, genetics, ecology, and evolution through inquiry-based AP science.", units: 8, topics: 63 },
-              { slug: "ap-chemistry",  image: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=600&q=80", desc: "Master atomic structure, chemical reactions, thermodynamics, and electrochemistry at the AP level.", units: 9, topics: 52 },
-              { slug: "ap-physics-c",  image: "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=600&q=80", desc: "Calculus-based mechanics and electricity & magnetism designed for the most rigorous AP physics exam.", units: 7, topics: 43 },
-              { slug: "ap-ush",        image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=600&q=80", desc: "Journey through American history from colonization to the present, analysing key events and primary sources.", units: 9, topics: 55 },
-              { slug: "ap-psych",      image: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=600&q=80", desc: "Uncover the science of mind and behaviour: cognition, development, social psychology, and clinical concepts.", units: 8, topics: 46 },
-              { slug: "ap-eng-lang",   image: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=600&q=80", desc: "Develop rhetoric analysis, argumentation, and synthesis writing skills for the AP Language exam.", units: 9, topics: 48 },
-              { slug: "ap-calc-bc",    image: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=600&q=80", desc: "Limits, derivatives, integrals, infinite series, and parametric equations covered to BC depth.", units: 10, topics: 58 },
-              { slug: "ap-stats",      image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&q=80", desc: "Statistical reasoning, data collection, probability models, and inference for the AP Statistics exam.", units: 9, topics: 44 },
-              { slug: "ap-csa",        image: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&q=80", desc: "Object-oriented programming in Java: data structures, algorithms, and software design principles.", units: 10, topics: 64 },
-            ];
-            return (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.4 }}
-                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 w-full max-w-7xl mt-8 mb-12"
-              >
-                {COURSE_CARDS.map((card, idx) => {
-                  const reg = courseRegistry[card.slug];
-                  if (!reg) return null;
-                  const Icon = (() => {
-                    const m: Record<string, React.ElementType> = {
-                      "ap-biology": Dna, "ap-chemistry": Beaker, "ap-physics-c": Atom,
-                      "ap-ush": History, "ap-psych": Brain, "ap-eng-lang": BookOpen,
-                      "ap-calc-bc": Sigma, "ap-stats": BarChart3, "ap-csa": Binary,
-                    };
-                    return m[card.slug] || GraduationCap;
-                  })();
-                  const courseProgress = classProgressMap?.[card.slug];
-                  const totalTopics = card.topics;
-                  const pct = typeof courseProgress === "number" ? Math.min(100, Math.round(courseProgress)) : 0;
-                  const completedTopics = Math.round((pct / 100) * totalTopics);
+          {/* Course Image Cards Grid */}
+          <div className="w-full max-w-6xl space-y-12">
+            {folders.map((folder, idx) => (
+              <div key={idx} className="space-y-6">
+                <div className="flex items-center space-x-3 border-b border-white/10 pb-3">
+                  <folder.icon className={cn("w-5 h-5", folder.color)} />
+                  <h3 className="font-instrument text-2xl font-bold text-white tracking-tight">
+                    {folder.title}
+                  </h3>
+                </div>
 
-                  return (
-                    <motion.div
-                      key={card.slug}
-                      initial={{ opacity: 0, y: 28 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: idx * 0.06, ease: [0.22, 1, 0.36, 1] }}
-                    >
-                      <Link href={`/dashboard/${card.slug}`} className="block group">
-                        <div className="bg-[#0b0d1a] border border-white/[0.07] rounded-2xl overflow-hidden hover:border-white/20 transition-all duration-300 hover:shadow-[0_8px_32px_rgba(0,0,0,0.7)] hover:-translate-y-1">
-                          {/* Hero image */}
-                          <div className="relative h-36 overflow-hidden">
-                            <img
-                              src={card.image}
-                              alt={reg.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                            />
-                            {/* Dark bottom fade */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0b0d1a] via-transparent to-transparent" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {folder.classes.map((cls, cIdx) => {
+                    const isEnrolled = progress?.selectedClasses?.includes(cls.name);
+                    const progressPercent = classProgressMap[cls.slug] || 0;
+                    const courseData = courseRegistry[cls.slug];
+
+                    return (
+                      <Link 
+                        key={cIdx} 
+                        href={`/dashboard/${cls.slug}`} 
+                        className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer"
+                      >
+                        {/* Course Header Banner Image */}
+                        <div className="relative h-44 w-full overflow-hidden">
+                          <img 
+                            src={`/images/${cls.slug}.png`} 
+                            alt={cls.name}
+                            onError={(e) => {
+                              (e.target as HTMLElement).style.display = 'none';
+                            }}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/40 to-transparent" />
+                          
+                          {/* Enrolled Highlight Badge */}
+                          {isEnrolled && (
+                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md flex items-center space-x-1.5 shadow-lg">
+                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                              <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Enrolled</span>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Card Body */}
+                        <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                          <div>
+                            <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
+                              <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
+                              <span>{folder.title}</span>
+                            </div>
+                            <h4 className="font-instrument text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                              {cls.name}
+                            </h4>
+                            <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
+                              Master core AP concepts, practice exam-style questions, and build topic fluency.
+                            </p>
                           </div>
 
-                          {/* Card body */}
-                          <div className="p-4">
-                            {/* Course name + icon */}
-                            <div className="flex items-center gap-2 mb-1.5">
-                              <Icon className="w-4 h-4 shrink-0" style={{ color: reg.accentColor }} />
-                              <h3 className="font-manrope font-extrabold text-sm text-white truncate">{reg.name}</h3>
+                          <div className="space-y-3 pt-2">
+                            <div className="flex justify-between items-center text-xs font-mono">
+                              <span className="text-white/40">Course Completion</span>
+                              <span className="font-bold text-white/80">{Math.round(progressPercent)}%</span>
                             </div>
-
-                            {/* Description */}
-                            <p className="font-sans text-[11px] text-white/45 leading-relaxed line-clamp-2 mb-3">
-                              {card.desc}
-                            </p>
-
-                            {/* Unit + topic pills */}
-                            <div className="flex items-center gap-2 mb-3">
-                              <span className="flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full border" style={{ borderColor: `${reg.accentColor}55`, color: reg.accentColor, background: `${reg.accentColor}18` }}>
-                                <Layers className="w-2.5 h-2.5" /> {card.units} UNITS
-                              </span>
-                              <span className="flex items-center gap-1 text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-violet-500/15 border border-violet-500/30 text-violet-400">
-                                <BookMarked className="w-2.5 h-2.5" /> {card.topics} TOPICS
-                              </span>
-                            </div>
-
-                            {/* Progress */}
-                            <div>
-                              <div className="flex items-center justify-between mb-1">
-                                <span className="text-[10px] font-mono text-white/35">✦ {pct}% Progress</span>
-                              </div>
-                              <div className="h-1.5 w-full rounded-full bg-white/[0.06] overflow-hidden">
-                                <motion.div
-                                  initial={{ width: 0 }}
-                                  animate={{ width: `${pct}%` }}
-                                  transition={{ duration: 0.8, delay: idx * 0.05 + 0.3, ease: "easeOut" }}
-                                  className="h-full rounded-full"
-                                  style={{ background: reg.accentColor }}
-                                />
-                              </div>
+                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                              <div 
+                                className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-500 rounded-full" 
+                                style={{ width: `${progressPercent}%` }}
+                              />
                             </div>
                           </div>
                         </div>
                       </Link>
-                    </motion.div>
-                  );
-                })}
-              </motion.div>
-            );
-          })()}
-
-
-          {/* Tab 2: Course Statistics Previews Grid */}
-          {dashboardTab === "previews" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl mt-8 mb-8 sm:mb-12"
-            >
-              {coursePreviewsData.map((course) => (
-                <div 
-                  key={course.slug}
-                  className={cn(
-                    "bg-[#08090e]/90 border rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group hover:scale-[1.02] transition-all duration-300 shadow-xl backdrop-blur-md",
-                    course.color
-                  )}
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-white/70">
-                        {course.category}
-                      </span>
-                      <span className="font-mono text-[10px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full bg-white/10 text-white/90">
-                        {course.difficulty}
-                      </span>
-                    </div>
-
-                    <h3 className="font-manrope font-extrabold text-2xl text-white mb-6 tracking-tight">
-                      {course.name}
-                    </h3>
-
-                    <div className="grid grid-cols-2 gap-3 mb-6">
-                      <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                          <Video className="w-4 h-4 text-white/80" />
-                        </div>
-                        <div>
-                          <div className="font-manrope font-bold text-white text-sm">{course.videos}</div>
-                          <div className="font-mono text-[9px] text-white/40 uppercase">Videos</div>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                          <FileText className="w-4 h-4 text-white/80" />
-                        </div>
-                        <div>
-                          <div className="font-manrope font-bold text-white text-sm">{course.articles}</div>
-                          <div className="font-mono text-[9px] text-white/40 uppercase">Articles</div>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                          <Layers className="w-4 h-4 text-white/80" />
-                        </div>
-                        <div>
-                          <div className="font-manrope font-bold text-white text-sm">{course.topics} / {course.subtopics}</div>
-                          <div className="font-mono text-[9px] text-white/40 uppercase">Topics / Subs</div>
-                        </div>
-                      </div>
-
-                      <div className="bg-white/5 border border-white/5 rounded-2xl p-3 flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-white/10 flex items-center justify-center shrink-0">
-                          <Clock className="w-4 h-4 text-white/80" />
-                        </div>
-                        <div>
-                          <div className="font-manrope font-bold text-white text-sm">{course.estTime}</div>
-                          <div className="font-mono text-[9px] text-white/40 uppercase">Est. Duration</div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Link href={`/dashboard/${course.slug}`}>
-                    <button className="w-full py-3 rounded-2xl bg-white/10 hover:bg-white text-white hover:text-black font-manrope font-bold text-xs uppercase tracking-wider transition-all duration-300 flex items-center justify-center space-x-2 border border-white/10">
-                      <span>Enter Course</span>
-                      <ArrowUpRight className="w-4 h-4" />
-                    </button>
-                  </Link>
+                    );
+                  })}
                 </div>
-              ))}
-            </motion.div>
-          )}
-
-          {/* Tab 3: Level Leaderboard Section */}
-          {dashboardTab === "leaderboard" && (
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="w-full max-w-4xl mt-8 mb-8 sm:mb-12"
-            >
-              <LevelLeaderboard />
-            </motion.div>
-          )}
+              </div>
+            ))}
+          </div>
         </div>
 
       </main>

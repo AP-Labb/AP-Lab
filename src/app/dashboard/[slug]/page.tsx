@@ -32,7 +32,8 @@ import {
   Globe,
   History,
   BookOpen,
-  TrendingUp
+  TrendingUp,
+  Clock
 } from "lucide-react";
 
 function getCourseIcon(slug: string) {
@@ -59,6 +60,7 @@ function getCourseIcon(slug: string) {
     default: return BookOpen;
   }
 }
+import { AppSidebar } from "@/components/AppSidebar";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import Link from "next/link";
 import { courseRegistry, CourseUnit, CourseTopic } from "@/lib/courses/course-registry";
@@ -1584,10 +1586,12 @@ export default function APDynamicCoursePage() {
   const [topicInteracted, setTopicInteracted] = useState(false);
   const [tabInteracted, setTabInteracted] = useState(false);
 
+  const [viewMode, setViewMode] = useState<"overview" | "workspace">("overview");
+  const [showExamOutlineModal, setShowExamOutlineModal] = useState(false);
+
   // Safely initialize active topic on course load
   useEffect(() => {
     if (course && course.units.length > 0) {
-      // Find matching topic from URL query or default to Unit 1 Topic 1
       if (!activeTopic) {
         const firstTopic = course.units[0].topics[0];
         if (firstTopic) {
@@ -1598,11 +1602,15 @@ export default function APDynamicCoursePage() {
     }
   }, [course, activeTopic]);
 
-  // Initialize and Sync Tab from URL query parameters (?tab=video | article | practice)
+  // Initialize and Sync Tab from URL query parameters
   useEffect(() => {
     if (typeof window !== "undefined") {
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get("tab");
+      const modeParam = urlParams.get("mode");
+      if (modeParam === "workspace") {
+        setViewMode("workspace");
+      }
       if (tabParam === "article" || tabParam === "practice" || tabParam === "video") {
         setActiveTab(tabParam);
       }
@@ -1619,10 +1627,10 @@ export default function APDynamicCoursePage() {
     }
   };
 
-  // Google / Browser "Are you sure you want to leave? You may have unsaved progress" Web Pop-up
+  // Google / Browser "Are you sure you want to leave?"
   useEffect(() => {
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      if (activeTab === "practice") {
+      if (activeTab === "practice" && viewMode === "workspace") {
         e.preventDefault();
         e.returnValue = "You have unsaved practice question progress. Are you sure you want to leave?";
         return e.returnValue;
@@ -1631,14 +1639,16 @@ export default function APDynamicCoursePage() {
 
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => window.removeEventListener("beforeunload", handleBeforeUnload);
-  }, [activeTab]);
+  }, [activeTab, viewMode]);
 
   // Dynamic Browser Tab Title tracking course, unit number, and topic
   useEffect(() => {
     if (course) {
       const rawTitle = (course.title || course.name || "").replace(/^AP[®\s]*/i, "").trim();
       const courseTitle = `AP® ${rawTitle}`;
-      if (activeTopic) {
+      if (viewMode === "overview") {
+        document.title = `${courseTitle} - Course Overview | AP Lab`;
+      } else if (activeTopic) {
         const unit = course.units.find(u => u.topics.some(t => t.id === activeTopic.id));
         if (unit) {
           const topicNum = activeTopic.id.startsWith(`${unit.id}.`) 
@@ -1652,7 +1662,7 @@ export default function APDynamicCoursePage() {
         document.title = `${courseTitle} | AP Lab`;
       }
     }
-  }, [course, activeTopic]);
+  }, [course, activeTopic, viewMode]);
 
   // Redirect unverified logged-in users
   useEffect(() => {
@@ -1678,6 +1688,374 @@ export default function APDynamicCoursePage() {
   const masteryKey = `${course.masteryPrefix}-${activeTopic?.id}`;
   const masteryScore = progress.masteryScores[masteryKey] || 0;
   const isLightMode = progress?.theme === "light";
+
+  // Calculate overall course progress
+  const totalCourseTopics = course.units.reduce((acc, u) => acc + u.topics.length, 0);
+  const completedCourseTopics = course.units.reduce((acc, u) => {
+    return acc + u.topics.filter(t => progress.completedTopics.includes(`${course.masteryPrefix}-${t.id}`)).length;
+  }, 0);
+  const courseProgressPercent = totalCourseTopics > 0 ? Math.round((completedCourseTopics / totalCourseTopics) * 100) : 0;
+
+  // Render Detailed Course Overview (Matching Screenshots 1 & 2)
+  if (viewMode === "overview") {
+    return (
+      <div className="min-h-screen bg-[#070914] text-white flex flex-row relative z-0 overflow-x-hidden selection:bg-neutral-800 selection:text-white font-manrope">
+        {/* Unified App Sidebar Navigation */}
+        <AppSidebar currentPath={`/dashboard/${slug}`} />
+
+        {/* Main Content Workspace Layout */}
+        <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16 relative">
+          
+          <main className="max-w-6xl mx-auto w-full px-4 sm:px-8 py-8 space-y-8 flex-1">
+            
+            {/* Top Breadcrumb Header */}
+            <div className="flex items-center space-x-2 text-xs font-mono text-white/50">
+              <Link href="/dashboard" className="hover:text-white transition-colors">Courses</Link>
+              <span>›</span>
+              <span className="text-white font-semibold">{course.name}</span>
+            </div>
+
+            {/* HERO BANNER SECTION (Matching Screenshot 2) */}
+            <div 
+              className="relative w-full rounded-3xl overflow-hidden border border-white/10 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+              style={{
+                backgroundImage: `linear-gradient(to right, rgba(7,9,20,0.92), rgba(7,9,20,0.75)), url('/images/SHOPbanner.png')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center"
+              }}
+            >
+              <div className="space-y-4 max-w-2xl text-left">
+                {/* Course Tags / Hashtags Row */}
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                    Preview
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                    AP
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                    {course.category || "STEM"}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                    High School
+                  </span>
+                </div>
+
+                {/* Course Main Title */}
+                <h1 className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                  {course.name}
+                </h1>
+
+                {/* Info Capsules & Action Buttons */}
+                <div className="flex flex-wrap items-center gap-3 pt-2">
+                  <div className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/80">
+                    <BookOpen className="w-4 h-4 text-white/60" />
+                    <span>{course.units.length} units</span>
+                  </div>
+
+                  <div className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/80">
+                    <Clock className="w-4 h-4 text-amber-400" />
+                    <span>In 284 Days 11 Hours</span>
+                  </div>
+
+                  {/* Course Details button -> Opens Exam Outline Modal (Screenshot 1) */}
+                  <button
+                    onClick={() => setShowExamOutlineModal(true)}
+                    className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-manrope font-bold text-white transition-all cursor-pointer shadow-md"
+                  >
+                    <FileText className="w-4 h-4 text-white/80" />
+                    <span>Course details</span>
+                  </button>
+
+                  {/* Practice button */}
+                  <button
+                    onClick={() => setShowExam(true)}
+                    className="flex items-center space-x-2 px-6 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-xl"
+                  >
+                    <span>Practice</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Top Card: COURSE PROGRESS Box (Matching Screenshot 2) */}
+              <div className="w-full md:w-72 bg-[#090b16]/90 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">COURSE PROGRESS</span>
+                  <span className="text-xs font-mono font-bold text-purple-400">0/4500 XP</span>
+                </div>
+                <div className="font-instrument text-4xl font-extrabold text-white">
+                  {courseProgressPercent}%
+                </div>
+                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/10">
+                  <div 
+                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-500 rounded-full" 
+                    style={{ width: `${courseProgressPercent}%` }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* MAIN CONTENT 2-COLUMN GRID (Matching Screenshot 2) */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              
+              {/* Left Column: Units & Subunits list (Course Path) */}
+              <div className="lg:col-span-2 space-y-6 text-left">
+                <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                  <div>
+                    <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest block">COURSE PATH</span>
+                    <h2 className="font-instrument text-2xl font-bold text-white">Units</h2>
+                  </div>
+                  <div className="text-xs font-mono text-white/50 space-x-4">
+                    <span>{course.units.length} units</span>
+                    <span>{courseProgressPercent}% complete</span>
+                  </div>
+                </div>
+
+                {/* Render Each Unit Card */}
+                {course.units.map((unit, uIdx) => {
+                  const unitTopicsCount = unit.topics.length;
+                  const unitCompletedTopics = unit.topics.filter(t => progress.completedTopics.includes(`${course.masteryPrefix}-${t.id}`)).length;
+                  const unitProgress = unitTopicsCount > 0 ? Math.round((unitCompletedTopics / unitTopicsCount) * 100) : 0;
+                  
+                  // AP Weighting estimates based on course unit number
+                  const apWeightings = ["30-40%", "15-22%", "18-25%", "12-18%", "10-15%", "8-12%", "6-10%", "5-8%"];
+                  const weightingStr = apWeightings[uIdx % apWeightings.length];
+
+                  return (
+                    <div 
+                      key={unit.id}
+                      className="bg-[#090b16]/90 border border-white/10 rounded-2xl p-6 shadow-xl space-y-5"
+                    >
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
+                        <div className="flex items-start space-x-4">
+                          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 shrink-0">
+                            <BookOpen className="w-5 h-5" />
+                          </div>
+                          <div>
+                            <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider block">
+                              UNIT {unit.id}
+                            </span>
+                            <h3 className="font-manrope font-bold text-lg text-white">
+                              {unit.title}
+                            </h3>
+                            <span className="text-xs font-mono text-white/40 block mt-0.5">
+                              {unitTopicsCount} lessons
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-col items-start sm:items-end space-y-1 font-mono text-xs">
+                          <span className="font-bold text-white/80">{weightingStr} AP WEIGHTING</span>
+                          <span className="text-white/40">Progress {unitProgress}%</span>
+                          <div className="w-28 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5 mt-1">
+                            <div className="h-full bg-purple-500 transition-all duration-300" style={{ width: `${unitProgress}%` }} />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Subunits / Lessons Pill Grid */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {unit.topics.map((topic, tIdx) => {
+                          const isTopicDone = progress.completedTopics.includes(`${course.masteryPrefix}-${topic.id}`);
+                          return (
+                            <button
+                              key={topic.id}
+                              onClick={() => {
+                                setActiveUnit(unit.id);
+                                setActiveTopic(topic);
+                                setViewMode("workspace");
+                              }}
+                              className={cn(
+                                "flex items-center space-x-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer group",
+                                isTopicDone 
+                                  ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-300" 
+                                  : "bg-white/[0.02] border-white/10 hover:bg-white/[0.06] hover:border-white/20 text-white/80"
+                              )}
+                            >
+                              <BookOpen className="w-3.5 h-3.5 shrink-0 opacity-60 group-hover:opacity-100" />
+                              <span className="font-manrope font-semibold text-xs truncate">
+                                {topic.id} {topic.title}
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })}
+
+                {/* Continue Button at Bottom of Left Column (Matching Screenshot 2) */}
+                <div className="pt-4 flex justify-end">
+                  <button
+                    onClick={() => setViewMode("workspace")}
+                    className="flex items-center space-x-3 px-8 py-3.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white font-manrope font-extrabold text-sm transition-all shadow-xl cursor-pointer hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    <span>Continue</span>
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              {/* Right Column: Course Progress & Mastery Grid (Matching Screenshot 2) */}
+              <div className="space-y-6 text-left">
+                <div className="bg-[#090b16]/90 border border-white/10 rounded-2xl p-6 shadow-xl space-y-6">
+                  <div className="flex items-center space-x-3 border-b border-white/10 pb-4">
+                    <BarChart2 className="w-5 h-5 text-blue-400" />
+                    <div>
+                      <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest block">COURSE</span>
+                      <h3 className="font-instrument text-xl font-bold text-white">Progress</h3>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center text-xs font-mono">
+                      <span className="text-white/60">MASTERY GRID</span>
+                      <div className="flex space-x-3 text-white/40 text-[10px]">
+                        <span>📖 Lesson</span>
+                        <span>📹 Video</span>
+                        <span>♾️ Practice</span>
+                      </div>
+                    </div>
+
+                    <div className="space-y-2">
+                      {course.units.map((unit) => (
+                        <div key={unit.id} className="flex items-center space-x-3">
+                          <span className="font-mono text-xs font-bold text-white/50 w-4">{unit.id}</span>
+                          <div className="flex-1 grid grid-cols-6 gap-1.5">
+                            {unit.topics.slice(0, 6).map((t, idx) => (
+                              <button
+                                key={idx}
+                                onClick={() => {
+                                  setActiveUnit(unit.id);
+                                  setActiveTopic(t);
+                                  setViewMode("workspace");
+                                }}
+                                className="h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 flex items-center justify-center text-white/40 text-xs transition-all"
+                              >
+                                ♾️
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </main>
+        </div>
+
+        {/* EXAM OUTLINE MODAL (Matching Screenshot 1) */}
+        <AnimatePresence>
+          {showExamOutlineModal && (
+            <div 
+              className="fixed inset-0 bg-black/85 backdrop-blur-xl z-[9999999] flex items-center justify-center p-4"
+              onClick={() => setShowExamOutlineModal(false)}
+            >
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                className="bg-[#05060b] border border-white/15 w-full max-w-2xl p-8 rounded-3xl shadow-2xl relative text-white space-y-6 text-left"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <button
+                  onClick={() => setShowExamOutlineModal(false)}
+                  className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/60 hover:text-white transition-all"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+
+                {/* Modal Title matching Screenshot 1 */}
+                <div className="text-center pb-2">
+                  <h2 className="font-serif text-3xl font-normal text-white tracking-wide">
+                    Exam Outline
+                  </h2>
+                </div>
+
+                {/* Section 1 Table matching Screenshot 1 */}
+                <div className="space-y-3">
+                  <h3 className="font-serif text-lg font-normal text-white">
+                    Section 1: Multiple Choice Questions
+                  </h3>
+
+                  <div className="overflow-hidden rounded-xl border border-white/20">
+                    <table className="w-full text-center text-sm font-sans">
+                      <thead>
+                        <tr className="border-b border-white/20 bg-white/5">
+                          <th className="py-3 px-4 font-bold border-r border-white/20">Questions</th>
+                          <th className="py-3 px-4 font-bold border-r border-white/20">Time</th>
+                          <th className="py-3 px-4 font-bold border-r border-white/20">Exam Weight</th>
+                          <th className="py-3 px-4 font-bold">Calculator</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/20">
+                        <tr>
+                          <td className="py-3 px-4 border-r border-white/20">28</td>
+                          <td className="py-3 px-4 border-r border-white/20">80 minutes</td>
+                          <td className="py-3 px-4 border-r border-white/20">43.75%</td>
+                          <td className="py-3 px-4">No</td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 px-4 border-r border-white/20">12</td>
+                          <td className="py-3 px-4 border-r border-white/20">40 minutes</td>
+                          <td className="py-3 px-4 border-r border-white/20">18.75%</td>
+                          <td className="py-3 px-4">Yes</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                {/* Section 2 Table matching Screenshot 1 */}
+                <div className="space-y-3 pt-2">
+                  <h3 className="font-serif text-lg font-normal text-white">
+                    Section 2: Free Response
+                  </h3>
+
+                  <div className="overflow-hidden rounded-xl border border-white/20">
+                    <table className="w-full text-center text-sm font-sans">
+                      <thead>
+                        <tr className="border-b border-white/20 bg-white/5">
+                          <th className="py-3 px-4 font-bold border-r border-white/20">Questions</th>
+                          <th className="py-3 px-4 font-bold border-r border-white/20">Time</th>
+                          <th className="py-3 px-4 font-bold border-r border-white/20">Exam Weight</th>
+                          <th className="py-3 px-4 font-bold">Calculator</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-white/20">
+                        <tr>
+                          <td className="py-3 px-4 border-r border-white/20">2</td>
+                          <td className="py-3 px-4 border-r border-white/20">30 minutes</td>
+                          <td className="py-3 px-4 border-r border-white/20">18.75%</td>
+                          <td className="py-3 px-4">Yes</td>
+                        </tr>
+                        <tr>
+                          <td className="py-3 px-4 border-r border-white/20">2</td>
+                          <td className="py-3 px-4 border-r border-white/20">30 minutes</td>
+                          <td className="py-3 px-4 border-r border-white/20">18.75%</td>
+                          <td className="py-3 px-4">No</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="text-center pt-2">
+                  <p className="text-xs text-white/60 font-sans italic">
+                    A calculator is allowed in specific sections.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
+      </div>
+    );
+  }
 
   return (
     <div 

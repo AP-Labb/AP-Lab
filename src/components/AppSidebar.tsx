@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Home, LayoutDashboard, Star, Award, Bot, ShoppingBag, Activity, 
-  Sun, Moon, Settings, User, FileText, Lock, Package, LogOut, ExternalLink 
+  Settings, User, FileText, Lock, Package, LogOut, ExternalLink, Trophy
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -27,7 +27,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const pathname = usePathname() || currentPath || "/dashboard";
   const router = useRouter();
   const { currentUser } = useAuth();
-  const { progress, updatePreferences } = useProgress();
+  const { progress } = useProgress();
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -42,9 +42,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const email = currentUser?.email || progress?.email || "student@aplab.com";
   const username = email.split("@")[0].toLowerCase();
   const photoURL = progress?.photoURL || currentUser?.photoURL || "";
-  const level = progress?.level || 1;
-  const xp = progress?.xp || 0;
-  const isLightMode = progress?.theme === "light";
 
   // Close menu on outside click
   useEffect(() => {
@@ -56,12 +53,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
     window.addEventListener("mousedown", handleClickOutside);
     return () => window.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  const handleToggleTheme = () => {
-    const newTheme = isLightMode ? "dark" : "light";
-    updatePreferences?.({ theme: newTheme });
-    setShowProfileMenu(false);
-  };
 
   const handleSignOut = async () => {
     try {
@@ -78,6 +69,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
     { label: "Progress", href: "/dashboard/progress", icon: "progress" },
     { label: "Review", href: "#review", icon: "review" },
     { label: "Quests", href: "/dashboard/quests", icon: Award },
+    { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
     { label: "AI Assistant", href: "/assistant", icon: "panda" },
     { label: "Shop", href: "/shop", icon: ShoppingBag },
   ];
@@ -158,6 +150,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                           <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
                         </div>
                       ) : (
+                        // @ts-ignore
                         <item.icon className="w-5 h-5 flex-shrink-0" />
                       )}
 
@@ -175,7 +168,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
             </div>
           </div>
 
-          {/* Bottom Section: Profile Button & Floating Menu */}
+          {/* Bottom Section: Profile Button Capsule */}
           <div className="relative flex flex-col gap-2 pb-6 w-full" ref={menuRef}>
             <div className="h-px bg-white/[0.08] mx-2 mb-2" />
 
@@ -223,31 +216,17 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               </AnimatePresence>
             </button>
 
-            {/* DARK FLOATING POPOVER MENU (Matching User Uploaded Screenshot 1) */}
+            {/* UNCLIPPED DARK FLOATING POPOVER MENU (Positioned FIXED outside sidebar bounds) */}
             <AnimatePresence>
               {showProfileMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: 12, scale: 0.95 }}
+                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 12, scale: 0.95 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
                   transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="absolute left-0 bottom-full mb-3 w-64 bg-[#0e101a] border border-white/15 rounded-2xl p-2 shadow-2xl z-[99999] backdrop-blur-2xl text-left text-white flex flex-col space-y-0.5"
+                  className="fixed bottom-16 left-3 w-60 bg-[#07080e] border border-white/20 rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.9)] z-[999999] text-left text-white flex flex-col space-y-1"
                 >
-                  {/* 1. Toggle Theme */}
-                  <button
-                    onClick={handleToggleTheme}
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
-                  >
-                    <div className="flex items-center space-x-3">
-                      {isLightMode ? <Moon className="w-4 h-4 text-purple-400" /> : <Sun className="w-4 h-4 text-amber-400" />}
-                      <span>Toggle Theme</span>
-                    </div>
-                    <span className="text-[10px] font-mono text-white/40 bg-white/5 border border-white/10 px-1.5 py-0.5 rounded">
-                      ⇧⌘L
-                    </span>
-                  </button>
-
-                  {/* 2. Settings */}
+                  {/* 1. Settings */}
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
@@ -255,11 +234,11 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     }}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
                   >
-                    <Settings className="w-4 h-4 text-white/60" />
+                    <Settings className="w-4 h-4 text-white/70" />
                     <span>Settings</span>
                   </button>
 
-                  {/* 3. My Profile */}
+                  {/* 2. My Profile */}
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
@@ -268,11 +247,26 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     }}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
                   >
-                    <User className="w-4 h-4 text-white/60" />
+                    <User className="w-4 h-4 text-white/70" />
                     <span>My Profile</span>
                   </button>
 
-                  <div className="h-px bg-white/10 my-1" />
+                  <div className="h-px bg-white/10 my-0.5" />
+
+                  {/* 3. My Inventory (White Package Icon) */}
+                  <button
+                    onClick={() => {
+                      setShowProfileMenu(false);
+                      setAccountModalDefaultTab("inventory");
+                      setShowAccountModal(true);
+                    }}
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
+                  >
+                    <Package className="w-4 h-4 text-white/70" />
+                    <span>My Inventory</span>
+                  </button>
+
+                  <div className="h-px bg-white/10 my-0.5" />
 
                   {/* 4. Terms of Service */}
                   <a
@@ -283,7 +277,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
                   >
                     <div className="flex items-center space-x-3">
-                      <FileText className="w-4 h-4 text-white/60" />
+                      <FileText className="w-4 h-4 text-white/70" />
                       <span>Terms of Service</span>
                     </div>
                     <ExternalLink className="w-3.5 h-3.5 text-white/40" />
@@ -298,30 +292,15 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
                   >
                     <div className="flex items-center space-x-3">
-                      <Lock className="w-4 h-4 text-white/60" />
+                      <Lock className="w-4 h-4 text-white/70" />
                       <span>Privacy Policy</span>
                     </div>
                     <ExternalLink className="w-3.5 h-3.5 text-white/40" />
                   </a>
 
-                  <div className="h-px bg-white/10 my-1" />
+                  <div className="h-px bg-white/10 my-0.5" />
 
-                  {/* 6. My Inventory */}
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      setAccountModalDefaultTab("inventory");
-                      setShowAccountModal(true);
-                    }}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
-                  >
-                    <Package className="w-4 h-4 text-amber-400" />
-                    <span>My Inventory</span>
-                  </button>
-
-                  <div className="h-px bg-white/10 my-1" />
-
-                  {/* 7. Log Out */}
+                  {/* 6. Log Out */}
                   <button
                     onClick={handleSignOut}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-red-500/10 transition-all cursor-pointer text-xs font-manrope font-bold text-red-400"
@@ -329,21 +308,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     <LogOut className="w-4 h-4 text-red-400" />
                     <span>Log Out</span>
                   </button>
-
-                  {/* Profile Card Footer inside menu matching screenshot */}
-                  <div className="pt-2 border-t border-white/10 mt-1 flex items-center space-x-3 px-2 py-1.5">
-                    {photoURL ? (
-                      <img src={photoURL} alt={displayName} className="w-7 h-7 rounded-full object-cover border border-white/20" />
-                    ) : (
-                      <div className="w-7 h-7 rounded-full bg-amber-400 text-black flex items-center justify-center font-bold text-xs">
-                        {displayName.charAt(0).toUpperCase()}
-                      </div>
-                    )}
-                    <div className="flex flex-col min-w-0">
-                      <span className="font-manrope font-extrabold text-xs text-white truncate">{displayName}</span>
-                      <span className="font-mono text-[9px] text-white/40 truncate">{username}</span>
-                    </div>
-                  </div>
                 </motion.div>
               )}
             </AnimatePresence>
