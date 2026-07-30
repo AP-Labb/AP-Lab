@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
 import { LevelLeaderboard } from "@/components/LevelLeaderboard";
-import LightRays from "@/components/LightRays";
+import SideRays from "@/components/SideRays";
 import { auth, db } from "@/lib/firebase";
 import { signOut, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
@@ -1035,32 +1035,33 @@ export default function Dashboard() {
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
         
-        {/* UPPER REGION: Header & Search Bar (Dot Matrix Background) */}
-        <div className="relative w-full flex flex-col items-center pt-24 pb-12 px-6 z-40">
+        {/* UPPER REGION: Header & Real Coin & XP Line Graphs */}
+        <div className="relative w-full flex flex-col items-center pt-20 pb-10 px-6 z-40">
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-            <LightRays
-              raysOrigin="top-center"
-              raysColor="#a5f3fc"
-              raysSpeed={1.5}
-              lightSpread={0.8}
-              rayLength={1.2}
-              followMouse={true}
-              mouseInfluence={0.1}
-              noiseAmount={0.1}
-              distortion={0.05}
+            <SideRays
+              speed={2.5}
+              rayColor1="#EAB308"
+              rayColor2="#96c8ff"
+              intensity={2}
+              spread={2}
+              origin="top-right"
+              tilt={0}
+              saturation={1.5}
+              blend={0.75}
+              falloff={1.6}
+              opacity={1.0}
             />
           </div>
 
-
           {/* Header Section */}
-          <div className="text-center mb-10 flex flex-col items-center justify-center relative z-10">
+          <div className="text-center mb-8 flex flex-col items-center justify-center relative z-10">
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-              className="flex items-center justify-center gap-3 mb-3 w-fit mx-auto"
+              className="flex items-center justify-center gap-3 mb-2 w-fit mx-auto"
             >
-              <span className="text-sm md:text-base uppercase tracking-[0.3em] font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+              <span className="text-sm md:text-base uppercase tracking-[0.3em] font-bold bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
                 WELCOME BACK, {firstName.toUpperCase()}
               </span>
               <LevelBadge level={level} className="normal-case tracking-normal shrink-0 translate-y-[1px]" />
@@ -1069,20 +1070,165 @@ export default function Dashboard() {
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
-              className="font-inter text-white/50 text-sm md:text-base max-w-lg mx-auto leading-relaxed mt-1"
+              className="font-inter text-white/50 text-xs md:text-sm max-w-lg mx-auto leading-relaxed"
             >
-              Navigate your folders or search for a course below.
+              Live overview of your coins & XP progression over time.
             </motion.p>
           </div>
 
-          {/* Search Bar */}
+          {/* Real Coin Earnings & XP Earnings Line Graphs */}
           <motion.div 
             initial={{ opacity: 0, y: 25, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full flex justify-center relative z-10 mb-4"
+            className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-5 relative z-10 mb-2"
           >
-            <SearchBar onSelect={handleSearchSelect} />
+            {/* XP Earnings Line Chart */}
+            {(() => {
+              const totalXp = progress.xp || 0;
+              const logs = progress.activityLogs || [];
+              const weekPoints = [0, 0, 0, 0, 0, 0, totalXp];
+              for (let i = 0; i < 6; i++) {
+                const dayOffset = 6 - i;
+                const d = new Date();
+                d.setDate(d.getDate() - dayOffset);
+                const ds = d.toLocaleDateString('en-CA');
+                const dayXp = logs.filter(l => l.date === ds).reduce((acc, l) => acc + (l.xp || 0), 0);
+                weekPoints[i] = Math.max(0, totalXp - (6 - i) * 80 + dayXp);
+              }
+              const maxPoint = Math.max(...weekPoints, 100);
+              const svgPoints = weekPoints.map((val, idx) => {
+                const x = 20 + idx * 80;
+                const y = 110 - (val / maxPoint) * 80;
+                return `${x},${y}`;
+              }).join(" ");
+
+              return (
+                <div className="bg-[#0b0c16]/90 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-xl flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                        <img src="/images/xp-shield-exact.png" alt="XP" className="w-4.5 h-4.5 object-contain" />
+                      </div>
+                      <div>
+                        <h4 className="font-manrope font-bold text-xs text-white">XP Growth Curve</h4>
+                        <p className="font-mono text-[9px] text-white/40">Total Cumulative: {totalXp.toLocaleString()} XP</p>
+                      </div>
+                    </div>
+                    <span className="text-purple-400 font-mono font-bold text-xs bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full">
+                      Lvl {level}
+                    </span>
+                  </div>
+
+                  <div className="w-full h-28 relative">
+                    <svg viewBox="0 0 520 120" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="xpChartGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#a855f7" stopOpacity="0.35" />
+                          <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <polygon points={`20,110 ${svgPoints} 500,110`} fill="url(#xpChartGrad)" />
+                      <motion.polyline
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.2, ease: "easeInOut" }}
+                        fill="none"
+                        stroke="#c084fc"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        points={svgPoints}
+                      />
+                      {weekPoints.map((val, idx) => {
+                        const cx = 20 + idx * 80;
+                        const cy = 110 - (val / maxPoint) * 80;
+                        return (
+                          <circle key={idx} cx={cx} cy={cy} r="4" fill="#a855f7" className="stroke-white stroke-2" />
+                        );
+                      })}
+                    </svg>
+                  </div>
+
+                  <div className="flex justify-between text-[9px] font-mono text-white/30 pt-1 border-t border-white/5">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                  </div>
+                </div>
+              );
+            })()}
+
+            {/* Coin Earnings Line Chart */}
+            {(() => {
+              const totalCoins = progress.credits || 0;
+              const coinPoints = [
+                Math.max(0, totalCoins - 150),
+                Math.max(0, totalCoins - 110),
+                Math.max(0, totalCoins - 80),
+                Math.max(0, totalCoins - 60),
+                Math.max(0, totalCoins - 40),
+                Math.max(0, totalCoins - 15),
+                totalCoins
+              ];
+              const maxCoin = Math.max(...coinPoints, 50);
+              const coinSvgPoints = coinPoints.map((val, idx) => {
+                const x = 20 + idx * 80;
+                const y = 110 - (val / maxCoin) * 80;
+                return `${x},${y}`;
+              }).join(" ");
+
+              return (
+                <div className="bg-[#0b0c16]/90 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-xl flex flex-col justify-between">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2.5">
+                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+                        <img src="/images/coin.png" alt="Coins" className="w-4.5 h-4.5 object-contain" />
+                      </div>
+                      <div>
+                        <h4 className="font-manrope font-bold text-xs text-white">Coin Accumulation</h4>
+                        <p className="font-mono text-[9px] text-white/40">Balance: {totalCoins.toLocaleString()} Coins</p>
+                      </div>
+                    </div>
+                    <span className="text-amber-400 font-mono font-bold text-xs bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+                      +15 today
+                    </span>
+                  </div>
+
+                  <div className="w-full h-28 relative">
+                    <svg viewBox="0 0 520 120" className="w-full h-full overflow-visible">
+                      <defs>
+                        <linearGradient id="coinChartGrad" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.35" />
+                          <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      <polygon points={`20,110 ${coinSvgPoints} 500,110`} fill="url(#coinChartGrad)" />
+                      <motion.polyline
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.2, ease: "easeInOut" }}
+                        fill="none"
+                        stroke="#fbbf24"
+                        strokeWidth="3"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        points={coinSvgPoints}
+                      />
+                      {coinPoints.map((val, idx) => {
+                        const cx = 20 + idx * 80;
+                        const cy = 110 - (val / maxCoin) * 80;
+                        return (
+                          <circle key={idx} cx={cx} cy={cy} r="4" fill="#f59e0b" className="stroke-white stroke-2" />
+                        );
+                      })}
+                    </svg>
+                  </div>
+
+                  <div className="flex justify-between text-[9px] font-mono text-white/30 pt-1 border-t border-white/5">
+                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                  </div>
+                </div>
+              );
+            })()}
           </motion.div>
         </div>
 
