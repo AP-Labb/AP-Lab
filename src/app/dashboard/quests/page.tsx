@@ -43,8 +43,8 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Rank Symbols (Military / Chess Insignia Badges matching reference image)
-const RankBadge = ({ variant, color = "gold" }: { variant: "chevron-1" | "chevron-2" | "chevron-3" | "star-1" | "star-2" | "star-3" | "pawn" | "rook" | "knight" | "crown"; color?: "gold" | "silver" | "green" }) => {
+// Custom Military Rank Badges (Chevron-1, Chevron-2, Chevron-3, Star-1, Star-2, Star-3)
+const RankBadge = ({ variant, color = "gold" }: { variant: "chevron-1" | "chevron-2" | "chevron-3" | "star-1" | "star-2" | "star-3"; color?: "gold" | "silver" | "green" }) => {
   const borderClass = color === "gold" ? "border-[#d9a036] bg-[#14120c]" : color === "silver" ? "border-[#a3a3a3] bg-[#121316]" : "border-[#15803d] bg-[#0b1a10]";
   const fillClass = color === "gold" ? "text-[#f59e0b]" : color === "silver" ? "text-[#e5e5e5]" : "text-[#22c55e]";
 
@@ -94,26 +94,6 @@ const RankBadge = ({ variant, color = "gold" }: { variant: "chevron-1" | "chevro
             </svg>
           </div>
         </div>
-      )}
-      {variant === "pawn" && (
-        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
-          <path d="M12 4a3 3 0 100 6 3 3 0 000-6zm-3 7a1 1 0 00-1 1v2h8v-2a1 1 0 00-1-1H9zm-2 5a1 1 0 00-1 1v3h12v-3a1 1 0 00-1-1H7z" />
-        </svg>
-      )}
-      {variant === "rook" && (
-        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
-          <path d="M5 4v3h2V5h3v2h4V5h3v2h2V4H5zm2 5v5h10V9H7zm-2 7v4h14v-4H5z" />
-        </svg>
-      )}
-      {variant === "knight" && (
-        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
-          <path d="M19 22H5v-2h14v2zm-2-4H7v-2h10v2zm-1-4h-2.5c0-1.5-1-2.5-2.5-3v-1c2 0 4-1.5 4-4 0-1.5-.5-2.5-1-3 2 0 4 1 5 3 1.5 3 1 6-3 8z" />
-        </svg>
-      )}
-      {variant === "crown" && (
-        <svg viewBox="0 0 24 24" className={cn("w-6 h-6 fill-current", fillClass)}>
-          <path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3H5v-2h14v2z" />
-        </svg>
       )}
     </div>
   );
@@ -260,7 +240,7 @@ export default function QuestsPage() {
   const completedTopics = progress?.completedTopics?.length || 0;
   const streakCount = progress?.streakCount || 0;
 
-  // Real Quests Data with custom rank symbols
+  // Real Quests Data with custom military rank badges
   const DAILY_QUESTS = [
     {
       id: "daily-practice",
@@ -300,7 +280,7 @@ export default function QuestsPage() {
   const WEEKLY_QUESTS = [
     {
       id: "weekly-100-q",
-      badge: <RankBadge variant="rook" color="gold" />,
+      badge: <RankBadge variant="chevron-3" color="gold" />,
       title: "Centurion Scholar",
       desc: "Answer 100 practice questions this week",
       difficulty: "Hard",
@@ -311,7 +291,7 @@ export default function QuestsPage() {
     },
     {
       id: "weekly-mastery",
-      badge: <RankBadge variant="knight" color="silver" />,
+      badge: <RankBadge variant="star-2" color="silver" />,
       title: "Topic Mastery",
       desc: "Reach 80%+ mastery across 5 subtopics",
       difficulty: "Hard",
@@ -325,7 +305,7 @@ export default function QuestsPage() {
   const SPECIAL_QUESTS = [
     {
       id: "special-exam-ready",
-      badge: <RankBadge variant="crown" color="gold" />,
+      badge: <RankBadge variant="star-3" color="gold" />,
       title: "Exam Readiness",
       desc: "Complete a full 55-question diagnostic mock test",
       difficulty: "Expert",
@@ -341,7 +321,7 @@ export default function QuestsPage() {
   const totalDailyQuests = DAILY_QUESTS.length;
   const totalDailyProgressPct = Math.round((completedDailyCount / totalDailyQuests) * 100);
 
-  // Handlers (Simultaneous XP & Coin claim in single unified toast)
+  // Handlers
   const handleClaimDailyQuest = async (quest: typeof DAILY_QUESTS[0]) => {
     if (claimedDailies[quest.id] || quest.current < quest.target) return;
     
@@ -532,15 +512,15 @@ export default function QuestsPage() {
 
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-8 flex-1 text-left">
           
-          {/* Progress Summary Cards (3 Compact Stat Cards) */}
+          {/* Progress Summary Cards (3 Compact Stat Cards with LARGER XP & Coin Graphics) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between shadow-sm">
               <div className="space-y-0.5">
                 <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
                 <span className="font-mono font-extrabold text-xl text-purple-300">+{todayXpEarned} XP</span>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
-                <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 object-contain" />
+              <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
+                <img src="/images/xp-shield-exact.png" alt="XP" className="w-8 h-8 object-contain scale-110" />
               </div>
             </div>
 
@@ -549,8 +529,8 @@ export default function QuestsPage() {
                 <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
                 <span className="font-mono font-extrabold text-xl text-amber-400">+{todayCoinsEarned}</span>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
-                <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
+              <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                <img src="/images/coin-exact.png" alt="Coins" className="w-8 h-8 object-contain scale-110" />
               </div>
             </div>
 
@@ -559,49 +539,41 @@ export default function QuestsPage() {
                 <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
                 <span className="font-mono font-extrabold text-xl text-white">{completedDailyCount} / {totalDailyQuests}</span>
               </div>
-              <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
-                <CheckCircle className="w-5 h-5" />
+              <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+                <CheckCircle className="w-6 h-6" />
               </div>
             </div>
           </div>
 
-          {/* Hero Section: QUESTbanner.png Background Banner (Mostly Empty with Countdown & Title) */}
-          <div className="relative w-full rounded-3xl border border-white/10 p-8 sm:p-10 shadow-2xl overflow-hidden min-h-[220px] flex items-center">
-            {/* Background Image QUESTbanner.png */}
-            <div 
-              className="absolute inset-0 bg-cover bg-center bg-no-repeat z-0"
-              style={{ backgroundImage: "url('/images/QUESTbanner.png')" }}
-            />
-            {/* Subtle Overlay to maintain text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-0" />
-
-            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6">
-              {/* Title & Simple Subtitle on clear background space */}
-              <div className="space-y-2 max-w-lg">
-                <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md border border-white/20 px-3 py-1 rounded-full text-xs font-mono font-bold text-white/90 uppercase tracking-wider">
-                  <Calendar className="w-3.5 h-3.5 text-amber-400" />
-                  <span>DAILY QUEST HUB</span>
-                </div>
-                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-white tracking-tight drop-shadow-md">
+          {/* Hero Section: Matching Shop Banner Height (min-h-[240px]), Clean Background without darkening, Black Text, Countdown Shifted Left */}
+          <div 
+            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
+            style={{ backgroundImage: `url('/images/QUESTbanner.png')` }}
+          >
+            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6 pl-4 sm:pl-8 pr-4">
+              
+              {/* Left Title & Description in Clean Black Text */}
+              <div className="space-y-2 max-w-sm sm:max-w-md mr-auto text-left">
+                <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-black tracking-tight leading-tight">
                   Daily Quests
                 </h2>
-                <p className="text-sm text-white/80 font-manrope max-w-md drop-shadow">
+                <p className="text-sm font-semibold text-neutral-800 font-manrope">
                   Complete daily study objectives before the timer resets to earn XP and coins.
                 </p>
               </div>
 
-              {/* Large Refresh Countdown Box */}
-              <div className="bg-[#03040a]/80 backdrop-blur-xl border border-white/15 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[240px]">
-                <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+              {/* Large Refresh Countdown Box (Positioned Far Left of Image Graphics) */}
+              <div className="bg-black/85 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[220px]">
+                <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
+                  <Clock className="w-4 h-4 text-white" />
                   REFRESH COUNTDOWN
                 </span>
 
                 <div className="flex items-center space-x-2 font-mono font-extrabold text-2xl sm:text-3xl text-white">
                   <span>{String(timeLeft.hours).padStart(2, '0')}h</span>
-                  <span className="text-white/30">:</span>
+                  <span className="text-white/40">:</span>
                   <span>{String(timeLeft.minutes).padStart(2, '0')}m</span>
-                  <span className="text-white/30">:</span>
+                  <span className="text-white/40">:</span>
                   <span>{String(timeLeft.seconds).padStart(2, '0')}s</span>
                 </div>
 
@@ -609,13 +581,14 @@ export default function QuestsPage() {
                   Refreshes in {timeLeft.hours}h {timeLeft.minutes}m
                 </span>
               </div>
+
             </div>
           </div>
 
-          {/* Main Grid: Left Quests Column (Daily, Weekly, Special, Social) & Right Sidebar (Streak, Weekly Summary, Chest Bonus) */}
+          {/* Main Grid: Left Quests Column (Daily, Weekly, Special) & Right Sidebar (Streak, Weekly Summary, Chest Bonus, Social Quests) */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
-            {/* Left 2 Columns: Quests Categorized */}
+            {/* Left 2 Columns: Main Quests (Daily, Weekly, Special) */}
             <div className="lg:col-span-2 space-y-8">
               
               {/* Category 1: Daily Quests */}
@@ -650,14 +623,14 @@ export default function QuestsPage() {
                             </div>
                           </div>
 
-                          {/* Reward Chips (Clean rounded capsules) */}
+                          {/* Reward Chips (Larger Graphic Icons) */}
                           <div className="flex items-center space-x-2 shrink-0">
-                            <span className="text-xs font-mono font-semibold text-white/90 bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center gap-1.5">
-                              <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-3.5 h-3.5 object-contain" />
+                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
                               +{quest.xpReward}
                             </span>
-                            <span className="text-xs font-mono font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-                              <img src="/images/coin-zoomed.png" alt="Coins" className="w-3.5 h-3.5 object-contain" />
+                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
                               +{quest.coinReward}
                             </span>
                           </div>
@@ -735,12 +708,12 @@ export default function QuestsPage() {
                         </div>
 
                         <div className="flex items-center space-x-2 shrink-0">
-                          <span className="text-xs font-mono font-semibold text-white/90 bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center gap-1.5">
-                            <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-3.5 h-3.5 object-contain" />
+                          <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
+                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
                             +{quest.xpReward}
                           </span>
-                          <span className="text-xs font-mono font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-                            <img src="/images/coin-zoomed.png" alt="Coins" className="w-3.5 h-3.5 object-contain" />
+                          <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                            <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
                             +{quest.coinReward}
                           </span>
                         </div>
@@ -793,12 +766,12 @@ export default function QuestsPage() {
                         </div>
 
                         <div className="flex items-center space-x-2 shrink-0">
-                          <span className="text-xs font-mono font-semibold text-white/90 bg-white/5 border border-white/10 px-3 py-1 rounded-full flex items-center gap-1.5">
-                            <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-3.5 h-3.5 object-contain" />
+                          <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
+                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
                             +{quest.xpReward}
                           </span>
-                          <span className="text-xs font-mono font-semibold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1 rounded-full flex items-center gap-1.5">
-                            <img src="/images/coin-zoomed.png" alt="Coins" className="w-3.5 h-3.5 object-contain" />
+                          <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
+                            <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
                             +{quest.coinReward}
                           </span>
                         </div>
@@ -808,14 +781,145 @@ export default function QuestsPage() {
                 </div>
               </section>
 
-              {/* Category 4: Social Quests */}
-              <section className="space-y-4">
-                <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
-                  <UserCheck className="w-4 h-4 text-white/60" />
-                  <h3 className="font-manrope text-base font-bold text-white">Social Quests</h3>
+            </div>
+
+            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Realistic Treasure Chest, Social Quests) */}
+            <div className="space-y-6">
+              
+              {/* Widget 1: Streak Card */}
+              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Flame className="w-5 h-5 text-amber-500" />
+                    <h4 className="font-manrope font-bold text-sm text-white">Current Streak</h4>
+                  </div>
+                  <span className="font-mono font-extrabold text-base text-amber-400">{streakCount} Days</span>
+                </div>
+                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
+                  <div className="h-full bg-amber-500 rounded-full" style={{ width: `${Math.min(100, (streakCount / 7) * 100)}%` }} />
+                </div>
+                <p className="text-xs text-white/40 font-manrope">Next streak reward in 2 days</p>
+              </div>
+
+              {/* Widget 2: Weekly Progress Card */}
+              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-manrope font-bold text-sm text-white">Weekly Progress</h4>
+                  <span className="font-mono font-bold text-xs text-white/60">18 / 25 Quests</span>
+                </div>
+                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                  <div className="h-full bg-white rounded-full" style={{ width: "72%" }} />
+                </div>
+                <p className="text-xs text-white/40 font-manrope">72% of weekly milestone completed</p>
+              </div>
+
+              {/* Widget 3: Realistic Graphic 3D Treasure Chest Bonus */}
+              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
+                <div className="flex items-center space-x-2 text-white">
+                  <Gift className="w-5 h-5 text-amber-400" />
+                  <h4 className="font-manrope font-bold text-sm">Daily Treasure Bonus</h4>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {/* Realistic SVG Treasure Chest Graphic with Opening Lid & Glowing Jewels */}
+                <div className="relative w-32 h-28 my-1 flex items-center justify-center">
+                  <motion.div
+                    animate={isChestOpening ? { rotate: [0, -6, 6, -4, 4, 0], scale: [1, 1.08, 1.15, 1] } : { y: [0, -3, 0] }}
+                    transition={{ duration: isChestOpening ? 0.9 : 3.5, repeat: isChestOpening ? 0 : Infinity, ease: "easeInOut" }}
+                    className="relative w-full h-full flex items-center justify-center"
+                  >
+                    <svg viewBox="0 0 100 80" className="w-28 h-24 drop-shadow-[0_10px_20px_rgba(245,158,11,0.4)]">
+                      {/* Chest Base Box */}
+                      <path d="M15 42 L85 42 L80 72 L20 72 Z" fill="#78350f" stroke="#d97706" strokeWidth="2" />
+                      {/* Steel Bands on Base */}
+                      <rect x="26" y="42" width="6" height="30" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
+                      <rect x="68" y="42" width="6" height="30" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
+                      
+                      {/* Golden Keyhole Lock */}
+                      <circle cx="50" cy="56" r="6" fill="#fbbf24" stroke="#78350f" strokeWidth="1.5" />
+                      <path d="M50 56 L50 63" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
+
+                      {/* Chest Lid (Animates Open) */}
+                      <motion.g
+                        animate={isChestOpening || dailyBonusClaimed ? { rotate: -40, y: -12 } : { rotate: 0, y: 0 }}
+                        transition={{ type: "spring", stiffness: 150, damping: 15 }}
+                        style={{ transformOrigin: "15px 42px" }}
+                      >
+                        <path d="M15 42 C15 22 85 22 85 42 Z" fill="#92400e" stroke="#f59e0b" strokeWidth="2" />
+                        <path d="M26 42 C26 26 32 26 32 42 Z" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
+                        <path d="M68 42 C68 26 74 26 74 42 Z" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
+                      </motion.g>
+
+                      {/* Interior Glowing Gold & Jewels when Open */}
+                      {(isChestOpening || dailyBonusClaimed) && (
+                        <g>
+                          <ellipse cx="50" cy="42" rx="28" ry="8" fill="#fbbf24" opacity="0.9" />
+                          <circle cx="42" cy="40" r="3.5" fill="#ef4444" />
+                          <circle cx="58" cy="40" r="3.5" fill="#3b82f6" />
+                          <circle cx="50" cy="38" r="4" fill="#10b981" />
+                        </g>
+                      )}
+                    </svg>
+
+                    {/* Opened Floating Rays & Sparks */}
+                    <AnimatePresence>
+                      {(isChestOpening || dailyBonusClaimed) && (
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0.5 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          className="absolute -top-3 inset-x-0 flex justify-center space-x-3 pointer-events-none"
+                        >
+                          <img src="/images/coin-exact.png" alt="Coin" className="w-6 h-6 object-contain animate-bounce" />
+                          <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain animate-bounce delay-100" />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                </div>
+
+                <p className="text-xs text-white/50 font-manrope">Unlock daily treasure for instant XP & Coin boosts:</p>
+
+                <div className="flex items-center space-x-2 text-xs font-mono font-bold">
+                  <span className="text-purple-300 flex items-center gap-1.5">
+                    <img src="/images/xp-shield-exact.png" alt="XP" className="w-4 h-4 object-contain" />
+                    +150 XP
+                  </span>
+                  <span className="text-white/20">•</span>
+                  <span className="text-amber-400 flex items-center gap-1.5">
+                    <img src="/images/coin-exact.png" alt="Coins" className="w-4 h-4 object-contain" />
+                    +50 Coins
+                  </span>
+                </div>
+
+                <button
+                  onClick={handleClaimDailyBonus}
+                  disabled={dailyBonusClaimed || isChestOpening}
+                  className={cn(
+                    "w-full py-3 rounded-xl font-manrope font-extrabold text-xs transition-all duration-150 cursor-pointer shadow-md flex items-center justify-center space-x-2",
+                    dailyBonusClaimed 
+                      ? "bg-white/5 text-white/30 cursor-default border border-white/5" 
+                      : isChestOpening
+                        ? "bg-amber-500 text-black animate-pulse"
+                        : "bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+                  )}
+                >
+                  {dailyBonusClaimed ? (
+                    <span>Chest Opened ✓</span>
+                  ) : isChestOpening ? (
+                    <span>Opening Chest...</span>
+                  ) : (
+                    <span>Open Daily Chest</span>
+                  )}
+                </button>
+              </div>
+
+              {/* Widget 4: Social Quests Section (Moved to Right Side Column) */}
+              <div className="space-y-4 pt-2">
+                <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
+                  <UserCheck className="w-4 h-4 text-white/60" />
+                  <h4 className="font-manrope text-sm font-bold text-white">Social Quests</h4>
+                </div>
+
+                <div className="space-y-3">
                   {SOCIAL_TASKS.map((task) => {
                     const isClicked = clickedTasks[task.id] === true;
                     const isClaimed = claimedTasks[task.id] === true;
@@ -835,7 +939,7 @@ export default function QuestsPage() {
                             </div>
                           </div>
                           <span className="font-mono font-bold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                            <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-3.5 h-3.5 object-contain" />
+                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-4 h-4 object-contain" />
                             +{task.xp}
                           </span>
                         </div>
@@ -885,108 +989,6 @@ export default function QuestsPage() {
                     );
                   })}
                 </div>
-              </section>
-
-            </div>
-
-            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Animated Treasure Chest Bonus) */}
-            <div className="space-y-6">
-              
-              {/* Widget 1: Streak Card */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Flame className="w-5 h-5 text-amber-500" />
-                    <h4 className="font-manrope font-bold text-sm text-white">Current Streak</h4>
-                  </div>
-                  <span className="font-mono font-extrabold text-base text-amber-400">{streakCount} Days</span>
-                </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-500 rounded-full" style={{ width: `${Math.min(100, (streakCount / 7) * 100)}%` }} />
-                </div>
-                <p className="text-xs text-white/40 font-manrope">Next streak reward in 2 days</p>
-              </div>
-
-              {/* Widget 2: Weekly Progress Card */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-manrope font-bold text-sm text-white">Weekly Progress</h4>
-                  <span className="font-mono font-bold text-xs text-white/60">18 / 25 Quests</span>
-                </div>
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <div className="h-full bg-white rounded-full" style={{ width: "72%" }} />
-                </div>
-                <p className="text-xs text-white/40 font-manrope">72% of weekly milestone completed</p>
-              </div>
-
-              {/* Widget 3: Interactive Animated Treasure Chest Daily Bonus */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
-                <div className="flex items-center space-x-2 text-white">
-                  <Gift className="w-5 h-5 text-amber-400" />
-                  <h4 className="font-manrope font-bold text-sm">Daily Treasure Bonus</h4>
-                </div>
-
-                {/* Animated Treasure Chest Graphics */}
-                <div className="relative w-28 h-24 my-2 flex items-center justify-center">
-                  <motion.div
-                    animate={isChestOpening ? { rotate: [0, -8, 8, -5, 5, 0], scale: [1, 1.1, 1.2, 1] } : { y: [0, -4, 0] }}
-                    transition={{ duration: isChestOpening ? 0.9 : 3, repeat: isChestOpening ? 0 : Infinity, ease: "easeInOut" }}
-                    className="relative z-10 text-6xl drop-shadow-[0_10px_20px_rgba(245,158,11,0.3)]"
-                  >
-                    {dailyBonusClaimed || isChestOpening ? "👑" : "🧰"}
-                  </motion.div>
-
-                  {/* Opened Jewels Burst Effect */}
-                  <AnimatePresence>
-                    {(isChestOpening || dailyBonusClaimed) && (
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.3 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                      >
-                        <div className="absolute -top-3 -left-2 text-xl animate-bounce">💎</div>
-                        <div className="absolute -top-4 right-0 text-xl animate-bounce delay-100">🪙</div>
-                        <div className="absolute top-2 -right-3 text-lg animate-bounce delay-200">✨</div>
-                        <div className="absolute -bottom-2 -left-3 text-lg animate-bounce delay-150">🌟</div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-
-                <p className="text-xs text-white/50 font-manrope">Unlock daily jewels for instant XP and Coin boosts:</p>
-
-                <div className="flex items-center space-x-2 text-xs font-mono font-bold">
-                  <span className="text-purple-300 flex items-center gap-1">
-                    <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-3.5 h-3.5 object-contain" />
-                    +150 XP
-                  </span>
-                  <span className="text-white/20">•</span>
-                  <span className="text-amber-400 flex items-center gap-1">
-                    <img src="/images/coin-zoomed.png" alt="Coins" className="w-3.5 h-3.5 object-contain" />
-                    +50 Coins
-                  </span>
-                </div>
-
-                <button
-                  onClick={handleClaimDailyBonus}
-                  disabled={dailyBonusClaimed || isChestOpening}
-                  className={cn(
-                    "w-full py-3 rounded-xl font-manrope font-extrabold text-xs transition-all duration-150 cursor-pointer shadow-md flex items-center justify-center space-x-2",
-                    dailyBonusClaimed 
-                      ? "bg-white/5 text-white/30 cursor-default border border-white/5" 
-                      : isChestOpening
-                        ? "bg-amber-500 text-black animate-pulse"
-                        : "bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold shadow-[0_0_20px_rgba(245,158,11,0.3)]"
-                  )}
-                >
-                  {dailyBonusClaimed ? (
-                    <span>Chest Opened ✓</span>
-                  ) : isChestOpening ? (
-                    <span>Opening Chest...</span>
-                  ) : (
-                    <span>Open Daily Chest</span>
-                  )}
-                </button>
               </div>
 
             </div>
