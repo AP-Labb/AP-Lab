@@ -1715,87 +1715,87 @@ export default function APDynamicCoursePage() {
               <span className="text-white font-semibold">{course.name}</span>
             </div>
 
-            {/* HERO BANNER SECTION (Matching Screenshot 2) */}
-            <div 
-              className="relative w-full rounded-3xl overflow-hidden border border-white/10 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
-              style={{
-                backgroundImage: `linear-gradient(to right, rgba(7,9,20,0.92), rgba(7,9,20,0.75)), url('/images/SHOPbanner.png')`,
-                backgroundSize: "cover",
-                backgroundPosition: "center"
-              }}
-            >
-              <div className="space-y-4 max-w-2xl text-left">
-                {/* Course Tags / Hashtags Row */}
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
-                    Preview
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
-                    AP
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
-                    {course.category || "STEM"}
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
-                    High School
-                  </span>
-                </div>
+            {/* HERO BANNER SECTION */}
+            {(() => {
+              const COURSE_HERO_IMAGES: Record<string, string> = {
+                "ap-biology": "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=1200&q=80",
+                "ap-chemistry": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1200&q=80",
+                "ap-physics-c": "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=1200&q=80",
+                "ap-calc-bc": "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&q=80",
+                "ap-stats": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&q=80",
+                "ap-csa": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&q=80",
+                "ap-ush": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1200&q=80",
+                "ap-psych": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1200&q=80",
+                "ap-eng-lang": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=1200&q=80",
+              };
+              const heroBgImage = COURSE_HERO_IMAGES[slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&q=80";
 
-                {/* Course Main Title */}
-                <h1 className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
-                  {course.name}
-                </h1>
+              return (
+                <div 
+                  className="relative w-full rounded-3xl overflow-hidden border border-white/10 p-6 sm:p-10 shadow-2xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6"
+                  style={{
+                    backgroundImage: `linear-gradient(to right, rgba(7,9,20,0.94), rgba(7,9,20,0.78)), url('${heroBgImage}')`,
+                    backgroundSize: "cover",
+                    backgroundPosition: "center"
+                  }}
+                >
+                  <div className="space-y-4 max-w-2xl text-left">
+                    {/* Course Tags */}
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                        AP
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                        {course.category || "STEM"}
+                      </span>
+                      <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+                        High School
+                      </span>
+                    </div>
 
-                {/* Info Capsules & Action Buttons */}
-                <div className="flex flex-wrap items-center gap-3 pt-2">
-                  <div className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/80">
-                    <BookOpen className="w-4 h-4 text-white/60" />
-                    <span>{course.units.length} units</span>
+                    {/* Course Main Title */}
+                    <h1 className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+                      {course.name}
+                    </h1>
+
+                    {/* Info Capsules & Practice Button */}
+                    <div className="flex flex-wrap items-center gap-3 pt-2">
+                      <div className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/80">
+                        <BookOpen className="w-4 h-4 text-white/60" />
+                        <span>{course.units.length} units</span>
+                      </div>
+
+                      {/* Practice button */}
+                      <button
+                        onClick={() => setShowExam(true)}
+                        className="flex items-center space-x-2 px-6 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-xl"
+                      >
+                        <span>Practice</span>
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/80">
-                    <Clock className="w-4 h-4 text-amber-400" />
-                    <span>In 284 Days 11 Hours</span>
+                  {/* Right Top Card: COURSE PROGRESS Box */}
+                  <div className="w-full md:w-72 bg-[#090b16]/90 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">COURSE PROGRESS</span>
+                      <span className="text-xs font-mono font-bold text-purple-400">0/4500 XP</span>
+                    </div>
+                    <div className="font-instrument text-4xl font-extrabold text-white">
+                      {courseProgressPercent}%
+                    </div>
+                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/10">
+                      <div 
+                        className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-500 rounded-full" 
+                        style={{ width: `${courseProgressPercent}%` }}
+                      />
+                    </div>
                   </div>
-
-                  {/* Course Details button -> Opens Exam Outline Modal (Screenshot 1) */}
-                  <button
-                    onClick={() => setShowExamOutlineModal(true)}
-                    className="flex items-center space-x-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-xs font-manrope font-bold text-white transition-all cursor-pointer shadow-md"
-                  >
-                    <FileText className="w-4 h-4 text-white/80" />
-                    <span>Course details</span>
-                  </button>
-
-                  {/* Practice button */}
-                  <button
-                    onClick={() => setShowExam(true)}
-                    className="flex items-center space-x-2 px-6 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-xl"
-                  >
-                    <span>Practice</span>
-                  </button>
                 </div>
-              </div>
+              );
+            })()}
 
-              {/* Right Top Card: COURSE PROGRESS Box (Matching Screenshot 2) */}
-              <div className="w-full md:w-72 bg-[#090b16]/90 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">COURSE PROGRESS</span>
-                  <span className="text-xs font-mono font-bold text-purple-400">0/4500 XP</span>
-                </div>
-                <div className="font-instrument text-4xl font-extrabold text-white">
-                  {courseProgressPercent}%
-                </div>
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/10">
-                  <div 
-                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-500 rounded-full" 
-                    style={{ width: `${courseProgressPercent}%` }}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* MAIN CONTENT 2-COLUMN GRID (Matching Screenshot 2) */}
+            {/* MAIN CONTENT 2-COLUMN GRID */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               
               {/* Left Column: Units & Subunits list (Course Path) */}
@@ -1811,78 +1811,91 @@ export default function APDynamicCoursePage() {
                   </div>
                 </div>
 
-                {/* Render Each Unit Card */}
-                {course.units.map((unit, uIdx) => {
-                  const unitTopicsCount = unit.topics.length;
-                  const unitCompletedTopics = unit.topics.filter(t => progress.completedTopics.includes(`${course.masteryPrefix}-${t.id}`)).length;
-                  const unitProgress = unitTopicsCount > 0 ? Math.round((unitCompletedTopics / unitTopicsCount) * 100) : 0;
-                  
-                  // AP Weighting estimates based on course unit number
-                  const apWeightings = ["30-40%", "15-22%", "18-25%", "12-18%", "10-15%", "8-12%", "6-10%", "5-8%"];
-                  const weightingStr = apWeightings[uIdx % apWeightings.length];
+                {/* Render Each Unit Card with Official CollegeBoard Weightings */}
+                {(() => {
+                  const OFFICIAL_WEIGHTINGS: Record<string, Record<number, string>> = {
+                    "ap-biology": { 1: "8–11%", 2: "10–13%", 3: "12–16%", 4: "10–15%", 5: "8–11%", 6: "12–16%", 7: "13–20%", 8: "10–15%" },
+                    "ap-chemistry": { 1: "7–9%", 2: "7–9%", 3: "18–22%", 4: "7–9%", 5: "7–9%", 6: "7–9%", 7: "7–9%", 8: "11–15%", 9: "7–9%" },
+                    "ap-physics-c": { 1: "14–20%", 2: "17–23%", 3: "14–17%", 4: "14–17%", 5: "14–20%", 6: "6–14%", 7: "6–14%" },
+                    "ap-calc-bc": { 1: "4–7%", 2: "4–7%", 3: "4–7%", 4: "6–9%", 5: "8–11%", 6: "17–20%", 7: "6–9%", 8: "6–9%", 9: "11–12%", 10: "17–18%" },
+                    "ap-stats": { 1: "15–23%", 2: "5–7%", 3: "12–15%", 4: "10–20%", 5: "7–12%", 6: "12–15%", 7: "10–18%", 8: "2–5%", 9: "2–5%" },
+                    "ap-csa": { 1: "2.5–5%", 2: "5–7.5%", 3: "15–17.5%", 4: "17.5–22.5%", 5: "5–7.5%", 6: "10–15%", 7: "2.5–7.5%", 8: "7.5–10%", 9: "5–10%", 10: "5–7.5%" },
+                    "ap-ush": { 1: "4–6%", 2: "6–8%", 3: "10–17%", 4: "10–17%", 5: "10–17%", 6: "10–17%", 7: "10–17%", 8: "10–17%", 9: "4–6%" },
+                    "ap-psych": { 1: "15–25%", 2: "15–25%", 3: "15–25%", 4: "15–25%", 5: "15–25%" },
+                    "ap-eng-lang": { 1: "22–26%", 2: "22–26%", 3: "22–26%", 4: "45%", 5: "55%" },
+                  };
+                  const courseMap = OFFICIAL_WEIGHTINGS[slug] || {};
 
-                  return (
-                    <div 
-                      key={unit.id}
-                      className="bg-[#090b16]/90 border border-white/10 rounded-2xl p-6 shadow-xl space-y-5"
-                    >
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
-                        <div className="flex items-start space-x-4">
-                          <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 shrink-0">
-                            <BookOpen className="w-5 h-5" />
-                          </div>
-                          <div>
-                            <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider block">
-                              UNIT {unit.id}
-                            </span>
-                            <h3 className="font-manrope font-bold text-lg text-white">
-                              {unit.title}
-                            </h3>
-                            <span className="text-xs font-mono text-white/40 block mt-0.5">
-                              {unitTopicsCount} lessons
-                            </span>
-                          </div>
-                        </div>
+                  return course.units.map((unit, uIdx) => {
+                    const unitTopicsCount = unit.topics.length;
+                    const unitCompletedTopics = unit.topics.filter(t => progress.completedTopics.includes(`${course.masteryPrefix}-${t.id}`)).length;
+                    const unitProgress = unitTopicsCount > 0 ? Math.round((unitCompletedTopics / unitTopicsCount) * 100) : 0;
+                    
+                    const officialWeighting = courseMap[unit.id] || "10–15%";
 
-                        <div className="flex flex-col items-start sm:items-end space-y-1 font-mono text-xs">
-                          <span className="font-bold text-white/80">{weightingStr} AP WEIGHTING</span>
-                          <span className="text-white/40">Progress {unitProgress}%</span>
-                          <div className="w-28 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5 mt-1">
-                            <div className="h-full bg-purple-500 transition-all duration-300" style={{ width: `${unitProgress}%` }} />
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Subunits / Lessons Pill Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                        {unit.topics.map((topic, tIdx) => {
-                          const isTopicDone = progress.completedTopics.includes(`${course.masteryPrefix}-${topic.id}`);
-                          return (
-                            <button
-                              key={topic.id}
-                              onClick={() => {
-                                setActiveUnit(unit.id);
-                                setActiveTopic(topic);
-                                setViewMode("workspace");
-                              }}
-                              className={cn(
-                                "flex items-center space-x-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer group",
-                                isTopicDone 
-                                  ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-300" 
-                                  : "bg-white/[0.02] border-white/10 hover:bg-white/[0.06] hover:border-white/20 text-white/80"
-                              )}
-                            >
-                              <BookOpen className="w-3.5 h-3.5 shrink-0 opacity-60 group-hover:opacity-100" />
-                              <span className="font-manrope font-semibold text-xs truncate">
-                                {topic.id} {topic.title}
+                    return (
+                      <div 
+                        key={unit.id}
+                        className="bg-[#090b16]/90 border border-white/10 rounded-2xl p-6 shadow-xl space-y-5"
+                      >
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/5 pb-4">
+                          <div className="flex items-start space-x-4">
+                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/70 shrink-0">
+                              <BookOpen className="w-5 h-5" />
+                            </div>
+                            <div>
+                              <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider block">
+                                UNIT {unit.id}
                               </span>
-                            </button>
-                          );
-                        })}
+                              <h3 className="font-manrope font-bold text-lg text-white">
+                                {unit.title}
+                              </h3>
+                              <span className="text-xs font-mono text-white/40 block mt-0.5">
+                                {unitTopicsCount} lessons
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col items-start sm:items-end space-y-1 font-mono text-xs">
+                            <span className="font-bold text-amber-400">{officialWeighting} AP WEIGHTING</span>
+                            <span className="text-white/40">Progress {unitProgress}%</span>
+                            <div className="w-28 h-1.5 bg-white/5 rounded-full overflow-hidden border border-white/5 mt-1">
+                              <div className="h-full bg-purple-500 transition-all duration-300" style={{ width: `${unitProgress}%` }} />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Subunits / Lessons Pill Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          {unit.topics.map((topic) => {
+                            const isTopicDone = progress.completedTopics.includes(`${course.masteryPrefix}-${topic.id}`);
+                            return (
+                              <button
+                                key={topic.id}
+                                onClick={() => {
+                                  setActiveUnit(unit.id);
+                                  setActiveTopic(topic);
+                                  setViewMode("workspace");
+                                }}
+                                className={cn(
+                                  "flex items-center space-x-2.5 p-3 rounded-xl border text-left transition-all cursor-pointer group",
+                                  isTopicDone 
+                                    ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-300" 
+                                    : "bg-white/[0.02] border-white/10 hover:bg-white/[0.06] hover:border-white/20 text-white/80"
+                                )}
+                              >
+                                <BookOpen className="w-3.5 h-3.5 shrink-0 opacity-60 group-hover:opacity-100" />
+                                <span className="font-manrope font-semibold text-xs truncate">
+                                  {topic.id} {topic.title}
+                                </span>
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  });
+                })()}
 
                 {/* Continue Button at Bottom of Left Column (Matching Screenshot 2) */}
                 <div className="pt-4 flex justify-end">

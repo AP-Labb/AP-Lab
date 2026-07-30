@@ -712,6 +712,22 @@ export default function Dashboard() {
                     const isEnrolled = progress?.selectedClasses?.includes(cls.name);
                     const progressPercent = classProgressMap[cls.slug] || 0;
                     const courseData = courseRegistry[cls.slug];
+                    const unitsCount = courseData?.units?.length || 8;
+                    const topicsCount = courseData?.units?.reduce((acc, u) => acc + u.topics.length, 0) || 45;
+
+                    const COURSE_IMAGES: Record<string, string> = {
+                      "ap-biology": "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&q=80",
+                      "ap-chemistry": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80",
+                      "ap-physics-c": "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=800&q=80",
+                      "ap-calc-bc": "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&q=80",
+                      "ap-stats": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+                      "ap-csa": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+                      "ap-ush": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
+                      "ap-psych": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80",
+                      "ap-eng-lang": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800&q=80",
+                    };
+
+                    const courseImgSrc = COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";
 
                     return (
                       <Link 
@@ -720,16 +736,13 @@ export default function Dashboard() {
                         className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer"
                       >
                         {/* Course Header Banner Image */}
-                        <div className="relative h-44 w-full overflow-hidden">
+                        <div className="relative h-44 w-full overflow-hidden bg-slate-900">
                           <img 
-                            src={`/images/${cls.slug}.png`} 
+                            src={courseImgSrc} 
                             alt={cls.name}
-                            onError={(e) => {
-                              (e.target as HTMLElement).style.display = 'none';
-                            }}
                             className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/40 to-transparent" />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/30 to-transparent" />
                           
                           {/* Enrolled Highlight Badge */}
                           {isEnrolled && (
@@ -753,6 +766,16 @@ export default function Dashboard() {
                             <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
                               Master core AP concepts, practice exam-style questions, and build topic fluency.
                             </p>
+
+                            {/* Unit & Subunit / Topic Count Badges */}
+                            <div className="flex flex-wrap items-center gap-2 mt-3.5">
+                              <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/80 uppercase tracking-wider">
+                                {unitsCount} UNITS
+                              </span>
+                              <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono font-bold text-purple-300 uppercase tracking-wider">
+                                {topicsCount} SUBUNITS
+                              </span>
+                            </div>
                           </div>
 
                           <div className="space-y-3 pt-2">

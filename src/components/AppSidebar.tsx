@@ -76,8 +76,9 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
   return (
     <>
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
-        <SidebarBody className="justify-between gap-6 sticky top-0 h-screen overflow-y-auto">
+      <aside className="fixed top-0 left-0 h-screen z-50 flex-shrink-0">
+        <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
+          <SidebarBody className="justify-between gap-6 h-screen overflow-y-auto">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {/* Top Logo */}
             <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
@@ -314,6 +315,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
           </div>
         </SidebarBody>
       </Sidebar>
+    </aside>
 
       <ReviewModal isOpen={showReviewModal} onClose={() => setShowReviewModal(false)} />
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
