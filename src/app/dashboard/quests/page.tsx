@@ -626,8 +626,8 @@ export default function QuestsPage() {
                 </p>
               </div>
 
-              {/* Refresh Countdown Box (Shifted ALL THE WAY LEFT into Cream Space, completely avoiding clipboard graphic on right) */}
-              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto -ml-4 md:-ml-8">
+              {/* Refresh Countdown Box (Positioned cleanly in cream area) */}
+              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto ml-0 md:ml-4">
                 <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-white" />
                   REFRESH COUNTDOWN
