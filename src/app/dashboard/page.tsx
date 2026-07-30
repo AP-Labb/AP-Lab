@@ -32,7 +32,8 @@ import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import FolderComponent from "@/components/Folder";
-import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import PixelBlast from "@/components/PixelBlast";
 
 
 const folders = [
@@ -700,303 +701,11 @@ export default function Dashboard() {
     });
   });
 
-  const sideNavLinks = [
-    {
-      label: "Home",
-      href: "/",
-      icon: <Home className="w-5 h-5 flex-shrink-0" />,
-    },
-    {
-      label: "Dashboard",
-      href: "/dashboard",
-      icon: <LayoutDashboard className="w-5 h-5 flex-shrink-0" />,
-    },
-    {
-      label: "Progress",
-      href: "/dashboard/progress",
-      icon: <BarChart2 className="w-5 h-5 flex-shrink-0" />,
-    },
-    {
-      label: "Review",
-      href: "#",
-      icon: <Star className="w-5 h-5 flex-shrink-0" />,
-    },
-  ];
-
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] selection:bg-primary-purple selection:text-white">
-
-      {/* ===== LEFT SIDEBAR ===== */}
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
-        <SidebarBody className="justify-between gap-6 sticky top-0">
-
-          {/* Top: Logo + Nav Links */}
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-
-            {/* AP Lab Logo */}
-            <Link
-              href="/"
-              className="flex items-center gap-3 px-2 py-2.5 mb-4 group"
-            >
-              <motion.div
-                whileHover={{ rotate: [0, -10, 10, -6, 6, 0] }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
-              </motion.div>
-              <motion.span
-                animate={{
-                  display: sidebarOpen ? "inline-block" : "none",
-                  opacity: sidebarOpen ? 1 : 0,
-                }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-bold text-white tracking-tight whitespace-pre text-sm"
-              >
-                AP Lab
-              </motion.span>
-            </Link>
-
-            {/* Divider */}
-            <div className="h-px bg-white/[0.06] mb-4 mx-2" />
-
-            {/* Nav Links with animated icons — hover on the whole row triggers child variants */}
-            <div className="flex flex-col gap-1">
-
-              {/* Home — smooth float up on row hover */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { y: 0, scale: 1 },
-                      hover: { y: -3, scale: 1.1 },
-                    }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Home className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Home
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Dashboard — squares shift/scale on row hover */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.15, rotate: 8 },
-                    }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <LayoutDashboard className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Dashboard
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Progress — animated rising bars on row hover */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/dashboard/progress"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
-                >
-                  {/* Custom animated bars SVG replacing BarChart2 */}
-                  <div className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]">
-                    {[
-                      { height: "40%", delay: 0 },
-                      { height: "70%", delay: 0.05 },
-                      { height: "55%", delay: 0.1 },
-                      { height: "90%", delay: 0.15 },
-                    ].map((bar, i) => (
-                      <motion.div
-                        key={i}
-                        className="flex-1 rounded-sm bg-current"
-                        style={{ height: bar.height }}
-                        variants={{
-                          rest: { scaleY: 1, originY: 1 },
-                          hover: { scaleY: [1, 1.5, 1.2, 1.35, 1], originY: 1 },
-                        }}
-                        transition={{ duration: 0.5, delay: bar.delay, ease: "easeInOut" }}
-                      />
-                    ))}
-                  </div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Progress
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Review */}
-              <motion.button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
-                whileHover="hover"
-                initial="rest"
-              >
-                <InstagramLikeStar />
-                <motion.span
-                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Review
-                </motion.span>
-              </motion.button>
-
-              {/* Quests — link to /dashboard/quests */}
-              <Link href="/dashboard/quests" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.18, rotate: -8 },
-                    }}
-                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Award className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Quests
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* AI Assistant — Panda Mascot Icon */}
-              <Link href="/assistant" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group cursor-pointer"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="w-5 h-5 shrink-0 flex items-center justify-center"
-                    variants={{
-                      rest: { scale: 1, rotate: 0, y: 0 },
-                      hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0], y: -1 },
-                    }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                  >
-                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    AI Assistant
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* Shop */}
-              <Link href="/shop" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-amber-400 w-full group cursor-pointer"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="w-5 h-5 shrink-0 flex items-center justify-center text-amber-400"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.2, rotate: 12 },
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre text-amber-400"
-                  >
-                    Shop
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-            </div>
-          </div>
-
-          {/* Bottom: Profile Capsule Button */}
-          <div className="flex flex-col gap-2 pb-6">
-            <div className="h-px bg-white/[0.06] mx-2 mb-2" />
-
-            {/* Profile — opens profile menu */}
-            <button
-              onClick={() => setShowAccountPopup(true)}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/70 hover:bg-white/[0.08] hover:text-white"
-            >
-              <div className="flex-shrink-0">
-                {progress?.photoURL || currentUser?.photoURL ? (
-                  <img
-                    src={progress?.photoURL || currentUser?.photoURL || ""}
-                    alt="Avatar"
-                    className="w-7 h-7 rounded-full object-cover border border-white/20 flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
-                    {firstName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-
-              <AnimatePresence>
-                {sidebarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex flex-col items-start text-left overflow-hidden"
-                  >
-                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
-                      {progress?.displayName || currentUser?.displayName || "Scholar"}
-                    </span>
-                    <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
-                      Lvl {level} • {xp.toLocaleString()} XP
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-          </div>
-        </SidebarBody>
-      </Sidebar>
-
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#030408] text-white selection:bg-neutral-800 selection:text-white font-manrope">
+      
+      {/* Unified App Sidebar with Sticky Navigation & Profile Popover */}
+      <AppSidebar currentPath="/dashboard" />
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
@@ -1005,20 +714,34 @@ export default function Dashboard() {
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
         
-        {/* UPPER REGION: Header with Pixelated Forest Background */}
+        {/* UPPER REGION: Header with PixelBlast Background */}
         <div className="relative w-full flex flex-col items-center pt-20 pb-12 px-6 z-40 overflow-hidden">
-          {/* Pixelated Forest Blurred Header Background */}
+          {/* PixelBlast Background */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-            <img 
-              src="/images/pixel-forest.png" 
-              alt="Pixel Forest" 
-              className="w-full h-full object-cover blur-sm opacity-60 scale-105 transform transition-all duration-700" 
+            <PixelBlast
+              variant="circle"
+              pixelSize={6}
+              color="#B497CF"
+              patternScale={3}
+              patternDensity={1.2}
+              pixelSizeJitter={0.5}
+              enableRipples
+              rippleSpeed={0.4}
+              rippleThickness={0.12}
+              rippleIntensityScale={1.5}
+              liquid
+              liquidStrength={0.12}
+              liquidRadius={1.2}
+              liquidWobbleSpeed={5}
+              speed={0.6}
+              edgeFade={0.25}
+              transparent
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#03040a]/40 via-[#03040a]/70 to-[#060712]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#03040a]/30 via-[#03040a]/60 to-[#060712]" />
           </div>
 
           {/* Header Section */}
-          <div className="text-center mb-8 flex flex-col items-center justify-center relative z-10">
+          <div className="text-center mb-6 flex flex-col items-center justify-center relative z-10">
             <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -1036,164 +759,9 @@ export default function Dashboard() {
               transition={{ duration: 0.6, delay: 0.12, ease: [0.22, 1, 0.36, 1] }}
               className="font-inter text-white/50 text-xs md:text-sm max-w-lg mx-auto leading-relaxed"
             >
-              Live overview of your coins & XP progression over time.
+              Interactive AP course workspace & study lab.
             </motion.p>
           </div>
-
-          {/* Real Coin Earnings & XP Earnings Line Graphs */}
-          <motion.div 
-            initial={{ opacity: 0, y: 25, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: 0.6, delay: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="w-full max-w-5xl grid grid-cols-1 md:grid-cols-2 gap-5 relative z-10 mb-2"
-          >
-            {/* XP Earnings Line Chart */}
-            {(() => {
-              const totalXp = progress.xp || 0;
-              const logs = progress.activityLogs || [];
-              const weekPoints = [0, 0, 0, 0, 0, 0, totalXp];
-              for (let i = 0; i < 6; i++) {
-                const dayOffset = 6 - i;
-                const d = new Date();
-                d.setDate(d.getDate() - dayOffset);
-                const ds = d.toLocaleDateString('en-CA');
-                const dayXp = logs.filter(l => l.date === ds).reduce((acc, l) => acc + (l.xp || 0), 0);
-                weekPoints[i] = Math.max(0, totalXp - (6 - i) * 80 + dayXp);
-              }
-              const maxPoint = Math.max(...weekPoints, 100);
-              const svgPoints = weekPoints.map((val, idx) => {
-                const x = 20 + idx * 80;
-                const y = 110 - (val / maxPoint) * 80;
-                return `${x},${y}`;
-              }).join(" ");
-
-              return (
-                <div className="bg-[#0b0c16]/90 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-xl flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
-                        <img src="/images/xp-shield-exact.png" alt="XP" className="w-4.5 h-4.5 object-contain" />
-                      </div>
-                      <div>
-                        <h4 className="font-manrope font-bold text-xs text-white">XP Growth Curve</h4>
-                        <p className="font-mono text-[9px] text-white/40">Total Cumulative: {totalXp.toLocaleString()} XP</p>
-                      </div>
-                    </div>
-                    <span className="text-purple-400 font-mono font-bold text-xs bg-purple-500/10 border border-purple-500/20 px-2 py-0.5 rounded-full">
-                      Lvl {level}
-                    </span>
-                  </div>
-
-                  <div className="w-full h-28 relative">
-                    <svg viewBox="0 0 520 120" className="w-full h-full overflow-visible">
-                      <defs>
-                        <linearGradient id="xpChartGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#a855f7" stopOpacity="0.35" />
-                          <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <polygon points={`20,110 ${svgPoints} 500,110`} fill="url(#xpChartGrad)" />
-                      <motion.polyline
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.2, ease: "easeInOut" }}
-                        fill="none"
-                        stroke="#c084fc"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        points={svgPoints}
-                      />
-                      {weekPoints.map((val, idx) => {
-                        const cx = 20 + idx * 80;
-                        const cy = 110 - (val / maxPoint) * 80;
-                        return (
-                          <circle key={idx} cx={cx} cy={cy} r="4" fill="#a855f7" className="stroke-white stroke-2" />
-                        );
-                      })}
-                    </svg>
-                  </div>
-
-                  <div className="flex justify-between text-[9px] font-mono text-white/30 pt-1 border-t border-white/5">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                  </div>
-                </div>
-              );
-            })()}
-
-            {/* Coin Earnings Line Chart */}
-            {(() => {
-              const totalCoins = progress.credits || 0;
-              const coinPoints = [
-                Math.max(0, totalCoins - 150),
-                Math.max(0, totalCoins - 110),
-                Math.max(0, totalCoins - 80),
-                Math.max(0, totalCoins - 60),
-                Math.max(0, totalCoins - 40),
-                Math.max(0, totalCoins - 15),
-                totalCoins
-              ];
-              const maxCoin = Math.max(...coinPoints, 50);
-              const coinSvgPoints = coinPoints.map((val, idx) => {
-                const x = 20 + idx * 80;
-                const y = 110 - (val / maxCoin) * 80;
-                return `${x},${y}`;
-              }).join(" ");
-
-              return (
-                <div className="bg-[#0b0c16]/90 border border-white/10 backdrop-blur-md rounded-2xl p-4 shadow-xl flex flex-col justify-between">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2.5">
-                      <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                        <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
-                      </div>
-                      <div>
-                        <h4 className="font-manrope font-bold text-xs text-white">Coin Accumulation</h4>
-                        <p className="font-mono text-[9px] text-white/40">Balance: {totalCoins.toLocaleString()} Coins</p>
-                      </div>
-                    </div>
-                    <span className="text-emerald-400 font-mono font-extrabold text-xs bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
-                      <span>▲</span> 9.3%
-                    </span>
-                  </div>
-
-                  <div className="w-full h-28 relative">
-                    <svg viewBox="0 0 520 120" className="w-full h-full overflow-visible">
-                      <defs>
-                        <linearGradient id="coinChartGrad" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.35" />
-                          <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      <polygon points={`20,110 ${coinSvgPoints} 500,110`} fill="url(#coinChartGrad)" />
-                      <motion.polyline
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.2, ease: "easeInOut" }}
-                        fill="none"
-                        stroke="#fbbf24"
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        points={coinSvgPoints}
-                      />
-                      {coinPoints.map((val, idx) => {
-                        const cx = 20 + idx * 80;
-                        const cy = 110 - (val / maxCoin) * 80;
-                        return (
-                          <circle key={idx} cx={cx} cy={cy} r="4" fill="#f59e0b" className="stroke-white stroke-2" />
-                        );
-                      })}
-                    </svg>
-                  </div>
-
-                  <div className="flex justify-between text-[9px] font-mono text-white/30 pt-1 border-t border-white/5">
-                    <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
-                  </div>
-                </div>
-              );
-            })()}
-          </motion.div>
         </div>
 
         {/* SEPARATION LINE PASSING DIRECTLY THROUGH THE VERTICAL MIDDLE OF THE SELECTION MENU */}

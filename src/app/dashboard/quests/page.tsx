@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
-import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
 import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { ReviewModal } from "@/components/ReviewModal";
@@ -445,116 +445,8 @@ export default function QuestsPage() {
   return (
     <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] text-white selection:bg-white selection:text-black font-manrope">
       
-      {/* STICKY Left Sidebar Navigation (Matching exact sidebar markup from shop/dashboard) */}
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
-        <SidebarBody className="justify-between gap-6 sticky top-0 h-screen overflow-y-auto">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
-              <Activity className="w-5 h-5 text-white flex-shrink-0" />
-              <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="font-bold text-white text-sm">
-                AP Lab
-              </motion.span>
-            </Link>
-
-            <div className="h-px bg-white/[0.06] mb-4 mx-2" />
-
-            <div className="flex flex-col gap-1">
-              <Link href="/" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <Home className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Home</motion.span>
-              </Link>
-
-              <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <LayoutDashboard className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Dashboard</motion.span>
-              </Link>
-
-              <Link href="/dashboard/progress" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <BarChart2 className="w-5 h-5 shrink-0" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Progress</motion.span>
-              </Link>
-
-              <button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-150 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
-              >
-                <InstagramLikeStar />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">
-                  Review
-                </motion.span>
-              </button>
-
-              {/* Active Quests Sidebar Item */}
-              <Link href="/dashboard/quests" className="relative flex items-center gap-3 px-2 py-2.5 rounded-xl bg-white/[0.06] text-white font-bold border border-white/10">
-                <div className="absolute left-0 top-2 bottom-2 w-1 bg-white rounded-r-full" />
-                <Award className="w-5 h-5 shrink-0 text-white ml-1" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-bold text-white">Quests</motion.span>
-              </Link>
-
-              <Link href="/assistant" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <div className="w-5 h-5 shrink-0 flex items-center justify-center font-bold text-xs bg-white/10 rounded-full text-white">A</div>
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">AI Assistant</motion.span>
-              </Link>
-
-              <Link href="/shop" className="flex items-center gap-3 px-2 py-2.5 rounded-xl text-white/50 hover:bg-white/[0.05]">
-                <ShoppingBag className="w-5 h-5 shrink-0 text-amber-400" />
-                <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold text-amber-400">Shop</motion.span>
-              </Link>
-
-              <SidebarSettingsButton open={sidebarOpen} />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2 pb-6 w-full">
-            <div className="h-px bg-white/[0.06] mx-2 mb-2" />
-            <button
-              onClick={() => setShowProfileModal(true)}
-              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.05] hover:text-white"
-            >
-              <div className="flex-shrink-0">
-                {userPhoto ? (
-                  <img
-                    src={userPhoto}
-                    alt="Avatar"
-                    className="w-7 h-7 rounded-full object-cover border border-white/20 flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
-                    {(userName).charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-
-              <AnimatePresence>
-                {sidebarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex flex-col items-start text-left overflow-hidden"
-                  >
-                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
-                      {userName}
-                    </span>
-                    <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
-                      Lvl {userLevel} • {userXp.toLocaleString()} XP
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-
-            <button
-              onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl text-white/30 hover:bg-red-500/10 hover:text-red-400"
-            >
-              <LogOut className="w-5 h-5 shrink-0" />
-              <motion.span animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }} className="text-sm font-semibold">Sign Out</motion.span>
-            </button>
-          </div>
-        </SidebarBody>
-      </Sidebar>
+      {/* Unified App Sidebar with Sticky Navigation & Profile Popover */}
+      <AppSidebar currentPath="/dashboard/quests" />
 
       {/* Main Workspace Layout */}
       <div className="flex-1 flex flex-col min-h-screen md:pl-16">

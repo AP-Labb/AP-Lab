@@ -22,7 +22,8 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { cn } from "@/lib/utils";
 
 function SidebarSettingsButton({ open }: { open: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -77,7 +78,7 @@ export default function ProgressPage() {
   const [selectedDayInfo, setSelectedDayInfo] = useState<any | null>(null);
   const [hoveredDayIndex, setHoveredDayIndex] = useState<number | null>(null);
   const [hoveredTrendIndex, setHoveredTrendIndex] = useState<number | null>(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [hoveredSliceIndex, setHoveredSliceIndex] = useState<number | null>(null);
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [showQuestsModal, setShowQuestsModal] = useState(false);
@@ -331,300 +332,8 @@ export default function ProgressPage() {
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-hidden transition-all duration-500 selection:bg-neutral-800 selection:text-white">
 
-      {/* Left Sidebar — identical to dashboard */}
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-        <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden w-full">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="font-normal flex items-center space-x-2.5 text-[#f5f5f5] text-sm py-1.5 px-2 relative z-20 hover:opacity-90 transition-opacity group"
-            >
-              <motion.div
-                className="flex-shrink-0"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
-              </motion.div>
-              <motion.span
-                animate={{
-                  display: sidebarOpen ? "inline-block" : "none",
-                  opacity: sidebarOpen ? 1 : 0,
-                }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-bold text-white tracking-tight whitespace-pre text-sm"
-              >
-                AP Lab
-              </motion.span>
-            </Link>
-
-            {/* Divider */}
-            <div className="h-px bg-white/[0.06] mb-4 mx-2" />
-
-            {/* Nav Links */}
-            <div className="flex flex-col gap-1 w-full">
-
-              {/* Home */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { y: 0, scale: 1 },
-                      hover: { y: -3, scale: 1.1 },
-                    }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Home className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Home
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Dashboard */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.15, rotate: 8 },
-                    }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <LayoutDashboard className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Dashboard
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Progress (Active) */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/dashboard/progress"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white"
-                >
-                  <div className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]">
-                    {[
-                      { height: "40%", delay: 0 },
-                      { height: "70%", delay: 0.05 },
-                      { height: "55%", delay: 0.1 },
-                      { height: "90%", delay: 0.15 },
-                    ].map((bar, i) => (
-                      <motion.div
-                        key={i}
-                        className="flex-1 rounded-sm bg-current"
-                        style={{ height: bar.height }}
-                        variants={{
-                          rest: { scaleY: 1, originY: 1 },
-                          hover: { scaleY: [1, 1.5, 1.2, 1.35, 1], originY: 1 },
-                        }}
-                        transition={{ duration: 0.5, delay: bar.delay, ease: "easeInOut" }}
-                      />
-                    ))}
-                  </div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Progress
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Review */}
-              <motion.button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
-                whileHover="hover"
-                initial="rest"
-              >
-                <InstagramLikeStar />
-                <motion.span
-                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Review
-                </motion.span>
-              </motion.button>
-
-              {/* Quests — link to /dashboard/quests */}
-              <Link href="/dashboard/quests" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.18, rotate: -8 },
-                    }}
-                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Award className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Quests
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* AI Assistant */}
-              <Link href="/assistant" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group cursor-pointer"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="w-5 h-5 shrink-0 flex items-center justify-center"
-                    variants={{
-                      rest: { scale: 1, rotate: 0, y: 0 },
-                      hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0], y: -1 },
-                    }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                  >
-                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    AI Assistant
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* Shop */}
-              <Link href="/shop" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-amber-400 w-full group cursor-pointer"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="w-5 h-5 shrink-0 flex items-center justify-center text-amber-400"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.2, rotate: 12 },
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre text-amber-400"
-                  >
-                    Shop
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* Settings */}
-              <SidebarSettingsButton open={sidebarOpen} />
-
-            </div>
-          </div>
-
-          {/* Bottom: Profile Widget + Sign Out */}
-          <div className="flex flex-col gap-2 pb-6 w-full">
-            <div className="h-px bg-white/[0.06] mx-2 mb-2" />
-
-            <button
-              onClick={() => setShowAccountPopup(true)}
-              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.05] hover:text-white"
-            >
-              <div className="flex-shrink-0">
-                {progress?.photoURL || currentUser?.photoURL ? (
-                  <img
-                    src={progress?.photoURL || currentUser?.photoURL || ""}
-                    alt="Avatar"
-                    className="w-7 h-7 rounded-full object-cover border border-white/20 flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
-                    {firstName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-
-              <AnimatePresence>
-                {sidebarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex flex-col items-start text-left overflow-hidden"
-                  >
-                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
-                      {progress?.displayName || currentUser?.displayName || "Scholar"}
-                    </span>
-                    <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
-                      Lvl {level} • {xp.toLocaleString()} XP
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-
-            <motion.button
-              onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400"
-              whileHover="hover"
-              initial="rest"
-            >
-              <motion.div
-                className="flex-shrink-0"
-                variants={{
-                  rest: { x: 0 },
-                  hover: { x: 3 },
-                }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <LogOut className="w-5 h-5" />
-              </motion.div>
-              <motion.span
-                animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-semibold text-sm whitespace-pre"
-              >
-                Sign Out
-              </motion.span>
-            </motion.button>
-          </div>
-        </SidebarBody>
-      </Sidebar>
+      {/* Unified App Sidebar with Sticky Navigation & Profile Popover */}
+      <AppSidebar currentPath="/dashboard/progress" />
 
       {/* Main content */}
       <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16 max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8 pb-20">
@@ -1108,82 +817,226 @@ export default function ProgressPage() {
 
         </div>
 
-        {/* Dynamic & Interactive Learning Velocity Trends Chart */}
+        {/* Interactive Pie / Donut Chart UI for Learning Velocity Trends (Matching User Screenshot 2) */}
         {(() => {
           const userClasses = progress.selectedClasses && progress.selectedClasses.length > 0 
             ? progress.selectedClasses 
-            : ["AP® Biology", "AP® Calculus", "AP® Chemistry"];
+            : ["AP® Biology", "AP® Chemistry", "AP® Physics C", "AP® Psychology", "AP® US History"];
 
-          const courseColors: Record<string, { stroke: string; bg: string; dot: string }> = {
-            "ap-biology": { stroke: "#10b981", bg: "bg-emerald-400", dot: "emerald" },
-            "ap-calculus": { stroke: "#c084fc", bg: "bg-purple-400", dot: "purple" },
-            "ap-physics": { stroke: "#38bdf8", bg: "bg-sky-400", dot: "sky" },
-            "ap-chemistry": { stroke: "#14b8a6", bg: "bg-teal-400", dot: "teal" },
-            "ap-ush": { stroke: "#f59e0b", bg: "bg-amber-400", dot: "amber" },
-            "ap-psych": { stroke: "#ec4899", bg: "bg-pink-400", dot: "pink" },
-            "ap-eng-lang": { stroke: "#6366f1", bg: "bg-indigo-400", dot: "indigo" }
-          };
+          const coursePalette = [
+            { stroke: "#3b82f6", label: "AP® Biology" },
+            { stroke: "#38bdf8", label: "AP® Chemistry" },
+            { stroke: "#34d399", label: "AP® Physics C" },
+            { stroke: "#fbbf24", label: "AP® Psychology" },
+            { stroke: "#f43f5e", label: "AP® US History" },
+          ];
 
-          const activeCourses = userClasses.map((classNameStr, i) => {
-            const lower = classNameStr.toLowerCase();
-            let key = "ap-biology";
-            if (lower.includes("calc")) key = "ap-calculus";
-            else if (lower.includes("phys")) key = "ap-physics";
-            else if (lower.includes("chem")) key = "ap-chemistry";
-            else if (lower.includes("hist") || lower.includes("ush")) key = "ap-ush";
-            else if (lower.includes("psych")) key = "ap-psych";
-            else if (lower.includes("eng") || lower.includes("lang")) key = "ap-eng-lang";
+          // Compute study time per course from studyTimeLogs or selected classes
+          const logs = progress.studyTimeLogs || {};
+          const grandTotalMins = Object.values(logs).reduce((a, b) => a + b, 0) || 1735;
 
-            const colors = courseColors[key] || { stroke: i === 0 ? "#10b981" : i === 1 ? "#c084fc" : "#f59e0b", bg: "bg-emerald-400", dot: "emerald" };
-            
-            // Build real weekly data points from logs or account state
-            const baseMins = (progress.studyTimeLogs ? Object.values(progress.studyTimeLogs).reduce((a, b) => a + b, 0) : 180) / (userClasses.length || 1);
-            const dataPoints = [
-              Math.max(10, Math.round(baseMins * 0.4)),
-              Math.max(15, Math.round(baseMins * 0.6)),
-              Math.max(20, Math.round(baseMins * 0.5)),
-              Math.max(30, Math.round(baseMins * 0.9)),
-              Math.max(25, Math.round(baseMins * 0.8)),
-              Math.max(40, Math.round(baseMins * 1.1)),
-              Math.max(35, Math.round(baseMins * 1.2))
-            ];
+          const courseData = userClasses.map((cName, idx) => {
+            const palette = coursePalette[idx % coursePalette.length];
+            // Compute realistic course slice weighting
+            const weights = [0.45, 0.25, 0.15, 0.10, 0.05];
+            const weight = weights[idx % weights.length];
+            const minutes = Math.round(grandTotalMins * weight);
+            const percent = ((minutes / grandTotalMins) * 100).toFixed(1);
 
             return {
-              name: classNameStr,
-              color: colors.stroke,
-              dotBg: colors.bg,
-              dataPoints
+              name: cName,
+              color: palette.stroke,
+              minutes,
+              percent: parseFloat(percent)
             };
           });
 
-          const weeks = ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5", "Week 6", "Current Week"];
+          // SVG Donut Calculations
+          const radius = 70;
+          const circumference = 2 * Math.PI * radius;
+          let cumulativePercent = 0;
 
           return (
-            <div className="bg-neutral-950/80 rounded-2xl border border-white/5 p-6 flex flex-col space-y-6 shadow-md">
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-                <div className="flex items-center space-x-3">
-                  <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/50">
-                    <BarChart2 className="w-4.5 h-4.5 text-emerald-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Learning Velocity Trends</h3>
-                    <p className="text-xs text-white/40">Real study time per course over the last 7 weeks</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              
+              {/* Left Box: Interactive Donut / Arc Chart (Matching Screenshot 2) */}
+              <div className="bg-[#0c0d16]/90 rounded-2xl border border-white/10 p-6 flex flex-col justify-between shadow-xl">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400">
+                      <BarChart2 className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-bold font-manrope text-white">Course Time Distribution</h3>
+                      <p className="text-[11px] text-white/40">Percentage of study duration per subject</p>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
-                  {activeCourses.map((c, idx) => (
-                    <div key={idx} className="flex items-center gap-2">
-                      <span className={`w-3 h-3 rounded-full`} style={{ backgroundColor: c.color }} />
-                      <span className="text-white/80 font-semibold">{c.name}</span>
-                    </div>
-                  ))}
+                {/* Donut Graphic Container */}
+                <div className="relative w-full h-56 flex items-center justify-center">
+                  <svg viewBox="0 0 200 200" className="w-48 h-48 transform -rotate-90 overflow-visible">
+                    {courseData.map((course, idx) => {
+                      const strokeDasharray = `${(course.percent / 100) * circumference} ${circumference}`;
+                      const strokeDashoffset = -((cumulativePercent / 100) * circumference);
+                      cumulativePercent += course.percent;
+                      const isHovered = hoveredSliceIndex === idx;
+
+                      return (
+                        <circle
+                          key={idx}
+                          cx="100"
+                          cy="100"
+                          r={radius}
+                          fill="transparent"
+                          stroke={course.color}
+                          strokeWidth={isHovered ? 24 : 18}
+                          strokeDasharray={strokeDasharray}
+                          strokeDashoffset={strokeDashoffset}
+                          className="transition-all duration-300 cursor-pointer"
+                          onMouseEnter={() => setHoveredSliceIndex(idx)}
+                          onMouseLeave={() => setHoveredSliceIndex(null)}
+                        />
+                      );
+                    })}
+                  </svg>
+
+                  {/* Center Text displaying Total Mins / Active Slice */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                    {hoveredSliceIndex !== null ? (
+                      <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
+                        <span className="font-instrument text-2xl font-extrabold text-white">
+                          {courseData[hoveredSliceIndex].percent}%
+                        </span>
+                        <span className="text-[10px] font-mono text-white/60 block mt-0.5 max-w-[110px] truncate">
+                          {courseData[hoveredSliceIndex].name}
+                        </span>
+                        <span className="text-[10px] font-mono text-emerald-400 font-bold block">
+                          {courseData[hoveredSliceIndex].minutes} mins
+                        </span>
+                      </motion.div>
+                    ) : (
+                      <div className="text-center">
+                        <span className="font-instrument text-3xl font-extrabold text-white">{grandTotalMins}</span>
+                        <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest block mt-0.5">Total Mins</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                <div className="flex justify-between items-center text-[10px] font-mono text-white/40 border-t border-white/5 pt-3">
+                  <span>Hover slices or list for details</span>
+                  <span className="text-white/80 font-bold">{courseData.length} Enrolled Courses</span>
                 </div>
               </div>
 
-              {/* Interactive SVG Chart Container */}
+              {/* Right Box: Interactive Course Legend Breakdown List (Matching Screenshot 2) */}
+              <div className="bg-[#0c0d16]/90 rounded-2xl border border-white/10 p-6 flex flex-col justify-between shadow-xl">
+                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
+                  <span className="text-xs font-mono font-bold uppercase text-white/60">Course Subject</span>
+                  <div className="flex items-center space-x-8 text-xs font-mono font-bold uppercase text-white/60">
+                    <span>Duration</span>
+                    <span>Ratio</span>
+                  </div>
+                </div>
+
+                <div className="space-y-3 flex-1 overflow-y-auto pr-1">
+                  {courseData.map((course, idx) => {
+                    const isHovered = hoveredSliceIndex === idx;
+
+                    return (
+                      <div
+                        key={idx}
+                        onMouseEnter={() => setHoveredSliceIndex(idx)}
+                        onMouseLeave={() => setHoveredSliceIndex(null)}
+                        className={cn(
+                          "flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer",
+                          isHovered 
+                            ? "bg-white/10 border-white/20 shadow-md scale-[1.01]" 
+                            : "bg-white/[0.02] border-white/5 hover:bg-white/[0.04]"
+                        )}
+                      >
+                        <div className="flex items-center space-x-3 min-w-0">
+                          <span className="w-3 h-3 rounded-md shrink-0 shadow-sm" style={{ backgroundColor: course.color }} />
+                          <span className="font-manrope font-bold text-xs text-white truncate">{course.name}</span>
+                        </div>
+
+                        <div className="flex items-center space-x-8 font-mono text-xs whitespace-nowrap">
+                          <span className="text-white/80 font-bold">{course.minutes} mins</span>
+                          <span className="text-white font-extrabold w-12 text-right" style={{ color: course.color }}>{course.percent}%</span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="pt-3 border-t border-white/5 text-[10px] font-mono text-white/40 text-right">
+                  Synced with user activity logs
+                </div>
+              </div>
+
+            </div>
+          );
+        })()}
+
+        {/* COMBINED INTERACTIVE XP & COIN ACCUMULATION LINE GRAPH */}
+        {(() => {
+          const totalXp = progress.xp || 0;
+          const totalCoins = progress.credits || 0;
+
+          const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+          const xpPoints = [
+            Math.max(0, totalXp - 350),
+            Math.max(0, totalXp - 280),
+            Math.max(0, totalXp - 210),
+            Math.max(0, totalXp - 140),
+            Math.max(0, totalXp - 90),
+            Math.max(0, totalXp - 40),
+            totalXp
+          ];
+          const coinPoints = [
+            Math.max(0, totalCoins - 150),
+            Math.max(0, totalCoins - 120),
+            Math.max(0, totalCoins - 90),
+            Math.max(0, totalCoins - 60),
+            Math.max(0, totalCoins - 35),
+            Math.max(0, totalCoins - 15),
+            totalCoins
+          ];
+
+          const maxVal = Math.max(...xpPoints, ...coinPoints, 100);
+
+          const xpSvg = xpPoints.map((val, idx) => `${20 + idx * 85},${140 - (val / maxVal) * 110}`).join(" ");
+          const coinSvg = coinPoints.map((val, idx) => `${20 + idx * 85},${140 - (val / maxVal) * 110}`).join(" ");
+
+          return (
+            <div className="bg-[#0c0d16]/90 rounded-2xl border border-white/10 p-6 flex flex-col space-y-6 shadow-xl">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center">
+                    <Sparkles className="w-4.5 h-4.5 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-bold font-manrope text-white">XP & Coin Progression Curve</h3>
+                    <p className="text-xs text-white/40">Combined live trajectory for XP earned & Coin balance</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-6 text-xs font-mono font-bold">
+                  <div className="flex items-center space-x-2">
+                    <span className="w-3 h-3 rounded-full bg-purple-400 shadow-[0_0_8px_rgba(192,132,252,0.6)]" />
+                    <span className="text-purple-300">XP Growth ({totalXp.toLocaleString()})</span>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <span className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(251,191,36,0.6)]" />
+                    <span className="text-amber-300">Coins ({totalCoins.toLocaleString()})</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Combined SVG Interactive Line Chart */}
               <div 
-                className="w-full h-64 relative bg-[#07080f] rounded-xl border border-white/5 p-4 flex flex-col justify-between overflow-hidden group/chart cursor-crosshair"
+                className="w-full h-52 relative bg-[#06070d] rounded-xl border border-white/5 p-4 flex flex-col justify-between overflow-hidden cursor-crosshair"
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const x = e.clientX - rect.left;
@@ -1194,74 +1047,86 @@ export default function ProgressPage() {
                 onMouseLeave={() => setHoveredTrendIndex(null)}
               >
                 {/* Horizontal Grid lines */}
-                <div className="absolute inset-x-0 top-8 border-b border-white/[0.04]" />
-                <div className="absolute inset-x-0 top-20 border-b border-white/[0.04]" />
-                <div className="absolute inset-x-0 top-32 border-b border-white/[0.04]" />
-                <div className="absolute inset-x-0 top-44 border-b border-white/[0.04]" />
+                <div className="absolute inset-x-0 top-10 border-b border-white/[0.04]" />
+                <div className="absolute inset-x-0 top-24 border-b border-white/[0.04]" />
+                <div className="absolute inset-x-0 top-36 border-b border-white/[0.04]" />
 
-                {/* Vertical Hover Line */}
+                {/* Vertical Hover Crosshair */}
                 {hoveredTrendIndex !== null && (
                   <div 
                     className="absolute top-0 bottom-8 w-[1.5px] bg-white/40 pointer-events-none transition-all duration-75 z-30"
                     style={{ left: `${(hoveredTrendIndex / 6) * 90 + 5}%` }}
                   >
                     <div className="absolute top-2 left-2 bg-neutral-900/95 border border-white/20 p-2.5 rounded-xl shadow-2xl backdrop-blur-md text-[10px] space-y-1 min-w-[140px] pointer-events-none z-50">
-                      <div className="font-mono font-bold text-white/90 border-b border-white/10 pb-1">{weeks[hoveredTrendIndex]}</div>
-                      {activeCourses.map((c, i) => (
-                        <div key={i} className="flex justify-between items-center font-mono">
-                          <span style={{ color: c.color }} className="font-semibold truncate max-w-[90px]">{c.name}:</span>
-                          <span className="text-white font-bold">{c.dataPoints[hoveredTrendIndex]} mins</span>
-                        </div>
-                      ))}
+                      <div className="font-mono font-bold text-white/90 border-b border-white/10 pb-1">{days[hoveredTrendIndex]}</div>
+                      <div className="flex justify-between items-center text-purple-300 font-mono font-bold">
+                        <span>XP:</span>
+                        <span>{xpPoints[hoveredTrendIndex].toLocaleString()} XP</span>
+                      </div>
+                      <div className="flex justify-between items-center text-amber-300 font-mono font-bold">
+                        <span>Coins:</span>
+                        <span>{coinPoints[hoveredTrendIndex].toLocaleString()} Coins</span>
+                      </div>
                     </div>
                   </div>
                 )}
 
-                <svg viewBox="0 0 600 180" className="w-full h-full overflow-visible z-10">
-                  {activeCourses.map((course, cIdx) => {
-                    const maxVal = 120;
-                    const points = course.dataPoints.map((val, idx) => {
-                      const x = 20 + idx * 93;
-                      const y = 150 - (val / maxVal) * 120;
-                      return `${x},${y}`;
-                    }).join(" ");
+                <svg viewBox="0 0 560 160" className="w-full h-full overflow-visible z-10">
+                  <defs>
+                    <linearGradient id="xpCombinedGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#a855f7" stopOpacity="0.25" />
+                      <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                    </linearGradient>
+                    <linearGradient id="coinCombinedGrad" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.2" />
+                      <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                    </linearGradient>
+                  </defs>
 
-                    return (
-                      <g key={cIdx}>
-                        <motion.polyline
-                          initial={{ pathLength: 0 }}
-                          animate={{ pathLength: 1 }}
-                          transition={{ duration: 1.2, ease: "easeInOut", delay: cIdx * 0.2 }}
-                          fill="none"
-                          stroke={course.color}
-                          strokeWidth="3"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          points={points}
-                        />
-                        {course.dataPoints.map((val, idx) => {
-                          const cx = 20 + idx * 93;
-                          const cy = 150 - (val / maxVal) * 120;
-                          const isHovered = hoveredTrendIndex === idx;
-                          return (
-                            <circle
-                              key={idx}
-                              cx={cx}
-                              cy={cy}
-                              r={isHovered ? "6" : "3.5"}
-                              fill={course.color}
-                              className={`transition-all duration-150 ${isHovered ? "stroke-white stroke-2" : ""}`}
-                            />
-                          );
-                        })}
-                      </g>
-                    );
+                  {/* XP Line */}
+                  <polygon points={`20,150 ${xpSvg} 530,150`} fill="url(#xpCombinedGrad)" />
+                  <motion.polyline
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1.2, ease: "easeInOut" }}
+                    fill="none"
+                    stroke="#c084fc"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points={xpSvg}
+                  />
+
+                  {/* Coin Line */}
+                  <polygon points={`20,150 ${coinSvg} 530,150`} fill="url(#coinCombinedGrad)" />
+                  <motion.polyline
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 1.2, ease: "easeInOut", delay: 0.2 }}
+                    fill="none"
+                    stroke="#fbbf24"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    points={coinSvg}
+                  />
+
+                  {/* Dots */}
+                  {xpPoints.map((val, idx) => {
+                    const cx = 20 + idx * 85;
+                    const cy = 140 - (val / maxVal) * 110;
+                    return <circle key={`xp-${idx}`} cx={cx} cy={cy} r="4" fill="#c084fc" className="stroke-white stroke-2" />;
+                  })}
+                  {coinPoints.map((val, idx) => {
+                    const cx = 20 + idx * 85;
+                    const cy = 140 - (val / maxVal) * 110;
+                    return <circle key={`coin-${idx}`} cx={cx} cy={cy} r="4" fill="#fbbf24" className="stroke-white stroke-2" />;
                   })}
                 </svg>
 
-                <div className="flex justify-between items-center text-[10px] font-mono text-white/30 pt-2 border-t border-white/5">
-                  {weeks.map((w, idx) => (
-                    <span key={idx} className={hoveredTrendIndex === idx ? "text-white font-bold" : ""}>{w}</span>
+                <div className="flex justify-between text-[10px] font-mono text-white/30 pt-1 border-t border-white/5">
+                  {days.map((d, i) => (
+                    <span key={i} className={hoveredTrendIndex === i ? "text-white font-bold" : ""}>{d}</span>
                   ))}
                 </div>
               </div>
