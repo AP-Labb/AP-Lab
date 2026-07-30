@@ -14,6 +14,7 @@ import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
 import { ReviewModal } from "@/components/ReviewModal";
+import { AccountProfileModal } from "@/components/AccountProfileModal";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { SettingsModal } from "@/components/SettingsModal";
 import { Settings } from "lucide-react";
@@ -57,46 +58,32 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
 
 // Custom Premium Shop Items
 const GEAR_ITEMS = [
-  // Streak Powerups as Functional Store Items
+  // 10-Hour Boost Powerups
   { 
-    id: "streak-freeze", 
-    name: "Streak Freeze", 
-    desc: "Pause your study streak for up to 30 days without losing progress", 
-    cost: 50, 
-    bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-gradient-to-br from-rose-500/20 to-pink-500/20 border-rose-400/40",
-    type: "powerup",
-    renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-rose-500/20 border-2 border-rose-500 flex items-center justify-center text-rose-400 shadow-[0_0_20px_rgba(244,63,94,0.4)]">
-        <PauseCircle className="w-12 h-12 drop-shadow-md" />
-      </div>
-    )
-  },
-  { 
-    id: "streak-repair", 
-    name: "Streak Repair", 
-    desc: "Instantly repair and restore a missed study streak day", 
-    cost: 100, 
-    bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
-    type: "powerup",
-    renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center text-amber-400 shadow-[0_0_20px_rgba(245,158,11,0.4)]">
-        <Wrench className="w-11 h-11 drop-shadow-md" />
-      </div>
-    )
-  },
-  { 
-    id: "streak-revive", 
-    name: "Streak Revive", 
-    desc: "Complete phoenix revival for broken study streaks", 
+    id: "boost-2x-xp", 
+    name: "10-Hour 2x XP Boost", 
+    desc: "Earn 2x Double XP on all study activities, quizzes, and completed topics for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-400/40",
-    type: "powerup",
+    innerBg: "bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-400/40",
+    type: "boost",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-orange-500/20 border-2 border-orange-500 flex items-center justify-center text-orange-400 shadow-[0_0_20px_rgba(249,115,22,0.4)]">
-        <Flame className="w-12 h-12 fill-orange-400 drop-shadow-md" />
+      <div className="relative w-20 h-20 rounded-full bg-purple-500/20 border-2 border-purple-500 flex items-center justify-center text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.5)]">
+        <Zap className="w-11 h-11 fill-purple-400 drop-shadow-md" />
+      </div>
+    )
+  },
+  { 
+    id: "boost-2x-coin", 
+    name: "10-Hour 2x Coin Boost", 
+    desc: "Earn 2x Double Coins on daily quests, study duration, and correct answers for 10 hours", 
+    cost: 150, 
+    bgColor: "bg-neutral-900 border-neutral-800",
+    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
+    type: "boost",
+    renderAccessory: () => (
+      <div className="relative w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center text-amber-300 shadow-[0_0_25px_rgba(245,158,11,0.5)]">
+        <img src="/images/coin-zoomed.png" alt="Coins" className="w-12 h-12 object-contain drop-shadow-md" />
       </div>
     )
   },
@@ -320,19 +307,13 @@ const SLOT_SYMBOLS = [
 export default function ShopPage() {
   const router = useRouter();
   const { currentUser } = useAuth();
-  const { progress, spendCredits, addCredits, buyItem, equipItem } = useProgress();
+  const { progress, spendCredits, addCredits, buyItem, equipItem, useBoostItem } = useProgress();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [showHowToEarnModal, setShowHowToEarnModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [selectedStoreItem, setSelectedStoreItem] = useState<typeof GEAR_ITEMS[0] | null>(null);
   const [powerupStatusMsg, setPowerupStatusMsg] = useState<string | null>(null);
-
-  // Slot Machine State with Mechanical Lever Animation
-  const [betAmount, setBetAmount] = useState<number>(10);
-  const [spinning, setSpinning] = useState(false);
-  const [handlePulled, setHandlePulled] = useState(false);
-  const [reels, setReels] = useState([SLOT_SYMBOLS[0], SLOT_SYMBOLS[1], SLOT_SYMBOLS[2]]);
-  const [gambleResult, setGambleResult] = useState<{ message: string; won: boolean; amount: number } | null>(null);
 
   const credits = progress?.credits || 0;
   const level = progress?.level || 1;
@@ -351,21 +332,15 @@ export default function ShopPage() {
     }
   };
 
-  // Functional Store Item Trigger (Handles powerups, wearables & gradients)
+  // Functional Store Item Trigger (Handles boosts, wearables & gradients)
   const handleItemClick = async (item: typeof GEAR_ITEMS[0], isOwned: boolean, isEquipped: boolean) => {
-    if (item.type === "powerup") {
-      const success = await spendCredits?.(item.cost);
+    if (item.type === "boost") {
+      const success = await buyItem?.(item.id, item.cost, item.type);
       if (!success) {
         alert("Not enough coins!");
         return;
       }
-      if (item.id === "streak-freeze") {
-        setPowerupStatusMsg("Streak Freeze Activated! Your study streak is paused & protected for 30 days.");
-      } else if (item.id === "streak-repair") {
-        setPowerupStatusMsg("Streak Repaired! Your missed study streak day has been restored!");
-      } else if (item.id === "streak-revive") {
-        setPowerupStatusMsg("Streak Revived! Phoenix power has completely restored your study streak!");
-      }
+      setPowerupStatusMsg(`${item.name} purchased! Open your Inventory to activate it anytime.`);
       setTimeout(() => setPowerupStatusMsg(null), 4500);
       return;
     }
@@ -376,56 +351,6 @@ export default function ShopPage() {
       const success = await buyItem?.(item.id, item.cost, item.type);
       if (!success) alert("Not enough coins!");
     }
-  };
-
-  // Slot Machine Handle Pull & Spin
-  const handleSpinSlots = async () => {
-    if (betAmount <= 0 || betAmount > credits || spinning) return;
-    
-    // Animate handle pull down
-    setHandlePulled(true);
-    setTimeout(() => setHandlePulled(false), 450);
-
-    const success = await spendCredits?.(betAmount);
-    if (!success) return;
-
-    setSpinning(true);
-    setGambleResult(null);
-
-    let spinCount = 0;
-    const interval = setInterval(() => {
-      spinCount++;
-      setReels([
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
-        SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
-      ]);
-
-      if (spinCount >= 22) {
-        clearInterval(interval);
-        
-        const finalReels = [
-          SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
-          SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
-          SLOT_SYMBOLS[Math.floor(Math.random() * SLOT_SYMBOLS.length)],
-        ];
-
-        setReels(finalReels);
-        setSpinning(false);
-
-        if (finalReels[0].name === finalReels[1].name && finalReels[1].name === finalReels[2].name) {
-          const winnings = Math.round(betAmount * finalReels[0].multiplier);
-          addCredits?.(winnings, `JACKPOT! 3x ${finalReels[0].name}!`);
-          setGambleResult({ message: `JACKPOT! Matched 3x ${finalReels[0].symbol} ${finalReels[0].name}! Won ${winnings} Coins!`, won: true, amount: winnings });
-        } else if (finalReels[0].name === finalReels[1].name || finalReels[1].name === finalReels[2].name || finalReels[0].name === finalReels[2].name) {
-          const winnings = Math.round(betAmount * 1.5);
-          addCredits?.(winnings, "Double Match!");
-          setGambleResult({ message: `Matched 2 symbols! Won ${winnings} Coins!`, won: true, amount: winnings });
-        } else {
-          setGambleResult({ message: `No match! Lost ${betAmount} Coins. Spin again!`, won: false, amount: 0 });
-        }
-      }
-    }, 80);
   };
 
   return (
@@ -740,173 +665,103 @@ export default function ShopPage() {
 
                     {/* Action Button */}
                     <div className="pt-2 border-t border-white/10">
-                      {isOwned && item.type !== "powerup" ? (
-                        <button
-                          onClick={() => equipItem?.(item.type, isEquipped ? "" : item.id)}
-                          className={cn(
-                            "w-full py-2.5 rounded-full font-bold text-xs transition-all cursor-pointer shadow-md",
-                            isEquipped 
-                              ? "bg-amber-400 text-black font-extrabold" 
-                              : "bg-white/10 hover:bg-white/20 text-white"
-                          )}
-                        >
-                          {isEquipped ? "Equipped ✓" : "Equip Item"}
-                        </button>
-                      ) : (
-                        <button
-                          onClick={() => handleItemClick(item, isOwned, isEquipped)}
-                          disabled={credits < item.cost}
-                          className={cn(
-                            "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-md",
-                            credits >= item.cost 
-                              ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold" 
-                              : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
-                          )}
-                        >
-                          <div className="w-7 h-7 flex items-center justify-center shrink-0">
-                            <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain transform scale-150 drop-shadow-md" />
-                          </div>
-                          <span className="text-base font-extrabold font-mono">{item.cost}</span>
-                        </button>
-                      )}
+                      <button
+                        onClick={() => setSelectedStoreItem(item)}
+                        className={cn(
+                          "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-md",
+                          isOwned 
+                            ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold" 
+                            : "bg-white/10 hover:bg-white/20 text-white"
+                        )}
+                      >
+                        {isOwned ? (
+                          <span>Owned ✓</span>
+                        ) : (
+                          <>
+                            <div className="w-5 h-5 flex items-center justify-center shrink-0">
+                              <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain transform scale-125" />
+                            </div>
+                            <span className="text-sm font-extrabold font-mono">{item.cost}</span>
+                          </>
+                        )}
+                      </button>
                     </div>
                   </div>
                 );
               })}
             </div>
-
-            {/* REALISTIC CASINO SLOT MACHINE UI WITH SHINY CHROME FRAME & PULL LEVER */}
-            <div className="pt-10">
-              <div className="bg-gradient-to-b from-[#1c1d2e] via-[#121320] to-[#0a0b12] border-4 border-amber-500/50 rounded-[42px] p-8 sm:p-12 shadow-[0_0_50px_rgba(245,158,11,0.2)] flex flex-col items-center space-y-8 text-center max-w-2xl mx-auto relative">
-                
-                {/* Top Casino Marquee Box */}
-                <div className="w-full bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-500 p-1 rounded-2xl shadow-xl">
-                  <div className="bg-[#0e0f18] py-3 px-6 rounded-xl border border-amber-400/40">
-                    <h3 className="font-instrument text-3xl sm:text-4xl font-extrabold text-amber-400 tracking-wider uppercase drop-shadow-md">
-                      🎰 VEGAS SLOTS 🎰
-                    </h3>
-                    <p className="text-[11px] font-mono font-bold text-amber-200/70 tracking-widest uppercase mt-0.5">
-                      PULL LEVER TO SPIN & WIN COINS
-                    </p>
-                  </div>
-                </div>
-
-                {/* Slot Machine Main Body with Pull Lever on the Right */}
-                <div className="w-full flex items-center justify-center space-x-6 relative py-4">
-                  
-                  {/* Chrome Reels Display Housing */}
-                  <div className="flex-1 bg-[#05060b] border-4 border-[#333852] rounded-3xl p-6 flex items-center justify-between shadow-[inset_0_0_20px_rgba(0,0,0,0.9)] relative overflow-hidden">
-                    <div className="absolute inset-0 rounded-2xl border-2 border-amber-400/30 pointer-events-none z-20" />
-                    {reels.map((item, idx) => (
-                      <motion.div 
-                        key={idx}
-                        animate={spinning ? { y: [-12, 12, -12] } : { y: 0 }}
-                        transition={{ repeat: Infinity, duration: 0.08 }}
-                        className="w-24 sm:w-28 h-36 rounded-2xl bg-gradient-to-b from-[#181926] via-[#10111c] to-[#0c0d17] border-2 border-amber-500/30 flex flex-col items-center justify-center shadow-2xl select-none space-y-2 relative z-10"
-                      >
-                        <span className="text-4xl sm:text-5xl drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">{item.symbol}</span>
-                        <span className={cn("text-[10px] font-extrabold font-mono uppercase tracking-wider", item.color)}>
-                          {item.name}
-                        </span>
-                      </motion.div>
-                    ))}
-                  </div>
-
-                  {/* Mechanical Pull Lever Handle */}
-                  <div 
-                    onClick={handleSpinSlots}
-                    className="flex flex-col items-center cursor-pointer group select-none"
-                    title="Pull Lever to Spin!"
-                  >
-                    {/* Red Sphere Ball Knob */}
-                    <motion.div 
-                      animate={handlePulled ? { y: 55 } : { y: 0 }}
-                      transition={{ type: "spring", stiffness: 350, damping: 15 }}
-                      className="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 via-red-600 to-red-800 border-2 border-red-900 shadow-[0_0_15px_rgba(239,68,68,0.6)] group-hover:scale-110 transition-transform flex items-center justify-center z-30"
-                    >
-                      <div className="w-3 h-3 rounded-full bg-white/50" />
-                    </motion.div>
-
-                    {/* Chrome Rod Shaft */}
-                    <motion.div 
-                      animate={handlePulled ? { height: 18 } : { height: 70 }}
-                      transition={{ type: "spring", stiffness: 350, damping: 15 }}
-                      className="w-4 bg-gradient-to-b from-neutral-300 via-neutral-100 to-neutral-400 rounded-full border border-neutral-600 shadow-inner z-20"
-                    />
-
-                    {/* Lever Socket Mount */}
-                    <div className="w-12 h-12 rounded-2xl bg-neutral-900 border-2 border-amber-500/60 flex items-center justify-center shadow-2xl z-10">
-                      <div className="w-5 h-5 rounded-full bg-neutral-950 border border-neutral-700 shadow-inner" />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Result Notification */}
-                {gambleResult && (
-                  <motion.div 
-                    initial={{ scale: 0.95, opacity: 0 }} 
-                    animate={{ scale: 1, opacity: 1 }}
-                    className={cn(
-                      "w-full p-4 rounded-2xl text-center text-xs font-bold font-manrope border shadow-2xl",
-                      gambleResult.won 
-                        ? "bg-emerald-500/10 border-emerald-500/40 text-emerald-300" 
-                        : "bg-red-500/10 border-red-500/40 text-red-300"
-                    )}
-                  >
-                    {gambleResult.message}
-                  </motion.div>
-                )}
-
-                {/* Bet Selector */}
-                <div className="w-full flex items-center justify-between bg-white/[0.03] border border-white/10 p-3.5 rounded-2xl">
-                  <span className="text-xs font-mono text-white/60 font-bold tracking-wider">BET COINS</span>
-                  <div className="flex items-center space-x-2">
-                    {[10, 25, 50, 100].map((amt) => (
-                      <button
-                        key={amt}
-                        onClick={() => setBetAmount(amt)}
-                        className={cn(
-                          "px-3.5 py-1.5 rounded-xl font-mono text-xs font-bold transition-all cursor-pointer",
-                          betAmount === amt 
-                            ? "bg-amber-400 text-black shadow-md font-extrabold" 
-                            : "bg-white/5 hover:bg-white/10 text-white/60"
-                        )}
-                      >
-                        {amt} C
-                      </button>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Spin Button */}
-                <button
-                  onClick={handleSpinSlots}
-                  disabled={spinning || betAmount > credits || betAmount <= 0}
-                  className={cn(
-                    "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm tracking-wider uppercase transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-xl",
-                    spinning || betAmount > credits 
-                      ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5" 
-                      : "bg-gradient-to-r from-amber-400 to-amber-500 hover:brightness-110 text-black"
-                  )}
-                >
-                  <RotateCw className={`w-4 h-4 ${spinning ? "animate-spin" : ""}`} />
-                  <span>{spinning ? "Spinning..." : `PULL LEVER TO SPIN (${betAmount} COINS)`}</span>
-                </button>
-
-                {/* Multiplier Table */}
-                <div className="w-full pt-4 border-t border-white/10 flex justify-around text-xs font-mono font-bold text-amber-300/80">
-                  <span>🎰🎰🎰 10x</span>
-                  <span>💎💎💎 7x</span>
-                  <span>👑👑👑 5x</span>
-                  <span>⚡⚡⚡ 3x</span>
-                </div>
-              </div>
-            </div>
-
           </section>
-
         </main>
       </div>
+
+      {/* ITEM CONFIRMATION & PURCHASE MODAL */}
+      <AnimatePresence>
+        {selectedStoreItem && (
+          <div 
+            className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl"
+            onClick={() => setSelectedStoreItem(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-lg bg-[#141622] border border-white/15 rounded-[36px] overflow-hidden shadow-2xl flex flex-col md:flex-row text-white"
+            >
+              <button
+                onClick={() => setSelectedStoreItem(null)}
+                className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Left Side Visual Box (Matching user uploaded Knowt confirmation screenshot) */}
+              <div className="w-full md:w-1/2 bg-[#0c0d16] p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[220px]">
+                {selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)}
+              </div>
+
+              {/* Right Side Item Info & Purchase Confirm Button */}
+              <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between text-left space-y-6">
+                <div>
+                  <div className="bg-white/10 text-white/70 font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full w-fit mb-3">
+                    0/1 Available
+                  </div>
+                  <h3 className="font-manrope font-extrabold text-2xl text-white tracking-tight">
+                    {selectedStoreItem.name}
+                  </h3>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-6 h-6 object-contain" />
+                    <span className="font-manrope font-extrabold text-xl text-amber-400">{selectedStoreItem.cost}</span>
+                  </div>
+                  <p className="text-xs text-white/50 font-manrope mt-3 leading-relaxed">
+                    {selectedStoreItem.desc}
+                  </p>
+                </div>
+
+                <button
+                  onClick={async () => {
+                    const isOwned = inventory.includes(selectedStoreItem.id);
+                    const isEquipped = activeFrame === selectedStoreItem.id || activeGrad === selectedStoreItem.id;
+                    await handleItemClick(selectedStoreItem, isOwned, isEquipped);
+                    setSelectedStoreItem(null);
+                  }}
+                  disabled={credits < selectedStoreItem.cost && !inventory.includes(selectedStoreItem.id)}
+                  className={cn(
+                    "w-full py-3.5 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2",
+                    inventory.includes(selectedStoreItem.id)
+                      ? "bg-amber-400 text-black hover:bg-amber-300"
+                      : credits >= selectedStoreItem.cost 
+                        ? "bg-emerald-500 hover:bg-emerald-400 text-black" 
+                        : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
+                  )}
+                >
+                  <span>{inventory.includes(selectedStoreItem.id) ? "Equip Now" : credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins"}</span>
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* HOW TO EARN COINS MODAL */}
       <AnimatePresence>
@@ -961,6 +816,7 @@ export default function ShopPage() {
 
       <DashboardContextMenu onOpenProfile={() => setShowProfileModal(true)} />
       <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
+      <AccountProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
     </div>
   );
 }

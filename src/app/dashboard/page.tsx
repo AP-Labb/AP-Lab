@@ -25,6 +25,7 @@ import { Onboarding } from "@/components/Onboarding";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
 import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
+import { AccountProfileModal } from "@/components/AccountProfileModal";
 import { SettingsModal } from "@/components/SettingsModal";
 import { getLevelForXp, getXpThresholdForLevel } from "@/lib/xpProgression";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
@@ -947,22 +948,18 @@ export default function Dashboard() {
                 </motion.div>
               </Link>
 
-              {/* Settings */}
-              <SidebarSettingsButton open={sidebarOpen} />
-
             </div>
           </div>
 
-          {/* Bottom: Profile Widget + Sign Out */}
+          {/* Bottom: Profile Capsule Button */}
           <div className="flex flex-col gap-2 pb-6">
             <div className="h-px bg-white/[0.06] mx-2 mb-2" />
 
-            {/* Profile — compact circle when closed, full widget when open */}
+            {/* Profile — opens profile menu */}
             <button
               onClick={() => setShowAccountPopup(true)}
-              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.05] hover:text-white"
+              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/70 hover:bg-white/[0.08] hover:text-white"
             >
-              {/* Avatar - always a circle */}
               <div className="flex-shrink-0">
                 {progress?.photoURL || currentUser?.photoURL ? (
                   <img
@@ -977,7 +974,6 @@ export default function Dashboard() {
                 )}
               </div>
 
-              {/* Full profile info — visible only when expanded */}
               <AnimatePresence>
                 {sidebarOpen && (
                   <motion.div
@@ -997,32 +993,6 @@ export default function Dashboard() {
                 )}
               </AnimatePresence>
             </button>
-
-            {/* Sign Out — animated on row hover */}
-            <motion.button
-              onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400"
-              whileHover="hover"
-              initial="rest"
-            >
-              <motion.div
-                className="flex-shrink-0"
-                variants={{
-                  rest: { x: 0 },
-                  hover: { x: 3 },
-                }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <LogOut className="w-5 h-5" />
-              </motion.div>
-              <motion.span
-                animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-semibold text-sm whitespace-pre"
-              >
-                Sign Out
-              </motion.span>
-            </motion.button>
           </div>
         </SidebarBody>
       </Sidebar>
@@ -1035,22 +1005,16 @@ export default function Dashboard() {
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
         
-        {/* UPPER REGION: Header & Real Coin & XP Line Graphs */}
-        <div className="relative w-full flex flex-col items-center pt-20 pb-10 px-6 z-40">
+        {/* UPPER REGION: Header with Pixelated Forest Background */}
+        <div className="relative w-full flex flex-col items-center pt-20 pb-12 px-6 z-40 overflow-hidden">
+          {/* Pixelated Forest Blurred Header Background */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-            <SideRays
-              speed={2.5}
-              rayColor1="#EAB308"
-              rayColor2="#96c8ff"
-              intensity={2}
-              spread={2}
-              origin="top-right"
-              tilt={0}
-              saturation={1.5}
-              blend={0.75}
-              falloff={1.6}
-              opacity={1.0}
+            <img 
+              src="/images/pixel-forest.png" 
+              alt="Pixel Forest" 
+              className="w-full h-full object-cover blur-sm opacity-60 scale-105 transform transition-all duration-700" 
             />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#03040a]/40 via-[#03040a]/70 to-[#060712]" />
           </div>
 
           {/* Header Section */}
@@ -1181,15 +1145,15 @@ export default function Dashboard() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="flex items-center space-x-2.5">
                       <div className="w-8 h-8 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                        <img src="/images/coin.png" alt="Coins" className="w-4.5 h-4.5 object-contain" />
+                        <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
                       </div>
                       <div>
                         <h4 className="font-manrope font-bold text-xs text-white">Coin Accumulation</h4>
                         <p className="font-mono text-[9px] text-white/40">Balance: {totalCoins.toLocaleString()} Coins</p>
                       </div>
                     </div>
-                    <span className="text-amber-400 font-mono font-bold text-xs bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
-                      +15 today
+                    <span className="text-emerald-400 font-mono font-extrabold text-xs bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full flex items-center gap-1">
+                      <span>▲</span> 9.3%
                     </span>
                   </div>
 
@@ -1699,7 +1663,7 @@ export default function Dashboard() {
 
       <DashboardContextMenu onOpenProfile={() => setShowAccountPopup(true)} />
       <FloatingXPOperations externalOpen={showQuestsModal} onClose={() => setShowQuestsModal(false)} />
-
+      <AccountProfileModal isOpen={showAccountPopup} onClose={() => setShowAccountPopup(false)} />
     </div>
   );
 }

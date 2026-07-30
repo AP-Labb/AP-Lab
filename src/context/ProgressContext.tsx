@@ -9,6 +9,7 @@ import { getLevelForXp } from "@/lib/xpProgression";
 import { playLevelUpSound } from "@/lib/sounds";
 import { LevelBadge } from "@/components/LevelBadge";
 import confetti from "canvas-confetti";
+import { cn } from "@/lib/utils";
 
 interface UserProgress {
   completedTopics: string[];
@@ -26,6 +27,7 @@ interface UserProgress {
   activeAvatarFrame?: string;
   activeNameGradient?: string;
   inventory?: string[];
+  activeBoosts?: Record<string, number>; // boostId -> expiryTimestamp
   displayName?: string;
   photoURL?: string;
   email?: string;
@@ -58,6 +60,7 @@ interface ProgressContextType {
   addCredits?: (amount: number, reason?: string) => Promise<void>;
   equipItem?: (itemType: string, itemId: string) => Promise<void>;
   buyItem?: (itemId: string, cost: number, itemType: string) => Promise<boolean>;
+  useBoostItem?: (boostId: string) => Promise<boolean>;
 }
 
 const defaultProgress: UserProgress = {
@@ -1145,12 +1148,75 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
+  const useBoostItem = async (boostId: string): Promise<boolean> => {
+    const inv = progress.inventory || [];
+    const idx = inv.indexOf(boostId);
+    if (idx === -1) return false;
+    
+    // Remove one instance of boost item from inventory
+    const newInv = [...inv];
+    newInv.splice(idx, 1);
+    
+    // Set 10 hour expiry timestamp (10 * 60 * 60 * 1000 = 36000000ms)
+    const activeBoosts = { ...(progress.activeBoosts || {}) };
+    activeBoosts[boostId] = Date.now() + 10 * 60 * 60 * 1000;
+    
+    const updated: UserProgress = {
+      ...progress,
+      inventory: newInv,
+      activeBoosts
+    };
+    setProgress(updated);
+    if (currentUser) {
+      const localKey = `ap-lab-progress-${currentUser.uid}`;
+      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+      setDoc(doc(db, "userProgress", currentUser.uid), {
+        inventory: newInv,
+        activeBoosts
+      }, { merge: true }).catch(() => {});
+    }
+    return true;
+  };
+
   return (
     <ProgressContext.Provider value={{
       progress, loading, completeTopic, recordQuestionAttempt, recordTutorMessage,
-      recordMockExamAttempt, claimSocialXp, updatePreferences, spendCredits, addCredits, buyItem, equipItem
+      recordMockExamAttempt, claimSocialXp, updatePreferences, spendCredits, addCredits, buyItem, equipItem, useBoostItem
     }}>
       {children}
+
+      {/* Top Center Active Boosts HUD */}
+      {(() => {
+        const activeBoosts = progress.activeBoosts || {};
+        const now = Date.now();
+        const activeList = Object.entries(activeBoosts).filter(([_, expiry]) => expiry > now);
+        if (activeList.length === 0) return null;
+
+        return (
+          <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[99999] flex items-center space-x-3 pointer-events-none">
+            {activeList.map(([id, expiry]) => {
+              const diffMs = Math.max(0, expiry - now);
+              const hours = Math.floor(diffMs / (1000 * 60 * 60));
+              const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+              const isXp = id === "boost-2x-xp";
+              
+              return (
+                <div 
+                  key={id} 
+                  className={cn(
+                    "px-4 py-1.5 rounded-full border shadow-2xl backdrop-blur-md flex items-center space-x-2 font-mono font-bold text-xs pointer-events-auto animate-pulse",
+                    isXp ? "bg-purple-950/90 border-purple-500/50 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "bg-amber-950/90 border-amber-500/50 text-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.4)]"
+                  )}
+                >
+                  <span className="text-base">{isXp ? "⚡" : "🪙"}</span>
+                  <span className="font-manrope font-extrabold uppercase text-[11px]">{isXp ? "2x XP Boost:" : "2x Coin Boost:"}</span>
+                  <span className="font-mono text-white tracking-wider">{hours}h {mins}m left</span>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })()}
       
       {/* Level Up Modal */}
       <AnimatePresence>
