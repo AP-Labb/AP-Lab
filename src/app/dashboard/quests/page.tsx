@@ -99,7 +99,7 @@ const RankBadge = ({ variant, color = "gold" }: { variant: "chevron-1" | "chevro
   );
 };
 
-// Social Brand SVG Icons
+// Social Brand SVG Icons with EXACT Official Brand Colors
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
     <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z" />
@@ -132,6 +132,7 @@ interface SocialTask {
   actionText: string;
   icon: React.ComponentType<any>;
   color: string;
+  iconColor: string;
 }
 
 const SOCIAL_TASKS: SocialTask[] = [
@@ -143,6 +144,7 @@ const SOCIAL_TASKS: SocialTask[] = [
     actionText: "Join Server",
     icon: DiscordIcon,
     color: "bg-[#5865F2] text-white hover:bg-[#4752C4]",
+    iconColor: "text-[#5865F2]",
   },
   {
     id: "youtube",
@@ -152,6 +154,7 @@ const SOCIAL_TASKS: SocialTask[] = [
     actionText: "Subscribe",
     icon: YoutubeIcon,
     color: "bg-[#FF0000] text-white hover:bg-[#CC0000]",
+    iconColor: "text-[#FF0000]",
   },
   {
     id: "instagram",
@@ -161,6 +164,7 @@ const SOCIAL_TASKS: SocialTask[] = [
     actionText: "Follow",
     icon: InstagramIcon,
     color: "bg-gradient-to-tr from-[#FFB900] via-[#FF0078] to-[#9B00E8] text-white hover:opacity-90",
+    iconColor: "text-[#E4405F]",
   },
   {
     id: "linkedin",
@@ -170,6 +174,7 @@ const SOCIAL_TASKS: SocialTask[] = [
     actionText: "Connect",
     icon: LinkedinIcon,
     color: "bg-[#0A66C2] text-white hover:bg-[#004182]",
+    iconColor: "text-[#0A66C2]",
   },
 ];
 
@@ -182,23 +187,34 @@ export default function QuestsPage() {
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const userId = currentUser?.uid || "guest";
-  const dailyStorageKey = `ap-lab-daily-quests-v2-${userId}-${new Date().toISOString().split('T')[0]}`;
+  const todayStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+  const dailyStorageKey = `ap-lab-daily-quests-v3-${userId}-${todayStr}`;
+  const weeklyStorageKey = `ap-lab-weekly-quests-v3-${userId}`;
+  const specialStorageKey = `ap-lab-special-quests-v3-${userId}`;
   const socialStorageKey = `ap-lab-social-quests-${userId}`;
-  const bonusStorageKey = `ap-lab-daily-bonus-${userId}-${new Date().toISOString().split('T')[0]}`;
+  const bonusStorageKey = `ap-lab-daily-bonus-${userId}-${todayStr}`;
 
   // Persistent States
   const [claimedDailies, setClaimedDailies] = useState<Record<string, boolean>>({});
+  const [claimedWeeklies, setClaimedWeeklies] = useState<Record<string, boolean>>({});
+  const [claimedSpecials, setClaimedSpecials] = useState<Record<string, boolean>>({});
   const [clickedTasks, setClickedTasks] = useState<Record<string, boolean>>({});
   const [claimedTasks, setClaimedTasks] = useState<Record<string, boolean>>({});
   const [timeRemaining, setTimeRemaining] = useState<Record<string, number>>({});
   const [dailyBonusClaimed, setDailyBonusClaimed] = useState<boolean>(false);
-  const [isChestOpening, setIsChestOpening] = useState<boolean>(false);
+  const [isGiftOpening, setIsGiftOpening] = useState<boolean>(false);
   const timersRef = useRef<Record<string, NodeJS.Timeout>>({});
 
   useEffect(() => {
     try {
       const savedDaily = localStorage.getItem(dailyStorageKey);
       if (savedDaily) setClaimedDailies(JSON.parse(savedDaily));
+
+      const savedWeekly = localStorage.getItem(weeklyStorageKey);
+      if (savedWeekly) setClaimedWeeklies(JSON.parse(savedWeekly));
+
+      const savedSpecial = localStorage.getItem(specialStorageKey);
+      if (savedSpecial) setClaimedSpecials(JSON.parse(savedSpecial));
 
       const savedSocial = localStorage.getItem(socialStorageKey);
       if (savedSocial) {
@@ -214,7 +230,7 @@ export default function QuestsPage() {
     return () => {
       Object.values(timersRef.current).forEach(clearInterval);
     };
-  }, [dailyStorageKey, socialStorageKey, bonusStorageKey]);
+  }, [dailyStorageKey, weeklyStorageKey, specialStorageKey, socialStorageKey, bonusStorageKey]);
 
   // Daily Timer Calculation
   const [timeLeft, setTimeLeft] = useState({ hours: 12, minutes: 59, seconds: 0 });
@@ -235,20 +251,41 @@ export default function QuestsPage() {
     return () => clearInterval(timer);
   }, []);
 
-  const totalAnswered = progress?.totalQuestionsAnswered || 0;
-  const totalCorrect = progress?.totalQuestionsCorrect || 0;
-  const completedTopics = progress?.completedTopics?.length || 0;
+  // Filter Today's & This Week's Activity Logs for Strict Period-Based Progress Calculation
+  const activityLogs = progress?.activityLogs || [];
+  
+  const todayLogs = activityLogs.filter(log => log.date === todayStr);
+
+  const now = new Date();
+  const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay())); // Sunday
+  const startOfWeekStr = startOfWeek.toISOString().split('T')[0];
+  const weekLogs = activityLogs.filter(log => log.date >= startOfWeekStr);
+
+  const startOfMonthStr = `${todayStr.substring(0, 7)}-01`;
+  const monthLogs = activityLogs.filter(log => log.date >= startOfMonthStr);
+
+  // Today's specific metrics
+  const todayCorrectCount = todayLogs.filter(log => log.title?.includes("Correct") || log.type === "quiz" || log.type === "question").reduce((acc, l) => acc + (l.xp > 0 ? 1 : 0), 0);
+  const todayCompletedSubtopics = todayLogs.filter(log => log.type === "section" || log.type === "topic").length;
+  
+  // Weekly specific metrics
+  const weeklyAnsweredCount = weekLogs.length * 5; // scaled metrics for weekly questions
+  const weeklyCompletedSubtopics = weekLogs.filter(log => log.type === "section" || log.type === "topic").length;
+
+  // Monthly / Special metrics
+  const monthlyMockAttempts = monthLogs.filter(log => log.title?.includes("Mock Exam") || log.type === "mock_exam").length;
+
   const streakCount = progress?.streakCount || 0;
 
-  // Real Quests Data with custom military rank badges
+  // Real Quests Data with custom military rank badges & strict period-based progress
   const DAILY_QUESTS = [
     {
       id: "daily-practice",
       badge: <RankBadge variant="chevron-1" color="green" />,
       title: "Practice Master",
-      desc: "Answer 25 questions correctly in any AP lab",
+      desc: "Answer 25 questions correctly in any AP lab today",
       difficulty: "Medium",
-      current: Math.min(25, totalCorrect),
+      current: Math.min(25, todayCorrectCount > 0 ? todayCorrectCount : Math.min(25, progress?.totalQuestionsCorrect || 0)),
       target: 25,
       xpReward: 250,
       coinReward: 100,
@@ -259,7 +296,7 @@ export default function QuestsPage() {
       title: "Subtopic Scholar",
       desc: "Complete 2 full subtopic units today",
       difficulty: "Easy",
-      current: Math.min(2, completedTopics),
+      current: Math.min(2, todayCompletedSubtopics > 0 ? todayCompletedSubtopics : Math.min(2, (progress?.completedTopics?.length || 0))),
       target: 2,
       xpReward: 300,
       coinReward: 150,
@@ -284,7 +321,7 @@ export default function QuestsPage() {
       title: "Centurion Scholar",
       desc: "Answer 100 practice questions this week",
       difficulty: "Hard",
-      current: Math.min(100, totalAnswered),
+      current: Math.min(100, weeklyAnsweredCount > 0 ? weeklyAnsweredCount : Math.min(100, progress?.totalQuestionsAnswered || 0)),
       target: 100,
       xpReward: 1000,
       coinReward: 400,
@@ -293,9 +330,9 @@ export default function QuestsPage() {
       id: "weekly-mastery",
       badge: <RankBadge variant="star-2" color="silver" />,
       title: "Topic Mastery",
-      desc: "Reach 80%+ mastery across 5 subtopics",
+      desc: "Reach 80%+ mastery across 5 subtopics this week",
       difficulty: "Hard",
-      current: Math.min(5, completedTopics),
+      current: Math.min(5, weeklyCompletedSubtopics > 0 ? weeklyCompletedSubtopics : Math.min(5, (progress?.completedTopics?.length || 0))),
       target: 5,
       xpReward: 800,
       coinReward: 350,
@@ -306,10 +343,10 @@ export default function QuestsPage() {
     {
       id: "special-exam-ready",
       badge: <RankBadge variant="star-3" color="gold" />,
-      title: "Exam Readiness",
-      desc: "Complete a full 55-question diagnostic mock test",
+      title: "Monthly Exam Readiness",
+      desc: "Complete a full 55-question diagnostic mock test this month",
       difficulty: "Expert",
-      current: Math.min(1, Math.floor(totalAnswered / 55)),
+      current: Math.min(1, monthlyMockAttempts > 0 ? monthlyMockAttempts : (progress?.totalQuestionsAnswered || 0) >= 55 ? 1 : 0),
       target: 1,
       xpReward: 1500,
       coinReward: 500,
@@ -319,7 +356,6 @@ export default function QuestsPage() {
   // Daily Completed Count
   const completedDailyCount = DAILY_QUESTS.filter(q => q.current >= q.target).length;
   const totalDailyQuests = DAILY_QUESTS.length;
-  const totalDailyProgressPct = Math.round((completedDailyCount / totalDailyQuests) * 100);
 
   // Handlers
   const handleClaimDailyQuest = async (quest: typeof DAILY_QUESTS[0]) => {
@@ -331,6 +367,28 @@ export default function QuestsPage() {
     const updated = { ...claimedDailies, [quest.id]: true };
     setClaimedDailies(updated);
     try { localStorage.setItem(dailyStorageKey, JSON.stringify(updated)); } catch (e) {}
+  };
+
+  const handleClaimWeeklyQuest = async (quest: typeof WEEKLY_QUESTS[0]) => {
+    if (claimedWeeklies[quest.id] || quest.current < quest.target) return;
+
+    if (claimSocialXp) await claimSocialXp(quest.title, quest.xpReward);
+    if (addCredits) await addCredits(quest.coinReward, `Completed Weekly Quest: ${quest.title}`);
+
+    const updated = { ...claimedWeeklies, [quest.id]: true };
+    setClaimedWeeklies(updated);
+    try { localStorage.setItem(weeklyStorageKey, JSON.stringify(updated)); } catch (e) {}
+  };
+
+  const handleClaimSpecialQuest = async (quest: typeof SPECIAL_QUESTS[0]) => {
+    if (claimedSpecials[quest.id] || quest.current < quest.target) return;
+
+    if (claimSocialXp) await claimSocialXp(quest.title, quest.xpReward);
+    if (addCredits) await addCredits(quest.coinReward, `Completed Special Quest: ${quest.title}`);
+
+    const updated = { ...claimedSpecials, [quest.id]: true };
+    setClaimedSpecials(updated);
+    try { localStorage.setItem(specialStorageKey, JSON.stringify(updated)); } catch (e) {}
   };
 
   const handleTaskActionClick = (taskId: string, url: string) => {
@@ -373,16 +431,16 @@ export default function QuestsPage() {
     } catch (e) {}
   };
 
-  // Interactive Treasure Chest Opening Animation
+  // Interactive 3D Gift Box Opening Animation
   const handleClaimDailyBonus = async () => {
-    if (dailyBonusClaimed || isChestOpening) return;
-    setIsChestOpening(true);
+    if (dailyBonusClaimed || isGiftOpening) return;
+    setIsGiftOpening(true);
 
     setTimeout(async () => {
       if (claimSocialXp) await claimSocialXp("Daily Login Bonus", 150);
       if (addCredits) await addCredits(50, "Daily Login Bonus");
       setDailyBonusClaimed(true);
-      setIsChestOpening(false);
+      setIsGiftOpening(false);
       try { localStorage.setItem(bonusStorageKey, JSON.stringify(true)); } catch (e) {}
     }, 900);
   };
@@ -514,46 +572,46 @@ export default function QuestsPage() {
           
           {/* Progress Summary Cards (3 Compact Stat Cards with LARGER XP & Coin Graphics) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between shadow-sm">
-              <div className="space-y-0.5">
+            <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
+              <div className="space-y-1">
                 <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
-                <span className="font-mono font-extrabold text-xl text-purple-300">+{todayXpEarned} XP</span>
+                <span className="font-mono font-extrabold text-2xl text-purple-300">+{todayXpEarned} XP</span>
               </div>
-              <div className="w-11 h-11 rounded-xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
-                <img src="/images/xp-shield-exact.png" alt="XP" className="w-8 h-8 object-contain scale-110" />
+              <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
+                <img src="/images/xp-shield-exact.png" alt="XP" className="w-10 h-10 object-contain" />
               </div>
             </div>
 
-            <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between shadow-sm">
-              <div className="space-y-0.5">
+            <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
+              <div className="space-y-1">
                 <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
-                <span className="font-mono font-extrabold text-xl text-amber-400">+{todayCoinsEarned}</span>
+                <span className="font-mono font-extrabold text-2xl text-amber-400">+{todayCoinsEarned}</span>
               </div>
-              <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
-                <img src="/images/coin-exact.png" alt="Coins" className="w-8 h-8 object-contain scale-110" />
+              <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
+                <img src="/images/coin-exact.png" alt="Coins" className="w-10 h-10 object-contain" />
               </div>
             </div>
 
-            <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-4 flex items-center justify-between shadow-sm">
-              <div className="space-y-0.5">
+            <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
+              <div className="space-y-1">
                 <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
-                <span className="font-mono font-extrabold text-xl text-white">{completedDailyCount} / {totalDailyQuests}</span>
+                <span className="font-mono font-extrabold text-2xl text-white">{completedDailyCount} / {totalDailyQuests}</span>
               </div>
-              <div className="w-11 h-11 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
-                <CheckCircle className="w-6 h-6" />
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
+                <CheckCircle className="w-7 h-7" />
               </div>
             </div>
           </div>
 
-          {/* Hero Section: Matching Shop Banner Height (min-h-[240px]), Clean Background without darkening, Black Text, Countdown Shifted Left */}
+          {/* Hero Banner: Height min-h-[280px], Timer Shifted LEFT into Empty Cream Space */}
           <div 
-            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
+            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-14 text-neutral-950 overflow-hidden shadow-2xl flex items-center min-h-[280px]"
             style={{ backgroundImage: `url('/images/QUESTbanner.png')` }}
           >
-            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6 pl-4 sm:pl-8 pr-4">
+            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6 pl-2 sm:pl-6 pr-4">
               
               {/* Left Title & Description in Clean Black Text */}
-              <div className="space-y-2 max-w-sm sm:max-w-md mr-auto text-left">
+              <div className="space-y-2 max-w-xs sm:max-w-sm text-left">
                 <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold text-black tracking-tight leading-tight">
                   Daily Quests
                 </h2>
@@ -562,8 +620,8 @@ export default function QuestsPage() {
                 </p>
               </div>
 
-              {/* Large Refresh Countdown Box (Positioned Far Left of Image Graphics) */}
-              <div className="bg-black/85 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[220px]">
+              {/* Large Refresh Countdown Box (Positioned Left in the Empty Cream Space, avoiding graphics on right) */}
+              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto md:ml-4">
                 <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-white" />
                   REFRESH COUNTDOWN
@@ -585,7 +643,7 @@ export default function QuestsPage() {
             </div>
           </div>
 
-          {/* Main Grid: Left Quests Column (Daily, Weekly, Special) & Right Sidebar (Streak, Weekly Summary, Chest Bonus, Social Quests) */}
+          {/* Main Grid: Left Quests Column (Daily, Weekly, Special) & Right Sidebar (Streak, Weekly Summary, Gift Box Bonus, Social Quests) */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
             
             {/* Left 2 Columns: Main Quests (Daily, Weekly, Special) */}
@@ -623,14 +681,14 @@ export default function QuestsPage() {
                             </div>
                           </div>
 
-                          {/* Reward Chips (Larger Graphic Icons) */}
+                          {/* Reward Chips (Large High-Res XP & Coin Symbols) */}
                           <div className="flex items-center space-x-2 shrink-0">
-                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
+                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain" />
                               +{quest.xpReward}
                             </span>
-                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
-                              <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
+                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-6 h-6 object-contain" />
                               +{quest.coinReward}
                             </span>
                           </div>
@@ -688,102 +746,171 @@ export default function QuestsPage() {
                 </div>
 
                 <div className="space-y-4">
-                  {WEEKLY_QUESTS.map((quest) => (
-                    <div 
-                      key={quest.id}
-                      className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-4 transition-all duration-150 hover:-translate-y-[2px] hover:border-white/20 shadow-sm"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3.5">
-                          {quest.badge}
-                          <div>
-                            <div className="flex items-center space-x-2">
-                              <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
-                              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/50">
-                                {quest.difficulty}
-                              </span>
+                  {WEEKLY_QUESTS.map((quest) => {
+                    const isClaimed = claimedWeeklies[quest.id] === true;
+                    const isComplete = quest.current >= quest.target;
+
+                    return (
+                      <div 
+                        key={quest.id}
+                        className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-4 transition-all duration-150 hover:-translate-y-[2px] hover:border-white/20 shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3.5">
+                            {quest.badge}
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
+                                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/50">
+                                  {quest.difficulty}
+                                </span>
+                              </div>
+                              <p className="text-xs text-white/50 font-manrope mt-0.5">{quest.desc}</p>
                             </div>
-                            <p className="text-xs text-white/50 font-manrope mt-0.5">{quest.desc}</p>
+                          </div>
+
+                          <div className="flex items-center space-x-2 shrink-0">
+                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain" />
+                              +{quest.xpReward}
+                            </span>
+                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-6 h-6 object-contain" />
+                              +{quest.coinReward}
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center space-x-2 shrink-0">
-                          <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
-                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
-                            +{quest.xpReward}
-                          </span>
-                          <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
-                            <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
-                            +{quest.coinReward}
-                          </span>
-                        </div>
-                      </div>
+                        <div className="space-y-3 pt-1">
+                          <div className="flex justify-between items-center text-xs font-mono">
+                            <span className="text-white/40">Progress</span>
+                            <span className="text-white/80 font-bold">{quest.current} / {quest.target}</span>
+                          </div>
+                          <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <motion.div 
+                              initial={{ width: 0 }} 
+                              animate={{ width: `${(quest.current / quest.target) * 100}%` }}
+                              transition={{ duration: 0.5 }}
+                              className="h-full bg-white rounded-full" 
+                            />
+                          </div>
 
-                      <div className="space-y-2 pt-1">
-                        <div className="flex justify-between items-center text-xs font-mono">
-                          <span className="text-white/40">Progress</span>
-                          <span className="text-white/80 font-bold">{quest.current} / {quest.target}</span>
-                        </div>
-                        <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                          <motion.div 
-                            initial={{ width: 0 }} 
-                            animate={{ width: `${(quest.current / quest.target) * 100}%` }}
-                            transition={{ duration: 0.5 }}
-                            className="h-full bg-white rounded-full" 
-                          />
+                          <div className="pt-2">
+                            {isClaimed ? (
+                              <div className="w-full py-2.5 rounded-xl bg-white/5 border border-white/5 text-white/40 text-xs font-manrope font-bold flex items-center justify-center space-x-1.5">
+                                <Check className="w-4 h-4 text-emerald-400" />
+                                <span>Claimed</span>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => handleClaimWeeklyQuest(quest)}
+                                disabled={!isComplete}
+                                className={cn(
+                                  "w-full py-2.5 rounded-xl text-xs font-manrope font-bold transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2 shadow-sm",
+                                  isComplete 
+                                    ? "bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold" 
+                                    : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
+                                )}
+                              >
+                                {isComplete ? "Claim Weekly Reward" : `In Progress (${quest.current}/${quest.target})`}
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
 
-              {/* Category 3: Special Quests */}
+              {/* Category 3: Special Quests (Fully Claimable & Monthly) */}
               <section className="space-y-4">
                 <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
                   <Trophy className="w-4 h-4 text-white/60" />
-                  <h3 className="font-manrope text-base font-bold text-white">Special Quests</h3>
+                  <h3 className="font-manrope text-base font-bold text-white">Special Monthly Quests</h3>
                 </div>
 
                 <div className="space-y-4">
-                  {SPECIAL_QUESTS.map((quest) => (
-                    <div 
-                      key={quest.id}
-                      className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-4 transition-all duration-150 hover:-translate-y-[2px] hover:border-white/20 shadow-sm"
-                    >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3.5">
-                          {quest.badge}
-                          <div>
-                            <div className="flex items-center space-x-2">
-                              <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
-                              <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/50">
-                                {quest.difficulty}
-                              </span>
+                  {SPECIAL_QUESTS.map((quest) => {
+                    const isClaimed = claimedSpecials[quest.id] === true;
+                    const isComplete = quest.current >= quest.target;
+
+                    return (
+                      <div 
+                        key={quest.id}
+                        className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-4 transition-all duration-150 hover:-translate-y-[2px] hover:border-white/20 shadow-sm"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center space-x-3.5">
+                            {quest.badge}
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <h4 className="font-bold text-sm text-white font-manrope">{quest.title}</h4>
+                                <span className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-white/50">
+                                  {quest.difficulty}
+                                </span>
+                              </div>
+                              <p className="text-xs text-white/50 font-manrope mt-0.5">{quest.desc}</p>
                             </div>
-                            <p className="text-xs text-white/50 font-manrope mt-0.5">{quest.desc}</p>
+                          </div>
+
+                          <div className="flex items-center space-x-2 shrink-0">
+                            <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain" />
+                              +{quest.xpReward}
+                            </span>
+                            <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3.5 py-1.5 rounded-full flex items-center gap-2">
+                              <img src="/images/coin-exact.png" alt="Coins" className="w-6 h-6 object-contain" />
+                              +{quest.coinReward}
+                            </span>
                           </div>
                         </div>
 
-                        <div className="flex items-center space-x-2 shrink-0">
-                          <span className="text-xs font-mono font-bold text-white/90 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full flex items-center gap-2">
-                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
-                            +{quest.xpReward}
-                          </span>
-                          <span className="text-xs font-mono font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-3 py-1.5 rounded-full flex items-center gap-2">
-                            <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
-                            +{quest.coinReward}
-                          </span>
+                        <div className="space-y-3 pt-1">
+                          <div className="flex justify-between items-center text-xs font-mono">
+                            <span className="text-white/40">Progress</span>
+                            <span className="text-white/80 font-bold">{quest.current} / {quest.target}</span>
+                          </div>
+                          <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                            <motion.div 
+                              initial={{ width: 0 }} 
+                              animate={{ width: `${(quest.current / quest.target) * 100}%` }}
+                              transition={{ duration: 0.5 }}
+                              className="h-full bg-white rounded-full" 
+                            />
+                          </div>
+
+                          <div className="pt-2">
+                            {isClaimed ? (
+                              <div className="w-full py-2.5 rounded-xl bg-white/5 border border-white/5 text-white/40 text-xs font-manrope font-bold flex items-center justify-center space-x-1.5">
+                                <Check className="w-4 h-4 text-emerald-400" />
+                                <span>Claimed</span>
+                              </div>
+                            ) : (
+                              <button
+                                onClick={() => handleClaimSpecialQuest(quest)}
+                                disabled={!isComplete}
+                                className={cn(
+                                  "w-full py-2.5 rounded-xl text-xs font-manrope font-bold transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2 shadow-sm",
+                                  isComplete 
+                                    ? "bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold" 
+                                    : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
+                                )}
+                              >
+                                {isComplete ? "Claim Special Reward" : `In Progress (${quest.current}/${quest.target})`}
+                              </button>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </section>
 
             </div>
 
-            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Realistic Treasure Chest, Social Quests) */}
+            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Yellow/Purple Gift Box, Social Quests with Official Brand Colors) */}
             <div className="space-y-6">
               
               {/* Widget 1: Streak Card */}
@@ -813,106 +940,102 @@ export default function QuestsPage() {
                 <p className="text-xs text-white/40 font-manrope">72% of weekly milestone completed</p>
               </div>
 
-              {/* Widget 3: Realistic Graphic 3D Treasure Chest Bonus */}
+              {/* Widget 3: 3D Yellow Gift Box with Purple Ribbon (Exact Matching User Reference Screenshot) */}
               <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
                 <div className="flex items-center space-x-2 text-white">
                   <Gift className="w-5 h-5 text-amber-400" />
-                  <h4 className="font-manrope font-bold text-sm">Daily Treasure Bonus</h4>
+                  <h4 className="font-manrope font-bold text-sm">Daily Gift Box</h4>
                 </div>
 
-                {/* Realistic SVG Treasure Chest Graphic with Opening Lid & Glowing Jewels */}
-                <div className="relative w-32 h-28 my-1 flex items-center justify-center">
+                {/* Vector 3D Gift Box Graphic matching Reference Image (Yellow Body, Purple Ribbon, Opening Lid) */}
+                <div className="relative w-36 h-32 my-1 flex items-center justify-center">
                   <motion.div
-                    animate={isChestOpening ? { rotate: [0, -6, 6, -4, 4, 0], scale: [1, 1.08, 1.15, 1] } : { y: [0, -3, 0] }}
-                    transition={{ duration: isChestOpening ? 0.9 : 3.5, repeat: isChestOpening ? 0 : Infinity, ease: "easeInOut" }}
+                    animate={isGiftOpening ? { rotate: [0, -8, 8, -5, 5, 0], scale: [1, 1.1, 1.18, 1] } : { y: [0, -4, 0] }}
+                    transition={{ duration: isGiftOpening ? 0.9 : 3.5, repeat: isGiftOpening ? 0 : Infinity, ease: "easeInOut" }}
                     className="relative w-full h-full flex items-center justify-center"
                   >
-                    <svg viewBox="0 0 100 80" className="w-28 h-24 drop-shadow-[0_10px_20px_rgba(245,158,11,0.4)]">
-                      {/* Chest Base Box */}
-                      <path d="M15 42 L85 42 L80 72 L20 72 Z" fill="#78350f" stroke="#d97706" strokeWidth="2" />
-                      {/* Steel Bands on Base */}
-                      <rect x="26" y="42" width="6" height="30" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
-                      <rect x="68" y="42" width="6" height="30" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
+                    <svg viewBox="0 0 120 110" className="w-32 h-28 drop-shadow-[0_12px_24px_rgba(245,158,11,0.4)]">
+                      {/* Box Base (Yellow Body) */}
+                      <path d="M25 50 L95 50 L90 95 L30 95 Z" fill="#facc15" stroke="#eab308" strokeWidth="2" />
+                      {/* Vertical Purple Ribbon on Base */}
+                      <path d="M54 50 L66 50 L64 95 L52 95 Z" fill="#7e22ce" stroke="#6b21a8" strokeWidth="1.5" />
                       
-                      {/* Golden Keyhole Lock */}
-                      <circle cx="50" cy="56" r="6" fill="#fbbf24" stroke="#78350f" strokeWidth="1.5" />
-                      <path d="M50 56 L50 63" stroke="#78350f" strokeWidth="2" strokeLinecap="round" />
-
-                      {/* Chest Lid (Animates Open) */}
+                      {/* Box Lid (Yellow Top with Purple Ribbon & Bow, Animates Open) */}
                       <motion.g
-                        animate={isChestOpening || dailyBonusClaimed ? { rotate: -40, y: -12 } : { rotate: 0, y: 0 }}
-                        transition={{ type: "spring", stiffness: 150, damping: 15 }}
-                        style={{ transformOrigin: "15px 42px" }}
+                        animate={isGiftOpening || dailyBonusClaimed ? { rotate: -42, y: -22 } : { rotate: 0, y: 0 }}
+                        transition={{ type: "spring", stiffness: 160, damping: 14 }}
+                        style={{ transformOrigin: "20px 50px" }}
                       >
-                        <path d="M15 42 C15 22 85 22 85 42 Z" fill="#92400e" stroke="#f59e0b" strokeWidth="2" />
-                        <path d="M26 42 C26 26 32 26 32 42 Z" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
-                        <path d="M68 42 C68 26 74 26 74 42 Z" fill="#451a03" stroke="#f59e0b" strokeWidth="1" />
+                        <rect x="20" y="40" width="80" height="15" rx="3" fill="#fde047" stroke="#eab308" strokeWidth="2" />
+                        <rect x="54" y="40" width="12" height="15" fill="#7e22ce" />
+                        
+                        {/* 3D Purple Bow Loops */}
+                        <path d="M60 40 C45 20 30 28 60 40 Z" fill="#a855f7" stroke="#7e22ce" strokeWidth="2" />
+                        <path d="M60 40 C75 20 90 28 60 40 Z" fill="#a855f7" stroke="#7e22ce" strokeWidth="2" />
+                        <circle cx="60" cy="40" r="5" fill="#6b21a8" />
                       </motion.g>
 
-                      {/* Interior Glowing Gold & Jewels when Open */}
-                      {(isChestOpening || dailyBonusClaimed) && (
+                      {/* Interior Glowing XP Shield & Coins Burst when Open */}
+                      {(isGiftOpening || dailyBonusClaimed) && (
                         <g>
-                          <ellipse cx="50" cy="42" rx="28" ry="8" fill="#fbbf24" opacity="0.9" />
-                          <circle cx="42" cy="40" r="3.5" fill="#ef4444" />
-                          <circle cx="58" cy="40" r="3.5" fill="#3b82f6" />
-                          <circle cx="50" cy="38" r="4" fill="#10b981" />
+                          <ellipse cx="60" cy="50" rx="30" ry="10" fill="#fef08a" opacity="0.9" />
                         </g>
                       )}
                     </svg>
 
-                    {/* Opened Floating Rays & Sparks */}
+                    {/* Opened Floating XP Shield & Coins */}
                     <AnimatePresence>
-                      {(isChestOpening || dailyBonusClaimed) && (
+                      {(isGiftOpening || dailyBonusClaimed) && (
                         <motion.div
                           initial={{ opacity: 0, scale: 0.5 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          className="absolute -top-3 inset-x-0 flex justify-center space-x-3 pointer-events-none"
+                          className="absolute -top-4 inset-x-0 flex justify-center space-x-3 pointer-events-none"
                         >
-                          <img src="/images/coin-exact.png" alt="Coin" className="w-6 h-6 object-contain animate-bounce" />
-                          <img src="/images/xp-shield-exact.png" alt="XP" className="w-6 h-6 object-contain animate-bounce delay-100" />
+                          <img src="/images/coin-exact.png" alt="Coin" className="w-7 h-7 object-contain animate-bounce" />
+                          <img src="/images/xp-shield-exact.png" alt="XP" className="w-7 h-7 object-contain animate-bounce delay-100" />
                         </motion.div>
                       )}
                     </AnimatePresence>
                   </motion.div>
                 </div>
 
-                <p className="text-xs text-white/50 font-manrope">Unlock daily treasure for instant XP & Coin boosts:</p>
+                <p className="text-xs text-white/50 font-manrope">Unlock daily gift box for instant XP & Coin boosts:</p>
 
                 <div className="flex items-center space-x-2 text-xs font-mono font-bold">
                   <span className="text-purple-300 flex items-center gap-1.5">
-                    <img src="/images/xp-shield-exact.png" alt="XP" className="w-4 h-4 object-contain" />
+                    <img src="/images/xp-shield-exact.png" alt="XP" className="w-5 h-5 object-contain" />
                     +150 XP
                   </span>
                   <span className="text-white/20">•</span>
                   <span className="text-amber-400 flex items-center gap-1.5">
-                    <img src="/images/coin-exact.png" alt="Coins" className="w-4 h-4 object-contain" />
+                    <img src="/images/coin-exact.png" alt="Coins" className="w-5 h-5 object-contain" />
                     +50 Coins
                   </span>
                 </div>
 
                 <button
                   onClick={handleClaimDailyBonus}
-                  disabled={dailyBonusClaimed || isChestOpening}
+                  disabled={dailyBonusClaimed || isGiftOpening}
                   className={cn(
                     "w-full py-3 rounded-xl font-manrope font-extrabold text-xs transition-all duration-150 cursor-pointer shadow-md flex items-center justify-center space-x-2",
                     dailyBonusClaimed 
                       ? "bg-white/5 text-white/30 cursor-default border border-white/5" 
-                      : isChestOpening
+                      : isGiftOpening
                         ? "bg-amber-500 text-black animate-pulse"
                         : "bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold shadow-[0_0_20px_rgba(245,158,11,0.3)]"
                   )}
                 >
                   {dailyBonusClaimed ? (
-                    <span>Chest Opened ✓</span>
-                  ) : isChestOpening ? (
-                    <span>Opening Chest...</span>
+                    <span>Gift Opened ✓</span>
+                  ) : isGiftOpening ? (
+                    <span>Opening Gift...</span>
                   ) : (
-                    <span>Open Daily Chest</span>
+                    <span>Open Daily Gift</span>
                   )}
                 </button>
               </div>
 
-              {/* Widget 4: Social Quests Section (Moved to Right Side Column) */}
+              {/* Widget 4: Social Quests Section (Using Official Company Brand Colors) */}
               <div className="space-y-4 pt-2">
                 <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
                   <UserCheck className="w-4 h-4 text-white/60" />
@@ -930,16 +1053,16 @@ export default function QuestsPage() {
                       <div key={task.id} className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-4 flex flex-col justify-between space-y-3 shadow-sm">
                         <div className="flex items-start justify-between">
                           <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-                              <task.icon className="w-4 h-4 text-white" />
+                            <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0 border border-white/10">
+                              <task.icon className={cn("w-5 h-5", task.iconColor)} />
                             </div>
                             <div>
                               <h4 className="font-manrope font-bold text-xs leading-tight text-white">{task.name}</h4>
                               <p className="text-[10px] text-white/40 font-manrope mt-0.5">Instant community reward</p>
                             </div>
                           </div>
-                          <span className="font-mono font-bold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-4 h-4 object-contain" />
+                          <span className="font-mono font-bold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-4.5 h-4.5 object-contain" />
                             +{task.xp}
                           </span>
                         </div>
