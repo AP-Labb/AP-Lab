@@ -6,6 +6,7 @@ import Dither from "./Dither";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useUI } from "@/context/UIContext";
+import LiquidGradientCanvas from "@/components/ui/liquid-gradient";
 import { ComparisonModal } from "./ComparisonModal";
 
 const DNAIcon = () => (
@@ -345,6 +346,20 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
+      {/* Liquid Gradient WebGL Background for Top Hero Section */}
+      <div className="absolute inset-x-0 top-0 h-[650px] z-0 pointer-events-none opacity-45 overflow-hidden select-none">
+        <LiquidGradientCanvas 
+          colors={["#050714", "#1a0b36", "#3b0f6f", "#081b3b"]}
+          speed={0.5}
+          scale={0.4}
+          seed={12}
+          exposure={1.15}
+          contrast={1.1}
+          className="w-full h-full"
+        />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#03040a]/40 to-[#03040a]" />
+      </div>
+
       {/* Base Background Image (HERONEW.png) - Bright on Left & Right, Dark Only in Center */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 

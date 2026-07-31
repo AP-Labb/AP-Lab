@@ -628,11 +628,16 @@ export default function Dashboard() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3 mb-2 w-fit mx-auto"
             >
-              <span 
-                className="text-sm md:text-base uppercase tracking-[0.3em] font-bold bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent"
-                style={progress?.activeNameColor ? { color: progress.activeNameColor, backgroundImage: 'none' } : undefined}
-              >
-                WELCOME BACK, {firstName.toUpperCase()}
+              <span className="text-sm md:text-base uppercase tracking-[0.3em] font-bold text-white">
+                WELCOME BACK,{" "}
+                <span 
+                  className={cn(
+                    !progress?.activeNameColor && "bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent"
+                  )}
+                  style={progress?.activeNameColor ? { color: progress.activeNameColor, backgroundImage: 'none' } : undefined}
+                >
+                  {firstName.toUpperCase()}
+                </span>
               </span>
               <LevelBadge level={level} className="normal-case tracking-normal shrink-0 translate-y-[1px]" />
             </motion.div>
