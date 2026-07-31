@@ -66,7 +66,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 4. Purple Beanie (Larger & Better Positioned) */}
+      {/* 4. Purple Beanie */}
       {hasPurpleBeanie && (
         <img 
           src="/images/avatar-gear/purple-beanie.png" 
@@ -93,7 +93,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* Base Avatar Circle Container (No Glowing Border, Clean Subtle Border) */}
+      {/* Base Avatar Circle Container */}
       <div className="w-full h-full rounded-full overflow-hidden flex items-center justify-center relative border border-white/20 z-0 bg-neutral-900">
         {photoURL ? (
           <img src={photoURL} alt={name || "User"} className="w-full h-full object-cover rounded-full" />
@@ -103,7 +103,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           </div>
         )}
 
-        {/* 7. Neon Pink Cyber Visor (Larger & Fits Eyes Perfectly) */}
+        {/* 7. Neon Pink Cyber Visor */}
         {hasNeonVisor && (
           <img 
             src="/images/avatar-gear/neon-pink-visor.png" 
@@ -112,7 +112,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           />
         )}
 
-        {/* 8. Dark Cyber Visor (Larger & Fits Eyes Perfectly) */}
+        {/* 8. Dark Cyber Visor */}
         {hasDarkVisor && (
           <img 
             src="/images/avatar-gear/dark-cyber-visor.png" 
@@ -121,22 +121,22 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           />
         )}
 
-        {/* 9. Face Mask (Bigger & Positioned Over Lower Face) */}
+        {/* 9. Face Mask (Refined Positioning over lower face) */}
         {hasFaceMask && (
           <img 
             src="/images/avatar-gear/face-mask.png" 
             alt="Face Mask" 
-            className="absolute top-[35%] left-1/2 -translate-x-1/2 w-[95%] h-[65%] object-contain z-10 pointer-events-none drop-shadow-sm" 
+            className="absolute top-[32%] left-1/2 -translate-x-1/2 w-[92%] h-[60%] object-contain z-10 pointer-events-none drop-shadow-sm" 
           />
         )}
       </div>
 
-      {/* 10. Astronaut Helmet (Fits Over Whole Head) */}
+      {/* 10. Astronaut Helmet (Transparent Visor Frame Enclosing Avatar) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[18%] left-1/2 -translate-x-1/2 w-[135%] h-[135%] object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[27%] left-1/2 -translate-x-1/2 w-[155%] h-[155%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
@@ -149,21 +149,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 12. Heart Necklace (Connects to both sides of neck) */}
+      {/* 12. Heart Necklace (Connected to neck sides, pendant under chin) */}
       {hasHeartNecklace && (
         <img 
           src="/images/avatar-gear/heart-necklace.png" 
           alt="Heart Necklace" 
-          className="absolute -bottom-[32%] left-1/2 -translate-x-1/2 w-[110%] h-[90%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[12%] left-1/2 -translate-x-1/2 w-[100%] h-[75%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
-      {/* 13. Gold Chain (Connects to both sides of neck) */}
+      {/* 13. Gold Chain (Connected to neck sides) */}
       {hasGoldChain && (
         <img 
           src="/images/avatar-gear/gold-chain.png" 
           alt="Gold Chain" 
-          className="absolute -bottom-[26%] left-1/2 -translate-x-1/2 w-[110%] h-[80%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[10%] left-1/2 -translate-x-1/2 w-[100%] h-[65%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
     </div>

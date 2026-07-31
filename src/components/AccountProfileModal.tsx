@@ -6,6 +6,7 @@ import { X, User, Settings, LogOut, Package, Zap, Shield, Check } from "lucide-r
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { SettingsModal } from "./SettingsModal";
+import { UserAvatar } from "./UserAvatar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
@@ -80,13 +81,7 @@ export function AccountProfileModal({ isOpen, onClose, defaultTab = "profile" }:
           {/* Top Header Row with User Avatar & Info */}
           <div className="flex items-start justify-between border-b border-white/10 pb-5">
             <div className="flex items-center space-x-4">
-              {photoURL ? (
-                <img src={photoURL} alt={displayName} className="w-14 h-14 rounded-full object-cover border-2 border-emerald-500/80 shadow-md" />
-              ) : (
-                <div className="w-14 h-14 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 text-white flex items-center justify-center font-manrope font-extrabold text-xl shadow-md">
-                  {displayName.charAt(0).toUpperCase()}
-                </div>
-              )}
+              <UserAvatar photoURL={photoURL} name={displayName} activeFrame={activeFrame} size="lg" />
               <div className="text-left space-y-1">
                 <div className="flex items-center space-x-2">
                   <h2 className="font-manrope font-extrabold text-xl text-white tracking-tight" style={progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}>{displayName}</h2>

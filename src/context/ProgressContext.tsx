@@ -604,8 +604,16 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       const topicCreditId = `topic-${topicId}`;
       const canEarnCredits = isFirstTime && !earnedIds.includes(topicCreditId);
 
-      const xpEarned = isFirstTime ? 100 : 0;
-      const creditsEarned = canEarnCredits ? 50 : 0;
+      const now = Date.now();
+      const activeBoosts = progress.activeBoosts || {};
+      const hasXpBoost = (activeBoosts["boost-2x-xp"] || 0) > now;
+      const hasCoinBoost = (activeBoosts["boost-2x-coin"] || 0) > now;
+
+      const rawXp = isFirstTime ? 100 : 0;
+      const rawCredits = canEarnCredits ? 50 : 0;
+      const xpEarned = hasXpBoost ? rawXp * 2 : rawXp;
+      const creditsEarned = hasCoinBoost ? rawCredits * 2 : rawCredits;
+
       const currentXp = progress.xp || 0;
       const newXp = currentXp + xpEarned;
       const currentCredits = progress.credits || 0;
@@ -696,8 +704,15 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       const qCreditId = masteryKey ? `q-${masteryKey}` : undefined;
       const canEarnQCredits = isCorrect && (!qCreditId || !earnedIds.includes(qCreditId));
       
-      const xpEarned = isCorrect ? (isCompleted ? 5 : 10) : 0;
-      const creditsEarned = canEarnQCredits ? 5 : 0;
+      const now = Date.now();
+      const activeBoosts = progress.activeBoosts || {};
+      const hasXpBoost = (activeBoosts["boost-2x-xp"] || 0) > now;
+      const hasCoinBoost = (activeBoosts["boost-2x-coin"] || 0) > now;
+
+      const rawXp = isCorrect ? (isCompleted ? 5 : 10) : 0;
+      const rawCredits = canEarnQCredits ? 5 : 0;
+      const xpEarned = hasXpBoost ? rawXp * 2 : rawXp;
+      const creditsEarned = hasCoinBoost ? rawCredits * 2 : rawCredits;
 
       const updatedAnswered = (progress.totalQuestionsAnswered || 0) + 1;
       const updatedCorrect = (progress.totalQuestionsCorrect || 0) + (isCorrect ? 1 : 0);
@@ -1063,14 +1078,14 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const isBoost = itemId.startsWith("boost-");
     if (isBoost) {
       const boostCount = inv.filter((id) => id === itemId).length;
-      if (boostCount >= 3) {
-        alert("You have reached the maximum limit of 3 for this boost!");
+      if (boostCount >= 5) {
+        alert("You have reached the maximum limit of 5 for this boost!");
         return false;
       }
     }
 
     const newCreds = currentCreds - cost;
-    const newInv = Array.from(new Set([...inv, itemId]));
+    const newInv = isBoost ? [...inv, itemId] : Array.from(new Set([...inv, itemId]));
     const isGradient = itemType === "gradient";
     const isColorPicker = itemType === "color-picker" || itemId === "custom-name-color";
     

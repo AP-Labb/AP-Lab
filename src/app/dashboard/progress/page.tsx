@@ -23,6 +23,7 @@ import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { AppSidebar } from "@/components/AppSidebar";
+import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 
 function SidebarSettingsButton({ open }: { open: boolean }) {
@@ -360,17 +361,12 @@ export default function ProgressPage() {
           className="bg-neutral-950/80 rounded-2xl border border-white/5 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-md relative overflow-hidden"
         >
           <div className="flex items-center space-x-4">
-            {progress?.photoURL || currentUser.photoURL ? (
-              <img 
-                src={(progress?.photoURL || currentUser.photoURL) || undefined} 
-                alt="Avatar" 
-                className="w-14 h-14 rounded-xl object-cover border border-white/10 shadow"
-              />
-            ) : (
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center font-instrument text-2xl font-bold text-black bg-gradient-to-br from-neutral-200 to-white shadow">
-                {firstName.charAt(0).toUpperCase()}
-              </div>
-            )}
+            <UserAvatar 
+              photoURL={progress?.photoURL || currentUser.photoURL} 
+              name={currentUser.displayName || "Scholar"} 
+              activeFrame={progress?.activeAvatarFrame} 
+              size="lg" 
+            />
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg font-bold font-manrope">{currentUser.displayName || "Scholar"}</h2>

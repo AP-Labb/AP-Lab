@@ -5,6 +5,7 @@ import { Settings } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { SettingsModal } from "@/components/SettingsModal";
+import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 
 interface AccountNavbarWidgetProps {
@@ -43,20 +44,8 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
           className="flex items-center space-x-2.5 cursor-pointer text-left focus:outline-none"
           title="View Account Profile"
         >
-          {/* Avatar Picture */}
-          <div className="relative shrink-0">
-            {photoURL ? (
-              <img
-                src={photoURL}
-                alt={displayName}
-                className={cn("w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border transition-colors", isLightMode ? "border-slate-300 group-hover:border-slate-400" : "border-white/20 group-hover:border-white/40")}
-              />
-            ) : (
-              <div className={cn("w-7 h-7 sm:w-8 sm:h-8 rounded-full border flex items-center justify-center font-manrope font-bold text-xs", isLightMode ? "bg-slate-100 border-slate-300 text-slate-900" : "bg-white/10 border-white/15 text-white/90")}>
-                {initials}
-              </div>
-            )}
-          </div>
+          {/* Avatar Picture with Equipped Accessories */}
+          <UserAvatar photoURL={photoURL} name={displayName} activeFrame={progress?.activeAvatarFrame} size="sm" />
 
           {/* Account Name & Total XP + Credits */}
           <div className="flex flex-col items-start text-left min-w-0">

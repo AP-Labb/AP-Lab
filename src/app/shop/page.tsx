@@ -70,7 +70,7 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Premium Shop Items with Custom Item Pastel Background Colors & Bigger Avatars
+// Custom Premium Shop Items
 const GEAR_ITEMS = [
   // 10-Hour Boost Powerups
   { 
@@ -102,7 +102,7 @@ const GEAR_ITEMS = [
     )
   },
 
-  // 1. Top Hat (Very light neutral background)
+  // 1. Top Hat
   { 
     id: "gear-top-hat", 
     name: "Top Hat", 
@@ -112,11 +112,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#f1f3f5] border-neutral-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-top-hat" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-top-hat" size="2xl" />
     )
   },
 
-  // 2. Purple Beanie (Really light purple background)
+  // 2. Purple Beanie
   { 
     id: "gear-purple-beanie", 
     name: "Purple Beanie", 
@@ -126,11 +126,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#f3edfc] border-violet-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-beanie" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-beanie" size="2xl" />
     )
   },
 
-  // 3. Purple Striped Party Hat (Really light fuchsia background)
+  // 3. Purple Striped Party Hat
   { 
     id: "gear-purple-party-hat", 
     name: "Purple Party Hat", 
@@ -140,11 +140,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fbeafc] border-fuchsia-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-party-hat" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-party-hat" size="2xl" />
     )
   },
 
-  // 4. Golden Crown with Jewels (Really light yellow background)
+  // 4. Golden Crown with Jewels
   { 
     id: "gear-golden-crown", 
     name: "Golden Crown", 
@@ -154,11 +154,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fefce8] border-yellow-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "crown",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-crown" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-crown" size="2xl" />
     )
   },
 
-  // 5. Cyber Neon Pink Visor (Really light pink background)
+  // 5. Cyber Neon Pink Visor
   { 
     id: "gear-neon-pink-visor", 
     name: "Cyber Neon Visor", 
@@ -168,11 +168,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fce7f3] border-pink-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-neon-pink-visor" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-neon-pink-visor" size="2xl" />
     )
   },
 
-  // 6. Dark Cyber Visor (Really light neutral background)
+  // 6. Dark Cyber Visor
   { 
     id: "gear-dark-cyber-visor", 
     name: "Dark Cyber Visor", 
@@ -182,11 +182,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#f3f4f6] border-neutral-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-dark-cyber-visor" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-dark-cyber-visor" size="2xl" />
     )
   },
 
-  // 7. Face Mask (Really light cyan background)
+  // 7. Face Mask
   { 
     id: "gear-face-mask", 
     name: "Face Mask", 
@@ -196,11 +196,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#ecfeff] border-cyan-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "mask",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-face-mask" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-face-mask" size="2xl" />
     )
   },
 
-  // 8. Heart Necklace (Really light rose background)
+  // 8. Heart Necklace
   { 
     id: "gear-heart-necklace", 
     name: "Heart Necklace", 
@@ -210,11 +210,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#ffe4e6] border-rose-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-heart-necklace" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-heart-necklace" size="2xl" />
     )
   },
 
-  // 9. Gold Chain (Really light amber background)
+  // 9. Gold Chain
   { 
     id: "gear-gold-chain", 
     name: "Gold Chain", 
@@ -224,11 +224,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fef3c7] border-amber-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-gold-chain" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-gold-chain" size="2xl" />
     )
   },
 
-  // 10. Devil Horns (Really light red background)
+  // 10. Devil Horns
   { 
     id: "gear-devil-horns", 
     name: "Devil Horns", 
@@ -238,11 +238,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fee2e2] border-red-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-devil-horns" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-devil-horns" size="2xl" />
     )
   },
 
-  // 11. Red Bowtie (Really light red/rose background)
+  // 11. Red Bowtie
   { 
     id: "gear-red-bowtie", 
     name: "Red Bowtie", 
@@ -252,11 +252,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#ffe4e6] border-rose-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-red-bowtie" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-red-bowtie" size="2xl" />
     )
   },
 
-  // 12. Golden Halo (Really light yellow background)
+  // 12. Golden Halo
   { 
     id: "gear-golden-halo", 
     name: "Golden Halo", 
@@ -266,11 +266,11 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fef9c3] border-yellow-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-halo" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-halo" size="2xl" />
     )
   },
 
-  // 13. Astronaut Helmet (Really light blue/grey background)
+  // 13. Astronaut Helmet
   { 
     id: "gear-astronaut-helmet", 
     name: "Astronaut Helmet", 
@@ -280,22 +280,22 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#eff6ff] border-blue-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "helmet",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-astronaut-helmet" size="xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-astronaut-helmet" size="2xl" />
     )
   },
 
-  // 14. Custom Name Color Customization (Rotating Rainbow Animation on User's Display Name)
+  // 14. Custom Name Color Customization (Solid White background with smooth rainbow colorshift)
   { 
     id: "custom-name-color", 
     name: "Custom Name Color", 
     desc: "Choose any custom color hex for your display name across the site", 
     cost: 120, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-pink-100/90 via-purple-100/90 to-cyan-100/90 border-purple-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
+    innerBg: "bg-white border-neutral-200 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
     type: "color-picker",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">
-        <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
+        <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
           {userName || "Scholar"}
         </span>
       </div>
@@ -352,7 +352,7 @@ export default function ShopPage() {
   return (
     <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
       
-      {/* Unified App Sidebar with Sticky Navigation & Profile Popover */}
+      {/* Unified App Sidebar */}
       <AppSidebar currentPath="/shop" />
 
       {/* Main Workspace Layout */}
@@ -377,12 +377,12 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner with text & button shifted left to sit inside the cream space */}
+          {/* Top Banner with text shifted left to fit perfectly inside the cream area */}
           <div 
             className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[260px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            <div className="relative z-10 max-w-xl sm:max-w-2xl mr-auto space-y-4 text-left pl-12 sm:pl-28 md:pl-36">
+            <div className="relative z-10 max-w-xl sm:max-w-2xl mr-auto space-y-4 text-left pl-8 sm:pl-20 md:pl-28">
               <h2 className="font-manrope text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
@@ -416,6 +416,7 @@ export default function ShopPage() {
               {GEAR_ITEMS.map((item) => {
                 const isOwned = inventory.includes(item.id);
                 const isEquipped = activeFrame === item.id || activeGrad === item.id;
+                const boostCount = item.type === "boost" ? inventory.filter(id => id === item.id).length : 0;
 
                 return (
                   <div 
@@ -426,7 +427,7 @@ export default function ShopPage() {
                     <div className={cn(item.innerBg, "group-hover:scale-[1.02] transition-transform")}>
                       {item.id === "custom-name-color" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full">
-                          <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
+                          <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
                             {userName}
                           </span>
                         </div>
@@ -435,28 +436,30 @@ export default function ShopPage() {
                       )}
                     </div>
 
-                    {/* Title & Simple Description */}
+                    {/* Title & Description */}
                     <div>
                       <div className="flex items-center justify-between">
                         <h4 className="font-extrabold text-sm text-white font-manrope">{item.name}</h4>
-                        <span className="text-[10px] font-mono font-bold text-white/40">{item.type === "powerup" ? "Unlimited" : isOwned ? "1/1" : "0/1"}</span>
+                        <span className="text-[10px] font-mono font-bold text-white/40">
+                          {item.type === "boost" ? `${boostCount}/5` : isOwned ? "1/1" : "0/1"}
+                        </span>
                       </div>
                       <p className="text-xs text-white/50 font-medium mt-1">{item.desc}</p>
                     </div>
 
-                    {/* Action Button */}
+                    {/* Action Button (Solid White Button when Owned, no checkmark!) */}
                     <div className="pt-2 border-t border-white/10">
                       <button
                         onClick={() => setSelectedStoreItem(item)}
                         className={cn(
-                          "w-full py-2.5 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-md",
+                          "w-full py-3 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-md",
                           isOwned 
-                            ? "bg-amber-400 hover:bg-amber-300 text-black font-extrabold" 
+                            ? "bg-white hover:bg-neutral-200 text-black font-extrabold" 
                             : "bg-white/10 hover:bg-white/20 text-white"
                         )}
                       >
                         {isOwned ? (
-                          <span>Owned ✓</span>
+                          <span>{isEquipped ? "Equipped" : "Equip"}</span>
                         ) : (
                           <>
                             <div className="w-5 h-5 flex items-center justify-center shrink-0">
@@ -475,7 +478,7 @@ export default function ShopPage() {
         </main>
       </div>
 
-      {/* ITEM CONFIRMATION & PURCHASE MODAL */}
+      {/* ITEM CONFIRMATION & PURCHASE MODAL (White Purchase Button & Bigger Coin Image) */}
       <AnimatePresence>
         {selectedStoreItem && (
           <div 
@@ -496,7 +499,7 @@ export default function ShopPage() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Left Side Visual Box (Enlarged Avatar Display) */}
+              {/* Left Side Visual Box */}
               <div className="w-full md:w-1/2 bg-[#0c0d16] p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[300px]">
                 {selectedStoreItem.type === "color-picker" ? (
                   <div className="flex flex-col items-center justify-center space-y-3 text-center">
@@ -513,18 +516,18 @@ export default function ShopPage() {
                 )}
               </div>
 
-              {/* Right Side Item Info & Purchase Confirm Button */}
+              {/* Right Side Item Info & White Purchase Button */}
               <div className="w-full md:w-1/2 p-8 flex flex-col justify-between text-left space-y-6">
                 <div>
                   <div className="bg-white/10 text-white/70 font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full w-fit mb-3">
-                    {selectedStoreItem.type === "color-picker" ? "Custom Color" : "0/1 Available"}
+                    {selectedStoreItem.type === "color-picker" ? "Custom Color" : selectedStoreItem.type === "boost" ? "Max 5" : "0/1 Available"}
                   </div>
                   <h3 className="font-manrope font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
                     {selectedStoreItem.name}
                   </h3>
-                  <div className="flex items-center space-x-2 mt-2">
-                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-7 h-7 object-contain" />
-                    <span className="font-manrope font-extrabold text-2xl text-amber-400">{selectedStoreItem.cost}</span>
+                  <div className="flex items-center space-x-3 mt-3">
+                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-9 h-9 object-contain" />
+                    <span className="font-manrope font-extrabold text-3xl text-amber-400">{selectedStoreItem.cost}</span>
                   </div>
                   <p className="text-xs text-white/50 font-manrope mt-2 leading-relaxed">
                     {selectedStoreItem.desc}
@@ -555,6 +558,7 @@ export default function ShopPage() {
                   )}
                 </div>
 
+                {/* White Purchase Button (Solid White with Black Font) */}
                 <button
                   onClick={async () => {
                     if (selectedStoreItem.type === "color-picker") {
@@ -578,71 +582,20 @@ export default function ShopPage() {
                   className={cn(
                     "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2 border-none",
                     selectedStoreItem.type === "color-picker"
-                      ? (credits >= selectedStoreItem.cost ? "bg-emerald-500 hover:bg-emerald-400 text-black font-black" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
+                      ? (credits >= selectedStoreItem.cost ? "bg-white hover:bg-neutral-200 text-black font-black" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
                       : inventory.includes(selectedStoreItem.id)
-                        ? "bg-amber-400 text-black hover:bg-amber-300"
+                        ? "bg-white text-black hover:bg-neutral-200 font-black"
                         : credits >= selectedStoreItem.cost 
-                          ? "bg-emerald-500 hover:bg-emerald-400 text-black" 
+                          ? "bg-white hover:bg-neutral-200 text-black font-black" 
                           : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                   )}
                 >
                   <span>
                     {selectedStoreItem.type === "color-picker"
-                      ? (credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins")
-                      : inventory.includes(selectedStoreItem.id) ? "Equip Now" : credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins"}
+                      ? (credits >= selectedStoreItem.cost ? "PURCHASE" : "NOT ENOUGH COINS")
+                      : inventory.includes(selectedStoreItem.id) ? (activeFrame === selectedStoreItem.id ? "EQUIPPED" : "EQUIP NOW") : credits >= selectedStoreItem.cost ? "PURCHASE" : "NOT ENOUGH COINS"}
                   </span>
                 </button>
-              </div>
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-      {/* HOW TO EARN COINS MODAL */}
-      <AnimatePresence>
-        {showHowToEarnModal && (
-          <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-lg bg-gradient-to-b from-[#7a5833] via-[#3a2818] to-[#1e140d] border border-amber-500/40 rounded-[36px] p-8 sm:p-10 shadow-2xl text-center text-white"
-            >
-              <button
-                onClick={() => setShowHowToEarnModal(false)}
-                className="absolute top-6 right-6 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              <div className="w-28 h-28 mx-auto mb-6">
-                <img src="/images/coin-zoomed.png" alt="Coin" className="w-full h-full object-contain" />
-              </div>
-
-              <h3 className="font-manrope font-extrabold text-2xl sm:text-3xl text-white mb-2">
-                Actions that earn coins
-              </h3>
-              <p className="text-xs text-amber-200/80 font-manrope mb-8">
-                Collect coins and redeem them for cool in-game items.
-              </p>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left font-manrope font-bold text-sm text-white max-w-md mx-auto">
-                <div className="flex items-center space-x-3 bg-white/5 border border-white/10 p-3 rounded-2xl">
-                  <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-xs shrink-0">✓</div>
-                  <span>Refer friends</span>
-                </div>
-                <div className="flex items-center space-x-3 bg-white/5 border border-white/10 p-3 rounded-2xl">
-                  <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-xs shrink-0">✓</div>
-                  <span>Reach a streak milestone</span>
-                </div>
-                <div className="flex items-center space-x-3 bg-white/5 border border-white/10 p-3 rounded-2xl">
-                  <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-xs shrink-0">✓</div>
-                  <span>Level up</span>
-                </div>
-                <div className="flex items-center space-x-3 bg-white/5 border border-white/10 p-3 rounded-2xl">
-                  <div className="w-6 h-6 rounded-full bg-white text-black flex items-center justify-center text-xs shrink-0">✓</div>
-                  <span>Complete badges</span>
-                </div>
               </div>
             </motion.div>
           </div>
