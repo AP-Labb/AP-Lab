@@ -22,6 +22,7 @@ import { cn } from "@/lib/utils";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { AppSidebar } from "@/components/AppSidebar";
+import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 
 function SidebarSettingsButton({ open }: { open: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,7 +58,7 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Premium Shop Items
+// Custom Premium Shop Items (Boosters, Avatar Gear & Custom Name Color)
 const GEAR_ITEMS = [
   // 10-Hour Boost Powerups
   { 
@@ -89,11 +90,53 @@ const GEAR_ITEMS = [
     )
   },
 
-  // Avatar Wearables
+  // Avatar Gear Wearables (Using Uploaded Transparent PNGs)
   { 
-    id: "gear-sunglasses", 
-    name: "Sunglasses", 
-    desc: "Glasses for the sun", 
+    id: "gear-top-hat", 
+    name: "Top Hat", 
+    desc: "Classic black magician top hat", 
+    cost: 50, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-400/40",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-purple-500">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-xl text-white">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        <img src="/images/avatar-gear/top-hat.png" alt="Top Hat" className="absolute -top-[52%] left-1/2 -translate-x-1/2 w-[115%] h-[95%] object-contain z-10 pointer-events-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]" />
+      </div>
+    )
+  },
+  { 
+    id: "gear-purple-beanie", 
+    name: "Purple Beanie", 
+    desc: "Cozy purple winter beanie with pom pom", 
+    cost: 45, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-gradient-to-br from-violet-500/20 to-purple-500/20 border-violet-400/40",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-violet-400">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-violet-500/20 flex items-center justify-center font-bold text-xl text-white">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        <img src="/images/avatar-gear/purple-beanie.png" alt="Purple Beanie" className="absolute -top-[42%] left-1/2 -translate-x-1/2 w-[110%] h-[90%] object-contain z-10 pointer-events-none drop-shadow-md" />
+      </div>
+    )
+  },
+  { 
+    id: "gear-face-mask", 
+    name: "Face Mask", 
+    desc: "Protective blue surgical face mask", 
     cost: 35, 
     bgColor: "bg-neutral-900 border-neutral-800", 
     innerBg: "bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border-emerald-400/40",
@@ -315,6 +358,8 @@ export default function ShopPage() {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedStoreItem, setSelectedStoreItem] = useState<typeof GEAR_ITEMS[0] | null>(null);
   const [powerupStatusMsg, setPowerupStatusMsg] = useState<string | null>(null);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
+  const [customColorHex, setCustomColorHex] = useState("#ec4899");
 
   const credits = progress?.credits || 0;
   const level = progress?.level || 1;
@@ -333,7 +378,7 @@ export default function ShopPage() {
     }
   };
 
-  // Functional Store Item Trigger (Handles boosts, wearables & gradients)
+  // Functional Store Item Trigger (Handles boosts, wearables, color pickers & gradients)
   const handleItemClick = async (item: typeof GEAR_ITEMS[0], isOwned: boolean, isEquipped: boolean) => {
     if (item.type === "boost") {
       const success = await buyItem?.(item.id, item.cost, item.type);
@@ -343,6 +388,11 @@ export default function ShopPage() {
       }
       setPowerupStatusMsg(`${item.name} purchased! Open your Inventory to activate it anytime.`);
       setTimeout(() => setPowerupStatusMsg(null), 4500);
+      return;
+    }
+
+    if (item.type === "color-picker") {
+      // Color picker handled via modal
       return;
     }
 
@@ -382,24 +432,25 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner using SHOPbanner.png with text positioned slightly right into clear space */}
+          {/* Top Banner using SHOPbanner.png with text positioned further right into open space */}
           <div 
             className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            <div className="relative z-10 max-w-sm sm:max-w-md mr-auto space-y-3.5 text-left pl-16 sm:pl-28">
+            <div className="relative z-10 max-w-sm sm:max-w-md mr-auto space-y-3.5 text-left pl-28 sm:pl-48">
               <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
               <p className="text-sm font-semibold text-neutral-800 font-manrope">
-                Get power ups, avatars, and customization hats & glasses.
+                Get power ups, avatars, and customization hats & gear.
               </p>
               <div className="pt-1">
                 <button 
-                  onClick={() => setShowHowToEarnModal(true)}
-                  className="px-7 py-3.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-xl"
+                  onClick={() => setShowInventoryModal(true)}
+                  className="px-7 py-3.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl flex items-center space-x-2"
                 >
-                  How to earn
+                  <ShoppingBag className="w-4 h-4 text-amber-400" />
+                  <span>My Inventory</span>
                 </button>
               </div>
             </div>
@@ -492,16 +543,26 @@ export default function ShopPage() {
                 <X className="w-4 h-4" />
               </button>
 
-              {/* Left Side Visual Box (Matching user uploaded Knowt confirmation screenshot) */}
-              <div className="w-full md:w-1/2 bg-[#0c0d16] p-8 flex items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[220px]">
-                {selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)}
+              {/* Left Side Visual Box */}
+              <div className="w-full md:w-1/2 bg-[#0c0d16] p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[220px]">
+                {selectedStoreItem.type === "color-picker" ? (
+                  <div className="flex flex-col items-center justify-center space-y-3 text-center">
+                    <span className="text-xs font-mono text-white/40 uppercase tracking-wider">Live Name Preview</span>
+                    <span className="font-manrope font-extrabold text-2xl tracking-tight transition-all drop-shadow-md" style={{ color: customColorHex }}>
+                      {userName}
+                    </span>
+                    <span className="text-[10px] font-mono text-white/30">{customColorHex.toUpperCase()}</span>
+                  </div>
+                ) : (
+                  selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)
+                )}
               </div>
 
               {/* Right Side Item Info & Purchase Confirm Button */}
               <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between text-left space-y-6">
                 <div>
                   <div className="bg-white/10 text-white/70 font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full w-fit mb-3">
-                    0/1 Available
+                    {selectedStoreItem.type === "color-picker" ? "Custom Color" : "0/1 Available"}
                   </div>
                   <h3 className="font-manrope font-extrabold text-2xl text-white tracking-tight">
                     {selectedStoreItem.name}
@@ -510,29 +571,82 @@ export default function ShopPage() {
                     <img src="/images/coin-zoomed.png" alt="Coin" className="w-6 h-6 object-contain" />
                     <span className="font-manrope font-extrabold text-xl text-amber-400">{selectedStoreItem.cost}</span>
                   </div>
-                  <p className="text-xs text-white/50 font-manrope mt-3 leading-relaxed">
+                  <p className="text-xs text-white/50 font-manrope mt-2 leading-relaxed">
                     {selectedStoreItem.desc}
                   </p>
+
+                  {/* Interactive Swatch & Hex Picker when item is Custom Name Color */}
+                  {selectedStoreItem.type === "color-picker" && (
+                    <div className="mt-4 space-y-3 pt-3 border-t border-white/10">
+                      <span className="text-[11px] font-mono font-bold text-white/60 block">Choose Display Color:</span>
+                      <div className="flex flex-wrap gap-2">
+                        {["#f43f5e", "#ec4899", "#d946ef", "#a855f7", "#3b82f6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#ffffff"].map((color) => (
+                          <button
+                            key={color}
+                            onClick={() => setCustomColorHex(color)}
+                            className={cn(
+                              "w-7 h-7 rounded-full border-2 transition-transform cursor-pointer shadow-sm hover:scale-110",
+                              customColorHex === color ? "border-white scale-110 ring-2 ring-white/40" : "border-transparent"
+                            )}
+                            style={{ backgroundColor: color }}
+                          />
+                        ))}
+                      </div>
+
+                      <div className="flex items-center space-x-2 pt-1">
+                        <input 
+                          type="color" 
+                          value={customColorHex}
+                          onChange={(e) => setCustomColorHex(e.target.value)}
+                          className="w-8 h-8 rounded-lg bg-transparent border-0 cursor-pointer p-0"
+                        />
+                        <input 
+                          type="text" 
+                          value={customColorHex}
+                          onChange={(e) => setCustomColorHex(e.target.value)}
+                          className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 font-mono text-xs text-white font-bold w-28 uppercase"
+                        />
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <button
                   onClick={async () => {
+                    if (selectedStoreItem.type === "color-picker") {
+                      const success = await buyItem?.("custom-name-color", selectedStoreItem.cost, "color-picker", customColorHex);
+                      if (!success) {
+                        alert("Not enough coins!");
+                      } else {
+                        setPowerupStatusMsg(`Name color updated to ${customColorHex}!`);
+                        setTimeout(() => setPowerupStatusMsg(null), 4500);
+                      }
+                      setSelectedStoreItem(null);
+                      return;
+                    }
+
                     const isOwned = inventory.includes(selectedStoreItem.id);
                     const isEquipped = activeFrame === selectedStoreItem.id || activeGrad === selectedStoreItem.id;
                     await handleItemClick(selectedStoreItem, isOwned, isEquipped);
                     setSelectedStoreItem(null);
                   }}
-                  disabled={credits < selectedStoreItem.cost && !inventory.includes(selectedStoreItem.id)}
+                  disabled={credits < selectedStoreItem.cost && !inventory.includes(selectedStoreItem.id) && selectedStoreItem.type !== "color-picker"}
                   className={cn(
-                    "w-full py-3.5 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2",
-                    inventory.includes(selectedStoreItem.id)
-                      ? "bg-amber-400 text-black hover:bg-amber-300"
-                      : credits >= selectedStoreItem.cost 
-                        ? "bg-emerald-500 hover:bg-emerald-400 text-black" 
-                        : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
+                    "w-full py-3.5 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2 border-none",
+                    selectedStoreItem.type === "color-picker"
+                      ? (credits >= selectedStoreItem.cost ? "bg-fuchsia-500 hover:bg-fuchsia-400 text-white shadow-[0_0_20px_rgba(217,70,239,0.4)]" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
+                      : inventory.includes(selectedStoreItem.id)
+                        ? "bg-amber-400 text-black hover:bg-amber-300"
+                        : credits >= selectedStoreItem.cost 
+                          ? "bg-emerald-500 hover:bg-emerald-400 text-black" 
+                          : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                   )}
                 >
-                  <span>{inventory.includes(selectedStoreItem.id) ? "Equip Now" : credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins"}</span>
+                  <span>
+                    {selectedStoreItem.type === "color-picker"
+                      ? (credits >= selectedStoreItem.cost ? `Buy & Set Color (${selectedStoreItem.cost} Coins)` : "Not Enough Coins")
+                      : inventory.includes(selectedStoreItem.id) ? "Equip Now" : credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins"}
+                  </span>
                 </button>
               </div>
             </motion.div>
@@ -591,6 +705,7 @@ export default function ShopPage() {
         )}
       </AnimatePresence>
 
+      <MinecraftInventoryModal isOpen={showInventoryModal} onClose={() => setShowInventoryModal(false)} />
       <DashboardContextMenu onOpenProfile={() => setShowProfileModal(true)} />
       <ReviewModal isOpen={isReviewModalOpen} onClose={() => setIsReviewModalOpen(false)} />
       <AccountProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />

@@ -26,6 +26,7 @@ interface UserProgress {
   earnedCreditIds?: string[];
   activeAvatarFrame?: string;
   activeNameGradient?: string;
+  activeNameColor?: string;
   inventory?: string[];
   activeBoosts?: Record<string, number>; // boostId -> expiryTimestamp
   displayName?: string;
@@ -59,7 +60,7 @@ interface ProgressContextType {
   spendCredits?: (amount: number) => Promise<boolean>;
   addCredits?: (amount: number, reason?: string) => Promise<void>;
   equipItem?: (itemType: string, itemId: string) => Promise<void>;
-  buyItem?: (itemId: string, cost: number, itemType: string) => Promise<boolean>;
+  buyItem?: (itemId: string, cost: number, itemType: string, customColorHex?: string) => Promise<boolean>;
   useBoostItem?: (boostId: string) => Promise<boolean>;
 }
 
@@ -1054,7 +1055,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     }
   };
 
-  const buyItem = async (itemId: string, cost: number, itemType: string): Promise<boolean> => {
+  const buyItem = async (itemId: string, cost: number, itemType: string, customColorHex?: string): Promise<boolean> => {
     const currentCreds = progress.credits || 0;
     if (currentCreds < cost) return false;
     const inv = progress.inventory || [];
@@ -1066,21 +1067,24 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         alert("You have reached the maximum limit of 3 for this boost!");
         return false;
       }
-    } else {
-      if (inv.includes(itemId)) return true; // cosmetics already owned
     }
 
     const newCreds = currentCreds - cost;
-    const newInv = [...inv, itemId];
+    const newInv = Array.from(new Set([...inv, itemId]));
     const isGradient = itemType === "gradient";
-    const activeFrame = !isGradient && itemType !== "boost" && itemType !== "powerup" ? itemId : progress.activeAvatarFrame;
-    const activeGrad = isGradient ? itemId : progress.activeNameGradient;
+    const isColorPicker = itemType === "color-picker" || itemId === "custom-name-color";
+    
+    const activeFrame = !isGradient && !isColorPicker && itemType !== "boost" && itemType !== "powerup" ? itemId : progress.activeAvatarFrame;
+    const activeGrad = isGradient ? itemId : (isColorPicker ? "" : progress.activeNameGradient);
+    const activeNameColor = isColorPicker && customColorHex ? customColorHex : progress.activeNameColor;
+
     const updated: UserProgress = {
       ...progress,
       credits: newCreds,
       inventory: newInv,
       activeAvatarFrame: activeFrame,
-      activeNameGradient: activeGrad
+      activeNameGradient: activeGrad,
+      activeNameColor
     };
     setProgress(updated);
     if (currentUser) {
@@ -1090,7 +1094,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         credits: newCreds,
         inventory: newInv,
         activeAvatarFrame: activeFrame,
-        activeNameGradient: activeGrad
+        activeNameGradient: activeGrad,
+        activeNameColor
       }, { merge: true }).catch(() => {});
     }
     return true;

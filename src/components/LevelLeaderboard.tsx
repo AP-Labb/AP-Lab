@@ -151,7 +151,9 @@ export function LevelLeaderboard() {
           {/* User Name & Level Badge */}
           <div className="flex flex-col md:flex-row md:items-center space-y-1.5 md:space-y-0 md:space-x-3">
             <span className="font-manrope font-bold text-white text-sm md:text-base leading-tight flex items-center gap-2">
-              <span className={cn(
+              <span 
+                style={isCurrentUser && progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}
+                className={cn(
                 isCurrentUser && progress?.activeNameGradient === "grad-fire" && "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent font-extrabold",
                 isCurrentUser && progress?.activeNameGradient === "grad-ocean" && "bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent font-extrabold",
                 isCurrentUser && progress?.activeNameGradient === "grad-gold" && "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-600 bg-clip-text text-transparent font-extrabold",

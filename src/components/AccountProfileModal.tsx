@@ -89,7 +89,7 @@ export function AccountProfileModal({ isOpen, onClose, defaultTab = "profile" }:
               )}
               <div className="text-left space-y-1">
                 <div className="flex items-center space-x-2">
-                  <h2 className="font-manrope font-extrabold text-xl text-white tracking-tight">{displayName}</h2>
+                  <h2 className="font-manrope font-extrabold text-xl text-white tracking-tight" style={progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}>{displayName}</h2>
                   <span className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40 text-[10px] font-mono font-bold text-blue-300 flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
                     <span>SCHOLAR LVL {level}</span>
