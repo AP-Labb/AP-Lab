@@ -1775,41 +1775,44 @@ export default function APDynamicCoursePage() {
                     </div>
                   </div>
 
-                  {/* Right Top Card: COURSE PROGRESS Box */}
-                  <div className="w-full md:w-72 bg-[#090b16]/90 border border-white/15 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest">COURSE PROGRESS</span>
-                      <span className="text-xs font-mono font-bold text-purple-400">0/4500 XP</span>
+                  {/* Right Top Card: COLLEGEBOARD OFFICIAL EXAM STRUCTURE */}
+                  <div className="w-full md:w-80 bg-[#090b16]/95 border border-amber-500/30 rounded-2xl p-5 shadow-2xl backdrop-blur-xl space-y-3.5">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-2.5">
+                      <span className="text-[10px] font-mono font-bold text-amber-400 uppercase tracking-widest">COLLEGEBOARD EXAM WEIGHTING</span>
+                      <FileText className="w-4 h-4 text-amber-400" />
                     </div>
-                    <div className="font-instrument text-4xl font-extrabold text-white">
-                      {courseProgressPercent}%
-                    </div>
-                    <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/10">
-                      <div 
-                        className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 transition-all duration-500 rounded-full" 
-                        style={{ width: `${courseProgressPercent}%` }}
-                      />
+
+                    <div className="space-y-2 text-xs font-manrope">
+                      <div className="flex justify-between items-center bg-white/5 p-2.5 rounded-xl border border-white/5">
+                        <span className="text-white/60 font-semibold">Multiple Choice (MCQ)</span>
+                        <span className="font-mono font-bold text-amber-300">50% Exam Weight</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/5 p-2.5 rounded-xl border border-white/5">
+                        <span className="text-white/60 font-semibold">Free Response (FRQ)</span>
+                        <span className="font-mono font-bold text-amber-300">50% Exam Weight</span>
+                      </div>
+                      <div className="flex justify-between items-center bg-white/5 p-2.5 rounded-xl border border-white/5">
+                        <span className="text-white/60 font-semibold">Course Units</span>
+                        <span className="font-mono font-bold text-white/90">{course.units.length} Units</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               );
             })()}
 
-            {/* MAIN CONTENT 2-COLUMN GRID */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              
-              {/* Left Column: Units & Subunits list (Course Path) */}
-              <div className="lg:col-span-2 space-y-6 text-left">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                  <div>
-                    <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest block">COURSE PATH</span>
-                    <h2 className="font-instrument text-2xl font-bold text-white">Units</h2>
-                  </div>
-                  <div className="text-xs font-mono text-white/50 space-x-4">
-                    <span>{course.units.length} units</span>
-                    <span>{courseProgressPercent}% complete</span>
-                  </div>
+            {/* MAIN CONTENT FULL-WIDTH GRID */}
+            <div className="w-full space-y-6 text-left">
+              <div className="flex items-center justify-between border-b border-white/10 pb-4">
+                <div>
+                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest block">OFFICIAL COURSE PATH</span>
+                  <h2 className="font-instrument text-2xl font-bold text-white">Units & Subunits</h2>
                 </div>
+                <div className="text-xs font-mono text-white/50 space-x-4">
+                  <span>{course.units.length} units</span>
+                  <span>{courseProgressPercent}% complete</span>
+                </div>
+              </div>
 
                 {/* Render Each Unit Card with Official CollegeBoard Weightings */}
                 {(() => {
@@ -1908,55 +1911,6 @@ export default function APDynamicCoursePage() {
                   </button>
                 </div>
               </div>
-
-              {/* Right Column: Course Progress & Mastery Grid (Matching Screenshot 2) */}
-              <div className="space-y-6 text-left">
-                <div className="bg-[#090b16]/90 border border-white/10 rounded-2xl p-6 shadow-xl space-y-6">
-                  <div className="flex items-center space-x-3 border-b border-white/10 pb-4">
-                    <BarChart2 className="w-5 h-5 text-blue-400" />
-                    <div>
-                      <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-widest block">COURSE</span>
-                      <h3 className="font-instrument text-xl font-bold text-white">Progress</h3>
-                    </div>
-                  </div>
-
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center text-xs font-mono">
-                      <span className="text-white/60">MASTERY GRID</span>
-                      <div className="flex space-x-3 text-white/40 text-[10px]">
-                        <span>📖 Lesson</span>
-                        <span>📹 Video</span>
-                        <span>♾️ Practice</span>
-                      </div>
-                    </div>
-
-                    <div className="space-y-2">
-                      {course.units.map((unit) => (
-                        <div key={unit.id} className="flex items-center space-x-3">
-                          <span className="font-mono text-xs font-bold text-white/50 w-4">{unit.id}</span>
-                          <div className="flex-1 grid grid-cols-6 gap-1.5">
-                            {unit.topics.slice(0, 6).map((t, idx) => (
-                              <button
-                                key={idx}
-                                onClick={() => {
-                                  setActiveUnit(unit.id);
-                                  setActiveTopic(t);
-                                  setViewMode("workspace");
-                                }}
-                                className="h-8 rounded-lg bg-white/5 border border-white/10 hover:bg-white/15 flex items-center justify-center text-white/40 text-xs transition-all"
-                              >
-                                ♾️
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            </div>
 
           </main>
         </div>

@@ -732,7 +732,7 @@ export default function Dashboard() {
                     return (
                       <Link 
                         key={cIdx} 
-                        href={`/dashboard/${cls.slug}`} 
+                        href={`/dashboard/${cls.slug}/preview`} 
                         className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer"
                       >
                         {/* Course Header Banner Image */}

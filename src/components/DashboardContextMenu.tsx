@@ -4,11 +4,13 @@ import React, { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { 
   Search, User, Calendar, LogOut, Compass, BookOpen, 
-  Home, LayoutDashboard, BarChart2, Star, Award, Bot, FileText, Folder, Sparkles, ArrowRight
+  Home, LayoutDashboard, BarChart2, Star, Award, Bot, FileText, Folder, Sparkles, ArrowRight, Package, Settings
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
+import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
+import { SettingsModal } from "@/components/SettingsModal";
 import { cn } from "@/lib/utils";
 
 interface ContextMenuProps {
@@ -35,6 +37,8 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
   const [visible, setVisible] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [searchOpen, setSearchOpen] = useState(false);
+  const [showMinecraftInventory, setShowMinecraftInventory] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
   
@@ -243,6 +247,33 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
               <span className="text-[9px] font-mono text-white/35 bg-white/5 border border-white/10 px-1 py-0.5 rounded">⌘G</span>
             </button>
 
+            <button
+              onClick={() => {
+                setVisible(false);
+                setShowMinecraftInventory(true);
+              }}
+              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+            >
+              <div className="flex items-center space-x-2.5">
+                <Package className="w-3.5 h-3.5 text-white/40" />
+                <span>Inventory</span>
+              </div>
+              <span className="text-[9px] font-mono text-white/35 bg-white/5 border border-white/10 px-1 py-0.5 rounded">⌘I</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setVisible(false);
+                setShowSettingsModal(true);
+              }}
+              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+            >
+              <div className="flex items-center space-x-2.5">
+                <Settings className="w-3.5 h-3.5 text-white/40" />
+                <span>Settings</span>
+              </div>
+            </button>
+
             <div className="h-[1px] bg-white/5 my-1" />
 
             <button
@@ -261,6 +292,9 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
           </motion.div>
         )}
       </AnimatePresence>
+
+      <MinecraftInventoryModal isOpen={showMinecraftInventory} onClose={() => setShowMinecraftInventory(false)} />
+      <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
 
       {/* Command Palette Search Modal */}
       <AnimatePresence>
