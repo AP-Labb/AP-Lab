@@ -37,10 +37,16 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
   const getItemDetails = (id: string) => {
     if (id === "boost-2x-xp") return { name: "2x XP Boost", type: "boost", desc: "Grants 2x Double XP for 10 hours", icon: "/images/2x-xp-boost.png" };
     if (id === "boost-2x-coin") return { name: "2x Coin Boost", type: "boost", desc: "Grants 2x Double Coins for 10 hours", icon: "/images/2x-coin-boost.png" };
-    if (id === "gear-sunglasses") return { name: "Sunglasses", type: "sunglasses", desc: "Cool shades wearable", icon: "🕶️" };
-    if (id === "gear-wizardhat") return { name: "Wizard Hat", type: "hat", desc: "Arcane wizard hat wearable", icon: "🧙‍♂️" };
-    if (id === "grad-fire") return { name: "Phoenix Fire", type: "gradient", desc: "Fiery red & orange name gradient", icon: "🔥" };
-    if (id === "grad-holographic") return { name: "Holo Gradient", type: "gradient", desc: "Holographic multi-color name gradient", icon: "🌈" };
+    if (id === "gear-top-hat") return { name: "Top Hat", type: "frame", desc: "Black magician top hat", icon: "/images/avatar-gear/top-hat.png" };
+    if (id === "gear-purple-beanie") return { name: "Purple Beanie", type: "frame", desc: "Winter beanie with pom pom", icon: "/images/avatar-gear/purple-beanie.png" };
+    if (id === "gear-purple-party-hat") return { name: "Purple Party Hat", type: "frame", desc: "Striped party cone hat", icon: "/images/avatar-gear/purple-party-hat.png" };
+    if (id === "gear-golden-crown") return { name: "Golden Crown", type: "frame", desc: "24k gold scholar crown", icon: "/images/avatar-gear/golden-crown.png" };
+    if (id === "gear-neon-pink-visor") return { name: "Cyber Neon Visor", type: "frame", desc: "Futuristic pink visor glasses", icon: "/images/avatar-gear/neon-pink-visor.png" };
+    if (id === "gear-dark-cyber-visor") return { name: "Dark Cyber Visor", type: "frame", desc: "Tactical dark sunglasses", icon: "/images/avatar-gear/dark-cyber-visor.png" };
+    if (id === "gear-face-mask") return { name: "Face Mask", type: "frame", desc: "Blue surgical face mask", icon: "/images/avatar-gear/face-mask.png" };
+    if (id === "gear-heart-necklace") return { name: "Heart Necklace", type: "frame", desc: "Pink gem heart pendant", icon: "/images/avatar-gear/heart-necklace.png" };
+    if (id === "gear-gold-chain") return { name: "Gold Chain", type: "frame", desc: "24k gold Cuban link chain", icon: "/images/avatar-gear/gold-chain.png" };
+    if (id === "custom-name-color") return { name: "Custom Name Color", type: "color-picker", desc: "Custom display name color", icon: "🎨" };
     return { name: id.replace("gear-", "").replace("frame-", ""), type: "item", desc: "Cosmetic Item", icon: "🛡️" };
   };
 

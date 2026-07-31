@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ShoppingBag, Sparkles, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
-  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench, RefreshCw, Zap, Stars
+  CheckCircle2, RotateCw, Crown, Palette, Dices, Activity, ArrowRight, Flame, Tag, Layers, Glasses, HardHat, Shield, X, PauseCircle, Wrench, RefreshCw, Zap, Stars, Package
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -58,7 +58,7 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Premium Shop Items (Boosters, Avatar Gear & Custom Name Color)
+// Custom Premium Shop Items (Boosters, Transparent PNG Gear & Custom Name Color)
 const GEAR_ITEMS = [
   // 10-Hour Boost Powerups
   { 
@@ -432,25 +432,25 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner using SHOPbanner.png with text positioned further right into open space */}
+          {/* Top Banner using SHOPbanner.png with text spread out horizontally to the right */}
           <div 
-            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[240px]"
+            className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[260px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            <div className="relative z-10 max-w-sm sm:max-w-md mr-auto space-y-3.5 text-left pl-28 sm:pl-48">
-              <h2 className="font-manrope text-3xl sm:text-4xl font-extrabold tracking-tight text-neutral-900 leading-tight">
+            <div className="relative z-10 max-w-xl sm:max-w-2xl mr-auto space-y-4 text-left pl-32 sm:pl-56 md:pl-64">
+              <h2 className="font-manrope text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
-              <p className="text-sm font-semibold text-neutral-800 font-manrope">
+              <p className="text-base font-bold text-neutral-800 font-manrope tracking-wide">
                 Get power ups, avatars, and customization hats & gear.
               </p>
-              <div className="pt-1">
+              <div className="pt-2">
                 <button 
                   onClick={() => setShowInventoryModal(true)}
-                  className="px-7 py-3.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl flex items-center space-x-2"
+                  className="px-8 py-3.5 rounded-full bg-neutral-950 hover:bg-neutral-800 text-white font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl flex items-center space-x-2.5"
                 >
-                  <ShoppingBag className="w-4 h-4 text-amber-400" />
-                  <span>My Inventory</span>
+                  <Package className="w-4.5 h-4.5 text-white" />
+                  <span className="text-white">My Inventory</span>
                 </button>
               </div>
             </div>
