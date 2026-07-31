@@ -70,7 +70,7 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Premium Shop Items with Cream Card Container Backgrounds & Bigger Avatars
+// Custom Premium Shop Items with Custom Item Pastel Background Colors & Bigger Avatars
 const GEAR_ITEMS = [
   // 10-Hour Boost Powerups
   { 
@@ -79,7 +79,7 @@ const GEAR_ITEMS = [
     desc: "Earn 2x Double XP on all study activities, quizzes, and completed topics for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center h-48 rounded-2xl",
+    innerBg: "bg-[#f4effc] border-purple-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "boost",
     renderAccessory: () => (
       <div className="w-32 h-32 flex items-center justify-center">
@@ -93,7 +93,7 @@ const GEAR_ITEMS = [
     desc: "Earn 2x Double Coins on daily quests, study duration, and correct answers for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center h-48 rounded-2xl",
+    innerBg: "bg-[#fef9e7] border-amber-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "boost",
     renderAccessory: () => (
       <div className="w-32 h-32 flex items-center justify-center">
@@ -102,297 +102,200 @@ const GEAR_ITEMS = [
     )
   },
 
-  // 1. Top Hat (Light Cream Background)
+  // 1. Top Hat (Very light neutral background)
   { 
     id: "gear-top-hat", 
     name: "Top Hat", 
     desc: "Classic black magician top hat", 
     cost: 50, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#f1f3f5] border-neutral-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-purple-500">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/top-hat.png" alt="Top Hat" className="absolute -top-[52%] left-1/2 -translate-x-1/2 w-[115%] h-[95%] object-contain z-10 pointer-events-none drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-top-hat" size="xl" />
     )
   },
 
-  // 2. Purple Beanie
+  // 2. Purple Beanie (Really light purple background)
   { 
     id: "gear-purple-beanie", 
     name: "Purple Beanie", 
     desc: "Cozy purple winter beanie with pom pom", 
     cost: 45, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#f3edfc] border-violet-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-violet-400">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-violet-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/purple-beanie.png" alt="Purple Beanie" className="absolute -top-[42%] left-1/2 -translate-x-1/2 w-[110%] h-[90%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-beanie" size="xl" />
     )
   },
 
-  // 3. Purple Striped Party Hat
+  // 3. Purple Striped Party Hat (Really light fuchsia background)
   { 
     id: "gear-purple-party-hat", 
     name: "Purple Party Hat", 
     desc: "Festive striped party cone hat with fluff top", 
     cost: 50, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#fbeafc] border-fuchsia-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-fuchsia-400">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-fuchsia-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/purple-party-hat.png" alt="Party Hat" className="absolute -top-[55%] left-1/2 -translate-x-1/2 w-[105%] h-[95%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-party-hat" size="xl" />
     )
   },
 
-  // 4. Golden Crown with Jewels
+  // 4. Golden Crown with Jewels (Really light yellow background)
   { 
     id: "gear-golden-crown", 
     name: "Golden Crown", 
     desc: "Royal 24k gold scholar crown with amethyst jewels", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#fefce8] border-yellow-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "crown",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-yellow-400">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/golden-crown.png" alt="Golden Crown" className="absolute -top-[36%] left-1/2 -translate-x-1/2 w-[105%] h-[75%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-crown" size="xl" />
     )
   },
 
-  // 5. Cyber Neon Pink Visor
+  // 5. Cyber Neon Pink Visor (Really light pink background)
   { 
     id: "gear-neon-pink-visor", 
     name: "Cyber Neon Visor", 
     desc: "Glowing futuristic pink cyberpunk visor glasses", 
     cost: 80, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#fce7f3] border-pink-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-pink-400 overflow-hidden">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-pink-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/neon-pink-visor.png" alt="Neon Pink Visor" className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[90%] h-[50%] object-contain z-10 pointer-events-none drop-shadow-[0_0_10px_rgba(236,72,153,0.8)]" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-neon-pink-visor" size="xl" />
     )
   },
 
-  // 6. Dark Cyber Visor
+  // 6. Dark Cyber Visor (Really light neutral background)
   { 
     id: "gear-dark-cyber-visor", 
     name: "Dark Cyber Visor", 
     desc: "Tactical dark tinted cyberpunk sunglasses", 
     cost: 75, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#f3f4f6] border-neutral-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-neutral-500 overflow-hidden">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-neutral-800 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/dark-cyber-visor.png" alt="Dark Cyber Visor" className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[90%] h-[50%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-dark-cyber-visor" size="xl" />
     )
   },
 
-  // 7. Face Mask
+  // 7. Face Mask (Really light cyan background)
   { 
     id: "gear-face-mask", 
     name: "Face Mask", 
     desc: "Protective blue surgical face mask", 
     cost: 35, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#ecfeff] border-cyan-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "mask",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-cyan-400 overflow-hidden">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-cyan-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/face-mask.png" alt="Face Mask" className="absolute top-[38%] left-1/2 -translate-x-1/2 w-[85%] h-[60%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-face-mask" size="xl" />
     )
   },
 
-  // 8. Heart Necklace
+  // 8. Heart Necklace (Really light rose background)
   { 
     id: "gear-heart-necklace", 
     name: "Heart Necklace", 
     desc: "Sparkling pink gem pendant necklace", 
     cost: 75, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#ffe4e6] border-rose-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-pink-400">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-pink-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/heart-necklace.png" alt="Heart Necklace" className="absolute -bottom-[40%] left-1/2 -translate-x-1/2 w-[95%] h-[85%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-heart-necklace" size="xl" />
     )
   },
 
-  // 9. Gold Chain
+  // 9. Gold Chain (Really light amber background)
   { 
     id: "gear-gold-chain", 
     name: "Gold Chain", 
     desc: "Shiny 24k gold Cuban link chain", 
     cost: 100, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#fef3c7] border-amber-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-amber-400">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/gold-chain.png" alt="Gold Chain" className="absolute -bottom-[32%] left-1/2 -translate-x-1/2 w-[95%] h-[75%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-gold-chain" size="xl" />
     )
   },
 
-  // 10. Devil Horns
+  // 10. Devil Horns (Really light red background)
   { 
     id: "gear-devil-horns", 
     name: "Devil Horns", 
-    desc: "Glowing crimson devil horns", 
+    desc: "Crimson devil horns", 
     cost: 100, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#fee2e2] border-red-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-red-500">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-red-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/devil-horns.png" alt="Devil Horns" className="absolute -top-[45%] left-1/2 -translate-x-1/2 w-[115%] h-[80%] object-contain z-10 pointer-events-none drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-devil-horns" size="xl" />
     )
   },
 
-  // 11. Red Bowtie
+  // 11. Red Bowtie (Really light red/rose background)
   { 
     id: "gear-red-bowtie", 
     name: "Red Bowtie", 
     desc: "Dapper crimson formal bowtie", 
     cost: 60, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#ffe4e6] border-rose-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-rose-500">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-rose-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/red-bowtie.png" alt="Red Bowtie" className="absolute -bottom-[22%] left-1/2 -translate-x-1/2 w-[80%] h-[50%] object-contain z-10 pointer-events-none drop-shadow-md" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-red-bowtie" size="xl" />
     )
   },
 
-  // 12. Golden Halo
+  // 12. Golden Halo (Really light yellow background)
   { 
     id: "gear-golden-halo", 
     name: "Golden Halo", 
     desc: "Radiant divine glowing yellow halo", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    innerBg: "bg-[#fef9c3] border-yellow-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-yellow-400">
-        {userPhoto ? (
-          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
-        ) : (
-          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-2xl text-white">
-            {(userName || "A").charAt(0).toUpperCase()}
-          </div>
-        )}
-        <img src="/images/avatar-gear/golden-halo.png" alt="Golden Halo" className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[110%] h-[70%] object-contain z-10 pointer-events-none drop-shadow-[0_0_12px_rgba(234,179,8,0.9)]" />
-      </div>
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-halo" size="xl" />
     )
   },
 
-  // 13. Custom Name Color Customization (Displays user's actual name in custom color)
+  // 13. Astronaut Helmet (Really light blue/grey background)
+  { 
+    id: "gear-astronaut-helmet", 
+    name: "Astronaut Helmet", 
+    desc: "Futuristic white space exploration helmet", 
+    cost: 120, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#eff6ff] border-blue-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "helmet",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-astronaut-helmet" size="xl" />
+    )
+  },
+
+  // 14. Custom Name Color Customization (Rotating Rainbow Animation on User's Display Name)
   { 
     id: "custom-name-color", 
     name: "Custom Name Color", 
     desc: "Choose any custom color hex for your display name across the site", 
     cost: 120, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
+    innerBg: "bg-gradient-to-br from-pink-100/90 via-purple-100/90 to-cyan-100/90 border-purple-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
     type: "color-picker",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="flex flex-col items-center justify-center h-full w-full space-y-1">
-        <span 
-          className="font-manrope font-extrabold text-2xl tracking-tight text-center drop-shadow-sm transition-colors"
-          style={{ color: "#ec4899" }}
-        >
+      <div className="flex flex-col items-center justify-center h-full w-full">
+        <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
           {userName || "Scholar"}
         </span>
       </div>
@@ -439,9 +342,9 @@ export default function ShopPage() {
     }
 
     if (isOwned) {
-      equipItem?.(item.type, isEquipped ? "" : item.id);
+      equipItem?.("frame", isEquipped ? "" : item.id);
     } else {
-      const success = await buyItem?.(item.id, item.cost, item.type);
+      const success = await buyItem?.(item.id, item.cost, "frame");
       if (!success) alert("Not enough coins!");
     }
   };
@@ -474,12 +377,12 @@ export default function ShopPage() {
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">
           
-          {/* Top Banner using SHOPbanner.png with text spread out horizontally to the right */}
+          {/* Top Banner with text & button shifted left to sit inside the cream space */}
           <div 
             className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-12 text-neutral-950 overflow-hidden shadow-2xl flex flex-col justify-center min-h-[260px]"
             style={{ backgroundImage: `url('/images/SHOPbanner.png')` }}
           >
-            <div className="relative z-10 max-w-xl sm:max-w-2xl mr-auto space-y-4 text-left pl-32 sm:pl-56 md:pl-64">
+            <div className="relative z-10 max-w-xl sm:max-w-2xl mr-auto space-y-4 text-left pl-12 sm:pl-28 md:pl-36">
               <h2 className="font-manrope text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-neutral-900 leading-tight">
                 Redeem coins for exclusive gear
               </h2>
@@ -519,14 +422,11 @@ export default function ShopPage() {
                     key={item.id}
                     className="relative rounded-3xl bg-[#12141e] border border-white/10 p-6 flex flex-col justify-between space-y-5 transition-all group shadow-xl hover:border-white/20"
                   >
-                    {/* Visual Card Display Box (Light Cream Pastel Rectangle with Larger Avatars) */}
+                    {/* Visual Card Display Box */}
                     <div className={cn(item.innerBg, "group-hover:scale-[1.02] transition-transform")}>
                       {item.id === "custom-name-color" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full">
-                          <span 
-                            className="font-manrope font-extrabold text-2xl tracking-tight text-center drop-shadow-sm transition-colors"
-                            style={{ color: customColorHex }}
-                          >
+                          <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-yellow-400 via-green-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
                             {userName}
                           </span>
                         </div>
@@ -575,7 +475,7 @@ export default function ShopPage() {
         </main>
       </div>
 
-      {/* ITEM CONFIRMATION & PURCHASE MODAL (Bigger Display & Horizontal Rainbow Slider Line) */}
+      {/* ITEM CONFIRMATION & PURCHASE MODAL */}
       <AnimatePresence>
         {selectedStoreItem && (
           <div 
@@ -596,7 +496,7 @@ export default function ShopPage() {
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Left Side Visual Box (Bigger Container & Avatar Display) */}
+              {/* Left Side Visual Box (Enlarged Avatar Display) */}
               <div className="w-full md:w-1/2 bg-[#0c0d16] p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[300px]">
                 {selectedStoreItem.type === "color-picker" ? (
                   <div className="flex flex-col items-center justify-center space-y-3 text-center">
@@ -630,7 +530,7 @@ export default function ShopPage() {
                     {selectedStoreItem.desc}
                   </p>
 
-                  {/* Horizontal Rainbow Color Slider Line (Matching exact user uploaded image!) */}
+                  {/* Horizontal Rainbow Color Slider Line */}
                   {selectedStoreItem.type === "color-picker" && (
                     <div className="mt-5 space-y-3 pt-3 border-t border-white/10">
                       <span className="text-[11px] font-mono font-bold text-white/60 block">Pick Display Color:</span>

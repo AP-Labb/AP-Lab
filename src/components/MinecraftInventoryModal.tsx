@@ -26,10 +26,12 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
   const displayName = progress?.displayName || currentUser?.displayName || "Steve";
   const photoURL = currentUser?.photoURL || progress?.photoURL || "";
 
-  // Group inventory items by count
+  // Group inventory items by count (excluding custom name color which is applied directly)
   const itemCounts: Record<string, number> = {};
   inventory.forEach((id) => {
-    itemCounts[id] = (itemCounts[id] || 0) + 1;
+    if (id !== "custom-name-color") {
+      itemCounts[id] = (itemCounts[id] || 0) + 1;
+    }
   });
 
   const uniqueItems = Object.keys(itemCounts);
@@ -46,7 +48,10 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
     if (id === "gear-face-mask") return { name: "Face Mask", type: "frame", desc: "Blue surgical face mask", icon: "/images/avatar-gear/face-mask.png" };
     if (id === "gear-heart-necklace") return { name: "Heart Necklace", type: "frame", desc: "Pink gem heart pendant", icon: "/images/avatar-gear/heart-necklace.png" };
     if (id === "gear-gold-chain") return { name: "Gold Chain", type: "frame", desc: "24k gold Cuban link chain", icon: "/images/avatar-gear/gold-chain.png" };
-    if (id === "custom-name-color") return { name: "Custom Name Color", type: "color-picker", desc: "Custom display name color", icon: "🎨" };
+    if (id === "gear-devil-horns") return { name: "Devil Horns", type: "frame", desc: "Crimson devil horns", icon: "/images/avatar-gear/devil-horns.png" };
+    if (id === "gear-red-bowtie") return { name: "Red Bowtie", type: "frame", desc: "Crimson formal bowtie", icon: "/images/avatar-gear/red-bowtie.png" };
+    if (id === "gear-golden-halo") return { name: "Golden Halo", type: "frame", desc: "Radiant yellow divine halo", icon: "/images/avatar-gear/golden-halo.png" };
+    if (id === "gear-astronaut-helmet") return { name: "Astronaut Helmet", type: "frame", desc: "White space exploration helmet", icon: "/images/avatar-gear/astronaut-helmet.png" };
     return { name: id.replace("gear-", "").replace("frame-", ""), type: "item", desc: "Cosmetic Item", icon: "🛡️" };
   };
 
