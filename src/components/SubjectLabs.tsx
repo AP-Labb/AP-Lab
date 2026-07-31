@@ -304,19 +304,8 @@ export function SubjectLabs() {
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => setActiveCourse("biology")}
                 whileHover={{ y: -6 }}
-                className={cn(
-                  "lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)]",
-                  isSelected 
-                    ? "border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.25)] bg-gradient-to-br from-[#121212] via-[#121212] to-emerald-950/20" 
-                    : "border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
-                )}
+                className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
               >
-                {isSelected && (
-                  <div className="absolute top-4 right-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-manrope font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm z-20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Enrolled Course
-                  </div>
-                )}
             <Cursor
               attachToParent
               variants={{

@@ -468,18 +468,13 @@ export default function QuestsPage() {
 
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-8 flex-1 text-left">
           
-          {/* Progress Summary Cards (3 Compact Stat Cards with Stock-like Percentage Badges) */}
+          {/* Progress Summary Cards (3 Compact Stat Cards displaying total available daily rewards) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center space-x-2">
-                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
-                  <span className="bg-[#051c14] border border-emerald-500/30 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
-                    <span className="text-[8px]">▲</span>
-                    <span>+44.4%</span>
-                  </span>
-                </div>
-                <span className="font-mono font-extrabold text-2xl text-purple-300 block">+{todayXpEarned} XP</span>
+              <div className="space-y-1 text-left">
+                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
+                <span className="font-mono font-extrabold text-2xl text-purple-300 block">+850 XP</span>
+                <span className="text-[10px] font-mono text-white/40 block">Available today</span>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
                 <img src="/images/xp-shield-exact.png" alt="XP" className="w-10 h-10 object-contain" />
@@ -487,15 +482,10 @@ export default function QuestsPage() {
             </div>
 
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center space-x-2">
-                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
-                  <span className="bg-[#051c14] border border-emerald-500/30 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
-                    <span className="text-[8px]">▲</span>
-                    <span>+25.0%</span>
-                  </span>
-                </div>
-                <span className="font-mono font-extrabold text-2xl text-amber-400 block">+{todayCoinsEarned}</span>
+              <div className="space-y-1 text-left">
+                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
+                <span className="font-mono font-extrabold text-2xl text-amber-400 block">+350</span>
+                <span className="text-[10px] font-mono text-white/40 block">Available today</span>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
                 <img src="/images/coin-exact.png" alt="Coins" className="w-10 h-10 object-contain" />
@@ -503,15 +493,10 @@ export default function QuestsPage() {
             </div>
 
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1.5 text-left">
-                <div className="flex items-center space-x-2">
-                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
-                  <span className="bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
-                    <span className="text-[8px]">▶</span>
-                    <span>100%</span>
-                  </span>
-                </div>
+              <div className="space-y-1 text-left">
+                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
                 <span className="font-mono font-extrabold text-2xl text-white block">{completedDailyCount} / {totalDailyQuests}</span>
+                <span className="text-[10px] font-mono text-emerald-400 font-bold block">Active Daily</span>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
                 <CheckCircle className="w-7 h-7" />
@@ -637,9 +622,9 @@ export default function QuestsPage() {
                                 onClick={() => handleClaimDailyQuest(quest)}
                                 disabled={!isComplete}
                                 className={cn(
-                                  "w-full py-3 rounded-xl text-xs font-manrope font-extrabold transition-all duration-150 flex items-center justify-center space-x-2 shadow-md",
+                                  "w-full py-3 rounded-xl text-xs font-manrope font-extrabold transition-all duration-150 flex items-center justify-center space-x-2 shadow-md border-none",
                                   isComplete 
-                                    ? "bg-[#10b981] hover:bg-[#059669] text-black font-extrabold shadow-[0_0_20px_rgba(16,185,129,0.5)] cursor-pointer" 
+                                    ? "bg-white hover:bg-neutral-200 text-black font-extrabold cursor-pointer" 
                                     : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                                 )}
                               >
@@ -724,7 +709,7 @@ export default function QuestsPage() {
                                 className={cn(
                                   "w-full py-2.5 rounded-xl text-xs font-manrope font-bold transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2 shadow-sm",
                                   isComplete 
-                                    ? "bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold" 
+                                    ? "bg-white hover:bg-neutral-200 text-black font-extrabold shadow-md border-none" 
                                     : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                                 )}
                               >
@@ -807,9 +792,9 @@ export default function QuestsPage() {
                                 onClick={() => handleClaimSpecialQuest(quest)}
                                 disabled={!isComplete}
                                 className={cn(
-                                  "w-full py-2.5 rounded-xl text-xs font-manrope font-bold transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2 shadow-sm",
+                                  "w-full py-2.5 rounded-xl text-xs font-manrope font-bold transition-all duration-150 cursor-pointer flex items-center justify-center space-x-2 shadow-sm border-none",
                                   isComplete 
-                                    ? "bg-emerald-500 hover:bg-emerald-400 text-black font-extrabold" 
+                                    ? "bg-white hover:bg-neutral-200 text-black font-extrabold shadow-md border-none" 
                                     : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                                 )}
                               >
@@ -893,12 +878,12 @@ export default function QuestsPage() {
                   onClick={handleClaimDailyBonus}
                   disabled={dailyBonusClaimed || isGiftOpening}
                   className={cn(
-                    "w-full py-3 rounded-xl font-manrope font-extrabold text-xs transition-all duration-150 cursor-pointer shadow-md flex items-center justify-center space-x-2",
+                    "w-full py-3 rounded-xl font-manrope font-extrabold text-xs transition-all duration-150 cursor-pointer shadow-md flex items-center justify-center space-x-2 border-none",
                     dailyBonusClaimed 
                       ? "bg-white/5 text-white/30 cursor-default border border-white/5" 
                       : isGiftOpening
                         ? "bg-amber-500 text-black animate-pulse"
-                        : "bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-black font-extrabold shadow-[0_0_20px_rgba(245,158,11,0.3)]"
+                        : "bg-white hover:bg-neutral-200 text-black font-extrabold shadow-md"
                   )}
                 >
                   {dailyBonusClaimed ? (
@@ -971,7 +956,7 @@ export default function QuestsPage() {
                           ) : isClicked ? (
                             <button
                               onClick={() => handleClaimSocialClick(task)}
-                              className="flex-1 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-black font-manrope font-extrabold text-xs cursor-pointer shadow-sm transition-all"
+                              className="flex-1 py-2 rounded-xl bg-white hover:bg-neutral-200 text-black font-manrope font-extrabold text-xs cursor-pointer shadow-md transition-all border-none"
                             >
                               Claim XP
                             </button>

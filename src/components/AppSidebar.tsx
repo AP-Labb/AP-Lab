@@ -84,7 +84,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
           <SidebarBody className="justify-between gap-6 h-screen overflow-y-auto">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {/* Top Logo */}
-            <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
+            <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
               <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-amber-400 transition-colors" />
               <motion.span
                 animate={{

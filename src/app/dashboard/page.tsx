@@ -733,7 +733,12 @@ export default function Dashboard() {
                       <Link 
                         key={cIdx} 
                         href={`/dashboard/${cls.slug}/preview`} 
-                        className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] border border-white/10 hover:border-white/30 transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer"
+                        className={cn(
+                          "group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer",
+                          isEnrolled 
+                            ? "border-2 border-emerald-400/80 shadow-[0_0_25px_rgba(52,211,153,0.35)]" 
+                            : "border border-white/10 hover:border-white/30"
+                        )}
                       >
                         {/* Course Header Banner Image */}
                         <div className="relative h-44 w-full overflow-hidden bg-slate-900">
