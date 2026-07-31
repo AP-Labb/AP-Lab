@@ -33,6 +33,7 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import FolderComponent from "@/components/Folder";
 import { AppSidebar } from "@/components/AppSidebar";
+import LiquidGradientCanvas from "@/components/ui/liquid-gradient";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import PixelBlast from "@/components/PixelBlast";
 
@@ -596,28 +597,18 @@ export default function Dashboard() {
         
         {/* UPPER REGION: Header with PixelBlast Background */}
         <div className="relative w-full flex flex-col items-center pt-16 pb-12 px-6 z-40 overflow-hidden">
-          {/* PixelBlast Background */}
-          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-            <PixelBlast
-              variant="circle"
-              pixelSize={6}
-              color="#B497CF"
-              patternScale={3}
-              patternDensity={1.2}
-              pixelSizeJitter={0.5}
-              enableRipples
-              rippleSpeed={0.4}
-              rippleThickness={0.12}
-              rippleIntensityScale={1.5}
-              liquid
-              liquidStrength={0.12}
-              liquidRadius={1.2}
-              liquidWobbleSpeed={5}
+          {/* Liquid Gradient WebGL Background */}
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-65">
+            <LiquidGradientCanvas
+              colors={["#2e1065", "#701a75", "#3b0f6f", "#0284c7", "#8b2fc9"]}
               speed={0.6}
-              edgeFade={0.25}
-              transparent
+              scale={0.5}
+              seed={15}
+              exposure={1.2}
+              contrast={1.15}
+              className="w-full h-full"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#03040a]/30 via-[#03040a]/60 to-[#060712]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#03040a]/20 via-[#03040a]/40 to-[#060712]" />
           </div>
 
           {/* Header Section */}

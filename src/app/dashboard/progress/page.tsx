@@ -22,41 +22,10 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
+import { AppSidebar } from "@/components/AppSidebar";
+import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 
-function SidebarSettingsButton({ open }: { open: boolean }) {
-  const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <>
-      <motion.button
-        onClick={() => setIsOpen(true)}
-        className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
-        whileHover="hover"
-        initial="rest"
-      >
-        <motion.div
-          className="flex-shrink-0"
-          variants={{
-            rest: { rotate: 0 },
-            hover: { rotate: 90 },
-          }}
-          transition={{ duration: 0.4, ease: "easeInOut" }}
-        >
-          <Settings className="w-5 h-5" />
-        </motion.div>
-        <motion.span
-          animate={{ display: open ? "inline-block" : "none", opacity: open ? 1 : 0 }}
-          transition={{ duration: 0.15 }}
-          className="text-sm font-manrope font-semibold whitespace-pre"
-        >
-          Settings
-        </motion.span>
-      </motion.button>
-      {isOpen && <SettingsModal isOpen={isOpen} onClose={() => setIsOpen(false)} />}
-    </>
-  );
-}
 
 // Helper to determine weekday headers
 const WEEKDAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -117,7 +86,7 @@ export default function ProgressPage() {
   }, []);
 
   // Compute metrics from actual account progress
-  const xp = progress.xp || 0;
+  const xp = progress?.xp || 0;
   const level = getLevelForXp(xp);
   const currentLevelThreshold = getXpThresholdForLevel(level);
   const nextLevelThreshold = getXpThresholdForLevel(level + 1);
@@ -125,14 +94,14 @@ export default function ProgressPage() {
   const xpInCurrentLevel = Math.max(0, xp - currentLevelThreshold);
   const progressPercent = Math.min(100, Math.max(0, (xpInCurrentLevel / xpNeededForNext) * 100));
 
-  const totalAnswered = progress.totalQuestionsAnswered || 0;
-  const totalCorrect = progress.totalQuestionsCorrect || 0;
+  const totalAnswered = progress?.totalQuestionsAnswered || 0;
+  const totalCorrect = progress?.totalQuestionsCorrect || 0;
   const accuracyRate = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
   const firstName = currentUser?.displayName?.split(" ")[0] || "Scholar";
 
   // Streaks - Pull real data from progress account
-  const streakCount = progress.streakCount || 0;
-  const maxStreak = progress.maxStreak || 0;
+  const streakCount = progress?.streakCount || 0;
+  const maxStreak = progress?.maxStreak || 0;
 
   const streakStyle = useMemo(() => {
     if (streakCount < 3) {
@@ -208,7 +177,7 @@ export default function ProgressPage() {
       return { practice: 0, mastery: 0, exams: 0 };
     }
     const quizXp = totalCorrect * 10;
-    const masteryXp = (progress.completedTopics?.length || 0) * 100;
+    const masteryXp = (progress?.completedTopics?.length || 0) * 100;
     const examXp = Math.max(0, xp - quizXp - masteryXp);
 
     const practicePercent = Math.min(100, Math.round((quizXp / xp) * 100));
@@ -220,7 +189,7 @@ export default function ProgressPage() {
       mastery: masteryPercent,
       exams: examsPercent
     };
-  }, [xp, totalCorrect, progress.completedTopics]);
+  }, [xp, totalCorrect, progress?.completedTopics]);
 
   const accuracyColor = useMemo(() => {
     if (accuracyRate >= 80) return "#22c55e"; // Green
@@ -236,7 +205,7 @@ export default function ProgressPage() {
 
   // Real tracked weekly study minutes from studyTimeLogs YYYY-MM-DD
   const weeklyStudyStats = useMemo(() => {
-    const logs = progress.studyTimeLogs || {};
+    const logs = progress?.studyTimeLogs || {};
     const result = [];
     
     // Get last 7 days ending today
@@ -253,7 +222,7 @@ export default function ProgressPage() {
       });
     }
     return result;
-  }, [progress.studyTimeLogs]);
+  }, [progress?.studyTimeLogs]);
 
   const totalMinutes = weeklyStudyStats.reduce((acc, curr) => acc + curr.minutes, 0);
   const weeklyTotalHours = (totalMinutes / 60).toFixed(1);
@@ -281,7 +250,7 @@ export default function ProgressPage() {
       });
     }
 
-    const activityLogs = progress.activityLogs || [];
+    const activityLogs = progress?.activityLogs || [];
 
     // Current month days mapping real logs
     for (let day = 1; day <= totalDays; day++) {
@@ -307,7 +276,7 @@ export default function ProgressPage() {
     }
 
     return days;
-  }, [currentDate, progress.activityLogs]);
+  }, [currentDate, progress?.activityLogs]);
 
   const handlePrevMonth = () => {
     setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1));
@@ -328,305 +297,16 @@ export default function ProgressPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-hidden transition-all duration-500 selection:bg-neutral-800 selection:text-white">
+    <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip transition-all duration-500 selection:bg-neutral-800 selection:text-white font-manrope">
 
-      {/* Left Sidebar — identical to dashboard */}
-      <Sidebar open={sidebarOpen} setOpen={setSidebarOpen}>
-        <SidebarBody className="justify-between gap-10">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden w-full">
-            {/* Logo */}
-            <Link
-              href="/"
-              className="font-normal flex items-center space-x-2.5 text-[#f5f5f5] text-sm py-1.5 px-2 relative z-20 hover:opacity-90 transition-opacity group"
-            >
-              <motion.div
-                className="flex-shrink-0"
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-white/80 transition-colors" />
-              </motion.div>
-              <motion.span
-                animate={{
-                  display: sidebarOpen ? "inline-block" : "none",
-                  opacity: sidebarOpen ? 1 : 0,
-                }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-bold text-white tracking-tight whitespace-pre text-sm"
-              >
-                AP Lab
-              </motion.span>
-            </Link>
+      {/* Unified App Sidebar with Sticky Navigation */}
+      <AppSidebar currentPath="/dashboard/progress" />
 
-            {/* Divider */}
-            <div className="h-px bg-white/[0.06] mb-4 mx-2" />
+      {/* Main Content Layout */}
+      <div className="flex-1 flex flex-col min-h-screen md:pl-16">
+        <UniversalTopHeader />
 
-            {/* Nav Links */}
-            <div className="flex flex-col gap-1 w-full">
-
-              {/* Home */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { y: 0, scale: 1 },
-                      hover: { y: -3, scale: 1.1 },
-                    }}
-                    transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Home className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Home
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Dashboard */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.15, rotate: 8 },
-                    }}
-                    transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <LayoutDashboard className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Dashboard
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Progress (Active) */}
-              <motion.div whileHover="hover" initial="rest">
-                <Link
-                  href="/dashboard/progress"
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 bg-white/10 text-white"
-                >
-                  <div className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]">
-                    {[
-                      { height: "40%", delay: 0 },
-                      { height: "70%", delay: 0.05 },
-                      { height: "55%", delay: 0.1 },
-                      { height: "90%", delay: 0.15 },
-                    ].map((bar, i) => (
-                      <motion.div
-                        key={i}
-                        className="flex-1 rounded-sm bg-current"
-                        style={{ height: bar.height }}
-                        variants={{
-                          rest: { scaleY: 1, originY: 1 },
-                          hover: { scaleY: [1, 1.5, 1.2, 1.35, 1], originY: 1 },
-                        }}
-                        transition={{ duration: 0.5, delay: bar.delay, ease: "easeInOut" }}
-                      />
-                    ))}
-                  </div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Progress
-                  </motion.span>
-                </Link>
-              </motion.div>
-
-              {/* Review */}
-              <motion.button
-                onClick={() => setIsReviewModalOpen(true)}
-                className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group/star"
-                whileHover="hover"
-                initial="rest"
-              >
-                <InstagramLikeStar />
-                <motion.span
-                  animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="text-sm font-manrope font-semibold whitespace-pre"
-                >
-                  Review
-                </motion.span>
-              </motion.button>
-
-              {/* Quests — link to /dashboard/quests */}
-              <Link href="/dashboard/quests" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="flex-shrink-0"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.18, rotate: -8 },
-                    }}
-                    transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                  >
-                    <Award className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    Quests
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* AI Assistant */}
-              <Link href="/assistant" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-white w-full group cursor-pointer"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="w-5 h-5 shrink-0 flex items-center justify-center"
-                    variants={{
-                      rest: { scale: 1, rotate: 0, y: 0 },
-                      hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0], y: -1 },
-                    }}
-                    transition={{ duration: 0.4, ease: "easeInOut" }}
-                  >
-                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre"
-                  >
-                    AI Assistant
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* Shop */}
-              <Link href="/shop" className="w-full">
-                <motion.div
-                  className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/50 hover:bg-white/[0.05] hover:text-amber-400 w-full group cursor-pointer"
-                  whileHover="hover"
-                  initial="rest"
-                >
-                  <motion.div
-                    className="w-5 h-5 shrink-0 flex items-center justify-center text-amber-400"
-                    variants={{
-                      rest: { scale: 1, rotate: 0 },
-                      hover: { scale: 1.2, rotate: 12 },
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                  </motion.div>
-                  <motion.span
-                    animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-sm font-manrope font-semibold whitespace-pre text-amber-400"
-                  >
-                    Shop
-                  </motion.span>
-                </motion.div>
-              </Link>
-
-              {/* Settings */}
-              <SidebarSettingsButton open={sidebarOpen} />
-
-            </div>
-          </div>
-
-          {/* Bottom: Profile Widget + Sign Out */}
-          <div className="flex flex-col gap-2 pb-6 w-full">
-            <div className="h-px bg-white/[0.06] mx-2 mb-2" />
-
-            <button
-              onClick={() => setShowAccountPopup(true)}
-              className="flex items-center gap-3 w-full px-2 py-2 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.05] hover:text-white"
-            >
-              <div className="flex-shrink-0">
-                {progress?.photoURL || currentUser?.photoURL ? (
-                  <img
-                    src={progress?.photoURL || currentUser?.photoURL || ""}
-                    alt="Avatar"
-                    className="w-7 h-7 rounded-full object-cover border border-white/20 flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-cyan-400 to-white flex-shrink-0">
-                    {firstName.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </div>
-
-              <AnimatePresence>
-                {sidebarOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.2 }}
-                    className="flex flex-col items-start text-left overflow-hidden"
-                  >
-                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[120px]">
-                      {progress?.displayName || currentUser?.displayName || "Scholar"}
-                    </span>
-                    <span className="font-mono font-bold text-[9px] text-white/40 tracking-wider mt-0.5 whitespace-nowrap">
-                      Lvl {level} • {xp.toLocaleString()} XP
-                    </span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
-
-            <motion.button
-              onClick={handleSignOut}
-              className="flex items-center gap-3 w-full px-2 py-2.5 rounded-xl transition-all duration-200 text-white/30 hover:bg-red-500/10 hover:text-red-400"
-              whileHover="hover"
-              initial="rest"
-            >
-              <motion.div
-                className="flex-shrink-0"
-                variants={{
-                  rest: { x: 0 },
-                  hover: { x: 3 },
-                }}
-                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-              >
-                <LogOut className="w-5 h-5" />
-              </motion.div>
-              <motion.span
-                animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-semibold text-sm whitespace-pre"
-              >
-                Sign Out
-              </motion.span>
-            </motion.button>
-          </div>
-        </SidebarBody>
-      </Sidebar>
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-y-auto md:pl-16 max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8 pb-20">
+        <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8 pb-20 text-left">
 
         {/* Header Block */}
         <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
@@ -1202,8 +882,6 @@ export default function ProgressPage() {
                 strokeWidth="2.5" 
                 strokeLinecap="round"
               />
-            </svg>
-
             <div className="flex justify-between items-center text-[10px] font-mono text-white/30 pt-2 border-t border-white/5">
               <span>Week 1</span>
               <span>Week 2</span>
@@ -1216,6 +894,7 @@ export default function ProgressPage() {
           </div>
         </motion.div>
 
+        </main>
       </div>
 
       {/* Account Profile Stats Modal */}

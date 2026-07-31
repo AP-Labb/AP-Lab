@@ -145,35 +145,43 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       {item.icon === "progress" ? (
                         <motion.div 
                           className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]"
-                          whileHover={{ scale: 1.15 }}
+                          variants={{
+                            rest: { scale: 1 },
+                            hover: { scale: 1.2 }
+                          }}
+                          transition={{ duration: 0.3 }}
                         >
                           {[
-                            { initialH: "40%", hoverH: ["40%", "90%", "60%", "40%"] },
-                            { initialH: "70%", hoverH: ["70%", "40%", "85%", "70%"] },
-                            { initialH: "55%", hoverH: ["55%", "95%", "50%", "55%"] },
-                            { initialH: "90%", hoverH: ["90%", "50%", "100%", "90%"] }
+                            { height: "40%" },
+                            { height: "70%" },
+                            { height: "55%" },
+                            { height: "90%" }
                           ].map((bar, i) => (
-                            <motion.div 
+                            <div 
                               key={i} 
                               className="flex-1 rounded-sm bg-current" 
-                              style={{ height: bar.initialH }}
-                              whileHover={{ height: bar.hoverH }}
-                              transition={{ duration: 0.4, repeat: Infinity, repeatType: "reverse" }}
+                              style={{ height: bar.height }}
                             />
                           ))}
                         </motion.div>
                       ) : item.icon === "panda" ? (
                         <motion.div 
                           className="w-5 h-5 shrink-0 flex items-center justify-center"
-                          whileHover={{ rotate: [-10, 10, -5, 5, 0], scale: 1.2 }}
+                          variants={{
+                            rest: { scale: 1, rotate: 0 },
+                            hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0] }
+                          }}
                           transition={{ duration: 0.4 }}
                         >
                           <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
                         </motion.div>
                       ) : (
                         <motion.div
-                          whileHover={{ scale: 1.2, rotate: 6 }}
-                          transition={{ duration: 0.2 }}
+                          variants={{
+                            rest: { scale: 1, rotate: 0 },
+                            hover: { scale: 1.22, rotate: 8 }
+                          }}
+                          transition={{ duration: 0.25, ease: "easeOut" }}
                           className="flex-shrink-0"
                         >
                           {/* @ts-ignore */}
