@@ -69,8 +69,8 @@ const GEAR_ITEMS = [
     innerBg: "bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-400/40",
     type: "boost",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-purple-500/20 border-2 border-purple-500 flex items-center justify-center text-purple-300 shadow-[0_0_25px_rgba(168,85,247,0.5)]">
-        <Zap className="w-11 h-11 fill-purple-400 drop-shadow-md" />
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
+        <img src="/images/2x-xp-boost.png" alt="2X XP Boost" className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
       </div>
     )
   },
@@ -83,8 +83,8 @@ const GEAR_ITEMS = [
     innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
     type: "boost",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full bg-amber-500/20 border-2 border-amber-500 flex items-center justify-center text-amber-300 shadow-[0_0_25px_rgba(245,158,11,0.5)]">
-        <img src="/images/coin-zoomed.png" alt="Coins" className="w-12 h-12 object-contain drop-shadow-md" />
+      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
+        <img src="/images/2x-coin-boost.png" alt="2X Coin Boost" className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]" />
       </div>
     )
   },

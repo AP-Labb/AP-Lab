@@ -1103,11 +1103,22 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const currentCreds = progress.credits || 0;
     if (currentCreds < cost) return false;
     const inv = progress.inventory || [];
-    if (inv.includes(itemId)) return true; // already owned
+    
+    const isBoost = itemId.startsWith("boost-");
+    if (isBoost) {
+      const boostCount = inv.filter((id) => id === itemId).length;
+      if (boostCount >= 3) {
+        alert("You have reached the maximum limit of 3 for this boost!");
+        return false;
+      }
+    } else {
+      if (inv.includes(itemId)) return true; // cosmetics already owned
+    }
+
     const newCreds = currentCreds - cost;
     const newInv = [...inv, itemId];
     const isGradient = itemType === "gradient";
-    const activeFrame = !isGradient && itemType !== "powerup" ? itemId : progress.activeAvatarFrame;
+    const activeFrame = !isGradient && itemType !== "boost" && itemType !== "powerup" ? itemId : progress.activeAvatarFrame;
     const activeGrad = isGradient ? itemId : progress.activeNameGradient;
     const updated: UserProgress = {
       ...progress,
