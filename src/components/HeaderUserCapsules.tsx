@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/ProgressContext";
 import { getXpThresholdForLevel } from "@/lib/xpProgression";
 import { LevelBadge } from "@/components/LevelBadge";
+import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { cn } from "@/lib/utils";
 
 interface HeaderUserCapsulesProps {
@@ -20,6 +21,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
 
   const [activeMenu, setActiveMenu] = useState<"none" | "streak" | "xp" | "coins">("none");
   const [showBadgesModal, setShowBadgesModal] = useState(false);
+  const [showInventoryModal, setShowInventoryModal] = useState(false);
 
   const xp = progress?.xp || 0;
   const level = progress?.level || 1;
@@ -271,13 +273,16 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                   </div>
                 </div>
 
-                {/* Action Buttons matching screenshot */}
+                {/* Action Buttons */}
                 <div className="grid grid-cols-2 gap-3">
                   <button
-                    onClick={() => router.push("/shop")}
+                    onClick={() => {
+                      setActiveMenu("none");
+                      setShowInventoryModal(true);
+                    }}
                     className="py-3 px-4 rounded-full bg-[#222433] hover:bg-[#2b2d40] border border-white/10 text-white font-manrope font-bold text-xs transition-all text-center cursor-pointer"
                   >
-                    My items
+                    My Inventory
                   </button>
                   <button
                     onClick={() => router.push("/shop")}
@@ -292,6 +297,8 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
         </div>
 
       </div>
+
+      <MinecraftInventoryModal isOpen={showInventoryModal} onClose={() => setShowInventoryModal(false)} />
 
       {/* 100 LEVEL BADGES MODAL */}
       <AnimatePresence>

@@ -468,11 +468,17 @@ export default function QuestsPage() {
 
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-8 flex-1 text-left">
           
-          {/* Progress Summary Cards (3 Compact Stat Cards displaying total available daily rewards) */}
+          {/* Progress Summary Cards (3 Compact Stat Cards with Stock-like Percentage Badges & Total Daily Available Rewards) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1 text-left">
-                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
+              <div className="space-y-1.5 text-left">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
+                  <span className="bg-[#051c14] border border-emerald-500/30 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
+                    <span className="text-[8px]">▲</span>
+                    <span>+44.4%</span>
+                  </span>
+                </div>
                 <span className="font-mono font-extrabold text-2xl text-purple-300 block">+850 XP</span>
                 <span className="text-[10px] font-mono text-white/40 block">Available today</span>
               </div>
@@ -482,8 +488,14 @@ export default function QuestsPage() {
             </div>
 
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1 text-left">
-                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
+              <div className="space-y-1.5 text-left">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
+                  <span className="bg-[#051c14] border border-emerald-500/30 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
+                    <span className="text-[8px]">▲</span>
+                    <span>+25.0%</span>
+                  </span>
+                </div>
                 <span className="font-mono font-extrabold text-2xl text-amber-400 block">+350</span>
                 <span className="text-[10px] font-mono text-white/40 block">Available today</span>
               </div>
@@ -493,8 +505,14 @@ export default function QuestsPage() {
             </div>
 
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1 text-left">
-                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
+              <div className="space-y-1.5 text-left">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
+                  <span className="bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
+                    <span className="text-[8px]">▶</span>
+                    <span>100%</span>
+                  </span>
+                </div>
                 <span className="font-mono font-extrabold text-2xl text-white block">{completedDailyCount} / {totalDailyQuests}</span>
                 <span className="text-[10px] font-mono text-emerald-400 font-bold block">Active Daily</span>
               </div>
@@ -811,37 +829,10 @@ export default function QuestsPage() {
 
             </div>
 
-            {/* Right Column (Sidebar Widgets: Streak, Weekly Progress, Exact Uploaded Giftbox Images, Social Quests) */}
+            {/* Right Column (Sidebar Widgets: Exact Uploaded Giftbox Images, Social Quests) */}
             <div className="space-y-6">
               
-              {/* Widget 1: Streak Card */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Flame className="w-5 h-5 text-amber-500" />
-                    <h4 className="font-manrope font-bold text-sm text-white">Current Streak</h4>
-                  </div>
-                  <span className="font-mono font-extrabold text-base text-amber-400">{streakCount} Days</span>
-                </div>
-                <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                  <div className="h-full bg-amber-500 rounded-full" style={{ width: `${Math.min(100, (streakCount / 7) * 100)}%` }} />
-                </div>
-                <p className="text-xs text-white/40 font-manrope">Next streak reward in 2 days</p>
-              </div>
-
-              {/* Widget 2: Weekly Progress Card */}
-              <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 space-y-3 shadow-sm">
-                <div className="flex items-center justify-between">
-                  <h4 className="font-manrope font-bold text-sm text-white">Weekly Progress</h4>
-                  <span className="font-mono font-bold text-xs text-white/60">18 / 25 Quests</span>
-                </div>
-                <div className="h-2 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                  <div className="h-full bg-white rounded-full" style={{ width: "72%" }} />
-                </div>
-                <p className="text-xs text-white/40 font-manrope">72% of weekly milestone completed</p>
-              </div>
-
-              {/* Widget 3: Daily Gift Box (Using Exact High-Res User Uploaded Closed/Open Giftbox Images) */}
+              {/* Widget 1: Daily Gift Box (Using Exact High-Res User Uploaded Closed/Open Giftbox Images) */}
               <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-6 space-y-4 shadow-sm flex flex-col items-center text-center relative overflow-hidden">
                 <h4 className="font-manrope font-bold text-sm text-white">Daily Gift Box</h4>
 

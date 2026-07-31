@@ -1,7 +1,6 @@
 "use client";
 
 import React from "react";
-import { Glasses, Crown, HardHat, Shield, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface UserAvatarProps {
@@ -23,7 +22,8 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
 
   const hasSunglasses = activeFrame === "gear-sunglasses";
   const hasCrown = activeFrame === "gear-crown" || activeFrame === "crown";
-  const hasHelmet = activeFrame === "gear-football" || activeFrame === "helmet";
+  const hasHelmet = activeFrame === "gear-helmet" || activeFrame === "gear-football" || activeFrame === "helmet";
+  const hasPartyHat = activeFrame === "gear-party-hat" || activeFrame === "party-hat";
   const isGoldFrame = activeFrame === "frame-gold";
   const isNeonFrame = activeFrame === "frame-neon" || activeFrame === "frame-cyber";
   const isEmeraldFrame = activeFrame === "frame-emerald";
@@ -32,7 +32,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
 
   return (
     <div className={cn("relative shrink-0 flex items-center justify-center select-none", sizeClasses, className)}>
-      {/* Outer Border Frame if equipped */}
+      {/* Outer Border Frame */}
       <div 
         className={cn(
           "w-full h-full rounded-full overflow-hidden flex items-center justify-center relative transition-all",
@@ -43,32 +43,49 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         )}
       >
         {photoURL ? (
-          <img src={photoURL} alt={name || "User"} className="w-full h-full object-cover" />
+          <img src={photoURL} alt={name || "User"} className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 text-black font-manrope font-extrabold flex items-center justify-center shadow-inner">
+          <div className="w-full h-full rounded-full bg-gradient-to-br from-amber-400 via-yellow-500 to-amber-600 text-black font-manrope font-extrabold flex items-center justify-center shadow-inner">
             {initial}
           </div>
         )}
 
-        {/* Sunglasses SVG Overlay */}
+        {/* 1. Sunglasses Wearable (Exact matching Shop preview) */}
         {hasSunglasses && (
-          <div className="absolute inset-0 flex items-center justify-center bg-black/20 backdrop-blur-[0.5px]">
-            <Glasses className="w-5 h-5 sm:w-6 sm:h-6 text-black fill-black drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]" />
+          <div className="absolute top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 w-3/4 flex items-center justify-between z-10 pointer-events-none drop-shadow-md">
+            <div className="w-[42%] h-3 bg-black rounded-sm border border-neutral-700" />
+            <div className="w-[16%] h-0.5 bg-black" />
+            <div className="w-[42%] h-3 bg-black rounded-sm border border-neutral-700" />
           </div>
         )}
       </div>
 
-      {/* Crown Accessory SVG Overlay */}
+      {/* 2. Golden Crown (Exact matching Shop preview) */}
       {hasCrown && (
-        <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10">
-          <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-amber-400 fill-amber-400 drop-shadow-[0_2px_6px_rgba(245,158,11,0.9)]" />
+        <div className="absolute -top-2.5 left-1/2 -translate-x-1/2 w-[85%] h-4 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-500 border border-yellow-600 rounded-t-md z-10 pointer-events-none drop-shadow-lg flex justify-between items-end px-0.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-rose-500 border border-yellow-700 -mt-1" />
+          <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 border border-yellow-700 -mt-1.5" />
+          <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 border border-yellow-700 -mt-1" />
         </div>
       )}
 
-      {/* Helmet Accessory SVG Overlay */}
+      {/* 3. Football Helmet (Exact matching Shop preview) */}
       {hasHelmet && (
-        <div className="absolute -top-2 right-0 z-10">
-          <HardHat className="w-4 h-4 text-red-500 fill-red-500 drop-shadow" />
+        <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-[105%] h-7 bg-gradient-to-b from-red-500 to-red-700 rounded-t-full border border-red-900 z-10 pointer-events-none flex flex-col items-center justify-between p-0.5 drop-shadow-lg overflow-hidden">
+          <div className="w-full h-0.5 bg-white rounded-full opacity-90" />
+          <div className="w-full h-3 bg-neutral-950/90 rounded-b-md border-t border-red-900 flex justify-around items-center px-0.5">
+            <div className="w-0.5 h-1.5 bg-neutral-300" />
+            <div className="w-0.5 h-1.5 bg-neutral-300" />
+            <div className="w-0.5 h-1.5 bg-neutral-300" />
+          </div>
+        </div>
+      )}
+
+      {/* 4. Party Cone Hat (Exact matching Shop preview) */}
+      {hasPartyHat && (
+        <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none drop-shadow-md flex flex-col items-center">
+          <div className="w-2 h-2 rounded-full bg-rose-500 shadow-md" />
+          <div className="w-0 h-0 border-l-[8px] border-l-transparent border-r-[8px] border-r-transparent border-b-[22px] border-b-amber-400" />
         </div>
       )}
     </div>

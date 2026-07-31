@@ -1586,7 +1586,7 @@ export default function APDynamicCoursePage() {
   const [topicInteracted, setTopicInteracted] = useState(false);
   const [tabInteracted, setTabInteracted] = useState(false);
 
-  const [viewMode, setViewMode] = useState<"overview" | "workspace">("overview");
+  const [viewMode, setViewMode] = useState<"overview" | "workspace">("workspace");
   const [showExamOutlineModal, setShowExamOutlineModal] = useState(false);
 
   // Safely initialize active topic on course load
@@ -1608,7 +1608,9 @@ export default function APDynamicCoursePage() {
       const urlParams = new URLSearchParams(window.location.search);
       const tabParam = urlParams.get("tab");
       const modeParam = urlParams.get("mode");
-      if (modeParam === "workspace") {
+      if (modeParam === "overview") {
+        setViewMode("overview");
+      } else {
         setViewMode("workspace");
       }
       if (tabParam === "article" || tabParam === "practice" || tabParam === "video") {

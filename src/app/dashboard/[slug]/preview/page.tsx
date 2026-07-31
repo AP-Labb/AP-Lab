@@ -94,43 +94,43 @@ export default function CoursePreviewPage({ params }: PageProps) {
 
         {/* HERO BANNER SECTION */}
         <div 
-          className="relative w-full rounded-3xl overflow-hidden border border-white/10 p-6 sm:p-10 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8"
+          className="relative w-full rounded-3xl overflow-hidden border border-white/15 p-6 sm:p-10 shadow-2xl flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8"
           style={{
-            backgroundImage: `linear-gradient(to right, rgba(7,9,20,0.95), rgba(7,9,20,0.82)), url('${heroBgImage}')`,
+            backgroundImage: `linear-gradient(to right, rgba(7,9,20,0.72), rgba(7,9,20,0.40)), url('${heroBgImage}')`,
             backgroundSize: "cover",
             backgroundPosition: "center"
           }}
         >
           <div className="space-y-4 max-w-xl text-left">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-purple-500/20 border border-purple-500/40 text-[10px] font-mono font-bold text-purple-300 uppercase tracking-wider shadow-sm">
                 AP
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider shadow-sm">
                 {course.category || "STEM"}
               </span>
-              <span className="px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[10px] font-mono font-bold text-white uppercase tracking-wider">
+              <span className="px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-500/40 text-[10px] font-mono font-bold text-cyan-300 uppercase tracking-wider shadow-sm">
                 High School
               </span>
             </div>
 
-            <h1 className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            <h1 className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight leading-tight drop-shadow-md">
               {course.name}
             </h1>
 
-            <p className="text-sm text-white/70 font-manrope leading-relaxed">
+            <p className="text-sm text-white/90 font-manrope leading-relaxed drop-shadow">
               Comprehensive CollegeBoard aligned curriculum, unit weightings, and practice exam workspace.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
-              <div className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-xs font-mono text-white/80">
-                <BookOpen className="w-4 h-4 text-white/60" />
+              <div className="flex items-center space-x-2 px-4 py-2.5 rounded-xl bg-black/40 border border-white/20 text-xs font-mono text-white backdrop-blur-md">
+                <BookOpen className="w-4 h-4 text-white/80" />
                 <span>{course.units.length} units</span>
               </div>
 
-              {/* Start Course Button (Link to actual course workspace page /dashboard/${slug}) */}
+              {/* Start Course Button (Link directly to course workspace mode) */}
               <Link
-                href={`/dashboard/${slug}`}
+                href={`/dashboard/${slug}?mode=workspace`}
                 className="flex items-center space-x-2.5 px-7 py-2.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-manrope font-extrabold text-sm transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95"
               >
                 <Play className="w-4 h-4 fill-white" />

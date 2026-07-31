@@ -644,50 +644,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* SEPARATION LINE PASSING DIRECTLY THROUGH THE VERTICAL MIDDLE OF THE SELECTION MENU */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20, scale: 0.94 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.32, ease: [0.22, 1, 0.36, 1] }}
-          className="relative w-full flex justify-center z-30 my-0"
-        >
-          {/* Horizontal Separation Line intersecting the middle */}
-          <div className="absolute top-1/2 left-0 right-0 h-[1px] bg-white/20 -translate-y-1/2 z-0 pointer-events-none" />
-
-          {/* Segmented Tab Selector sitting directly on top of the separation line */}
-          <div className="flex items-center justify-center p-1.5 rounded-full bg-[#0a0b12] border border-white/20 shadow-2xl gap-1.5 sm:gap-2 select-none z-10 relative">
-            {[
-              { id: "courses", label: "Courses", icon: Folder },
-              { id: "previews", label: "Previews", icon: Eye },
-              { id: "leaderboard", label: "Leaderboard", icon: Trophy }
-            ].map((tab) => {
-              const isActive = dashboardTab === tab.id;
-              const Icon = tab.icon;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => setDashboardTab(tab.id as any)}
-                  className="relative flex items-center space-x-2 px-5 sm:px-6 py-2 sm:py-2.5 rounded-full font-manrope font-bold text-xs sm:text-sm cursor-pointer transition-colors duration-300 z-10 select-none"
-                >
-                  {/* Regular White Capsule Oval */}
-                  {isActive && (
-                    <motion.div
-                      layoutId="activeDashboardTabOval"
-                      transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                      className="absolute inset-0 rounded-full bg-white shadow-lg z-0"
-                    />
-                  )}
-                  
-                  <Icon className={cn("w-4 h-4 relative z-10 transition-colors duration-300", isActive ? "text-black" : "text-white/60")} />
-                  <span className={cn("relative z-10 transition-colors duration-300", isActive ? "text-black font-extrabold" : "text-white/60 hover:text-white")}>
-                    {tab.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-        </motion.div>
-
         {/* LOWER REGION: Folders Grid with Grid Background Pattern */}
         <div 
           className="w-full flex-1 relative z-20 flex flex-col items-center pt-8 pb-12 px-6 md:px-12 bg-[#060712]"

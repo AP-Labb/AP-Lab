@@ -6,7 +6,7 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "./AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
 import { getLevelForXp } from "@/lib/xpProgression";
-import { playLevelUpSound } from "@/lib/sounds";
+import { playLevelUpSound, playSpinSound } from "@/lib/sounds";
 import { LevelBadge } from "@/components/LevelBadge";
 import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
@@ -109,13 +109,14 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
   const playedSoundRef = useRef(false);
 
   useEffect(() => {
-    // 1. Play the combined level up sound (riser + impact) on mount once
+    // 1. Play spin sound and level up sound on mount
     if (!playedSoundRef.current) {
       playedSoundRef.current = true;
+      playSpinSound();
       playLevelUpSound();
     }
 
-    // 2. Trigger morph at 1.8s
+    // 2. Trigger morph at 0.9s (fast, smooth spin)
     const morphTimer = setTimeout(() => {
       setIsMorphed(true);
       // Trigger a direct confetti burst at the morph instant
@@ -124,12 +125,12 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
         spread: 80,
         origin: { y: 0.5 }
       });
-    }, 1800);
+    }, 900);
 
-    // 3. Auto-hide modal at 4.2s (after new badge wiggles and text settles)
+    // 3. Auto-hide modal at 3.0s
     const closeTimer = setTimeout(() => {
       onClose();
-    }, 4200);
+    }, 3000);
 
     return () => {
       clearTimeout(morphTimer);
@@ -151,7 +152,7 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: [0, 1, 0] }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, times: [0, 0.2, 1] }}
+            transition={{ duration: 0.4, times: [0, 0.2, 1] }}
             className="absolute inset-0 bg-white pointer-events-none z-50 mix-blend-overlay"
           />
         )}
@@ -161,7 +162,7 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
         initial={{ scale: 0.85, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.85, opacity: 0 }}
-        transition={{ type: "spring", stiffness: 200, damping: 20 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
         className="w-full max-w-md bg-black border border-white/15 rounded-[36px] p-10 text-center relative overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.95)]"
       >
         <div className="relative z-10 flex flex-col items-center justify-center space-y-6">
@@ -170,7 +171,7 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
           <motion.h2 
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.1 }}
             className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight uppercase"
           >
             Level Up!
@@ -179,20 +180,19 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
           {/* Centered Morphing Badge Frame */}
           <div className="relative w-44 h-44 flex items-center justify-center">
             
-            {/* Spinning/Morphing Old Badge */}
+            {/* Faster/Smoother Spinning Old Badge */}
             {!isMorphed && (
               <motion.div
                 key="old-badge"
                 initial={{ scale: 1, rotate: 0, opacity: 1 }}
                 animate={{ 
-                  scale: [1, 1.1, 0.95, 0],
-                  rotate: [0, 90, 360],
-                  opacity: [1, 1, 0.8, 0]
+                  scale: [1, 1.15, 0],
+                  rotate: [0, 180, 540],
+                  opacity: [1, 1, 0]
                 }}
                 transition={{ 
-                  duration: 1.8,
-                  times: [0, 0.4, 0.8, 1],
-                  ease: "easeInOut"
+                  duration: 0.9,
+                  ease: [0.16, 1, 0.3, 1]
                 }}
                 className="absolute flex items-center justify-center"
               >
@@ -208,9 +208,9 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
                 animate={{ scale: 1.2, rotate: 0, opacity: 1 }}
                 transition={{ 
                   type: "spring",
-                  stiffness: 140,
-                  damping: 10,
-                  mass: 0.8
+                  stiffness: 220,
+                  damping: 14,
+                  mass: 0.6
                 }}
                 className="relative"
               >
