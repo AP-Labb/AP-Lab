@@ -23,6 +23,18 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
+import { UserAvatar } from "@/components/UserAvatar";
+
+function hslToHex(h: number, s: number, l: number) {
+  l /= 100;
+  const a = (s * Math.min(l, 1 - l)) / 100;
+  const f = (n: number) => {
+    const k = (n + h / 30) % 12;
+    const color = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+    return Math.round(255 * color).toString(16).padStart(2, "0");
+  };
+  return `#${f(0)}${f(8)}${f(4)}`;
+}
 
 function SidebarSettingsButton({ open }: { open: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,7 +70,7 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
   );
 }
 
-// Custom Premium Shop Items (Boosters, Transparent PNG Gear & Custom Name Color)
+// Custom Premium Shop Items with Cream Card Container Backgrounds & Bigger Avatars
 const GEAR_ITEMS = [
   // 10-Hour Boost Powerups
   { 
@@ -67,10 +79,10 @@ const GEAR_ITEMS = [
     desc: "Earn 2x Double XP on all study activities, quizzes, and completed topics for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center",
+    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center h-48 rounded-2xl",
     type: "boost",
     renderAccessory: () => (
-      <div className="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+      <div className="w-32 h-32 flex items-center justify-center">
         <img src="/images/2x-xp-boost.png" alt="2X XP Boost" className="w-full h-full object-contain select-none" />
       </div>
     )
@@ -81,30 +93,30 @@ const GEAR_ITEMS = [
     desc: "Earn 2x Double Coins on daily quests, study duration, and correct answers for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center",
+    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center h-48 rounded-2xl",
     type: "boost",
     renderAccessory: () => (
-      <div className="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+      <div className="w-32 h-32 flex items-center justify-center">
         <img src="/images/2x-coin-boost.png" alt="2X Coin Boost" className="w-full h-full object-contain select-none" />
       </div>
     )
   },
 
-  // 1. Top Hat
+  // 1. Top Hat (Light Cream Background)
   { 
     id: "gear-top-hat", 
     name: "Top Hat", 
     desc: "Classic black magician top hat", 
     cost: 50, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-purple-500">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-purple-500">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-purple-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -120,14 +132,14 @@ const GEAR_ITEMS = [
     desc: "Cozy purple winter beanie with pom pom", 
     cost: 45, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-violet-500/20 to-purple-500/20 border-violet-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-violet-400">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-violet-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-violet-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-violet-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -143,14 +155,14 @@ const GEAR_ITEMS = [
     desc: "Festive striped party cone hat with fluff top", 
     cost: 50, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-fuchsia-500/20 to-purple-500/20 border-fuchsia-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-fuchsia-400">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-fuchsia-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-fuchsia-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-fuchsia-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -166,14 +178,14 @@ const GEAR_ITEMS = [
     desc: "Royal 24k gold scholar crown with amethyst jewels", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-yellow-500/20 to-amber-500/20 border-yellow-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "crown",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-yellow-400">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-yellow-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -189,14 +201,14 @@ const GEAR_ITEMS = [
     desc: "Glowing futuristic pink cyberpunk visor glasses", 
     cost: 80, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-pink-500/20 to-fuchsia-500/20 border-pink-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-pink-400 overflow-hidden">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-pink-400 overflow-hidden">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-pink-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-pink-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -212,14 +224,14 @@ const GEAR_ITEMS = [
     desc: "Tactical dark tinted cyberpunk sunglasses", 
     cost: 75, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-neutral-700/20 to-neutral-900/20 border-neutral-600/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-neutral-500 overflow-hidden">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-neutral-500 overflow-hidden">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-neutral-800 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-neutral-800 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -235,14 +247,14 @@ const GEAR_ITEMS = [
     desc: "Protective blue surgical face mask", 
     cost: 35, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border-cyan-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "mask",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-cyan-400 overflow-hidden">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-cyan-400 overflow-hidden">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-cyan-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-cyan-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -258,14 +270,14 @@ const GEAR_ITEMS = [
     desc: "Sparkling pink gem pendant necklace", 
     cost: 75, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-pink-500/20 to-rose-500/20 border-pink-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-pink-400">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-pink-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-pink-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-pink-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -281,14 +293,14 @@ const GEAR_ITEMS = [
     desc: "Shiny 24k gold Cuban link chain", 
     cost: 100, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center shadow-lg bg-neutral-900 border-2 border-amber-400">
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-amber-400">
         {userPhoto ? (
           <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
         ) : (
-          <div className="w-full h-full rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-xl text-white">
+          <div className="w-full h-full rounded-full bg-amber-500/20 flex items-center justify-center font-bold text-2xl text-white">
             {(userName || "A").charAt(0).toUpperCase()}
           </div>
         )}
@@ -297,33 +309,95 @@ const GEAR_ITEMS = [
     )
   },
 
-  // 10. Custom Name Color Customization
+  // 10. Devil Horns
+  { 
+    id: "gear-devil-horns", 
+    name: "Devil Horns", 
+    desc: "Glowing crimson devil horns", 
+    cost: 100, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-red-500">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-red-500/20 flex items-center justify-center font-bold text-2xl text-white">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        <img src="/images/avatar-gear/devil-horns.png" alt="Devil Horns" className="absolute -top-[45%] left-1/2 -translate-x-1/2 w-[115%] h-[80%] object-contain z-10 pointer-events-none drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]" />
+      </div>
+    )
+  },
+
+  // 11. Red Bowtie
+  { 
+    id: "gear-red-bowtie", 
+    name: "Red Bowtie", 
+    desc: "Dapper crimson formal bowtie", 
+    cost: 60, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "necklace",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-rose-500">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-rose-500/20 flex items-center justify-center font-bold text-2xl text-white">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        <img src="/images/avatar-gear/red-bowtie.png" alt="Red Bowtie" className="absolute -bottom-[22%] left-1/2 -translate-x-1/2 w-[80%] h-[50%] object-contain z-10 pointer-events-none drop-shadow-md" />
+      </div>
+    )
+  },
+
+  // 12. Golden Halo
+  { 
+    id: "gear-golden-halo", 
+    name: "Golden Halo", 
+    desc: "Radiant divine glowing yellow halo", 
+    cost: 150, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <div className="relative w-28 h-28 rounded-full flex items-center justify-center shadow-md bg-neutral-900 border-2 border-yellow-400">
+        {userPhoto ? (
+          <img src={userPhoto} alt="User Avatar" className="w-full h-full object-cover rounded-full" />
+        ) : (
+          <div className="w-full h-full rounded-full bg-yellow-500/20 flex items-center justify-center font-bold text-2xl text-white">
+            {(userName || "A").charAt(0).toUpperCase()}
+          </div>
+        )}
+        <img src="/images/avatar-gear/golden-halo.png" alt="Golden Halo" className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[110%] h-[70%] object-contain z-10 pointer-events-none drop-shadow-[0_0_12px_rgba(234,179,8,0.9)]" />
+      </div>
+    )
+  },
+
+  // 13. Custom Name Color Customization (Displays user's actual name in custom color)
   { 
     id: "custom-name-color", 
     name: "Custom Name Color", 
     desc: "Choose any custom color hex for your display name across the site", 
     cost: 120, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-gradient-to-br from-fuchsia-500/20 via-purple-500/20 to-cyan-500/20 border-fuchsia-400/40",
+    innerBg: "bg-[#fefaf4] border-amber-200/50 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
     type: "color-picker",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full space-y-1">
-        <Palette className="w-8 h-8 text-fuchsia-400 animate-bounce" />
-        <span className="font-manrope font-extrabold text-sm bg-gradient-to-r from-fuchsia-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent text-center">
-          Custom Color
+        <span 
+          className="font-manrope font-extrabold text-2xl tracking-tight text-center drop-shadow-sm transition-colors"
+          style={{ color: "#ec4899" }}
+        >
+          {userName || "Scholar"}
         </span>
       </div>
     )
   },
-];
-
-// Slot Machine Symbols
-const SLOT_SYMBOLS = [
-  { symbol: "🎰", name: "Lucky 7", multiplier: 10, color: "text-amber-400" },
-  { symbol: "💎", name: "Diamond Gem", multiplier: 7, color: "text-cyan-400" },
-  { symbol: "👑", name: "Golden Crown", multiplier: 5, color: "text-yellow-400" },
-  { symbol: "⚡", name: "Lightning Bolt", multiplier: 3, color: "text-purple-400" },
-  { symbol: "🍒", name: "Cherry Pair", multiplier: 2, color: "text-rose-400" },
 ];
 
 export default function ShopPage() {
@@ -338,6 +412,7 @@ export default function ShopPage() {
   const [powerupStatusMsg, setPowerupStatusMsg] = useState<string | null>(null);
   const [showInventoryModal, setShowInventoryModal] = useState(false);
   const [customColorHex, setCustomColorHex] = useState("#ec4899");
+  const [hueValue, setHueValue] = useState(330);
 
   const credits = progress?.credits || 0;
   const level = progress?.level || 1;
@@ -347,16 +422,6 @@ export default function ShopPage() {
   const activeGrad = progress?.activeNameGradient || "";
   const userName = progress?.displayName || currentUser?.displayName || "Scholar";
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      router.push("/");
-    } catch (e) {
-      console.error("Sign out error:", e);
-    }
-  };
-
-  // Functional Store Item Trigger (Handles boosts, wearables, color pickers & gradients)
   const handleItemClick = async (item: typeof GEAR_ITEMS[0], isOwned: boolean, isEquipped: boolean) => {
     if (item.type === "boost") {
       const success = await buyItem?.(item.id, item.cost, item.type);
@@ -370,7 +435,6 @@ export default function ShopPage() {
     }
 
     if (item.type === "color-picker") {
-      // Color picker handled via modal
       return;
     }
 
@@ -441,7 +505,7 @@ export default function ShopPage() {
             </motion.div>
           )}
 
-          {/* Store Items Grid with Dark Card Outer Frame & Light Inner Preview Rectangle */}
+          {/* Store Items Grid */}
           <section className="space-y-6 pt-4">
             <h3 className="font-manrope text-xl font-bold text-white">Store Items</h3>
 
@@ -455,9 +519,20 @@ export default function ShopPage() {
                     key={item.id}
                     className="relative rounded-3xl bg-[#12141e] border border-white/10 p-6 flex flex-col justify-between space-y-5 transition-all group shadow-xl hover:border-white/20"
                   >
-                    {/* Visual Card Display Box (Light Inner Pastel Rectangle) */}
-                    <div className={cn("w-full h-36 rounded-2xl border flex items-center justify-center relative overflow-hidden group-hover:scale-[1.02] transition-transform p-3", item.innerBg)}>
-                      {item.renderAccessory(currentUser?.photoURL || undefined, userName)}
+                    {/* Visual Card Display Box (Light Cream Pastel Rectangle with Larger Avatars) */}
+                    <div className={cn(item.innerBg, "group-hover:scale-[1.02] transition-transform")}>
+                      {item.id === "custom-name-color" ? (
+                        <div className="flex flex-col items-center justify-center h-full w-full">
+                          <span 
+                            className="font-manrope font-extrabold text-2xl tracking-tight text-center drop-shadow-sm transition-colors"
+                            style={{ color: customColorHex }}
+                          >
+                            {userName}
+                          </span>
+                        </div>
+                      ) : (
+                        item.renderAccessory(currentUser?.photoURL || undefined, userName)
+                      )}
                     </div>
 
                     {/* Title & Simple Description */}
@@ -500,7 +575,7 @@ export default function ShopPage() {
         </main>
       </div>
 
-      {/* ITEM CONFIRMATION & PURCHASE MODAL */}
+      {/* ITEM CONFIRMATION & PURCHASE MODAL (Bigger Display & Horizontal Rainbow Slider Line) */}
       <AnimatePresence>
         {selectedStoreItem && (
           <div 
@@ -512,77 +587,68 @@ export default function ShopPage() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-lg bg-[#141622] border border-white/15 rounded-[36px] overflow-hidden shadow-2xl flex flex-col md:flex-row text-white"
+              className="relative w-full max-w-xl bg-[#141622] border border-white/15 rounded-[36px] overflow-hidden shadow-2xl flex flex-col md:flex-row text-white"
             >
               <button
                 onClick={() => setSelectedStoreItem(null)}
-                className="absolute top-4 right-4 z-30 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all cursor-pointer"
+                className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
 
-              {/* Left Side Visual Box */}
-              <div className="w-full md:w-1/2 bg-[#0c0d16] p-8 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[220px]">
+              {/* Left Side Visual Box (Bigger Container & Avatar Display) */}
+              <div className="w-full md:w-1/2 bg-[#0c0d16] p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[300px]">
                 {selectedStoreItem.type === "color-picker" ? (
                   <div className="flex flex-col items-center justify-center space-y-3 text-center">
                     <span className="text-xs font-mono text-white/40 uppercase tracking-wider">Live Name Preview</span>
-                    <span className="font-manrope font-extrabold text-2xl tracking-tight transition-all drop-shadow-md" style={{ color: customColorHex }}>
+                    <span className="font-manrope font-extrabold text-3xl tracking-tight transition-colors drop-shadow-md" style={{ color: customColorHex }}>
                       {userName}
                     </span>
-                    <span className="text-[10px] font-mono text-white/30">{customColorHex.toUpperCase()}</span>
+                    <span className="text-xs font-mono text-white/30">{customColorHex.toUpperCase()}</span>
                   </div>
                 ) : (
-                  selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)
+                  <div className="transform scale-125 flex items-center justify-center">
+                    {selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)}
+                  </div>
                 )}
               </div>
 
               {/* Right Side Item Info & Purchase Confirm Button */}
-              <div className="w-full md:w-1/2 p-6 sm:p-8 flex flex-col justify-between text-left space-y-6">
+              <div className="w-full md:w-1/2 p-8 flex flex-col justify-between text-left space-y-6">
                 <div>
                   <div className="bg-white/10 text-white/70 font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full w-fit mb-3">
                     {selectedStoreItem.type === "color-picker" ? "Custom Color" : "0/1 Available"}
                   </div>
-                  <h3 className="font-manrope font-extrabold text-2xl text-white tracking-tight">
+                  <h3 className="font-manrope font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
                     {selectedStoreItem.name}
                   </h3>
                   <div className="flex items-center space-x-2 mt-2">
-                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-6 h-6 object-contain" />
-                    <span className="font-manrope font-extrabold text-xl text-amber-400">{selectedStoreItem.cost}</span>
+                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-7 h-7 object-contain" />
+                    <span className="font-manrope font-extrabold text-2xl text-amber-400">{selectedStoreItem.cost}</span>
                   </div>
                   <p className="text-xs text-white/50 font-manrope mt-2 leading-relaxed">
                     {selectedStoreItem.desc}
                   </p>
 
-                  {/* Interactive Swatch & Hex Picker when item is Custom Name Color */}
+                  {/* Horizontal Rainbow Color Slider Line (Matching exact user uploaded image!) */}
                   {selectedStoreItem.type === "color-picker" && (
-                    <div className="mt-4 space-y-3 pt-3 border-t border-white/10">
-                      <span className="text-[11px] font-mono font-bold text-white/60 block">Choose Display Color:</span>
-                      <div className="flex flex-wrap gap-2">
-                        {["#f43f5e", "#ec4899", "#d946ef", "#a855f7", "#3b82f6", "#06b6d4", "#10b981", "#f59e0b", "#ef4444", "#ffffff"].map((color) => (
-                          <button
-                            key={color}
-                            onClick={() => setCustomColorHex(color)}
-                            className={cn(
-                              "w-7 h-7 rounded-full border-2 transition-transform cursor-pointer shadow-sm hover:scale-110",
-                              customColorHex === color ? "border-white scale-110 ring-2 ring-white/40" : "border-transparent"
-                            )}
-                            style={{ backgroundColor: color }}
-                          />
-                        ))}
-                      </div>
-
-                      <div className="flex items-center space-x-2 pt-1">
+                    <div className="mt-5 space-y-3 pt-3 border-t border-white/10">
+                      <span className="text-[11px] font-mono font-bold text-white/60 block">Pick Display Color:</span>
+                      <div className="relative w-full flex items-center py-2">
                         <input 
-                          type="color" 
-                          value={customColorHex}
-                          onChange={(e) => setCustomColorHex(e.target.value)}
-                          className="w-8 h-8 rounded-lg bg-transparent border-0 cursor-pointer p-0"
-                        />
-                        <input 
-                          type="text" 
-                          value={customColorHex}
-                          onChange={(e) => setCustomColorHex(e.target.value)}
-                          className="px-3 py-1.5 rounded-xl bg-white/5 border border-white/10 font-mono text-xs text-white font-bold w-28 uppercase"
+                          type="range" 
+                          min="0" 
+                          max="360" 
+                          value={hueValue} 
+                          onChange={(e) => {
+                            const h = Number(e.target.value);
+                            setHueValue(h);
+                            setCustomColorHex(hslToHex(h, 100, 50));
+                          }} 
+                          className="w-full h-3 rounded-full appearance-none cursor-pointer outline-none shadow-md"
+                          style={{
+                            background: "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)"
+                          }}
                         />
                       </div>
                     </div>
@@ -610,9 +676,9 @@ export default function ShopPage() {
                   }}
                   disabled={credits < selectedStoreItem.cost && !inventory.includes(selectedStoreItem.id) && selectedStoreItem.type !== "color-picker"}
                   className={cn(
-                    "w-full py-3.5 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2 border-none",
+                    "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2 border-none",
                     selectedStoreItem.type === "color-picker"
-                      ? (credits >= selectedStoreItem.cost ? "bg-fuchsia-500 hover:bg-fuchsia-400 text-white shadow-[0_0_20px_rgba(217,70,239,0.4)]" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
+                      ? (credits >= selectedStoreItem.cost ? "bg-emerald-500 hover:bg-emerald-400 text-black font-black" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
                       : inventory.includes(selectedStoreItem.id)
                         ? "bg-amber-400 text-black hover:bg-amber-300"
                         : credits >= selectedStoreItem.cost 
@@ -622,7 +688,7 @@ export default function ShopPage() {
                 >
                   <span>
                     {selectedStoreItem.type === "color-picker"
-                      ? (credits >= selectedStoreItem.cost ? `Buy & Set Color (${selectedStoreItem.cost} Coins)` : "Not Enough Coins")
+                      ? (credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins")
                       : inventory.includes(selectedStoreItem.id) ? "Equip Now" : credits >= selectedStoreItem.cost ? "Purchase" : "Not Enough Coins"}
                   </span>
                 </button>

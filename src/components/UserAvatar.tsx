@@ -7,7 +7,7 @@ interface UserAvatarProps {
   photoURL?: string | null;
   name?: string | null;
   activeFrame?: string | null;
-  size?: "xs" | "sm" | "md" | "lg" | "xl";
+  size?: "xs" | "sm" | "md" | "lg" | "xl" | "2xl";
   className?: string;
 }
 
@@ -18,6 +18,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
     md: "w-10 h-10 text-sm",
     lg: "w-14 h-14 text-xl",
     xl: "w-20 h-20 text-3xl",
+    "2xl": "w-32 h-32 text-5xl",
   }[size];
 
   const hasTopHat = activeFrame === "gear-top-hat";
@@ -29,12 +30,33 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
   const hasFaceMask = activeFrame === "gear-face-mask";
   const hasHeartNecklace = activeFrame === "gear-heart-necklace";
   const hasGoldChain = activeFrame === "gear-gold-chain";
+  const hasDevilHorns = activeFrame === "gear-devil-horns";
+  const hasRedBowtie = activeFrame === "gear-red-bowtie";
+  const hasGoldenHalo = activeFrame === "gear-golden-halo";
 
   const initial = (name || "S").charAt(0).toUpperCase();
 
   return (
     <div className={cn("relative shrink-0 flex items-center justify-center select-none", sizeClasses, className)}>
-      {/* 1. Top Hat Wearable (Positioned above avatar head) */}
+      {/* 1. Golden Halo (Floats above head) */}
+      {hasGoldenHalo && (
+        <img 
+          src="/images/avatar-gear/golden-halo.png" 
+          alt="Golden Halo" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[110%] h-[70%] object-contain z-20 pointer-events-none drop-shadow-[0_0_12px_rgba(234,179,8,0.9)]" 
+        />
+      )}
+
+      {/* 2. Devil Horns (Positioned on top of head) */}
+      {hasDevilHorns && (
+        <img 
+          src="/images/avatar-gear/devil-horns.png" 
+          alt="Devil Horns" 
+          className="absolute -top-[45%] left-1/2 -translate-x-1/2 w-[115%] h-[80%] object-contain z-20 pointer-events-none drop-shadow-[0_0_10px_rgba(239,68,68,0.8)]" 
+        />
+      )}
+
+      {/* 3. Top Hat Wearable */}
       {hasTopHat && (
         <img 
           src="/images/avatar-gear/top-hat.png" 
@@ -43,7 +65,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 2. Purple Beanie Wearable */}
+      {/* 4. Purple Beanie Wearable */}
       {hasPurpleBeanie && (
         <img 
           src="/images/avatar-gear/purple-beanie.png" 
@@ -52,7 +74,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 3. Purple Party Hat Wearable */}
+      {/* 5. Purple Party Hat Wearable */}
       {hasPartyHat && (
         <img 
           src="/images/avatar-gear/purple-party-hat.png" 
@@ -61,7 +83,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 4. Golden Crown Wearable */}
+      {/* 6. Golden Crown Wearable */}
       {hasCrown && (
         <img 
           src="/images/avatar-gear/golden-crown.png" 
@@ -80,7 +102,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           </div>
         )}
 
-        {/* 5. Neon Pink Cyber Visor (Positioned over eyes) */}
+        {/* 7. Neon Pink Cyber Visor */}
         {hasNeonVisor && (
           <img 
             src="/images/avatar-gear/neon-pink-visor.png" 
@@ -89,7 +111,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           />
         )}
 
-        {/* 6. Dark Cyber Visor / Sunglasses */}
+        {/* 8. Dark Cyber Visor / Sunglasses */}
         {hasDarkVisor && (
           <img 
             src="/images/avatar-gear/dark-cyber-visor.png" 
@@ -98,7 +120,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           />
         )}
 
-        {/* 7. Face Mask Wearable (Positioned over lower face/mouth) */}
+        {/* 9. Face Mask Wearable */}
         {hasFaceMask && (
           <img 
             src="/images/avatar-gear/face-mask.png" 
@@ -108,7 +130,16 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         )}
       </div>
 
-      {/* 8. Heart Necklace (Hanging below avatar) */}
+      {/* 10. Red Bowtie (Positioned at neck/bottom) */}
+      {hasRedBowtie && (
+        <img 
+          src="/images/avatar-gear/red-bowtie.png" 
+          alt="Red Bowtie" 
+          className="absolute -bottom-[22%] left-1/2 -translate-x-1/2 w-[80%] h-[50%] object-contain z-20 pointer-events-none drop-shadow-md" 
+        />
+      )}
+
+      {/* 11. Heart Necklace */}
       {hasHeartNecklace && (
         <img 
           src="/images/avatar-gear/heart-necklace.png" 
@@ -117,7 +148,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 9. Gold Chain (Hanging below avatar) */}
+      {/* 12. Gold Chain */}
       {hasGoldChain && (
         <img 
           src="/images/avatar-gear/gold-chain.png" 
