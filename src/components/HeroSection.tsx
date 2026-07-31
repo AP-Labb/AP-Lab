@@ -345,15 +345,15 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Base Background Image (HERONEW.png) with Clean Radial Center-Out Darkening Overlay */}
+      {/* Base Background Image (HERONEW.png) - Bright on Left & Right, Dark Only in Center */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HERONEW.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-80"
+          className="w-full h-full object-cover opacity-95 brightness-[1.1] contrast-[1.05]"
         />
-        {/* Radial Darkening Effect from Center Out */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.35)_0%,rgba(5,7,15,0.80)_60%,rgba(5,7,15,0.98)_100%)]" />
+        {/* Subtle Darkening Overlay ONLY in the center going out a little bit */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.75)_0%,rgba(5,7,15,0.40)_30%,transparent_60%)]" />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />

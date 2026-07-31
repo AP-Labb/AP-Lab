@@ -47,15 +47,19 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const username = email.split("@")[0].toLowerCase();
   const photoURL = progress?.photoURL || currentUser?.photoURL || "";
 
-  // Close menu on outside click
+  // Close menu on outside click or touch
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
+    const handleClickOutside = (event: MouseEvent | TouchEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowProfileMenu(false);
       }
     };
-    window.addEventListener("mousedown", handleClickOutside);
-    return () => window.removeEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
   }, []);
 
   const handleSignOut = async () => {

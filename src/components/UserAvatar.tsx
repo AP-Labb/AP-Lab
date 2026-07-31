@@ -104,39 +104,39 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         )}
       </div>
 
-      {/* 7. Neon Pink Cyber Visor (Positioned ON TOP, unclipped) */}
+      {/* 7. Neon Pink Cyber Visor */}
       {hasNeonVisor && (
         <img 
           src="/images/avatar-gear/neon-pink-visor.png" 
           alt="Neon Pink Visor" 
-          className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[108%] h-[60%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[115%] h-[65%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 8. Dark Cyber Visor (Positioned ON TOP, unclipped) */}
+      {/* 8. Dark Cyber Visor */}
       {hasDarkVisor && (
         <img 
           src="/images/avatar-gear/dark-cyber-visor.png" 
           alt="Dark Cyber Visor" 
-          className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[108%] h-[60%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[115%] h-[65%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 9. Face Mask (Stretches edge-to-edge across center left & right of avatar circle) */}
+      {/* 9. Face Mask (Dramatically larger, stretching completely across mouth and lower face) */}
       {hasFaceMask && (
         <img 
           src="/images/avatar-gear/face-mask.png" 
           alt="Face Mask" 
-          className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[112%] h-[68%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute top-[26%] left-1/2 -translate-x-1/2 w-[122%] h-[75%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 10. Astronaut Helmet (Larger, framing avatar circle inside visor window) */}
+      {/* 10. Astronaut Helmet (Extra Large, completely enclosing the avatar circle in the glass visor) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[36%] left-1/2 -translate-x-1/2 w-[185%] h-[185%] object-contain z-30 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[42%] left-1/2 -translate-x-1/2 w-[210%] h-[210%] object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -145,25 +145,25 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/red-bowtie.png" 
           alt="Red Bowtie" 
-          className="absolute -bottom-[22%] left-1/2 -translate-x-1/2 w-[85%] h-[50%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[22%] left-1/2 -translate-x-1/2 w-[90%] h-[55%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
-      {/* 12. Heart Necklace (Stretches edge-to-edge from center-left to center-right of avatar circle) */}
+      {/* 12. Heart Necklace (Dramatically larger, stretching from left-center edge to right-center edge) */}
       {hasHeartNecklace && (
         <img 
           src="/images/avatar-gear/heart-necklace.png" 
           alt="Heart Necklace" 
-          className="absolute -bottom-[10%] left-1/2 -translate-x-1/2 w-[115%] h-[80%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[14%] left-1/2 -translate-x-1/2 w-[130%] h-[90%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 13. Gold Chain (Stretches edge-to-edge from center-left to center-right of avatar circle) */}
+      {/* 13. Gold Chain (Dramatically larger, stretching from left-center edge to right-center edge) */}
       {hasGoldChain && (
         <img 
           src="/images/avatar-gear/gold-chain.png" 
           alt="Gold Chain" 
-          className="absolute -bottom-[8%] left-1/2 -translate-x-1/2 w-[115%] h-[75%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[12%] left-1/2 -translate-x-1/2 w-[130%] h-[85%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
     </div>
