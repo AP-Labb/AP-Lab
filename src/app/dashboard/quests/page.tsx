@@ -11,6 +11,7 @@ import {
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { AppSidebar } from "@/components/AppSidebar";
+import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { ReviewModal } from "@/components/ReviewModal";
@@ -451,20 +452,8 @@ export default function QuestsPage() {
       {/* Main Workspace Layout */}
       <div className="flex-1 flex flex-col min-h-screen md:pl-16">
         
-        {/* Apple/Linear Style Clean Header Bar */}
-        <header className="sticky top-0 z-40 w-full backdrop-blur-xl bg-[#03040a]/90 border-b border-white/[0.08] px-8 py-4 flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
-              <Award className="w-4.5 h-4.5" />
-            </div>
-            <div>
-              <h1 className="font-instrument text-xl font-bold tracking-tight text-white">Quests & Challenges</h1>
-              <p className="text-[11px] text-white/40 font-manrope">Track daily study goals, weekly milestones, and achievements</p>
-            </div>
-          </div>
-
-          <HeaderUserCapsules onOpenProfile={() => setShowProfileModal(true)} />
-        </header>
+        {/* Universal Top Header with Search Bar on Top Left & Capsules on Top Right */}
+        <UniversalTopHeader />
 
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-8 flex-1 text-left">
           

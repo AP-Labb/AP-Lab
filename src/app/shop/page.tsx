@@ -24,6 +24,7 @@ import { auth } from "@/lib/firebase";
 import { AppSidebar } from "@/components/AppSidebar";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { UserAvatar } from "@/components/UserAvatar";
+import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 
 function hslToHex(h: number, s: number, l: number) {
   l /= 100;
@@ -112,7 +113,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#f1f3f5] border-neutral-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-top-hat" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-top-hat" size="xl" />
     )
   },
 
@@ -126,7 +127,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#f3edfc] border-violet-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-beanie" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-beanie" size="xl" />
     )
   },
 
@@ -140,7 +141,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fbeafc] border-fuchsia-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-party-hat" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-purple-party-hat" size="xl" />
     )
   },
 
@@ -154,7 +155,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fefce8] border-yellow-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "crown",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-crown" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-crown" size="xl" />
     )
   },
 
@@ -168,7 +169,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fce7f3] border-pink-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-neon-pink-visor" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-neon-pink-visor" size="xl" />
     )
   },
 
@@ -182,7 +183,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#f3f4f6] border-neutral-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "visor",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-dark-cyber-visor" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-dark-cyber-visor" size="xl" />
     )
   },
 
@@ -196,7 +197,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#ecfeff] border-cyan-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "mask",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-face-mask" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-face-mask" size="xl" />
     )
   },
 
@@ -210,7 +211,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#ffe4e6] border-rose-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-heart-necklace" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-heart-necklace" size="xl" />
     )
   },
 
@@ -224,7 +225,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fef3c7] border-amber-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-gold-chain" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-gold-chain" size="xl" />
     )
   },
 
@@ -238,7 +239,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fee2e2] border-red-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-devil-horns" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-devil-horns" size="xl" />
     )
   },
 
@@ -252,7 +253,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#ffe4e6] border-rose-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "necklace",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-red-bowtie" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-red-bowtie" size="xl" />
     )
   },
 
@@ -266,7 +267,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#fef9c3] border-yellow-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "hat",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-halo" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-halo" size="xl" />
     )
   },
 
@@ -280,7 +281,7 @@ const GEAR_ITEMS = [
     innerBg: "bg-[#eff6ff] border-blue-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
     type: "helmet",
     renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-astronaut-helmet" size="2xl" />
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-astronaut-helmet" size="xl" />
     )
   },
 
@@ -358,21 +359,8 @@ export default function ShopPage() {
       {/* Main Workspace Layout */}
       <div className="flex-1 flex flex-col min-h-screen md:pl-16">
         
-        {/* Top Header Bar */}
-        <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#0a0b10]/90 border-b border-white/[0.08] px-8 py-5 flex items-center justify-between">
-          <div className="flex items-center space-x-3.5">
-            <div className="w-10 h-10 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-amber-400">
-              <ShoppingBag className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="font-instrument text-2xl font-bold tracking-tight text-white">Store</h1>
-              <p className="text-xs text-white/40 font-manrope">Redeem coins for exclusive gear, power ups & cosmetics</p>
-            </div>
-          </div>
-
-          {/* Top Right Header Capsules */}
-          <HeaderUserCapsules onOpenProfile={() => setShowProfileModal(true)} />
-        </header>
+        {/* Universal Top Header with Search Bar on Top Left & Capsules on Top Right */}
+        <UniversalTopHeader />
 
         {/* Shop Main Content Area */}
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-10 flex-1 text-left">

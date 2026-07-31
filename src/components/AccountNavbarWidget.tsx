@@ -49,7 +49,10 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
 
           {/* Account Name & Total XP + Credits */}
           <div className="flex flex-col items-start text-left min-w-0">
-            <span className={cn("font-manrope font-extrabold text-xs sm:text-sm tracking-tight leading-none transition-colors truncate max-w-[90px] sm:max-w-[120px]", isLightMode ? "text-slate-900 group-hover:text-emerald-600" : "text-white group-hover:text-emerald-400")}>
+            <span 
+              className={cn("font-manrope font-extrabold text-xs sm:text-sm tracking-tight leading-none transition-colors truncate max-w-[90px] sm:max-w-[120px]", isLightMode ? "text-slate-900 group-hover:text-emerald-600" : "text-white group-hover:text-emerald-400")}
+              style={progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}
+            >
               {displayName}
             </span>
             <div className="flex items-center gap-2 mt-0.5 whitespace-nowrap font-mono font-bold text-[9px] sm:text-[10px]">

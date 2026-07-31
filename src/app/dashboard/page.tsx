@@ -33,6 +33,7 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import FolderComponent from "@/components/Folder";
 import { AppSidebar } from "@/components/AppSidebar";
+import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import PixelBlast from "@/components/PixelBlast";
 
 
@@ -589,13 +590,12 @@ export default function Dashboard() {
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
-        {/* Mobile top bar spacer */}
-        <div className="h-4 md:hidden" />
+        <UniversalTopHeader />
 
         <main className="flex-1 w-full flex flex-col items-center z-10">
         
         {/* UPPER REGION: Header with PixelBlast Background */}
-        <div className="relative w-full flex flex-col items-center pt-20 pb-12 px-6 z-40 overflow-hidden">
+        <div className="relative w-full flex flex-col items-center pt-16 pb-12 px-6 z-40 overflow-hidden">
           {/* PixelBlast Background */}
           <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             <PixelBlast
@@ -628,7 +628,10 @@ export default function Dashboard() {
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
               className="flex items-center justify-center gap-3 mb-2 w-fit mx-auto"
             >
-              <span className="text-sm md:text-base uppercase tracking-[0.3em] font-bold bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent">
+              <span 
+                className="text-sm md:text-base uppercase tracking-[0.3em] font-bold bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent"
+                style={progress?.activeNameColor ? { color: progress.activeNameColor, backgroundImage: 'none' } : undefined}
+              >
                 WELCOME BACK, {firstName.toUpperCase()}
               </span>
               <LevelBadge level={level} className="normal-case tracking-normal shrink-0 translate-y-[1px]" />

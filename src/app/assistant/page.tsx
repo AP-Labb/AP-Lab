@@ -19,6 +19,7 @@ import { getLevelForXp } from "@/lib/xpProgression";
 import { auth } from "@/lib/firebase";
 import { signOut } from "firebase/auth";
 import { AppSidebar } from "@/components/AppSidebar";
+import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import { ReviewModal } from "@/components/ReviewModal";
 import { SettingsModal } from "@/components/SettingsModal";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
@@ -246,6 +247,7 @@ export default function AssistantPage() {
         onScroll={handleScroll}
         className="flex-1 flex flex-col min-h-screen overflow-y-auto relative bg-[#0b0c10] md:pl-16"
       >
+        <UniversalTopHeader />
         {messages.length === 0 ? (
           /* ── INITIAL LANDING: vertically + horizontally centered ── */
           <div className="flex flex-col items-center justify-center min-h-screen w-full px-6 pb-10">
