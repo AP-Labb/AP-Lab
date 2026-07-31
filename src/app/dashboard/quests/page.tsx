@@ -468,12 +468,18 @@ export default function QuestsPage() {
 
         <main className="max-w-6xl mx-auto w-full px-6 sm:px-10 py-8 space-y-8 flex-1 text-left">
           
-          {/* Progress Summary Cards (3 Compact Stat Cards with LARGER XP & Coin Graphics) */}
+          {/* Progress Summary Cards (3 Compact Stat Cards with Stock-like Percentage Badges) */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1">
-                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
-                <span className="font-mono font-extrabold text-2xl text-purple-300">+{todayXpEarned} XP</span>
+              <div className="space-y-1.5 text-left">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's XP</span>
+                  <span className="bg-[#051c14] border border-emerald-500/30 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
+                    <span className="text-[8px]">▲</span>
+                    <span>+44.4%</span>
+                  </span>
+                </div>
+                <span className="font-mono font-extrabold text-2xl text-purple-300 block">+{todayXpEarned} XP</span>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center shrink-0">
                 <img src="/images/xp-shield-exact.png" alt="XP" className="w-10 h-10 object-contain" />
@@ -481,9 +487,15 @@ export default function QuestsPage() {
             </div>
 
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1">
-                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
-                <span className="font-mono font-extrabold text-2xl text-amber-400">+{todayCoinsEarned}</span>
+              <div className="space-y-1.5 text-left">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Today's Coins</span>
+                  <span className="bg-[#051c14] border border-emerald-500/30 text-emerald-400 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
+                    <span className="text-[8px]">▲</span>
+                    <span>+25.0%</span>
+                  </span>
+                </div>
+                <span className="font-mono font-extrabold text-2xl text-amber-400 block">+{todayCoinsEarned}</span>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center shrink-0">
                 <img src="/images/coin-exact.png" alt="Coins" className="w-10 h-10 object-contain" />
@@ -491,9 +503,15 @@ export default function QuestsPage() {
             </div>
 
             <div className="bg-[#0b0d18] border border-white/[0.08] rounded-2xl p-5 flex items-center justify-between shadow-sm">
-              <div className="space-y-1">
-                <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
-                <span className="font-mono font-extrabold text-2xl text-white">{completedDailyCount} / {totalDailyQuests}</span>
+              <div className="space-y-1.5 text-left">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[11px] font-manrope font-semibold text-white/40 uppercase tracking-wider block">Quests Complete</span>
+                  <span className="bg-white/5 border border-white/10 text-white/60 font-mono text-[10px] px-2 py-0.5 rounded-md flex items-center space-x-0.5 font-bold">
+                    <span className="text-[8px]">▶</span>
+                    <span>100%</span>
+                  </span>
+                </div>
+                <span className="font-mono font-extrabold text-2xl text-white block">{completedDailyCount} / {totalDailyQuests}</span>
               </div>
               <div className="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center shrink-0 text-emerald-400">
                 <CheckCircle className="w-7 h-7" />
@@ -501,12 +519,12 @@ export default function QuestsPage() {
             </div>
           </div>
 
-          {/* Hero Banner: Height min-h-[300px], Refresh Countdown Moved EVEN FURTHER LEFT into Cream Space */}
+          {/* Hero Banner: Refresh Countdown Moved to the Left in Empty Cream Area */}
           <div 
             className="relative w-full rounded-3xl bg-cover bg-center p-8 sm:p-14 text-neutral-950 overflow-hidden shadow-2xl flex items-center min-h-[300px]"
             style={{ backgroundImage: `url('/images/QUESTbanner.png')` }}
           >
-            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-between gap-6 pl-2 sm:pl-4 pr-4">
+            <div className="relative z-10 w-full flex flex-col md:flex-row items-center justify-start gap-8 sm:gap-12 pl-2 sm:pl-4 pr-4">
               
               {/* Left Title & Description in Clean Black Text */}
               <div className="space-y-2 max-w-xs text-left">
@@ -518,8 +536,8 @@ export default function QuestsPage() {
                 </p>
               </div>
 
-              {/* Refresh Countdown Box (Positioned cleanly in cream area) */}
-              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px] md:mr-auto ml-0 md:ml-4">
+              {/* Refresh Countdown Box (Positioned further left in empty cream area) */}
+              <div className="bg-black/90 backdrop-blur-xl border border-white/20 rounded-2xl p-5 sm:p-6 flex flex-col items-center justify-center shrink-0 shadow-2xl min-w-[210px]">
                 <span className="text-[10px] font-mono font-bold text-white/60 uppercase tracking-widest mb-1.5 flex items-center gap-1.5">
                   <Clock className="w-4 h-4 text-white" />
                   REFRESH COUNTDOWN
@@ -920,7 +938,7 @@ export default function QuestsPage() {
                             </div>
                           </div>
                           <span className="font-mono font-extrabold text-xs text-white/90 bg-white/5 border border-white/10 px-2.5 py-1 rounded-full flex items-center gap-1.5 shrink-0">
-                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-4.5 h-4.5 object-contain" />
+                            <img src="/images/xp-shield-exact.png" alt="XP" className="w-4 h-4 object-contain" />
                             +{task.xp}
                           </span>
                         </div>

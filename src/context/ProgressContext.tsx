@@ -162,36 +162,22 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.85, opacity: 0 }}
         transition={{ type: "spring", stiffness: 200, damping: 20 }}
-        className="w-full max-w-md bg-[#050508]/90 border border-yellow-500/20 rounded-[40px] p-10 text-center relative overflow-hidden shadow-[0_0_100px_rgba(234,179,8,0.15)] backdrop-blur-md"
+        className="w-full max-w-md bg-black border border-white/15 rounded-[36px] p-10 text-center relative overflow-hidden shadow-[0_0_100px_rgba(0,0,0,0.95)]"
       >
-        {/* Decorative radial glows */}
-        <div className="absolute -top-32 -left-32 w-64 h-64 rounded-full blur-[100px] opacity-25 bg-amber-500 pointer-events-none" />
-        <div className="absolute -bottom-32 -right-32 w-64 h-64 rounded-full blur-[100px] opacity-25 bg-amber-500 pointer-events-none" />
-        
-        <div className="relative z-10 flex flex-col items-center justify-center space-y-8">
+        <div className="relative z-10 flex flex-col items-center justify-center space-y-6">
           
-          {/* Header text with elegant fade-in after morph */}
-          <div className="space-y-1">
-            <motion.span 
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
-              className="text-[10px] font-mono font-black text-amber-500 uppercase tracking-[0.3em] block"
-            >
-              Academic Advancement
-            </motion.span>
-            <motion.h2 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
-              className="font-instrument text-4xl text-white tracking-tight leading-none"
-            >
-              Level Up!
-            </motion.h2>
-          </div>
+          {/* Main Title */}
+          <motion.h2 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="font-instrument text-4xl sm:text-5xl font-extrabold text-white tracking-tight uppercase"
+          >
+            Level Up!
+          </motion.h2>
 
           {/* Centered Morphing Badge Frame */}
-          <div className="relative w-48 h-48 flex items-center justify-center">
+          <div className="relative w-44 h-44 flex items-center justify-center">
             
             {/* Spinning/Morphing Old Badge */}
             {!isMorphed && (
@@ -211,13 +197,6 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
                 className="absolute flex items-center justify-center"
               >
                 <LevelBadge level={oldLevel} size="lg" />
-                {/* Glowing charged energy overlay */}
-                <motion.div 
-                  className="absolute inset-0 bg-amber-400 rounded-full mix-blend-screen blur-md pointer-events-none"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: [0, 0.3, 0.6, 0.9], scale: [0.8, 1.0, 1.15, 1.25] }}
-                  transition={{ duration: 1.8, times: [0, 0.4, 0.8, 1], ease: "easeInOut" }}
-                />
               </motion.div>
             )}
  
@@ -233,42 +212,18 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
                   damping: 10,
                   mass: 0.8
                 }}
-                className="relative filter drop-shadow-[0_0_35px_rgba(251,191,36,0.6)]"
+                className="relative"
               >
                 <LevelBadge level={newLevel} size="lg" />
               </motion.div>
             )}
-            
-            {/* Ambient gold halo during morph */}
-            <motion.div
-              animate={isMorphed 
-                ? { scale: [1, 1.4, 1.2], opacity: [0.1, 0.5, 0.2] } 
-                : { scale: [0.9, 1.1, 0.9], opacity: [0.05, 0.15, 0.05] }
-              }
-              transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute w-36 h-36 border border-amber-500/30 rounded-full blur-md -z-10 pointer-events-none"
-            />
           </div>
 
-          {/* Sub-text revealing smoothly after new badge settles */}
-          <div className="h-12 flex flex-col items-center justify-center">
-            <AnimatePresence>
-              {isMorphed && (
-                <motion.div
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.4 }}
-                  className="space-y-1"
-                >
-                  <p className="text-white/60 text-sm font-manrope">
-                    You have ascended to level <span className="text-amber-400 font-bold font-mono">{newLevel}</span>
-                  </p>
-                  <p className="text-[10px] text-white/30 uppercase tracking-widest font-mono">
-                    Keep up the exceptional performance
-                  </p>
-                </motion.div>
-              )}
-            </AnimatePresence>
+          {/* Level Transition text (e.g. 16 ➔ 17) */}
+          <div className="flex items-center justify-center space-x-3 text-2xl font-mono font-black text-white pt-2">
+            <span className="text-white/60">LVL {oldLevel}</span>
+            <span className="text-amber-400">➔</span>
+            <span className="text-amber-400 font-extrabold">LVL {newLevel}</span>
           </div>
 
         </div>
