@@ -345,41 +345,15 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Base Background Image (HERONEW.png) with Brightened Left & Right Sides */}
+      {/* Base Background Image (HERONEW.png) with Clean Radial Center-Out Darkening Overlay */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HERONEW.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-60 brightness-[0.9] contrast-[1.08]"
+          className="w-full h-full object-cover opacity-80"
         />
-        {/* Dark Center Vignette Overlay */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.85)_0%,rgba(5,7,15,0.72)_38%,transparent_82%)]" />
-        {/* Left-side brightness equaliser — lifts the left to match the right */}
-        <div className="absolute inset-0 bg-gradient-to-r from-white/[0.10] via-white/[0.04] to-transparent" />
-      </div>
-
-
-      {/* Moving Specular Light Wave Sweep Revealing Image Underneath */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none opacity-85">
-        <div 
-          className="relative w-full h-full"
-          style={{
-            WebkitMaskImage: "linear-gradient(110deg, transparent 35%, #000 50%, transparent 65%)",
-            maskImage: "linear-gradient(110deg, transparent 35%, #000 50%, transparent 65%)",
-            WebkitMaskSize: "200% 100%",
-            maskSize: "200% 100%",
-            animation: "ui-glint 6.5s infinite ease-in-out",
-            transform: "translate3d(0,0,0)",
-            willChange: "transform, mask-image",
-            backfaceVisibility: "hidden",
-          }}
-        >
-          <img 
-            src="/images/HERONEW.png" 
-            alt="Hero Natural Image Wave Reveal" 
-            className="w-full h-full object-cover brightness-[1.2] contrast-[1.08]"
-          />
-        </div>
+        {/* Radial Darkening Effect from Center Out */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.35)_0%,rgba(5,7,15,0.80)_60%,rgba(5,7,15,0.98)_100%)]" />
       </div>
 
       <div className="absolute bottom-0 left-0 right-0 h-[180px] bg-gradient-to-t from-deep-navy via-deep-navy/40 to-transparent z-10 pointer-events-none" />

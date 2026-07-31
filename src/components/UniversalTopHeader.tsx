@@ -32,7 +32,7 @@ export function UniversalTopHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-50 w-full backdrop-blur-2xl bg-[#080911]/95 border-b border-white/[0.08] px-4 sm:px-8 py-3 flex items-center justify-between font-manrope">
+      <header className="sticky top-0 z-30 w-full backdrop-blur-2xl bg-[#080911]/95 border-b border-white/[0.08] px-4 sm:px-8 py-3 flex items-center justify-between font-manrope">
         {/* Universal Search Bar (Extends horizontally all the way until streak capsule with h-12 matching height) */}
         <div className="relative flex-1 mr-4 sm:mr-6">
           <div className="relative flex items-center w-full">

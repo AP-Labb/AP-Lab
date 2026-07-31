@@ -79,7 +79,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
   return (
     <>
-      <aside className="fixed top-0 left-0 h-screen z-50 flex-shrink-0">
+      <aside className="fixed top-0 left-0 h-screen z-[9999] flex-shrink-0">
         <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
           <SidebarBody className="justify-between gap-6 h-screen overflow-y-auto">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
