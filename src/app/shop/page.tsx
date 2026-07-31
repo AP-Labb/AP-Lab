@@ -66,11 +66,11 @@ const GEAR_ITEMS = [
     desc: "Earn 2x Double XP on all study activities, quizzes, and completed topics for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-gradient-to-br from-purple-500/20 to-indigo-500/20 border-purple-400/40",
+    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center",
     type: "boost",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-        <img src="/images/2x-xp-boost.png" alt="2X XP Boost" className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.6)]" />
+      <div className="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+        <img src="/images/2x-xp-boost.png" alt="2X XP Boost" className="w-full h-full object-contain select-none" />
       </div>
     )
   },
@@ -80,11 +80,11 @@ const GEAR_ITEMS = [
     desc: "Earn 2x Double Coins on daily quests, study duration, and correct answers for 10 hours", 
     cost: 150, 
     bgColor: "bg-neutral-900 border-neutral-800",
-    innerBg: "bg-gradient-to-br from-amber-500/20 to-yellow-500/20 border-amber-400/40",
+    innerBg: "bg-[#0b0c16] border-white/10 flex items-center justify-center",
     type: "boost",
     renderAccessory: () => (
-      <div className="relative w-20 h-20 rounded-full flex items-center justify-center">
-        <img src="/images/2x-coin-boost.png" alt="2X Coin Boost" className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(245,158,11,0.6)]" />
+      <div className="w-28 h-28 sm:w-32 sm:h-32 flex items-center justify-center">
+        <img src="/images/2x-coin-boost.png" alt="2X Coin Boost" className="w-full h-full object-contain select-none" />
       </div>
     )
   },

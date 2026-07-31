@@ -19,6 +19,8 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { ProgressProfileModal } from "@/components/ProgressProfileModal";
+import { ActiveBoostsTimer } from "@/components/ActiveBoostsTimer";
+import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
@@ -180,17 +182,12 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               )}
             >
               <div className="flex-shrink-0">
-                {photoURL ? (
-                  <img
-                    src={photoURL}
-                    alt={displayName}
-                    className="w-8 h-8 rounded-full object-cover border border-amber-400/60 shadow-md flex-shrink-0"
-                  />
-                ) : (
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs text-black bg-gradient-to-br from-amber-400 to-yellow-500 shadow-md flex-shrink-0">
-                    {displayName.charAt(0).toUpperCase()}
-                  </div>
-                )}
+                <UserAvatar 
+                  photoURL={photoURL} 
+                  name={displayName} 
+                  activeFrame={progress?.activeAvatarFrame} 
+                  size="sm" 
+                />
               </div>
 
               <AnimatePresence>
@@ -315,6 +312,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <ProgressProfileModal isOpen={showProgressProfile} onClose={() => setShowProgressProfile(false)} />
       <MinecraftInventoryModal isOpen={showMinecraftInventory} onClose={() => setShowMinecraftInventory(false)} />
+      <ActiveBoostsTimer />
     </>
   );
 }

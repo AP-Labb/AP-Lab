@@ -6,6 +6,7 @@ import { Trophy, Crown, Award, User, MoreHorizontal } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
+import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 
 interface LeaderboardUser {
@@ -139,28 +140,13 @@ export function LevelLeaderboard() {
             )}
           </div>
 
-          {/* Avatar with active frame aura */}
-          <div className="relative shrink-0">
-            <div className={cn(
-              "w-10 h-10 rounded-xl p-[2px] transition-all",
-              isCurrentUser && progress?.activeAvatarFrame === "frame-gold" && "bg-gradient-to-tr from-amber-400 to-yellow-600 shadow-[0_0_15px_rgba(245,158,11,0.5)]",
-              isCurrentUser && progress?.activeAvatarFrame === "frame-neon-cyan" && "bg-gradient-to-tr from-cyan-400 to-blue-600 shadow-[0_0_15px_rgba(6,182,212,0.5)]",
-              isCurrentUser && progress?.activeAvatarFrame === "frame-emerald" && "bg-gradient-to-tr from-emerald-400 to-teal-600 shadow-[0_0_15px_rgba(16,185,129,0.5)]",
-              isCurrentUser && progress?.activeAvatarFrame === "frame-cosmic-purple" && "bg-gradient-to-tr from-purple-500 via-pink-500 to-amber-400 shadow-[0_0_15px_rgba(168,85,247,0.5)]"
-            )}>
-              {user.photoURL ? (
-                <img
-                  src={user.photoURL}
-                  alt={user.displayName}
-                  className="w-full h-full rounded-[10px] object-cover border border-white/15"
-                />
-              ) : (
-                <div className="w-full h-full rounded-[10px] bg-white/5 border border-white/10 flex items-center justify-center text-white/60 font-semibold text-xs font-mono">
-                  {initials}
-                </div>
-              )}
-            </div>
-          </div>
+          {/* Avatar with equipped active frame & accessories */}
+          <UserAvatar 
+            photoURL={user.photoURL} 
+            name={user.displayName} 
+            activeFrame={isCurrentUser ? progress?.activeAvatarFrame : null} 
+            size="md" 
+          />
 
           {/* User Name & Level Badge */}
           <div className="flex flex-col md:flex-row md:items-center space-y-1.5 md:space-y-0 md:space-x-3">
