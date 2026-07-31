@@ -351,7 +351,7 @@ export default function ShopPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-clip bg-[#0a0b10] text-white selection:bg-amber-400 selection:text-black font-manrope">
       
       {/* Unified App Sidebar */}
       <AppSidebar currentPath="/shop" />

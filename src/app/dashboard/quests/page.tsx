@@ -444,7 +444,7 @@ export default function QuestsPage() {
   const todayCoinsEarned = (completedDailyCount * 100) + (dailyBonusClaimed ? 50 : 0);
 
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#03040a] text-white selection:bg-white selection:text-black font-manrope">
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-clip bg-[#03040a] text-white selection:bg-white selection:text-black font-manrope">
       
       {/* Unified App Sidebar with Sticky Navigation & Profile Popover */}
       <AppSidebar currentPath="/dashboard/quests" />

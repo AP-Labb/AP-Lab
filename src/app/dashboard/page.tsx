@@ -583,13 +583,13 @@ export default function Dashboard() {
   });
 
   return (
-    <div className="min-h-screen flex flex-row relative z-0 overflow-x-hidden bg-[#030408] text-white selection:bg-neutral-800 selection:text-white font-manrope">
+    <div className="min-h-screen flex flex-row relative z-0 overflow-x-clip bg-[#030408] text-white selection:bg-neutral-800 selection:text-white font-manrope">
       
       {/* Unified App Sidebar with Sticky Navigation & Profile Popover */}
       <AppSidebar currentPath="/dashboard" />
 
       {/* ===== MAIN CONTENT ===== */}
-      <div className="flex-1 flex flex-col min-h-screen overflow-x-hidden md:pl-16 relative">
+      <div className="flex-1 flex flex-col min-h-screen overflow-x-clip md:pl-16 relative">
         <UniversalTopHeader />
 
         <main className="flex-1 w-full flex flex-col items-center z-10">

@@ -48,17 +48,13 @@ export function UniversalTopHeader() {
               onFocus={() => setIsSearchOpen(true)}
               className="w-full h-12 pl-11 pr-12 rounded-full bg-[#181a26] hover:bg-[#202232] border border-white/10 text-sm font-medium text-white placeholder:text-white/40 focus:outline-none focus:border-amber-400/50 transition-all shadow-inner"
             />
-            {query ? (
+            {query && (
               <button
                 onClick={() => setQuery("")}
                 className="absolute right-4 text-white/40 hover:text-white transition-all"
               >
                 <X className="w-4 h-4" />
               </button>
-            ) : (
-              <span className="absolute right-4 text-[11px] font-mono font-bold text-white/30 px-2 py-0.5 rounded bg-white/5 border border-white/10 hidden sm:inline-block">
-                ⌘K
-              </span>
             )}
           </div>
 

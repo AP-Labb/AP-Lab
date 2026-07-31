@@ -235,7 +235,7 @@ export default function AssistantPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060712] text-white flex flex-row relative z-0 transition-all duration-500 selection:bg-neutral-800 selection:text-white overflow-hidden">
+    <div className="min-h-screen bg-[#060712] text-white flex flex-row relative z-0 transition-all duration-500 selection:bg-neutral-800 selection:text-white overflow-x-clip">
       {/* WebGL Mesh Drift Shader Background */}
       <MeshDriftShader />
       {/* Standardized Sticky App Sidebar */}
