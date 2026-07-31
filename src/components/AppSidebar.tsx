@@ -17,6 +17,8 @@ import { AccountProfileModal } from "@/components/AccountProfileModal";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
+import { ProgressProfileModal } from "@/components/ProgressProfileModal";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
@@ -33,8 +35,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showAccountModal, setShowAccountModal] = useState(false);
-  const [accountModalDefaultTab, setAccountModalDefaultTab] = useState<"profile" | "inventory">("profile");
+  const [showMinecraftInventory, setShowMinecraftInventory] = useState(false);
+  const [showProgressProfile, setShowProgressProfile] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -45,8 +47,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
   // Close menu on outside click
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setShowProfileMenu(false);
       }
     };
@@ -64,7 +66,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   };
 
   const navItems = [
-    { label: "Home", href: "/", icon: Home },
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Progress", href: "/dashboard/progress", icon: "progress" },
     { label: "Review", href: "#review", icon: "review" },
@@ -81,13 +82,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
           <SidebarBody className="justify-between gap-6 h-screen overflow-y-auto">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {/* Top Logo */}
-            <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
-              <motion.div
-                whileHover={{ rotate: [0, -10, 10, -6, 6, 0] }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-              >
-                <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-amber-400 transition-colors" />
-              </motion.div>
+            <Link href="/dashboard" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
+              <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-amber-400 transition-colors" />
               <motion.span
                 animate={{
                   display: sidebarOpen ? "inline-block" : "none",
@@ -243,8 +239,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
-                      setAccountModalDefaultTab("profile");
-                      setShowAccountModal(true);
+                      setShowProgressProfile(true);
                     }}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
                   >
@@ -258,8 +253,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
-                      setAccountModalDefaultTab("inventory");
-                      setShowAccountModal(true);
+                      setShowMinecraftInventory(true);
                     }}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
                   >
@@ -319,11 +313,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
       <ReviewModal isOpen={showReviewModal} onClose={() => setShowReviewModal(false)} />
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
-      <AccountProfileModal 
-        isOpen={showAccountModal} 
-        onClose={() => setShowAccountModal(false)} 
-        defaultTab={accountModalDefaultTab}
-      />
+      <ProgressProfileModal isOpen={showProgressProfile} onClose={() => setShowProgressProfile(false)} />
+      <MinecraftInventoryModal isOpen={showMinecraftInventory} onClose={() => setShowMinecraftInventory(false)} />
     </>
   );
 }

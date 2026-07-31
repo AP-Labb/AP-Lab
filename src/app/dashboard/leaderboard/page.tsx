@@ -7,7 +7,7 @@ import { Trophy } from "lucide-react";
 
 export default function LeaderboardPage() {
   return (
-    <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-hidden selection:bg-neutral-800 selection:text-white font-manrope">
+    <div className="min-h-screen bg-[#030408] bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:4rem_4rem] text-white flex flex-row relative z-0 overflow-x-hidden selection:bg-neutral-800 selection:text-white font-manrope">
       {/* Unified App Sidebar with Sticky Navigation */}
       <AppSidebar currentPath="/dashboard/leaderboard" />
 

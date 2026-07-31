@@ -769,11 +769,13 @@ export default function Dashboard() {
 
                             {/* Unit & Subunit / Topic Count Badges */}
                             <div className="flex flex-wrap items-center gap-2 mt-3.5">
-                              <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/80 uppercase tracking-wider">
-                                {unitsCount} UNITS
+                              <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/80 uppercase tracking-wider flex items-center space-x-1.5">
+                                <BookOpen className="w-3 h-3 text-white/70" />
+                                <span>{unitsCount} UNITS</span>
                               </span>
-                              <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono font-bold text-purple-300 uppercase tracking-wider">
-                                {topicsCount} SUBUNITS
+                              <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono font-bold text-purple-300 uppercase tracking-wider flex items-center space-x-1.5">
+                                <Layers className="w-3 h-3 text-purple-300" />
+                                <span>{topicsCount} SUBUNITS</span>
                               </span>
                             </div>
                           </div>
