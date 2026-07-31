@@ -296,7 +296,7 @@ const GEAR_ITEMS = [
     type: "color-picker",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">
-        <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
+        <span className="font-manrope font-black text-2xl tracking-tight text-center animate-rainbow-gradient drop-shadow-sm">
           {userName || "Scholar"}
         </span>
       </div>

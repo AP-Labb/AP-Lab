@@ -85,7 +85,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {/* Top Logo */}
             <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
-              <Activity className="w-5 h-5 text-white flex-shrink-0 group-hover:text-amber-400 transition-colors" />
+              <Activity className="w-5 h-5 text-white flex-shrink-0" />
               <motion.span
                 animate={{
                   display: sidebarOpen ? "inline-block" : "none",
@@ -199,18 +199,19 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
             <button
               onClick={() => setShowProfileMenu((prev) => !prev)}
               className={cn(
-                "flex items-center gap-3 w-full px-2 py-2 rounded-2xl transition-all duration-200 border text-left cursor-pointer",
+                "flex items-center gap-3 w-full py-2 rounded-2xl transition-all duration-200 border cursor-pointer",
+                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center",
                 showProfileMenu 
                   ? "bg-white/10 border-white/20 text-white shadow-lg" 
                   : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
               )}
             >
-              <div className="flex-shrink-0">
+              <div className="flex-shrink-0 flex items-center justify-center">
                 <UserAvatar 
                   photoURL={photoURL} 
                   name={displayName} 
                   activeFrame={progress?.activeAvatarFrame} 
-                  size="sm" 
+                  size="md" 
                 />
               </div>
 

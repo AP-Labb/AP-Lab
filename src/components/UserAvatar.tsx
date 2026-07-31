@@ -44,7 +44,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/golden-halo.png" 
           alt="Golden Halo" 
-          className="absolute -top-[42%] left-1/2 -translate-x-1/2 w-[100%] h-[65%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[42%] left-1/2 -translate-x-1/2 w-[105%] h-[68%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -53,7 +53,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/devil-horns.png" 
           alt="Devil Horns" 
-          className="absolute -top-[40%] left-1/2 -translate-x-1/2 w-[105%] h-[75%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[40%] left-1/2 -translate-x-1/2 w-[110%] h-[78%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -62,7 +62,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/top-hat.png" 
           alt="Top Hat" 
-          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[105%] h-[90%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[110%] h-[92%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -71,7 +71,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/purple-beanie.png" 
           alt="Purple Beanie" 
-          className="absolute -top-[44%] left-1/2 -translate-x-1/2 w-[115%] h-[98%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[44%] left-1/2 -translate-x-1/2 w-[120%] h-[100%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -80,7 +80,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/purple-party-hat.png" 
           alt="Party Hat" 
-          className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[98%] h-[90%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[50%] left-1/2 -translate-x-1/2 w-[100%] h-[92%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -89,7 +89,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/golden-crown.png" 
           alt="Golden Crown" 
-          className="absolute -top-[32%] left-1/2 -translate-x-1/2 w-[98%] h-[70%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[32%] left-1/2 -translate-x-1/2 w-[102%] h-[72%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -108,7 +108,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           <img 
             src="/images/avatar-gear/neon-pink-visor.png" 
             alt="Neon Pink Visor" 
-            className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[100%] h-[58%] object-contain z-10 pointer-events-none drop-shadow-sm" 
+            className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[105%] h-[60%] object-contain z-10 pointer-events-none drop-shadow-sm" 
           />
         )}
 
@@ -117,26 +117,26 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           <img 
             src="/images/avatar-gear/dark-cyber-visor.png" 
             alt="Dark Cyber Visor" 
-            className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[100%] h-[58%] object-contain z-10 pointer-events-none drop-shadow-sm" 
+            className="absolute top-[22%] left-1/2 -translate-x-1/2 w-[105%] h-[60%] object-contain z-10 pointer-events-none drop-shadow-sm" 
           />
         )}
 
-        {/* 9. Face Mask (Fits from left-center to right-center of avatar circle) */}
+        {/* 9. Face Mask (Stretches edge to edge across avatar face) */}
         {hasFaceMask && (
           <img 
             src="/images/avatar-gear/face-mask.png" 
             alt="Face Mask" 
-            className="absolute top-[34%] left-1/2 -translate-x-1/2 w-[88%] h-[55%] object-contain z-10 pointer-events-none drop-shadow-sm" 
+            className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[105%] h-[65%] object-contain z-10 pointer-events-none drop-shadow-sm" 
           />
         )}
       </div>
 
-      {/* 10. Astronaut Helmet */}
+      {/* 10. Astronaut Helmet (Larger & Enclosing Entire Avatar Circle) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[24%] left-1/2 -translate-x-1/2 w-[148%] h-[148%] object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[32%] left-1/2 -translate-x-1/2 w-[170%] h-[170%] object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
@@ -145,25 +145,25 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/red-bowtie.png" 
           alt="Red Bowtie" 
-          className="absolute -bottom-[20%] left-1/2 -translate-x-1/2 w-[75%] h-[45%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[20%] left-1/2 -translate-x-1/2 w-[80%] h-[48%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
-      {/* 12. Heart Necklace (Fits from left-center to right-center of avatar circle) */}
+      {/* 12. Heart Necklace (Stretches edge to edge from center-left to center-right) */}
       {hasHeartNecklace && (
         <img 
           src="/images/avatar-gear/heart-necklace.png" 
           alt="Heart Necklace" 
-          className="absolute -bottom-[6%] left-1/2 -translate-x-1/2 w-[98%] h-[68%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[8%] left-1/2 -translate-x-1/2 w-[110%] h-[75%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
-      {/* 13. Gold Chain (Fits from left-center to right-center of avatar circle) */}
+      {/* 13. Gold Chain (Stretches edge to edge from center-left to center-right) */}
       {hasGoldChain && (
         <img 
           src="/images/avatar-gear/gold-chain.png" 
           alt="Gold Chain" 
-          className="absolute -bottom-[4%] left-1/2 -translate-x-1/2 w-[98%] h-[60%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -bottom-[6%] left-1/2 -translate-x-1/2 w-[110%] h-[70%] object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
     </div>
