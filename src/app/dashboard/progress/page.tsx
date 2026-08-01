@@ -38,6 +38,9 @@ const MONTH_NAMES = [
 ];
 
 export default function ProgressPage() {
+  useEffect(() => {
+    document.title = "Progress | AP Lab";
+  }, []);
   const { currentUser, loading: authLoading } = useAuth();
   const { progress, loading: progressLoading } = useProgress();
   const router = useRouter();

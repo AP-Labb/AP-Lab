@@ -1,12 +1,15 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import { LevelLeaderboard } from "@/components/LevelLeaderboard";
 import { Trophy } from "lucide-react";
 
 export default function LeaderboardPage() {
+  useEffect(() => {
+    document.title = "Leaderboard | AP Lab";
+  }, []);
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
       {/* Clean Grid Background Overlay */}

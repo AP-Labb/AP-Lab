@@ -129,6 +129,9 @@ function SidebarSettingsButton({ open }: { open: boolean }) {
 }
 
 export default function AssistantPage() {
+  useEffect(() => {
+    document.title = "Assistant | AP Lab";
+  }, []);
   const { currentUser } = useAuth();
   const { progress } = useProgress();
   const [sidebarOpen, setSidebarOpen] = useState(false);

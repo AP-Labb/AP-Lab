@@ -252,6 +252,10 @@ export default function QuestsPage() {
     return () => clearInterval(timer);
   }, []);
 
+  useEffect(() => {
+    document.title = "Quests | AP Lab";
+  }, []);
+
   // Reliable Real Progress Tracking from Progress Context
   const totalCorrect = progress?.totalQuestionsCorrect || 0;
   const totalAnswered = progress?.totalQuestionsAnswered || 0;

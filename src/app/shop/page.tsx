@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -366,6 +366,10 @@ export default function ShopPage() {
   const router = useRouter();
   const { currentUser } = useAuth();
   const { progress, spendCredits, addCredits, buyItem, equipItem, useBoostItem } = useProgress();
+
+  useEffect(() => {
+    document.title = "Shop | AP Lab";
+  }, []);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [showHowToEarnModal, setShowHowToEarnModal] = useState(false);
