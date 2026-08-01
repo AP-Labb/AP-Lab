@@ -34,6 +34,7 @@ import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import FolderComponent from "@/components/Folder";
 import { AppSidebar } from "@/components/AppSidebar";
 import LiquidGradientCanvas from "@/components/ui/liquid-gradient";
+import { UserDisplayName } from "@/components/UserDisplayName";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import PixelBlast from "@/components/PixelBlast";
 
@@ -621,14 +622,13 @@ export default function Dashboard() {
             >
               <span className="text-sm md:text-base uppercase tracking-[0.3em] font-bold text-white">
                 WELCOME BACK,{" "}
-                <span 
+                <UserDisplayName 
+                  name={firstName.toUpperCase()} 
+                  activeNameColor={progress?.activeNameColor} 
                   className={cn(
                     !progress?.activeNameColor && "bg-gradient-to-r from-amber-300 via-amber-400 to-yellow-500 bg-clip-text text-transparent"
-                  )}
-                  style={progress?.activeNameColor ? { color: progress.activeNameColor, backgroundImage: 'none' } : undefined}
-                >
-                  {firstName.toUpperCase()}
-                </span>
+                  )} 
+                />
               </span>
               <LevelBadge level={level} className="normal-case tracking-normal shrink-0 translate-y-[1px]" />
             </motion.div>

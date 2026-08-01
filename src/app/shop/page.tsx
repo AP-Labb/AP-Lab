@@ -417,7 +417,7 @@ export default function ShopPage() {
                     <div className={cn(item.innerBg, "group-hover:scale-[1.02] transition-transform")}>
                       {item.id === "custom-name-color" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full">
-                          <span className="font-manrope font-extrabold text-2xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm">
+                          <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-gradient drop-shadow-sm select-none">
                             {userName}
                           </span>
                         </div>
@@ -494,7 +494,7 @@ export default function ShopPage() {
                 {selectedStoreItem.type === "color-picker" ? (
                   <div className="flex flex-col items-center justify-center space-y-3 text-center">
                     <span className="text-xs font-mono text-white/40 uppercase tracking-wider">Live Name Preview</span>
-                    <span className="font-manrope font-extrabold text-3xl tracking-tight transition-colors drop-shadow-md" style={{ color: customColorHex }}>
+                    <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-gradient drop-shadow-md select-none">
                       {userName}
                     </span>
                     <span className="text-xs font-mono text-white/30">{customColorHex.toUpperCase()}</span>
@@ -516,18 +516,18 @@ export default function ShopPage() {
                     {selectedStoreItem.name}
                   </h3>
                   <div className="flex items-center space-x-3 mt-3">
-                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-9 h-9 object-contain" />
+                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
                     <span className="font-manrope font-extrabold text-3xl text-amber-400">{selectedStoreItem.cost}</span>
                   </div>
                   <p className="text-xs text-white/50 font-manrope mt-2 leading-relaxed">
                     {selectedStoreItem.desc}
                   </p>
 
-                  {/* Horizontal Rainbow Color Slider Line */}
+                  {/* Horizontal Rainbow Color Slider Line with Custom Circle Thumb Fill */}
                   {selectedStoreItem.type === "color-picker" && (
                     <div className="mt-5 space-y-3 pt-3 border-t border-white/10">
                       <span className="text-[11px] font-mono font-bold text-white/60 block">Pick Display Color:</span>
-                      <div className="relative w-full flex items-center py-2">
+                      <div className="relative w-full flex items-center py-3">
                         <input 
                           type="range" 
                           min="0" 
@@ -538,9 +538,21 @@ export default function ShopPage() {
                             setHueValue(h);
                             setCustomColorHex(hslToHex(h, 100, 50));
                           }} 
-                          className="w-full h-3 rounded-full appearance-none cursor-pointer outline-none shadow-md"
+                          className="w-full h-3 rounded-full appearance-none cursor-pointer outline-none shadow-md z-20 opacity-0 relative"
+                        />
+                        {/* Rainbow Track */}
+                        <div 
+                          className="absolute inset-x-0 h-3 rounded-full pointer-events-none z-0"
                           style={{
-                            background: "linear-gradient(to right, #ff0000, #ffff00, #00ff00, #00ffff, #0000ff, #ff00ff, #ff0000)"
+                            background: "linear-gradient(to right, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff, #ff0000)"
+                          }}
+                        />
+                        {/* Circle Thumb handle displaying exact selected color with thick white border outline */}
+                        <div 
+                          className="absolute top-1/2 -translate-y-1/2 w-6 h-6 rounded-full border-[3px] border-white shadow-[0_2px_8px_rgba(0,0,0,0.6)] pointer-events-none z-10 transition-transform duration-75"
+                          style={{
+                            left: `calc(${(hueValue / 360) * 100}% - ${(hueValue / 360) * 24}px)`,
+                            backgroundColor: customColorHex
                           }}
                         />
                       </div>

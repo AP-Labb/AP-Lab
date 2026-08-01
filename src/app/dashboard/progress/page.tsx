@@ -24,6 +24,7 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
+import { UserDisplayName } from "@/components/UserDisplayName";
 
 
 
@@ -931,9 +932,11 @@ export default function ProgressPage() {
                 )}
                 <div className="space-y-1">
                   <div className="flex flex-col sm:flex-row sm:items-center gap-2 font-manrope">
-                    <h3 className="font-instrument text-2xl text-white font-medium">
-                      {currentUser?.displayName || "AP Scholar"}
-                    </h3>
+                    <UserDisplayName 
+                      name={currentUser?.displayName || "AP Scholar"} 
+                      activeNameColor={progress?.activeNameColor} 
+                      className="font-instrument text-2xl text-white font-medium" 
+                    />
                     <LevelBadge level={level} />
                   </div>
                   <div className="flex flex-col gap-1 text-white/50 text-xs">

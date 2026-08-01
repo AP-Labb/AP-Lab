@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { SettingsModal } from "./SettingsModal";
 import { UserAvatar } from "./UserAvatar";
+import { UserDisplayName } from "./UserDisplayName";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 
@@ -84,7 +85,11 @@ export function AccountProfileModal({ isOpen, onClose, defaultTab = "profile" }:
               <UserAvatar photoURL={photoURL} name={displayName} activeFrame={activeFrame} size="lg" />
               <div className="text-left space-y-1">
                 <div className="flex items-center space-x-2">
-                  <h2 className="font-manrope font-extrabold text-xl text-white tracking-tight" style={progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}>{displayName}</h2>
+                  <UserDisplayName 
+                    name={displayName} 
+                    activeNameColor={progress?.activeNameColor} 
+                    className="font-manrope font-extrabold text-xl text-white tracking-tight" 
+                  />
                   <span className="px-2 py-0.5 rounded-full bg-blue-500/20 border border-blue-500/40 text-[10px] font-mono font-bold text-blue-300 flex items-center space-x-1">
                     <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
                     <span>SCHOLAR LVL {level}</span>

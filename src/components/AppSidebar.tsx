@@ -23,6 +23,8 @@ import { ActiveBoostsTimer } from "@/components/ActiveBoostsTimer";
 import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
 
+import { UserDisplayName } from "@/components/UserDisplayName";
+
 interface AppSidebarProps {
   currentPath?: string;
 }
@@ -236,9 +238,11 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     transition={{ duration: 0.2 }}
                     className="flex flex-col items-start text-left overflow-hidden min-w-0 flex-1"
                   >
-                    <span className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[110px]">
-                      {displayName}
-                    </span>
+                    <UserDisplayName 
+                      name={displayName} 
+                      activeNameColor={progress?.activeNameColor} 
+                      className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[110px]" 
+                    />
                     <span className="font-mono font-medium text-[10px] text-white/40 tracking-wider mt-0.5 truncate max-w-[110px]">
                       {username}
                     </span>

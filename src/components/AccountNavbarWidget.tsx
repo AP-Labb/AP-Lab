@@ -6,6 +6,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { SettingsModal } from "@/components/SettingsModal";
 import { UserAvatar } from "@/components/UserAvatar";
+import { UserDisplayName } from "@/components/UserDisplayName";
 import { cn } from "@/lib/utils";
 
 interface AccountNavbarWidgetProps {
@@ -49,12 +50,11 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
 
           {/* Account Name & Total XP + Credits */}
           <div className="flex flex-col items-start text-left min-w-0">
-            <span 
-              className={cn("font-manrope font-extrabold text-xs sm:text-sm tracking-tight leading-none transition-colors truncate max-w-[90px] sm:max-w-[120px]", isLightMode ? "text-slate-900 group-hover:text-emerald-600" : "text-white group-hover:text-emerald-400")}
-              style={progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}
-            >
-              {displayName}
-            </span>
+            <UserDisplayName 
+              name={displayName} 
+              activeNameColor={progress?.activeNameColor} 
+              className={cn("font-manrope font-extrabold text-xs sm:text-sm tracking-tight leading-none transition-colors truncate max-w-[90px] sm:max-w-[120px]", isLightMode ? "text-slate-900 group-hover:text-emerald-600" : "text-white group-hover:text-emerald-400")} 
+            />
             <div className="flex items-center gap-2 mt-0.5 whitespace-nowrap font-mono font-bold text-[9px] sm:text-[10px]">
               <span className={cn("flex items-center gap-1", isLightMode ? "text-slate-600" : "text-white/50")}>
                 <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 inline object-contain" />

@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
 import { UserAvatar } from "@/components/UserAvatar";
+import { UserDisplayName } from "@/components/UserDisplayName";
 import { cn } from "@/lib/utils";
 
 interface LeaderboardUser {
@@ -151,16 +152,17 @@ export function LevelLeaderboard() {
           {/* User Name & Level Badge */}
           <div className="flex flex-col md:flex-row md:items-center space-y-1.5 md:space-y-0 md:space-x-3">
             <span className="font-manrope font-bold text-white text-sm md:text-base leading-tight flex items-center gap-2">
-              <span 
-                style={isCurrentUser && progress?.activeNameColor ? { color: progress.activeNameColor } : undefined}
+              <UserDisplayName 
+                name={user.displayName || "AP Scholar"} 
+                activeNameColor={isCurrentUser ? progress?.activeNameColor : null} 
                 className={cn(
-                isCurrentUser && progress?.activeNameGradient === "grad-fire" && "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent font-extrabold",
-                isCurrentUser && progress?.activeNameGradient === "grad-ocean" && "bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent font-extrabold",
-                isCurrentUser && progress?.activeNameGradient === "grad-gold" && "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-600 bg-clip-text text-transparent font-extrabold",
-                isCurrentUser && progress?.activeNameGradient === "grad-holographic" && "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent font-extrabold animate-pulse"
-              )}>
-                {user.displayName || "AP Scholar"}
-              </span>
+                  "font-extrabold text-sm md:text-base",
+                  isCurrentUser && progress?.activeNameGradient === "grad-fire" && "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent",
+                  isCurrentUser && progress?.activeNameGradient === "grad-ocean" && "bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent",
+                  isCurrentUser && progress?.activeNameGradient === "grad-gold" && "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-600 bg-clip-text text-transparent",
+                  isCurrentUser && progress?.activeNameGradient === "grad-holographic" && "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent animate-pulse"
+                )}
+              />
               {isCurrentUser && (
                 <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/35 text-[9px] font-manrope font-black tracking-widest uppercase">
                   YOU
