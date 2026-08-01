@@ -315,53 +315,50 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="relative w-full max-w-4xl bg-[#0f1019] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col max-h-[85vh] text-left text-white"
+              className="relative w-full max-w-4xl bg-[#0b0c14] border border-white/15 rounded-3xl p-6 sm:p-8 shadow-2xl flex flex-col max-h-[85vh] text-left text-white"
             >
-              {/* Modal Header without trophy icon */}
-              <div className="flex items-center justify-between border-b border-white/10 pb-5 mb-6">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between border-b border-white/10 pb-4 mb-5">
                 <div>
-                  <h3 className="font-instrument text-3xl font-bold text-white">
-                    Academic Badges (Levels 1 - 100)
+                  <h3 className="font-manrope text-2xl font-black text-white">
+                    Level Badges (1 - 100)
                   </h3>
-                  <p className="text-xs text-white/50 font-manrope mt-1">
-                    Earn XP by mastering AP subjects and solving practice questions to unlock higher tier badges!
+                  <p className="text-xs text-white/50 font-manrope mt-0.5">
+                    Current Level: <span className="text-emerald-400 font-extrabold">Level {level}</span>
                   </p>
                 </div>
                 <button
                   onClick={() => setShowBadgesModal(false)}
-                  className="p-2 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white transition-all cursor-pointer"
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/70 hover:text-white transition-all cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Scrollable Badges Grid with white outline on current level badge */}
+              {/* Simplistic 100 Badges Grid */}
               <div 
                 data-lenis-prevent="true"
-                className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 gap-4 pr-2"
+                className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-2.5 p-1"
               >
                 {Array.from({ length: 100 }, (_, i) => i + 1).map((lvl) => {
-                  const isUnlocked = level >= lvl;
                   const isCurrent = level === lvl;
+                  const isUnlocked = level >= lvl;
 
                   return (
                     <div
                       key={lvl}
                       className={cn(
-                        "p-4 rounded-2xl border flex flex-col items-center justify-center space-y-2 text-center transition-all relative",
+                        "p-2.5 rounded-2xl border flex flex-col items-center justify-center space-y-1 text-center transition-all",
                         isCurrent 
-                          ? "bg-purple-950/40 border-2 border-white ring-4 ring-white/20 shadow-2xl scale-105 z-10" 
+                          ? "bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)] font-bold" 
                           : (isUnlocked 
-                              ? "bg-purple-950/20 border-purple-500/40" 
-                              : "bg-white/[0.02] border-white/5 opacity-40 grayscale")
+                              ? "bg-white/5 border-white/10 hover:bg-white/10" 
+                              : "bg-white/[0.02] border-white/5 opacity-35 grayscale")
                       )}
                     >
-                      <LevelBadge level={lvl} size="md" />
-                      <span className="font-manrope font-bold text-xs text-white block mt-1">
-                        Level {lvl} {isCurrent && "(Current)"}
-                      </span>
-                      <span className="text-[10px] font-mono text-white/40">
-                        {isCurrent ? "Active Badge ✓" : (isUnlocked ? "Unlocked ✓" : "Locked")}
+                      <LevelBadge level={lvl} size="sm" />
+                      <span className={cn("font-mono text-[11px]", isCurrent ? "text-emerald-300 font-extrabold" : "text-white/70")}>
+                        {lvl}
                       </span>
                     </div>
                   );

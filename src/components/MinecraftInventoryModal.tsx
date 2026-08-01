@@ -1,11 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
 import { UserAvatar } from "@/components/UserAvatar";
+import { cn } from "@/lib/utils";
 
 interface MinecraftInventoryModalProps {
   isOpen: boolean;
@@ -17,8 +19,13 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
   const { progress, equipItem, useBoostItem } = useProgress();
   const [hoveredSlotInfo, setHoveredSlotInfo] = useState<string | null>(null);
   const [activeMsg, setActiveMsg] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
 
-  if (!isOpen) return null;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!isOpen || !mounted) return null;
 
   const inventory = progress?.inventory || [];
   const activeFrame = progress?.activeAvatarFrame || "";
@@ -69,7 +76,7 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
     }
   };
 
-  return (
+  return createPortal(
     <div 
       className="fixed inset-0 bg-black/80 backdrop-blur-md z-[9999999] flex items-center justify-center p-4 font-mono select-none"
       onClick={onClose}
@@ -89,7 +96,7 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
           <span className="font-bold text-sm tracking-wider text-[#373737]">PLAYER INVENTORY</span>
           <button 
             onClick={onClose}
-            className="w-6 h-6 bg-[#c6c6c6] border-2 border-[#ffffff] border-r-[#555555] border-b-[#555555] flex items-center justify-center text-xs font-bold active:translate-y-0.5"
+            className="w-6 h-6 bg-[#c6c6c6] border-2 border-[#ffffff] border-r-[#555555] border-b-[#555555] flex items-center justify-center text-xs font-bold active:translate-y-0.5 cursor-pointer"
           >
             <X className="w-3.5 h-3.5 text-[#373737]" />
           </button>
@@ -118,41 +125,40 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
         </div>
 
         {/* 9x3 Item Grid Slots */}
-        <div className="grid grid-cols-9 gap-1.5 bg-[#8b8b8b] p-2.5 border-2 border-[#373737] border-r-[#ffffff] border-b-[#ffffff] mb-3">
-          {Array.from({ length: 27 }).map((_, idx) => {
-            const itemId = uniqueItems[idx];
-            const count = itemId ? itemCounts[itemId] : 0;
+        <div className="grid grid-cols-9 gap-1.5 bg-[#8b8b8b] border-2 border-[#373737] p-2 mb-4">
+          {Array.from({ length: 27 }).map((_, i) => {
+            const itemId = uniqueItems[i];
             const details = itemId ? getItemDetails(itemId) : null;
-            const isEquipped = itemId && (activeFrame === itemId || activeGrad === itemId);
+            const count = itemId ? itemCounts[itemId] : 0;
+            const isEquipped = activeFrame === itemId || activeGrad === itemId;
 
             return (
               <div
-                key={idx}
-                onMouseEnter={() => details && setHoveredSlotInfo(`${details.name}: ${details.desc}`)}
+                key={i}
+                onMouseEnter={() => setHoveredSlotInfo(details ? `${details.name}: ${details.desc}` : null)}
                 onMouseLeave={() => setHoveredSlotInfo(null)}
                 onClick={() => itemId && handleSlotClick(itemId)}
-                className={`relative w-11 h-11 bg-[#8b8b8b] border-2 flex items-center justify-center cursor-pointer transition-all ${
-                  itemId ? "hover:bg-[#a0a0a0] active:translate-y-0.5" : ""
-                } ${
-                  isEquipped ? "border-amber-400 bg-amber-200/50" : "border-[#373737] border-r-[#ffffff] border-b-[#ffffff]"
-                }`}
+                className={cn(
+                  "w-11 h-11 bg-[#8b8b8b] border-2 border-[#373737] border-r-[#ffffff] border-b-[#ffffff] relative flex items-center justify-center cursor-pointer transition-all hover:bg-[#a0a0a0]",
+                  isEquipped && "ring-2 ring-[#ffff55] bg-[#a8a8a8]"
+                )}
               >
                 {details && (
                   <>
-                    {details.icon.startsWith("/") ? (
-                      <img src={details.icon} alt={details.name} className="w-8 h-8 object-contain drop-shadow" />
+                    {typeof details.icon === "string" && details.icon.startsWith("/") ? (
+                      <img src={details.icon} alt={details.name} className="w-8 h-8 object-contain" />
                     ) : (
                       <span className="text-lg">{details.icon}</span>
                     )}
 
                     {count > 1 && (
-                      <span className="absolute bottom-0.5 right-1 text-[10px] font-extrabold text-white drop-shadow-[0_1px_2px_rgba(0,0,0,1)]">
+                      <span className="absolute bottom-0.5 right-1 text-[11px] font-bold text-[#ffff55] drop-shadow-[1px_1px_0px_#000000]">
                         {count}
                       </span>
                     )}
 
                     {isEquipped && (
-                      <span className="absolute top-0.5 left-0.5 bg-amber-500 text-black text-[8px] px-0.5 rounded font-extrabold">
+                      <span className="absolute top-0.5 left-0.5 text-[8px] font-bold text-[#ffff55] bg-[#373737] px-0.5 leading-none">
                         EQ
                       </span>
                     )}
@@ -174,6 +180,7 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
           )}
         </div>
       </motion.div>
-    </div>
+    </div>,
+    document.body
   );
 }

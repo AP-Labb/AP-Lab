@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Moved up higher & enlarged so user avatar fits 100% inside visor window) */}
+      {/* 10. Astronaut Helmet (Perfectly centered uploaded helmet so user avatar sits 100% inside visor window) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[88%] left-1/2 -translate-x-1/2 w-[290%] h-[290%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[90%] left-1/2 -translate-x-1/2 w-[300%] h-[300%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -180,21 +180,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 15. Einstein Hair (Even bigger & positioned better over avatar head) */}
+      {/* 15. Einstein Hair (Much bigger & positioned perfectly over avatar head) */}
       {hasEinsteinHair && (
         <img 
           src="/images/avatar-gear/einstein-hair.png" 
           alt="Einstein Hair" 
-          className="absolute -top-[60%] left-1/2 -translate-x-1/2 w-[180%] h-[140%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[68%] left-1/2 -translate-x-1/2 w-[215%] h-[165%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 16. Golden Frame (Larger 24k Gold Frame wrapping perfectly around avatar circle) */}
+      {/* 16. Golden Frame (Shifted down and left so it sits 100% symmetrically around avatar circle) */}
       {hasGoldenFrame && (
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[196%] h-[196%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[44%] left-[48.5%] -translate-x-1/2 w-[196%] h-[196%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
