@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { LogoFieldBackground } from "@/components/LogoFieldBackground";
+import Lanyard from "@/components/Lanyard";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { CheckCircle2, Loader2, Users, Eye, GraduationCap, Award } from "lucide-react";
 
@@ -197,6 +198,18 @@ export default function JoinPage() {
       
       {/* Canvas Logo Field Background - White theme */}
       <LogoFieldBackground color="#ffffff" opacity={0.14} speedX={0.25} speedY={0.12} />
+
+      {/* Interactive 3D AP Lab Lanyard Background */}
+      <div className="absolute inset-0 pointer-events-auto z-0 overflow-hidden opacity-90 flex items-center justify-center">
+        <Lanyard 
+          position={[0, 0, 20]} 
+          gravity={[0, -40, 0]} 
+          frontImage="/images/ap-lab-card-front.png"
+          backImage="/images/ap-lab-card-back.png"
+          lanyardImage="/images/ap-lab-lanyard-band.png"
+          lanyardWidth={1.2}
+        />
+      </div>
 
       {/* Radial Gradient Mask for Vignette Effect */}
       <div className="absolute inset-0 -z-20 w-full h-full overflow-hidden pointer-events-none">
