@@ -33,7 +33,7 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import FolderComponent from "@/components/Folder";
 import { AppSidebar } from "@/components/AppSidebar";
-import LiquidGradientCanvas from "@/components/ui/liquid-gradient";
+import Grainient from "@/components/Grainient";
 import { UserDisplayName } from "@/components/UserDisplayName";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import PixelBlast from "@/components/PixelBlast";
@@ -598,15 +598,31 @@ export default function Dashboard() {
         
         {/* UPPER REGION: Header with PixelBlast Background */}
         <div className="relative w-full flex flex-col items-center pt-16 pb-12 px-6 z-40 overflow-hidden">
-          {/* Liquid Gradient WebGL Background */}
-          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-55">
-            <LiquidGradientCanvas
-              colors={["#030514", "#0f172a", "#1e1b4b", "#2e1065", "#0c1938"]}
-              speed={0.45}
-              scale={0.45}
-              seed={18}
-              exposure={1.1}
-              contrast={1.05}
+          {/* Space Textured Grainient Background */}
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-65">
+            <Grainient
+              color1="#0a0b16"
+              color2="#311059"
+              color3="#030408"
+              timeSpeed={0.05}
+              colorBalance={0.0}
+              warpStrength={0.8}
+              warpFrequency={4.0}
+              warpSpeed={0.5}
+              warpAmplitude={40.0}
+              blendAngle={15.0}
+              blendSoftness={0.08}
+              rotationAmount={120.0}
+              noiseScale={1.5}
+              grainAmount={0.12}
+              grainScale={2.5}
+              grainAnimated={false}
+              contrast={1.4}
+              gamma={1.0}
+              saturation={1.1}
+              centerX={0.0}
+              centerY={0.0}
+              zoom={0.95}
               className="w-full h-full"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#03040a]/40 to-[#060712]" />
