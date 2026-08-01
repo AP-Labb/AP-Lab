@@ -653,7 +653,7 @@ export default function QuestsPage() {
               {/* Category 2: Weekly Quests */}
               <section className="space-y-4">
                 <div className="flex items-center space-x-2 border-b border-white/[0.08] pb-3">
-                  <Target className="w-4 h-4 text-white/60" />
+                  <Calendar className="w-4 h-4 text-white/60" />
                   <h3 className="font-manrope text-base font-bold text-white">Weekly Quests</h3>
                 </div>
 

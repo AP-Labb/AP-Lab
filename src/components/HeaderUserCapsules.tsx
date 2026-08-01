@@ -355,15 +355,24 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                       <div
                         key={lvl}
                         className={cn(
-                          "p-2 rounded-2xl border flex items-center justify-center text-center transition-all min-h-[60px] w-full relative overflow-hidden",
+                          "p-2 rounded-2xl border flex items-center justify-center text-center transition-all min-h-[60px] w-full relative overflow-hidden group cursor-pointer hover:bg-white hover:border-white shadow-sm",
                           isCurrent 
                             ? "bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)] font-bold scale-105 z-10" 
                             : (isUnlocked 
-                                ? "bg-white/5 border-white/10 hover:bg-white/15 hover:border-white/20" 
-                                : "bg-white/[0.02] border-white/5 opacity-30 grayscale")
+                                ? "bg-white/5 border-white/10 hover:border-white" 
+                                : "bg-white/[0.02] border-white/5 opacity-40 grayscale")
                         )}
                       >
-                        <LevelBadge level={lvl} size="sm" showLabel={false} />
+                        {/* Normal Badge Icon */}
+                        <div className="group-hover:opacity-0 transition-opacity">
+                          <LevelBadge level={lvl} size="sm" showLabel={false} />
+                        </div>
+
+                        {/* Hover Overlay: Pure White Background with Bold Black Level Number */}
+                        <div className="absolute inset-0 bg-white flex flex-col items-center justify-center font-manrope font-extrabold text-black opacity-0 group-hover:opacity-100 transition-all duration-150 z-20">
+                          <span className="text-[10px] uppercase font-mono tracking-widest text-black/60 font-bold leading-none mb-0.5">LVL</span>
+                          <span className="text-base font-extrabold leading-none">{lvl}</span>
+                        </div>
                       </div>
                     );
                   })}

@@ -126,21 +126,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 9. Face Mask (Stretching completely from left edge to right edge across lower face) */}
+      {/* 9. Face Mask (Larger, connecting to the center part of both left and right sides of avatar circle) */}
       {hasFaceMask && (
         <img 
           src="/images/avatar-gear/face-mask.png" 
           alt="Face Mask" 
-          className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[138%] h-[85%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute top-[25%] left-1/2 -translate-x-1/2 w-[152%] h-[92%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 10. Astronaut Helmet (Perfectly centered transparent astronaut helmet) */}
+      {/* 10. Astronaut Helmet (Moved up higher so user avatar fits perfectly inside visor window) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[95%] left-1/2 -translate-x-1/2 w-[305%] h-[305%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[106%] left-1/2 -translate-x-1/2 w-[310%] h-[310%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -153,21 +153,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 12. Heart Necklace (Stretching from center left edge to center right edge) */}
+      {/* 12. Heart Necklace (Larger, connecting to center part of both left and right sides) */}
       {hasHeartNecklace && (
         <img 
           src="/images/avatar-gear/heart-necklace.png" 
           alt="Heart Necklace" 
-          className="absolute -bottom-[18%] left-1/2 -translate-x-1/2 w-[145%] h-[100%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -bottom-[22%] left-1/2 -translate-x-1/2 w-[155%] h-[105%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 13. Gold Chain (Stretching from center left edge to center right edge) */}
+      {/* 13. Gold Chain (Larger, connecting to center part of both left and right sides) */}
       {hasGoldChain && (
         <img 
           src="/images/avatar-gear/gold-chain.png" 
           alt="Gold Chain" 
-          className="absolute -bottom-[16%] left-1/2 -translate-x-1/2 w-[145%] h-[95%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -bottom-[20%] left-1/2 -translate-x-1/2 w-[155%] h-[100%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 

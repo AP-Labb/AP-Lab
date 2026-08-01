@@ -35,7 +35,7 @@ export function ActiveBoostHUD() {
         const formatted = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         return (
           <div className="h-12 px-4 rounded-full border border-purple-800/60 bg-[#241338] text-purple-200 flex items-center space-x-2.5 font-mono text-xs shadow-md">
-            <img src="/images/2x-xp-boost.png" alt="2x XP Boost" className="w-6 h-6 max-w-[24px] max-h-[24px] object-contain shrink-0 drop-shadow-sm" />
+            <img src="/images/2x-xp-boost.png" alt="2x XP Boost" className="w-8 h-8 max-w-[32px] max-h-[32px] object-contain shrink-0 drop-shadow" />
             <span className="font-manrope font-extrabold uppercase text-[10px] sm:text-[11px] text-purple-300 whitespace-nowrap">2x XP:</span>
             <span className="font-mono text-white tracking-wider text-[11px] sm:text-xs">{formatted}</span>
           </div>
@@ -51,7 +51,7 @@ export function ActiveBoostHUD() {
         const formatted = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         return (
           <div className="h-12 px-4 rounded-full border border-amber-800/60 bg-[#332509] text-amber-200 flex items-center space-x-2.5 font-mono text-xs shadow-md">
-            <img src="/images/2x-coin-boost.png" alt="2x Coins Boost" className="w-6 h-6 max-w-[24px] max-h-[24px] object-contain shrink-0 drop-shadow-sm" />
+            <img src="/images/2x-coin-boost.png" alt="2x Coins Boost" className="w-8 h-8 max-w-[32px] max-h-[32px] object-contain shrink-0 drop-shadow" />
             <span className="font-manrope font-extrabold uppercase text-[10px] sm:text-[11px] text-amber-300 whitespace-nowrap">2x Coins:</span>
             <span className="font-mono text-white tracking-wider text-[11px] sm:text-xs">{formatted}</span>
           </div>
