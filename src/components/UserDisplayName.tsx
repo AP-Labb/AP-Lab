@@ -11,12 +11,13 @@ interface UserDisplayNameProps {
 }
 
 export function UserDisplayName({ name, activeNameColor, className, style }: UserDisplayNameProps) {
-  const isRainbow = activeNameColor === "rainbow" || activeNameColor === "rainbow-shift" || activeNameColor === "grad-rainbow";
+  const colorStr = activeNameColor ? String(activeNameColor).trim() : "";
+  const isRainbow = colorStr === "rainbow" || colorStr === "rainbow-shift" || colorStr === "grad-rainbow" || colorStr === "custom-name-color";
 
   if (isRainbow) {
     return (
       <span 
-        className={cn("animate-rainbow-gradient font-extrabold inline-block", className)}
+        className={cn("animate-rainbow-gradient font-extrabold inline-block text-transparent bg-clip-text", className)}
         style={style}
       >
         {name}
@@ -24,11 +25,16 @@ export function UserDisplayName({ name, activeNameColor, className, style }: Use
     );
   }
 
-  if (activeNameColor && (activeNameColor.startsWith("#") || activeNameColor.startsWith("rgb") || activeNameColor.startsWith("hsl"))) {
+  if (colorStr && (colorStr.startsWith("#") || colorStr.startsWith("rgb") || colorStr.startsWith("hsl"))) {
     return (
       <span 
         className={cn("font-extrabold inline-block", className)} 
-        style={{ ...style, color: activeNameColor, backgroundImage: "none", WebkitTextFillColor: activeNameColor }}
+        style={{ 
+          ...style, 
+          color: colorStr, 
+          WebkitTextFillColor: colorStr, 
+          backgroundImage: "none" 
+        }}
       >
         {name}
       </span>

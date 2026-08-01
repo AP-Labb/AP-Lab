@@ -304,6 +304,20 @@ const GEAR_ITEMS = [
       </div>
     )
   },
+
+  // 15. Traffic Cone Hat
+  { 
+    id: "gear-traffic-cone", 
+    name: "Traffic Cone Hat", 
+    desc: "Vibrant orange safety traffic cone hat", 
+    cost: 80, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#fff7ed] border-orange-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-traffic-cone" size="xl" />
+    )
+  },
 ];
 
 export default function ShopPage() {
@@ -430,25 +444,32 @@ export default function ShopPage() {
                     <div>
                       <div className="flex items-center justify-between">
                         <h4 className="font-extrabold text-sm text-white font-manrope">{item.name}</h4>
-                        <span className="text-[10px] font-mono font-bold text-white/40">
-                          {item.type === "boost" ? `${boostCount}/5` : isOwned ? "1/1" : "0/1"}
-                        </span>
+                        {item.type !== "color-picker" && (
+                          <span className="text-[10px] font-mono font-bold text-white/40">
+                            {item.type === "boost" ? `${boostCount}/5` : isOwned ? "1/1" : "0/1"}
+                          </span>
+                        )}
                       </div>
                       <p className="text-xs text-white/50 font-medium mt-1">{item.desc}</p>
                     </div>
 
-                    {/* Action Button (Solid White Button when Owned, no checkmark!) */}
+                    {/* Action Button */}
                     <div className="pt-2 border-t border-white/10">
                       <button
                         onClick={() => setSelectedStoreItem(item)}
+                        disabled={item.type === "boost" && boostCount >= 5}
                         className={cn(
                           "w-full py-3 rounded-full font-bold text-xs transition-all flex items-center justify-center space-x-2.5 cursor-pointer shadow-md",
-                          isOwned 
-                            ? "bg-white hover:bg-neutral-200 text-black font-extrabold" 
-                            : "bg-white/10 hover:bg-white/20 text-white"
+                          item.type === "boost" && boostCount >= 5
+                            ? "bg-white/5 text-white/40 cursor-not-allowed border border-white/5"
+                            : isOwned && item.type !== "color-picker" && item.type !== "boost"
+                              ? "bg-white hover:bg-neutral-200 text-black font-extrabold" 
+                              : "bg-white/10 hover:bg-white/20 text-white"
                         )}
                       >
-                        {isOwned ? (
+                        {item.type === "boost" && boostCount >= 5 ? (
+                          <span className="text-[11px] uppercase tracking-wider font-extrabold text-white/40">MAX LIMIT REACHED</span>
+                        ) : isOwned && item.type !== "color-picker" && item.type !== "boost" ? (
                           <span>{isEquipped ? "Equipped" : "Equip"}</span>
                         ) : (
                           <>
@@ -470,58 +491,61 @@ export default function ShopPage() {
 
       {/* ITEM CONFIRMATION & PURCHASE MODAL (White Purchase Button & Bigger Coin Image) */}
       <AnimatePresence>
-        {selectedStoreItem && (
-          <div 
-            className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl"
-            onClick={() => setSelectedStoreItem(null)}
-          >
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.95 }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-xl bg-[#141622] border border-white/15 rounded-[36px] overflow-hidden shadow-2xl flex flex-col md:flex-row text-white"
+        {selectedStoreItem && (() => {
+          const selectedBoostCount = inventory.filter((id) => id === selectedStoreItem.id).length;
+
+          return (
+            <div 
+              className="fixed inset-0 z-[9999999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl"
+              onClick={() => setSelectedStoreItem(null)}
             >
-              <button
-                onClick={() => setSelectedStoreItem(null)}
-                className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all cursor-pointer"
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-xl bg-[#141622] border border-white/15 rounded-[36px] overflow-hidden shadow-2xl flex flex-col md:flex-row text-white"
               >
-                <X className="w-5 h-5" />
-              </button>
+                <button
+                  onClick={() => setSelectedStoreItem(null)}
+                  className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-all cursor-pointer"
+                >
+                  <X className="w-5 h-5" />
+                </button>
 
-              {/* Left Side Visual Box */}
-              <div className="w-full md:w-1/2 bg-[#0c0d16] p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[300px]">
-                {selectedStoreItem.type === "color-picker" ? (
-                  <div className="flex flex-col items-center justify-center space-y-3 text-center">
-                    <span className="text-xs font-mono text-white/40 uppercase tracking-wider">Live Name Preview</span>
-                    <span 
-                      className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center drop-shadow-md select-none transition-colors duration-100"
-                      style={{ color: customColorHex }}
-                    >
-                      {userName}
-                    </span>
-                    <span className="text-xs font-mono text-white/30">{customColorHex.toUpperCase()}</span>
-                  </div>
-                ) : (
-                  <div className="transform scale-125 flex items-center justify-center">
-                    {selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)}
-                  </div>
-                )}
-              </div>
+                {/* Left Side Visual Box */}
+                <div className="w-full md:w-1/2 bg-[#0c0d16] p-10 flex flex-col items-center justify-center border-b md:border-b-0 md:border-r border-white/10 relative min-h-[300px]">
+                  {selectedStoreItem.type === "color-picker" ? (
+                    <div className="flex flex-col items-center justify-center space-y-3 text-center">
+                      <span className="text-xs font-mono text-white/40 uppercase tracking-wider">Live Name Preview</span>
+                      <span 
+                        className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center drop-shadow-md select-none transition-colors duration-100"
+                        style={{ color: customColorHex }}
+                      >
+                        {userName}
+                      </span>
+                      <span className="text-xs font-mono text-white/30">{customColorHex.toUpperCase()}</span>
+                    </div>
+                  ) : (
+                    <div className="transform scale-125 flex items-center justify-center">
+                      {selectedStoreItem.renderAccessory(currentUser?.photoURL || undefined, userName)}
+                    </div>
+                  )}
+                </div>
 
-              {/* Right Side Item Info & White Purchase Button */}
-              <div className="w-full md:w-1/2 p-8 flex flex-col justify-between text-left space-y-6">
-                <div>
-                  <div className="bg-white/10 text-white/70 font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full w-fit mb-3">
-                    {selectedStoreItem.type === "color-picker" ? "Custom Color" : selectedStoreItem.type === "boost" ? "Max 5" : "0/1 Available"}
-                  </div>
-                  <h3 className="font-manrope font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
-                    {selectedStoreItem.name}
-                  </h3>
-                  <div className="flex items-center space-x-3 mt-3">
-                    <img src="/images/coin-zoomed.png" alt="Coin" className="w-8 h-8 sm:w-9 sm:h-9 object-contain" />
-                    <span className="font-manrope font-extrabold text-3xl text-amber-400">{selectedStoreItem.cost}</span>
-                  </div>
+                {/* Right Side Item Info & White Purchase Button */}
+                <div className="w-full md:w-1/2 p-8 flex flex-col justify-between text-left space-y-6">
+                  <div>
+                    <div className="bg-white/10 text-white/70 font-mono text-[10px] uppercase font-bold tracking-wider px-2.5 py-1 rounded-full w-fit mb-3">
+                      {selectedStoreItem.type === "color-picker" ? "Custom Color" : selectedStoreItem.type === "boost" ? `${selectedBoostCount}/5 Owned` : inventory.includes(selectedStoreItem.id) ? "1/1 Owned" : "0/1 Available"}
+                    </div>
+                    <h3 className="font-manrope font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
+                      {selectedStoreItem.name}
+                    </h3>
+                    <div className="flex items-center space-x-3.5 mt-3">
+                      <img src="/images/coin-zoomed.png" alt="Coin" className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0" />
+                      <span className="font-manrope font-black text-4xl text-amber-400">{selectedStoreItem.cost}</span>
+                    </div>
                   <p className="text-xs text-white/50 font-manrope mt-2 leading-relaxed">
                     {selectedStoreItem.desc}
                   </p>
@@ -563,14 +587,12 @@ export default function ShopPage() {
                   )}
                 </div>
 
-                {/* White Purchase Button (Solid White with Black Font) */}
+                {/* White Purchase Button (No popup alerts!) */}
                 <button
                   onClick={async () => {
                     if (selectedStoreItem.type === "color-picker") {
                       const success = await buyItem?.("custom-name-color", selectedStoreItem.cost, "color-picker", customColorHex);
-                      if (!success) {
-                        alert("Not enough coins!");
-                      } else {
+                      if (success) {
                         setPowerupStatusMsg(`Name color updated to ${customColorHex}!`);
                         setTimeout(() => setPowerupStatusMsg(null), 4500);
                       }
@@ -583,28 +605,41 @@ export default function ShopPage() {
                     await handleItemClick(selectedStoreItem, isOwned, isEquipped);
                     setSelectedStoreItem(null);
                   }}
-                  disabled={credits < selectedStoreItem.cost && !inventory.includes(selectedStoreItem.id) && selectedStoreItem.type !== "color-picker"}
+                  disabled={
+                    selectedStoreItem.type === "color-picker"
+                      ? credits < selectedStoreItem.cost
+                      : selectedStoreItem.type === "boost"
+                        ? selectedBoostCount >= 5 || credits < selectedStoreItem.cost
+                        : !inventory.includes(selectedStoreItem.id) && credits < selectedStoreItem.cost
+                  }
                   className={cn(
                     "w-full py-4 rounded-2xl font-manrope font-extrabold text-sm uppercase tracking-wider transition-all cursor-pointer shadow-xl flex items-center justify-center space-x-2 border-none",
                     selectedStoreItem.type === "color-picker"
                       ? (credits >= selectedStoreItem.cost ? "bg-white hover:bg-neutral-200 text-black font-black" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
-                      : inventory.includes(selectedStoreItem.id)
-                        ? "bg-white text-black hover:bg-neutral-200 font-black"
-                        : credits >= selectedStoreItem.cost 
-                          ? "bg-white hover:bg-neutral-200 text-black font-black" 
-                          : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
+                      : selectedStoreItem.type === "boost"
+                        ? (selectedBoostCount >= 5 ? "bg-white/5 text-white/30 cursor-not-allowed border border-white/5" : credits >= selectedStoreItem.cost ? "bg-white hover:bg-neutral-200 text-black font-black" : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5")
+                        : inventory.includes(selectedStoreItem.id)
+                          ? "bg-white text-black hover:bg-neutral-200 font-black"
+                          : credits >= selectedStoreItem.cost 
+                            ? "bg-white hover:bg-neutral-200 text-black font-black" 
+                            : "bg-white/5 text-white/30 cursor-not-allowed border border-white/5"
                   )}
                 >
                   <span>
                     {selectedStoreItem.type === "color-picker"
-                      ? (credits >= selectedStoreItem.cost ? "PURCHASE" : "NOT ENOUGH COINS")
-                      : inventory.includes(selectedStoreItem.id) ? (activeFrame === selectedStoreItem.id ? "EQUIPPED" : "EQUIP NOW") : credits >= selectedStoreItem.cost ? "PURCHASE" : "NOT ENOUGH COINS"}
+                      ? (credits >= selectedStoreItem.cost ? "PURCHASE COLOR" : "NOT ENOUGH COINS")
+                      : selectedStoreItem.type === "boost"
+                        ? (selectedBoostCount >= 5 ? "MAX LIMIT REACHED" : credits >= selectedStoreItem.cost ? "PURCHASE BOOST" : "NOT ENOUGH COINS")
+                        : inventory.includes(selectedStoreItem.id)
+                          ? (activeFrame === selectedStoreItem.id ? "EQUIPPED" : "EQUIP NOW")
+                          : credits >= selectedStoreItem.cost ? "PURCHASE" : "NOT ENOUGH COINS"}
                   </span>
                 </button>
               </div>
             </motion.div>
           </div>
-        )}
+        );
+      })()}
       </AnimatePresence>
 
       <MinecraftInventoryModal isOpen={showInventoryModal} onClose={() => setShowInventoryModal(false)} />

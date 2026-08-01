@@ -34,6 +34,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
   const hasRedBowtie = activeFrame === "gear-red-bowtie";
   const hasGoldenHalo = activeFrame === "gear-golden-halo";
   const hasAstronautHelmet = activeFrame === "gear-astronaut-helmet" || activeFrame === "gear-helmet" || activeFrame === "helmet";
+  const hasTrafficCone = activeFrame === "gear-traffic-cone" || activeFrame === "traffic-cone";
 
   const initial = (name || "S").charAt(0).toUpperCase();
 
@@ -131,12 +132,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Positioned so avatar circle fits 100% inside clear visor circle) */}
+      {/* 10. Astronaut Helmet (Enlarged so user's PFP circle fits 100% neatly inside visor circle) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[28%] left-1/2 -translate-x-1/2 w-[160%] h-[160%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[34%] left-1/2 -translate-x-1/2 w-[185%] h-[185%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -164,6 +165,15 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           src="/images/avatar-gear/gold-chain.png" 
           alt="Gold Chain" 
           className="absolute -bottom-[16%] left-1/2 -translate-x-1/2 w-[145%] h-[95%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+        />
+      )}
+
+      {/* 14. Traffic Cone Hat */}
+      {hasTrafficCone && (
+        <img 
+          src="/images/avatar-gear/traffic-cone.png" 
+          alt="Traffic Cone" 
+          className="absolute -top-[55%] left-1/2 -translate-x-1/2 w-[115%] h-[110%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
     </div>
