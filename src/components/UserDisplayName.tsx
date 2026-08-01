@@ -17,7 +17,7 @@ export function UserDisplayName({ name, activeNameColor, className, style }: Use
   if (isRainbow) {
     return (
       <span 
-        className={cn("animate-rainbow-gradient font-extrabold inline-block text-transparent bg-clip-text", className)}
+        className={cn("animate-rainbow-solid-shift font-extrabold inline-block", className)}
         style={style}
       >
         {name}

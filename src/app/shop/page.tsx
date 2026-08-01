@@ -334,7 +334,7 @@ const GEAR_ITEMS = [
     desc: "Prestige 24k solid gold avatar ring frame", 
     cost: 10000, 
     bgColor: "bg-gradient-to-b from-amber-900/60 to-yellow-950/80 border-amber-500/50", 
-    innerBg: "bg-gradient-to-br from-amber-400/20 via-yellow-500/10 to-amber-600/20 border-amber-400/50 flex items-center justify-center h-48 rounded-2xl shadow-[inset_0_0_20px_rgba(245,158,11,0.2)]",
+    innerBg: "bg-[url('/images/gold-texture.jpg')] bg-cover bg-center border-amber-400/80 flex items-center justify-center h-48 rounded-2xl shadow-xl overflow-hidden",
     type: "frame",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-frame" size="xl" />
@@ -353,7 +353,7 @@ const GEAR_ITEMS = [
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">
         <span 
-          className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm select-none"
+          className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-solid-shift drop-shadow-sm select-none"
         >
           {userName || "Scholar"}
         </span>
@@ -473,7 +473,7 @@ export default function ShopPage() {
                     <div className={cn(item.innerBg, "group-hover:scale-[1.02] transition-transform")}>
                       {item.id === "custom-name-color" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full">
-                          <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm select-none">
+                          <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-solid-shift drop-shadow-sm select-none">
                             {userName}
                           </span>
                         </div>

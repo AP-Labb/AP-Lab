@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Significantly larger framing pfp perfectly inside visor) */}
+      {/* 10. Astronaut Helmet (Significantly larger & moved up more so user's PFP fits 100% perfectly) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[230%] h-[230%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[52%] left-1/2 -translate-x-1/2 w-[245%] h-[245%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -194,7 +194,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[7%] left-1/2 -translate-x-1/2 w-[114%] h-[114%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[124%] h-[124%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
