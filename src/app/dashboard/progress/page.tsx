@@ -322,10 +322,7 @@ export default function ProgressPage() {
               Progress
             </h1>
           </div>
-
-          <AccountNavbarWidget onOpenProfile={() => setShowAccountPopup(true)} />
         </div>
-
 
         {/* Level Progression Banner */}
         <motion.div 
@@ -347,7 +344,11 @@ export default function ProgressPage() {
             )}
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-bold font-manrope">{currentUser.displayName || "Scholar"}</h2>
+                <UserDisplayName 
+                  name={currentUser.displayName || progress?.displayName || "Scholar"} 
+                  activeNameColor={progress?.activeNameColor} 
+                  className="text-lg font-extrabold font-manrope" 
+                />
                 <LevelBadge level={level} />
               </div>
               <p className="text-xs text-white/40 font-mono mt-0.5">Account ID: {currentUser.uid.substring(0, 8)}</p>
@@ -791,108 +792,326 @@ export default function ProgressPage() {
 
         </div>
 
-        {/* Multi-Line Course Velocity & Quest Completion Trends Chart */}
+        {/* XP & COIN DAILY EARNINGS DUAL-LINE GRAPH */}
         <motion.div 
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="bg-neutral-950/80 rounded-2xl border border-white/5 p-6 flex flex-col space-y-6 shadow-md"
+          className="bg-neutral-950/80 rounded-2xl border border-white/5 p-6 flex flex-col space-y-6 shadow-md relative"
         >
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
               <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/50">
-                <BarChart2 className="w-4.5 h-4.5 text-cyan-400" />
+                <BarChart2 className="w-4.5 h-4.5 text-purple-400" />
               </div>
               <div>
-                <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Learning Velocity Trends</h3>
-                <p className="text-xs text-white/40">Multi-course study time & quest milestone velocity over time</p>
+                <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Daily XP & Coin Earnings</h3>
+                <p className="text-xs text-white/40">Track your daily XP and Coin accumulation over time</p>
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-4 text-xs font-mono">
+            <div className="flex items-center space-x-6 text-xs font-mono">
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-cyan-400" />
-                <span className="text-white/70 font-semibold">AP® Biology & Chemistry</span>
+                <span className="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
+                <span className="text-purple-300 font-bold">XP Earned (Purple)</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-purple-400" />
-                <span className="text-white/70 font-semibold">AP® Calculus</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-400" />
-                <span className="text-white/70 font-semibold">Quests Completed</span>
+                <span className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
+                <span className="text-amber-300 font-bold">Coins Earned (Yellow)</span>
               </div>
             </div>
           </div>
 
-          {/* SVG Multi-Line Chart (Matching reference screenshot styling) */}
-          <div className="w-full h-64 relative bg-[#07080f] rounded-xl border border-white/5 p-4 flex flex-col justify-between overflow-hidden">
-            {/* Horizontal Grid lines */}
-            <div className="absolute inset-x-0 top-8 border-b border-white/[0.04]" />
-            <div className="absolute inset-x-0 top-20 border-b border-white/[0.04]" />
-            <div className="absolute inset-x-0 top-32 border-b border-white/[0.04]" />
-            <div className="absolute inset-x-0 top-44 border-b border-white/[0.04]" />
-            <div className="absolute inset-x-0 top-56 border-b border-white/[0.04]" />
+          {/* Interactive Dual-Line SVG Graph with Connected Dots */}
+          <div className="w-full h-72 relative bg-[#07080f] rounded-xl border border-white/5 p-5 flex flex-col justify-between overflow-visible">
+            {/* Background Grid Lines */}
+            <div className="absolute inset-x-0 top-8 border-b border-white/[0.03]" />
+            <div className="absolute inset-x-0 top-20 border-b border-white/[0.03]" />
+            <div className="absolute inset-x-0 top-32 border-b border-white/[0.03]" />
+            <div className="absolute inset-x-0 top-44 border-b border-white/[0.03]" />
 
-            <svg viewBox="0 0 600 180" className="w-full h-full overflow-visible z-10">
-              <defs>
-                <linearGradient id="cyanLineGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#22d3ee" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#22d3ee" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="purpleLineGrad" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#c084fc" stopOpacity="0.3" />
-                  <stop offset="100%" stopColor="#c084fc" stopOpacity="0" />
-                </linearGradient>
-              </defs>
+            {/* SVG Lines & Points */}
+            <div className="relative flex-1 w-full h-full">
+              <svg viewBox="0 0 700 160" className="w-full h-full overflow-visible z-10">
+                <defs>
+                  <linearGradient id="purpleEarningsGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#a855f7" stopOpacity="0.25" />
+                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                  </linearGradient>
+                  <linearGradient id="amberEarningsGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.2" />
+                    <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
 
-              {/* Cyan Line Area Fill */}
-              <polygon 
-                points="10,140 60,110 110,130 160,80 210,100 260,50 310,70 360,40 410,90 460,60 510,75 560,30 590,45 590,170 10,170" 
-                fill="url(#cyanLineGrad)" 
-              />
-              {/* Cyan Smooth Multi-Point Curve */}
-              <motion.path 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut" }}
-                d="M 10 140 L 60 110 L 110 130 L 160 80 L 210 100 L 260 50 L 310 70 L 360 40 L 410 90 L 460 60 L 510 75 L 560 30 L 590 45" 
-                fill="none" 
-                stroke="#22d3ee" 
-                strokeWidth="2.5" 
-                strokeLinecap="round"
-              />
+                {/* Simulated daily data points mapped dynamically */}
+                {(() => {
+                  const pointsCount = 14;
+                  const stepX = 680 / (pointsCount - 1);
+                  
+                  // XP line coordinates (purple)
+                  const xpCoords = Array.from({ length: pointsCount }).map((_, i) => {
+                    const x = 10 + i * stepX;
+                    // Daily XP variation curve ending with user's current progress
+                    const val = i === 13 ? Math.min(xp, 250) : Math.max(10, (Math.sin(i * 0.75) * 45 + 75 + (i % 3) * 20));
+                    const y = 140 - Math.min(120, (val / 300) * 120);
+                    return { x, y, val };
+                  });
 
-              {/* Purple Line Smooth Curve */}
-              <motion.path 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.2 }}
-                d="M 10 70 L 60 90 L 110 75 L 160 120 L 210 85 L 260 110 L 310 65 L 360 95 L 410 70 L 460 105 L 510 60 L 560 85 L 590 55" 
-                fill="none" 
-                stroke="#c084fc" 
-                strokeWidth="2.5" 
-                strokeLinecap="round"
-              />
+                  // Coin line coordinates (yellow)
+                  const coinCoords = Array.from({ length: pointsCount }).map((_, i) => {
+                    const x = 10 + i * stepX;
+                    const val = i === 13 ? Math.min(progress?.credits || 0, 120) : Math.max(5, (Math.cos(i * 0.6) * 30 + 40 + (i % 2) * 15));
+                    const y = 145 - Math.min(125, (val / 200) * 125);
+                    return { x, y, val };
+                  });
 
-              {/* Amber Line Smooth Curve */}
-              <motion.path 
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                transition={{ duration: 1.5, ease: "easeInOut", delay: 0.4 }}
-                d="M 10 160 L 60 145 L 110 155 L 160 130 L 210 140 L 260 120 L 310 135 L 360 110 L 410 125 L 460 95 L 510 115 L 560 90 L 590 80" 
-              />
-            </svg>
+                  const xpPathStr = xpCoords.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`, '');
+                  const xpAreaStr = `${xpPathStr} L ${xpCoords[pointsCount - 1].x} 160 L 10 160 Z`;
 
-            <div className="flex justify-between items-center text-[10px] font-mono text-white/30 pt-2 border-t border-white/5">
-              <span>Week 1</span>
-              <span>Week 2</span>
-              <span>Week 3</span>
-              <span>Week 4</span>
-              <span>Week 5</span>
-              <span>Week 6</span>
-              <span>Current Week</span>
+                  const coinPathStr = coinCoords.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`, '');
+                  const coinAreaStr = `${coinPathStr} L ${coinCoords[pointsCount - 1].x} 160 L 10 160 Z`;
+
+                  return (
+                    <>
+                      {/* Purple XP Area Fill */}
+                      <polygon points={xpAreaStr.replace(/M |L /g, '')} fill="url(#purpleEarningsGrad)" />
+
+                      {/* Purple XP Line */}
+                      <motion.path 
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.2, ease: "easeInOut" }}
+                        d={xpPathStr} 
+                        fill="none" 
+                        stroke="#a855f7" 
+                        strokeWidth="3" 
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+
+                      {/* Yellow Coin Area Fill */}
+                      <polygon points={coinAreaStr.replace(/M |L /g, '')} fill="url(#amberEarningsGrad)" />
+
+                      {/* Yellow Coin Line */}
+                      <motion.path 
+                        initial={{ pathLength: 0 }}
+                        animate={{ pathLength: 1 }}
+                        transition={{ duration: 1.2, ease: "easeInOut", delay: 0.2 }}
+                        d={coinPathStr} 
+                        fill="none" 
+                        stroke="#f59e0b" 
+                        strokeWidth="3" 
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      />
+
+                      {/* Connected Interactive Dots for Purple XP Line */}
+                      {xpCoords.map((p, idx) => (
+                        <circle
+                          key={`xp-dot-${idx}`}
+                          cx={p.x}
+                          cy={p.y}
+                          r="4.5"
+                          fill="#a855f7"
+                          stroke="#07080f"
+                          strokeWidth="2"
+                          className="transition-all duration-150 cursor-pointer hover:r-7"
+                        />
+                      ))}
+
+                      {/* Connected Interactive Dots for Yellow Coin Line */}
+                      {coinCoords.map((p, idx) => (
+                        <circle
+                          key={`coin-dot-${idx}`}
+                          cx={p.x}
+                          cy={p.y}
+                          r="4.5"
+                          fill="#f59e0b"
+                          stroke="#07080f"
+                          strokeWidth="2"
+                          className="transition-all duration-150 cursor-pointer hover:r-7"
+                        />
+                      ))}
+                    </>
+                  );
+                })()}
+              </svg>
             </div>
+
+            {/* X-Axis Day Labels */}
+            <div className="flex justify-between items-center text-[10px] font-mono text-white/40 pt-2 border-t border-white/5 px-2">
+              {Array.from({ length: 14 }).map((_, i) => {
+                const d = new Date();
+                d.setDate(d.getDate() - (13 - i));
+                return (
+                  <span key={i} className="hover:text-white transition-colors cursor-default">
+                    {d.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+        </motion.div>
+
+
+        {/* SUBJECT STUDY TIME DISTRIBUTION PIE CHART */}
+        <motion.div 
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35 }}
+          className="bg-neutral-950/80 rounded-2xl border border-white/5 p-6 flex flex-col space-y-6 shadow-md"
+        >
+          <div className="flex items-center space-x-3">
+            <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/50">
+              <BookOpen className="w-4.5 h-4.5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Subject Study Time Distribution</h3>
+              <p className="text-xs text-white/40">Percentage of study time spent on your opened AP subjects</p>
+            </div>
+          </div>
+
+          {/* Clean SVG Pie / Donut Chart & Legend */}
+          <div className="flex flex-col md:flex-row items-center justify-around gap-8 bg-[#07080f] border border-white/5 rounded-2xl p-6">
+            
+            {/* SVG Pie Chart SVG */}
+            <div className="relative w-48 h-48 flex items-center justify-center shrink-0">
+              {(() => {
+                const completed = progress?.completedTopics || [];
+                // Categorize completed topics by opened course
+                const counts: Record<string, { name: string; color: string; count: number }> = {};
+                
+                const COURSE_COLORS: Record<string, { name: string; color: string }> = {
+                  "ap-bio": { name: "AP® Biology", color: "#0088ff" },
+                  "ap-chem": { name: "AP® Chemistry", color: "#a484d7" },
+                  "ap-physics": { name: "AP® Physics C", color: "#38bdf8" },
+                  "ap-ush": { name: "AP® US History", color: "#f59e0b" },
+                  "ap-psych": { name: "AP® Psychology", color: "#ec4899" },
+                  "ap-eng": { name: "AP® English", color: "#8b5cf6" },
+                  "ap-calc": { name: "AP® Calculus BC", color: "#10b981" },
+                  "ap-stats": { name: "AP® Statistics", color: "#34d399" },
+                  "ap-csa": { name: "AP® Comp Sci A", color: "#06b6d4" },
+                };
+
+                completed.forEach(topicId => {
+                  const key = topicId.split("-").slice(0, 2).join("-");
+                  const info = COURSE_COLORS[key] || { name: key.toUpperCase(), color: "#3b82f6" };
+                  if (!counts[key]) {
+                    counts[key] = { name: info.name, color: info.color, count: 0 };
+                  }
+                  counts[key].count += 1;
+                });
+
+                // Default fallback if no completed topics yet: show AP Bio, AP Chem, AP Calc
+                const items = Object.values(counts);
+                if (items.length === 0) {
+                  items.push(
+                    { name: "AP® Biology", color: "#0088ff", count: 45 },
+                    { name: "AP® Chemistry", color: "#a484d7", count: 35 },
+                    { name: "AP® Calculus BC", color: "#10b981", count: 20 }
+                  );
+                }
+
+                const total = items.reduce((sum, item) => sum + item.count, 0);
+                let cumulativePercent = 0;
+
+                return (
+                  <>
+                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90 overflow-visible">
+                      {items.map((item, idx) => {
+                        const percent = (item.count / total) * 100;
+                        const strokeDasharray = `${percent} ${100 - percent}`;
+                        const strokeDashoffset = -cumulativePercent;
+                        cumulativePercent += percent;
+
+                        return (
+                          <motion.circle
+                            key={idx}
+                            cx="50"
+                            cy="50"
+                            r="15.91549430918954"
+                            fill="transparent"
+                            stroke={item.color}
+                            strokeWidth="10"
+                            strokeDasharray={strokeDasharray}
+                            strokeDashoffset={strokeDashoffset}
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ duration: 0.6, delay: idx * 0.1 }}
+                            className="transition-all hover:opacity-80 cursor-pointer"
+                          />
+                        );
+                      })}
+                    </svg>
+
+                    {/* Donut Center Label */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                      <span className="font-instrument text-2xl font-extrabold text-white leading-none">
+                        {items.length}
+                      </span>
+                      <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest mt-1">
+                        Subjects
+                      </span>
+                    </div>
+                  </>
+                );
+              })()}
+            </div>
+
+            {/* Side Legend showing course percentages */}
+            <div className="flex-1 w-full space-y-3 font-manrope">
+              {(() => {
+                const completed = progress?.completedTopics || [];
+                const counts: Record<string, { name: string; color: string; count: number }> = {};
+                
+                const COURSE_COLORS: Record<string, { name: string; color: string }> = {
+                  "ap-bio": { name: "AP® Biology", color: "#0088ff" },
+                  "ap-chem": { name: "AP® Chemistry", color: "#a484d7" },
+                  "ap-physics": { name: "AP® Physics C", color: "#38bdf8" },
+                  "ap-ush": { name: "AP® US History", color: "#f59e0b" },
+                  "ap-psych": { name: "AP® Psychology", color: "#ec4899" },
+                  "ap-eng": { name: "AP® English", color: "#8b5cf6" },
+                  "ap-calc": { name: "AP® Calculus BC", color: "#10b981" },
+                  "ap-stats": { name: "AP® Statistics", color: "#34d399" },
+                  "ap-csa": { name: "AP® Comp Sci A", color: "#06b6d4" },
+                };
+
+                completed.forEach(topicId => {
+                  const key = topicId.split("-").slice(0, 2).join("-");
+                  const info = COURSE_COLORS[key] || { name: key.toUpperCase(), color: "#3b82f6" };
+                  if (!counts[key]) {
+                    counts[key] = { name: info.name, color: info.color, count: 0 };
+                  }
+                  counts[key].count += 1;
+                });
+
+                const items = Object.values(counts);
+                if (items.length === 0) {
+                  items.push(
+                    { name: "AP® Biology", color: "#0088ff", count: 45 },
+                    { name: "AP® Chemistry", color: "#a484d7", count: 35 },
+                    { name: "AP® Calculus BC", color: "#10b981", count: 20 }
+                  );
+                }
+
+                const total = items.reduce((sum, item) => sum + item.count, 0);
+
+                return items.map((item, idx) => {
+                  const percent = Math.round((item.count / total) * 100);
+                  return (
+                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl border border-white/5 bg-white/[0.01]">
+                      <div className="flex items-center space-x-3">
+                        <span className="w-3 h-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
+                        <span className="font-bold text-xs text-white/90">{item.name}</span>
+                      </div>
+                      <span className="font-mono font-extrabold text-xs text-white/70">{percent}%</span>
+                    </div>
+                  );
+                });
+              })()}
+            </div>
+
           </div>
         </motion.div>
 

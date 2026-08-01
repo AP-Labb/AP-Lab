@@ -79,12 +79,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 5. Purple Party Hat */}
+      {/* 5. Purple Party Hat (Moved up to fit head better) */}
       {hasPartyHat && (
         <img 
           src="/images/avatar-gear/purple-party-hat.png" 
           alt="Party Hat" 
-          className="absolute -top-[52%] left-1/2 -translate-x-1/2 w-[105%] h-[95%] object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[60%] left-1/2 -translate-x-1/2 w-[110%] h-[100%] max-w-none object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -180,21 +180,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 15. Einstein Hair (Much bigger & positioned perfectly over avatar head) */}
+      {/* 15. Einstein Hair (Bigger wig sitting over avatar head) */}
       {hasEinsteinHair && (
         <img 
           src="/images/avatar-gear/einstein-hair.png" 
           alt="Einstein Hair" 
-          className="absolute -top-[68%] left-1/2 -translate-x-1/2 w-[215%] h-[165%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[74%] left-1/2 -translate-x-1/2 w-[235%] h-[180%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 16. Golden Frame (Shifted down and left so it sits 100% symmetrically around avatar circle) */}
+      {/* 16. Golden Frame (Moved up to the right a tiny bit and enlarged) */}
       {hasGoldenFrame && (
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[44%] left-[48.5%] -translate-x-1/2 w-[196%] h-[196%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[45%] left-[50%] -translate-x-1/2 w-[202%] h-[202%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
