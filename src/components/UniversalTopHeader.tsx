@@ -36,7 +36,7 @@ export function UniversalTopHeader() {
         {/* Universal Search Bar (Extends horizontally all the way until streak capsule with h-12 matching height) */}
         <div className="relative flex-1 mr-4 sm:mr-6">
           <div className="relative flex items-center w-full">
-            <Search className="absolute left-4 w-4.5 h-4.5 text-white/50 pointer-events-none" />
+            <Search className="absolute left-4 w-5 h-5 text-white/50 pointer-events-none" />
             <input
               type="text"
               placeholder="Search for anything"
