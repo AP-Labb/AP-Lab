@@ -1071,6 +1071,23 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const updated = { ...progress, credits: newCreds, totalCreditsEarned: totalEarned };
     setProgress(updated);
     if (reason) triggerXpToast(0, reason, "question", effectiveAmount);
+
+    // Sync to user daily earnings record
+    if (typeof window !== "undefined") {
+      const uidKey = currentUser?.uid || progress?.uid || "guest";
+      const todayStr = new Date().toLocaleDateString('en-CA');
+      const storageKey = `ap_lab_daily_earnings_${uidKey}`;
+      try {
+        const existing = JSON.parse(localStorage.getItem(storageKey) || "{}");
+        const current = existing[todayStr] || { xp: 0, coins: 0 };
+        existing[todayStr] = {
+          xp: current.xp || 0,
+          coins: (current.coins || 0) + effectiveAmount
+        };
+        localStorage.setItem(storageKey, JSON.stringify(existing));
+      } catch (e) {}
+    }
+
     if (currentUser) {
       const localKey = `ap-lab-progress-${currentUser.uid}`;
       try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}

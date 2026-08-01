@@ -726,8 +726,7 @@ export default function Dashboard() {
                           
                           {/* Enrolled Highlight Badge */}
                           {isEnrolled && (
-                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md flex items-center space-x-1.5 shadow-lg">
-                              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-lg">
                               <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Enrolled</span>
                             </div>
                           )}

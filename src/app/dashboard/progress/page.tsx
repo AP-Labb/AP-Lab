@@ -826,6 +826,12 @@ export default function ProgressPage() {
             const daysCount = 7;
             const stepX = 660 / (daysCount - 1);
             
+            const uidKey = currentUser?.uid || progress?.uid || "guest";
+            let userDailyEarnings: Record<string, { xp: number; coins: number }> = {};
+            try {
+              userDailyEarnings = JSON.parse(localStorage.getItem(`ap_lab_daily_earnings_${uidKey}`) || "{}");
+            } catch (e) {}
+
             const activityLog = ((progress as any)?.activityLogs || (progress as any)?.activityLog || []) as any[];
 
             const daysData = Array.from({ length: daysCount }).map((_, i) => {
@@ -836,30 +842,31 @@ export default function ProgressPage() {
 
               const x = 20 + i * stepX;
 
-              // Match actual activity log entry if recorded
+              // Match actual activity log entry or user daily earnings store
               const dayLog = activityLog.find((log: any) => log.date === isoDateStr || log.timestamp?.startsWith(isoDateStr));
+              const recorded = userDailyEarnings[isoDateStr] || {};
               
-              let xpVal = 0;
-              let coinVal = 0;
+              let xpVal = recorded.xp || 0;
+              let coinVal = recorded.coins || 0;
 
               if (dayLog) {
-                xpVal = dayLog.xpEarned || dayLog.xp || 0;
-                coinVal = dayLog.coinsEarned || dayLog.coins || 0;
-              } else if (i === daysCount - 1) {
-                // Today's actual current live session balance
-                xpVal = Math.min(xp, 150);
-                coinVal = Math.min(progress?.credits || 0, 80);
+                xpVal = Math.max(xpVal, dayLog.xpEarned || dayLog.xp || 0);
+                coinVal = Math.max(coinVal, dayLog.coinsEarned || dayLog.coins || 0);
+              } 
+              
+              if (i === daysCount - 1) {
+                // Today's actual current live balance so coins/XP are never zero if user has credits
+                xpVal = Math.max(xpVal, xp || 0);
+                coinVal = Math.max(coinVal, progress?.credits || progress?.totalCreditsEarned || 0);
               }
 
-              const xpY = 140 - Math.min(120, (xpVal / 250) * 120);
-              const coinY = 145 - Math.min(125, (coinVal / 150) * 125);
+              const xpY = 140 - Math.min(120, (xpVal / Math.max(200, xpVal + 50)) * 120);
+              const coinY = 145 - Math.min(125, (coinVal / Math.max(150, coinVal + 50)) * 125);
 
-              return { index: i, dateStr, x, xpY, xpVal, coinY, coinVal, hasData: xpVal > 0 || coinVal > 0 || i === daysCount - 1 };
+              return { index: i, dateStr, x, xpY, xpVal, coinY, coinVal, hasData: true };
             });
 
-            // Filter points with recorded data
-            const validPoints = daysData.filter(p => p.hasData);
-            const pointsToDraw = validPoints.length > 0 ? daysData : daysData;
+            const pointsToDraw = daysData;
 
             const xpPathStr = pointsToDraw.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.xpY}`, '');
             const xpAreaStr = `${xpPathStr} L ${pointsToDraw[pointsToDraw.length - 1].x} 160 L ${pointsToDraw[0].x} 160 Z`;
@@ -1037,178 +1044,130 @@ export default function ProgressPage() {
           </div>
 
           {/* Clean SVG Pie / Donut Chart & Legend */}
-          <div className="flex flex-col md:flex-row items-center justify-around gap-10 bg-[#07080f] border border-white/5 rounded-2xl p-8">
-            
-            {/* Enlarged SVG Pie Chart Container */}
-            <div className="relative w-64 h-64 flex items-center justify-center shrink-0">
-              {(() => {
-                let openedSlugs: string[] = [];
-                try {
-                  openedSlugs = JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]");
-                } catch (e) {}
+          {(() => {
+            const uidKey = currentUser?.uid || progress?.uid || "guest";
+            let openedSlugs: string[] = [];
+            try {
+              openedSlugs = JSON.parse(localStorage.getItem(`ap_lab_user_accessed_${uidKey}`) || localStorage.getItem("ap_accessed_courses") || "[]");
+            } catch (e) {}
 
-                const completed = progress?.completedTopics || [];
-                const COURSE_MAP: Record<string, { name: string; color: string }> = {
-                  "ap-biology": { name: "AP® Biology", color: "#0088ff" },
-                  "ap-chemistry": { name: "AP® Chemistry", color: "#a484d7" },
-                  "ap-physics-c": { name: "AP® Physics C", color: "#38bdf8" },
-                  "ap-us-history": { name: "AP® US History", color: "#f59e0b" },
-                  "ap-psychology": { name: "AP® Psychology", color: "#ec4899" },
-                  "ap-english": { name: "AP® English", color: "#8b5cf6" },
-                  "ap-calculus-bc": { name: "AP® Calculus BC", color: "#10b981" },
-                  "ap-statistics": { name: "AP® Statistics", color: "#34d399" },
-                  "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#06b6d4" },
-                };
+            const completed = progress?.completedTopics || [];
+            const COURSE_MAP: Record<string, { name: string; color: string }> = {
+              "ap-biology": { name: "AP® Biology", color: "#0088ff" },
+              "ap-chemistry": { name: "AP® Chemistry", color: "#a484d7" },
+              "ap-physics-c": { name: "AP® Physics C", color: "#38bdf8" },
+              "ap-us-history": { name: "AP® US History", color: "#f59e0b" },
+              "ap-psychology": { name: "AP® Psychology", color: "#ec4899" },
+              "ap-english": { name: "AP® English", color: "#8b5cf6" },
+              "ap-calculus-bc": { name: "AP® Calculus BC", color: "#10b981" },
+              "ap-statistics": { name: "AP® Statistics", color: "#34d399" },
+              "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#06b6d4" },
+            };
 
-                const counts: Record<string, { name: string; color: string; count: number }> = {};
+            const counts: Record<string, { name: string; color: string; count: number }> = {};
 
-                openedSlugs.forEach(slug => {
-                  const info = COURSE_MAP[slug] || { 
-                    name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
-                    color: "#6366f1" 
-                  };
-                  counts[slug] = { name: info.name, color: info.color, count: 25 };
-                });
+            openedSlugs.forEach(slug => {
+              const info = COURSE_MAP[slug] || { 
+                name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
+                color: "#6366f1" 
+              };
+              counts[slug] = { name: info.name, color: info.color, count: 25 };
+            });
 
-                completed.forEach(topicId => {
-                  const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
-                  const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
-                  const info = COURSE_MAP[key] || { name: "AP® Subject", color: "#3b82f6" };
-                  if (!counts[key]) {
-                    counts[key] = { name: info.name, color: info.color, count: 0 };
-                  }
-                  counts[key].count += 15;
-                });
+            completed.forEach(topicId => {
+              const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
+              const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
+              const info = COURSE_MAP[key] || { name: "AP® Subject", color: "#3b82f6" };
+              if (!counts[key]) {
+                counts[key] = { name: info.name, color: info.color, count: 0 };
+              }
+              counts[key].count += 15;
+            });
 
-                let items = Object.values(counts);
+            const items = Object.values(counts);
 
-                if (items.length === 0) {
-                  items = [
-                    { name: "AP® Biology", color: "#0088ff", count: 45 },
-                    { name: "AP® Chemistry", color: "#a484d7", count: 35 },
-                    { name: "AP® Calculus BC", color: "#10b981", count: 20 }
-                  ];
-                }
+            if (items.length === 0) {
+              return (
+                <div className="flex flex-col items-center justify-center p-12 text-center space-y-4 bg-[#07080f] border border-white/5 rounded-2xl w-full">
+                  <div className="w-16 h-16 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 mb-1">
+                    <BookOpen className="w-8 h-8 text-white/30" />
+                  </div>
+                  <h4 className="font-manrope font-bold text-white text-base">No Subject Study Time Recorded Yet</h4>
+                  <p className="text-xs text-white/50 max-w-sm leading-relaxed">
+                    Open a course first from the dashboard to start tracking your subject study time distribution!
+                  </p>
+                  <Link href="/dashboard" className="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white font-manrope font-extrabold text-xs uppercase tracking-wider transition-all mt-2">
+                    Open a Course
+                  </Link>
+                </div>
+              );
+            }
 
-                const total = items.reduce((sum, item) => sum + item.count, 0);
-                let cumulativePercent = 0;
+            const total = items.reduce((sum, item) => sum + item.count, 0);
+            let cumulativePercent = 0;
+            const R = 28;
+            const C = 2 * Math.PI * R;
 
-                // Radius=28, Circumference = 2 * PI * 28 = 175.929
-                const R = 28;
-                const C = 2 * Math.PI * R;
+            return (
+              <div className="flex flex-col md:flex-row items-center justify-around gap-10 bg-[#07080f] border border-white/5 rounded-2xl p-8">
+                {/* SVG Pie Chart Container */}
+                <div className="relative w-64 h-64 flex items-center justify-center shrink-0">
+                  <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90 overflow-visible">
+                    {items.map((item, idx) => {
+                      const percent = (item.count / total);
+                      const strokeDasharray = `${percent * C} ${C * (1 - percent)}`;
+                      const strokeDashoffset = -(cumulativePercent * C);
+                      cumulativePercent += percent;
 
-                return (
-                  <>
-                    <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90 overflow-visible">
-                      {items.map((item, idx) => {
-                        const percent = (item.count / total);
-                        const strokeDasharray = `${percent * C} ${C * (1 - percent)}`;
-                        const strokeDashoffset = -(cumulativePercent * C);
-                        cumulativePercent += percent;
+                      return (
+                        <motion.circle
+                          key={idx}
+                          cx="50"
+                          cy="50"
+                          r={R}
+                          fill="transparent"
+                          stroke={item.color}
+                          strokeWidth="12"
+                          strokeDasharray={strokeDasharray}
+                          strokeDashoffset={strokeDashoffset}
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          transition={{ duration: 0.6, delay: idx * 0.1 }}
+                          className="transition-all hover:opacity-85 cursor-pointer"
+                        />
+                      );
+                    })}
+                  </svg>
 
-                        return (
-                          <motion.circle
-                            key={idx}
-                            cx="50"
-                            cy="50"
-                            r={R}
-                            fill="transparent"
-                            stroke={item.color}
-                            strokeWidth="12"
-                            strokeDasharray={strokeDasharray}
-                            strokeDashoffset={strokeDashoffset}
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            transition={{ duration: 0.6, delay: idx * 0.1 }}
-                            className="transition-all hover:opacity-85 cursor-pointer"
-                          />
-                        );
-                      })}
-                    </svg>
+                  {/* Donut Center Label */}
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
+                    <span className="font-instrument text-3xl font-extrabold text-white leading-none">
+                      {items.length}
+                    </span>
+                    <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest mt-1">
+                      Opened Courses
+                    </span>
+                  </div>
+                </div>
 
-                    {/* Donut Center Label - Spacious & Clean */}
-                    <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                      <span className="font-instrument text-3xl font-extrabold text-white leading-none">
-                        {items.length}
-                      </span>
-                      <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest mt-1">
-                        Opened Courses
-                      </span>
-                    </div>
-                  </>
-                );
-              })()}
-            </div>
-
-            {/* Side Legend showing course percentages */}
-            <div className="flex-1 w-full space-y-3 font-manrope">
-              {(() => {
-                let openedSlugs: string[] = [];
-                try {
-                  openedSlugs = JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]");
-                } catch (e) {}
-
-                const completed = progress?.completedTopics || [];
-                const COURSE_MAP: Record<string, { name: string; color: string }> = {
-                  "ap-biology": { name: "AP® Biology", color: "#0088ff" },
-                  "ap-chemistry": { name: "AP® Chemistry", color: "#a484d7" },
-                  "ap-physics-c": { name: "AP® Physics C", color: "#38bdf8" },
-                  "ap-us-history": { name: "AP® US History", color: "#f59e0b" },
-                  "ap-psychology": { name: "AP® Psychology", color: "#ec4899" },
-                  "ap-english": { name: "AP® English", color: "#8b5cf6" },
-                  "ap-calculus-bc": { name: "AP® Calculus BC", color: "#10b981" },
-                  "ap-statistics": { name: "AP® Statistics", color: "#34d399" },
-                  "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#06b6d4" },
-                };
-
-                const counts: Record<string, { name: string; color: string; count: number }> = {};
-
-                openedSlugs.forEach(slug => {
-                  const info = COURSE_MAP[slug] || { 
-                    name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
-                    color: "#6366f1" 
-                  };
-                  counts[slug] = { name: info.name, color: info.color, count: 25 };
-                });
-
-                completed.forEach(topicId => {
-                  const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
-                  const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
-                  const info = COURSE_MAP[key] || { name: "AP® Subject", color: "#3b82f6" };
-                  if (!counts[key]) {
-                    counts[key] = { name: info.name, color: info.color, count: 0 };
-                  }
-                  counts[key].count += 15;
-                });
-
-                let items = Object.values(counts);
-
-                if (items.length === 0) {
-                  items = [
-                    { name: "AP® Biology", color: "#0088ff", count: 45 },
-                    { name: "AP® Chemistry", color: "#a484d7", count: 35 },
-                    { name: "AP® Calculus BC", color: "#10b981", count: 20 }
-                  ];
-                }
-
-                const total = items.reduce((sum, item) => sum + item.count, 0);
-
-                return items.map((item, idx) => {
-                  const percent = Math.round((item.count / total) * 100);
-                  return (
-                    <div key={idx} className="flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] transition-all">
-                      <div className="flex items-center space-x-3">
-                        <span className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
-                        <span className="font-bold text-sm text-white/90">{item.name}</span>
+                {/* Side Legend */}
+                <div className="flex-1 w-full space-y-3 font-manrope">
+                  {items.map((item, idx) => {
+                    const percent = Math.round((item.count / total) * 100);
+                    return (
+                      <div key={idx} className="flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] transition-all">
+                        <div className="flex items-center space-x-3">
+                          <span className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
+                          <span className="font-bold text-sm text-white/90">{item.name}</span>
+                        </div>
+                        <span className="font-mono font-extrabold text-sm text-white/80">{percent}%</span>
                       </div>
-                      <span className="font-mono font-extrabold text-sm text-white/80">{percent}%</span>
-                    </div>
-                  );
-                });
-              })()}
-            </div>
-
-          </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          })()}
         </motion.div>
 
         </main>
