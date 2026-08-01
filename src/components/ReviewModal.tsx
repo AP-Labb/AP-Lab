@@ -29,11 +29,33 @@ export function ReviewModal({ isOpen, onClose }: ReviewModalProps) {
     }
   }, [isOpen]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (rating === 0) return;
     
     console.log("Review submitted:", { rating, title, description });
+
+    const formspreeKey = process.env.NEXT_PUBLIC_FORMSPREE_KEY || "mgojyqwp";
+    const submitUrl = formspreeKey.includes("@")
+      ? `https://formspree.io/${formspreeKey}`
+      : `https://formspree.io/f/${formspreeKey}`;
+
+    try {
+      await fetch(submitUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          subject: `New AP Lab Review (${rating}/5 Stars): ${title}`,
+          rating: `${rating} / 5 Stars`,
+          title,
+          description,
+          email: "theaplabbss@gmail.com",
+          target_email: "theaplabbss@gmail.com"
+        })
+      });
+    } catch (err) {
+      console.error("Error submitting review to Formspree:", err);
+    }
     
     setIsSubmitted(true);
     setTimeout(() => {

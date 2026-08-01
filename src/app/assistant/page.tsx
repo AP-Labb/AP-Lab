@@ -26,6 +26,7 @@ import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
+import { UserDisplayName } from "@/components/UserDisplayName";
 import MeshDriftShader from "@/components/MeshDriftShader";
 
 interface Message {
@@ -262,7 +263,13 @@ export default function AssistantPage() {
               transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
               className="font-manrope font-bold text-3xl sm:text-4xl text-white tracking-tight text-center mb-10"
             >
-              What do you need help with, {firstName}?
+              What do you need help with,{" "}
+              <UserDisplayName 
+                name={firstName} 
+                activeNameColor={progress?.activeNameColor} 
+                className="text-white" 
+              />
+              ?
             </motion.h1>
 
             {/* Input card + panda — all in a single centered flex column */}
