@@ -120,7 +120,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       whileHover="hover"
                       initial="rest"
                     >
-                      <div className="flex-shrink-0 text-white">
+                      <div className="flex-shrink-0 text-white/60 group-hover/star:text-white transition-colors duration-200">
                         <InstagramLikeStar />
                       </div>
                       <motion.span

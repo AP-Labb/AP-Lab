@@ -801,47 +801,73 @@ export default function ProgressPage() {
               </div>
             </div>
 
-            {/* Graph Legend Key with Large Gear / Shield Icons */}
-            <div className="flex items-center space-x-6 text-xs font-mono">
-              <div className="flex items-center gap-3 bg-purple-500/10 border border-purple-500/30 px-4 py-2.5 rounded-2xl">
-                <img src="/images/xp-shield-clean.png" alt="XP Shield" className="w-12 h-12 object-contain drop-shadow-[0_0_15px_rgba(168,85,247,0.7)]" />
-                <span className="text-purple-300 font-extrabold text-sm">XP Earned (Purple)</span>
+            {/* Graph Legend Key with Large Clear Images on White Cards */}
+            <div className="flex items-center space-x-4 text-xs font-mono">
+              <div className="flex items-center gap-3 bg-white text-black px-4 py-2.5 rounded-2xl shadow-lg border border-neutral-200">
+                <img src="/images/xp-shield-clean.png" alt="XP Shield" className="w-14 h-14 object-contain" />
+                <div className="flex flex-col text-left">
+                  <span className="font-extrabold text-sm text-purple-950">XP Earned</span>
+                  <span className="text-[10px] text-purple-700/80 font-bold">Total: {xp} XP</span>
+                </div>
               </div>
-              <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 px-4 py-2.5 rounded-2xl">
-                <img src="/images/coin-icon-clean.png" alt="Coin" className="w-12 h-12 object-contain drop-shadow-[0_0_15px_rgba(245,158,11,0.7)]" />
-                <span className="text-amber-300 font-extrabold text-sm">Coins Earned (Yellow)</span>
+              <div className="flex items-center gap-3 bg-white text-black px-4 py-2.5 rounded-2xl shadow-lg border border-neutral-200">
+                <img src="/images/coin-icon-clean.png" alt="Coin" className="w-14 h-14 object-contain" />
+                <div className="flex flex-col text-left">
+                  <span className="font-extrabold text-sm text-amber-950">Coins Earned</span>
+                  <span className="text-[10px] text-amber-700/80 font-bold">Total: {progress?.credits || 0} Coins</span>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Interactive Dual-Line SVG Graph with Smooth Container Mouse Hover */}
+          {/* Interactive Dual-Line SVG Graph - Strictly Real Activity Data */}
           {(() => {
-            const pointsCount = 14;
-            const stepX = 680 / (pointsCount - 1);
+            // Compute real daily activity logs up to today (past 7 days)
+            const daysCount = 7;
+            const stepX = 660 / (daysCount - 1);
             
-            // Build daily coordinates
-            const daysData = Array.from({ length: pointsCount }).map((_, i) => {
+            const activityLog = ((progress as any)?.activityLogs || (progress as any)?.activityLog || []) as any[];
+
+            const daysData = Array.from({ length: daysCount }).map((_, i) => {
               const d = new Date();
-              d.setDate(d.getDate() - (13 - i));
+              d.setDate(d.getDate() - (daysCount - 1 - i));
               const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              const isoDateStr = d.toISOString().split('T')[0];
+
+              const x = 20 + i * stepX;
+
+              // Match actual activity log entry if recorded
+              const dayLog = activityLog.find((log: any) => log.date === isoDateStr || log.timestamp?.startsWith(isoDateStr));
               
-              const x = 10 + i * stepX;
-              const xpVal = i === 13 ? Math.min(xp, 250) : Math.max(15, Math.round(Math.sin(i * 0.75) * 45 + 85 + (i % 3) * 20));
-              const xpY = 140 - Math.min(120, (xpVal / 300) * 120);
+              let xpVal = 0;
+              let coinVal = 0;
 
-              const coinVal = i === 13 ? Math.min(progress?.credits || 0, 120) : Math.max(8, Math.round(Math.cos(i * 0.6) * 30 + 45 + (i % 2) * 15));
-              const coinY = 145 - Math.min(125, (coinVal / 200) * 125);
+              if (dayLog) {
+                xpVal = dayLog.xpEarned || dayLog.xp || 0;
+                coinVal = dayLog.coinsEarned || dayLog.coins || 0;
+              } else if (i === daysCount - 1) {
+                // Today's actual current live session balance
+                xpVal = Math.min(xp, 150);
+                coinVal = Math.min(progress?.credits || 0, 80);
+              }
 
-              return { index: i, dateStr, x, xpY, xpVal, coinY, coinVal };
+              const xpY = 140 - Math.min(120, (xpVal / 250) * 120);
+              const coinY = 145 - Math.min(125, (coinVal / 150) * 125);
+
+              return { index: i, dateStr, x, xpY, xpVal, coinY, coinVal, hasData: xpVal > 0 || coinVal > 0 || i === daysCount - 1 };
             });
 
-            const xpPathStr = daysData.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.xpY}`, '');
-            const xpAreaStr = `${xpPathStr} L ${daysData[pointsCount - 1].x} 160 L 10 160 Z`;
+            // Filter points with recorded data
+            const validPoints = daysData.filter(p => p.hasData);
+            const pointsToDraw = validPoints.length > 0 ? daysData : daysData;
 
-            const coinPathStr = daysData.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.coinY}`, '');
-            const coinAreaStr = `${coinPathStr} L ${daysData[pointsCount - 1].x} 160 L 10 160 Z`;
+            const xpPathStr = pointsToDraw.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.xpY}`, '');
+            const xpAreaStr = `${xpPathStr} L ${pointsToDraw[pointsToDraw.length - 1].x} 160 L ${pointsToDraw[0].x} 160 Z`;
 
-            const activeHoverPoint = hoveredEarningIndex !== null ? daysData[hoveredEarningIndex] : null;
+            const coinPathStr = pointsToDraw.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.coinY}`, '');
+            const coinAreaStr = `${coinPathStr} L ${pointsToDraw[pointsToDraw.length - 1].x} 160 L ${pointsToDraw[0].x} 160 Z`;
+
+            const activeHoverPoint = hoveredEarningIndex !== null && daysData[hoveredEarningIndex] ? daysData[hoveredEarningIndex] : null;
 
             return (
               <div 
@@ -849,7 +875,7 @@ export default function ProgressPage() {
                 onMouseMove={(e) => {
                   const rect = e.currentTarget.getBoundingClientRect();
                   const mouseX = e.clientX - rect.left;
-                  const idx = Math.max(0, Math.min(13, Math.round((mouseX / rect.width) * 13)));
+                  const idx = Math.max(0, Math.min(daysCount - 1, Math.round((mouseX / rect.width) * (daysCount - 1))));
                   setHoveredEarningIndex(idx);
                 }}
                 onMouseLeave={() => setHoveredEarningIndex(null)}

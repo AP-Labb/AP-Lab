@@ -79,12 +79,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 5. Purple Party Hat (Moved up to fit head better) */}
+      {/* 5. Purple Party Hat (Positioned cleanly right on top of head) */}
       {hasPartyHat && (
         <img 
           src="/images/avatar-gear/purple-party-hat.png" 
           alt="Party Hat" 
-          className="absolute -top-[60%] left-1/2 -translate-x-1/2 w-[110%] h-[100%] max-w-none object-contain z-20 pointer-events-none drop-shadow-sm" 
+          className="absolute -top-[52%] left-1/2 -translate-x-1/2 w-[105%] h-[95%] max-w-none object-contain z-20 pointer-events-none drop-shadow-sm" 
         />
       )}
 
@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Perfectly centered uploaded helmet so user avatar sits 100% inside visor window) */}
+      {/* 10. Astronaut Helmet (Perfectly centered transparent astronaut helmet) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[90%] left-1/2 -translate-x-1/2 w-[300%] h-[300%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[95%] left-1/2 -translate-x-1/2 w-[305%] h-[305%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -171,12 +171,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 14. Traffic Cone Hat */}
+      {/* 14. Traffic Cone Hat (Positioned cleanly on top of avatar head) */}
       {hasTrafficCone && (
         <img 
           src="/images/avatar-gear/traffic-cone.png" 
           alt="Traffic Cone" 
-          className="absolute -top-[55%] left-1/2 -translate-x-1/2 w-[115%] h-[110%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[102%] h-[98%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
@@ -189,12 +189,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 16. Golden Frame (Moved up to the right a tiny bit and enlarged) */}
+      {/* 16. Golden Frame (Shifted up just a bit so it sits perfectly) */}
       {hasGoldenFrame && (
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[45%] left-[50%] -translate-x-1/2 w-[202%] h-[202%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[202%] h-[202%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
