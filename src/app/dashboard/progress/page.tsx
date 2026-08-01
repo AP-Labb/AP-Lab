@@ -877,11 +877,9 @@ export default function ProgressPage() {
                 animate={{ pathLength: 1 }}
                 transition={{ duration: 1.5, ease: "easeInOut", delay: 0.4 }}
                 d="M 10 160 L 60 145 L 110 155 L 160 130 L 210 140 L 260 120 L 310 135 L 360 110 L 410 125 L 460 95 L 510 115 L 560 90 L 590 80" 
-                fill="none" 
-                stroke="#fbbf24" 
-                strokeWidth="2.5" 
-                strokeLinecap="round"
               />
+            </svg>
+
             <div className="flex justify-between items-center text-[10px] font-mono text-white/30 pt-2 border-t border-white/5">
               <span>Week 1</span>
               <span>Week 2</span>
