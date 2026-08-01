@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Significantly larger & moved up more so user's PFP fits 100% perfectly) */}
+      {/* 10. Astronaut Helmet (Moved up more & enlarged so user's PFP fits 100% perfectly inside visor bubble) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[52%] left-1/2 -translate-x-1/2 w-[245%] h-[245%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[62%] left-1/2 -translate-x-1/2 w-[250%] h-[250%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -180,21 +180,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 15. Einstein Hair */}
+      {/* 15. Einstein Hair (Bigger & positioned naturally over avatar head) */}
       {hasEinsteinHair && (
         <img 
           src="/images/avatar-gear/einstein-hair.png" 
           alt="Einstein Hair" 
-          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[140%] h-[110%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[54%] left-1/2 -translate-x-1/2 w-[160%] h-[125%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 16. Golden Frame (10,000 Coins) */}
+      {/* 16. Golden Frame (Much larger 24k Gold Frame wrapping perfectly around avatar circle) */}
       {hasGoldenFrame && (
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[12%] left-1/2 -translate-x-1/2 w-[124%] h-[124%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[24%] left-1/2 -translate-x-1/2 w-[148%] h-[148%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 

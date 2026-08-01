@@ -479,6 +479,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           inventory: Array.from(new Set([...(firestoreData.inventory || []), ...(localProgress?.inventory || []), ...(guestProgress?.inventory || [])])),
           activeAvatarFrame: firestoreData.activeAvatarFrame || localProgress?.activeAvatarFrame || "",
           activeNameGradient: firestoreData.activeNameGradient || localProgress?.activeNameGradient || "",
+          activeNameColor: localProgress?.activeNameColor || firestoreData.activeNameColor || undefined,
+          activeBoosts: { ...(firestoreData.activeBoosts || {}), ...(localProgress?.activeBoosts || {}) },
           activityLogs: firestoreData.activityLogs || localProgress?.activityLogs || guestProgress?.activityLogs || [],
           studyTimeLogs: firestoreData.studyTimeLogs || localProgress?.studyTimeLogs || guestProgress?.studyTimeLogs || {},
           isOnboarded: firestoreData.isOnboarded || localProgress?.isOnboarded || false,
@@ -497,7 +499,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           firestoreData.level !== merged.level || 
           firestoreData.credits !== merged.credits ||
           (firestoreData.completedTopics || []).length !== merged.completedTopics.length ||
-          firestoreData.streakCount !== merged.streakCount;
+          firestoreData.streakCount !== merged.streakCount ||
+          firestoreData.activeNameColor !== merged.activeNameColor;
 
         if (needsFirestoreWrite || (guestProgress && (guestProgress.xp || 0) > 0)) {
           console.log("Firestore is out of sync or guest migration needed. Syncing merged progress to Firestore...");
@@ -514,6 +517,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
             inventory: merged.inventory,
             activeAvatarFrame: merged.activeAvatarFrame,
             activeNameGradient: merged.activeNameGradient,
+            activeNameColor: merged.activeNameColor,
+            activeBoosts: merged.activeBoosts,
             lastAccessed: serverTimestamp(),
             streakCount: merged.streakCount,
             maxStreak: merged.maxStreak,
@@ -1093,13 +1098,28 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const activeGrad = isGradient ? itemId : (isColorPicker ? "" : progress.activeNameGradient);
     const activeNameColor = isColorPicker && customColorHex ? customColorHex : progress.activeNameColor;
 
+    const activeBoosts = { ...(progress.activeBoosts || {}) };
+    if (isBoost) {
+      const expiryTime = Date.now() + 10 * 60 * 60 * 1000;
+      activeBoosts[itemId] = expiryTime;
+      if (itemId.includes("xp")) {
+        activeBoosts["boost-xp-2x"] = expiryTime;
+        activeBoosts["boost-2x-xp"] = expiryTime;
+      }
+      if (itemId.includes("coin")) {
+        activeBoosts["boost-coin-2x"] = expiryTime;
+        activeBoosts["boost-2x-coin"] = expiryTime;
+      }
+    }
+
     const updated: UserProgress = {
       ...progress,
       credits: newCreds,
       inventory: newInv,
       activeAvatarFrame: activeFrame,
       activeNameGradient: activeGrad,
-      activeNameColor
+      activeNameColor,
+      activeBoosts
     };
     setProgress(updated);
     if (currentUser) {
@@ -1110,7 +1130,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         inventory: newInv,
         activeAvatarFrame: activeFrame,
         activeNameGradient: activeGrad,
-        activeNameColor
+        activeNameColor,
+        activeBoosts
       }, { merge: true }).catch(() => {});
     }
     return true;
