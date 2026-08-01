@@ -11,6 +11,8 @@ import { LevelBadge } from "@/components/LevelBadge";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { cn } from "@/lib/utils";
 
+import { ActiveBoostHUD } from "@/components/ActiveBoostHUD";
+
 interface HeaderUserCapsulesProps {
   onOpenProfile?: () => void;
 }
@@ -68,6 +70,9 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
     <>
       <div className="flex items-center space-x-2.5 font-manrope select-none relative z-50">
         
+        {/* Active Boost HUD (10-Hour Countdown Timer) */}
+        <ActiveBoostHUD />
+
         {/* 1. STREAK CAPSULE WITH WEEKLY HOVER MENU */}
         <div 
           className="relative"

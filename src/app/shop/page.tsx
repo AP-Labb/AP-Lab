@@ -494,7 +494,10 @@ export default function ShopPage() {
                 {selectedStoreItem.type === "color-picker" ? (
                   <div className="flex flex-col items-center justify-center space-y-3 text-center">
                     <span className="text-xs font-mono text-white/40 uppercase tracking-wider">Live Name Preview</span>
-                    <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-gradient drop-shadow-md select-none">
+                    <span 
+                      className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center drop-shadow-md select-none transition-colors duration-100"
+                      style={{ color: customColorHex }}
+                    >
                       {userName}
                     </span>
                     <span className="text-xs font-mono text-white/30">{customColorHex.toUpperCase()}</span>

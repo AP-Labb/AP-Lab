@@ -1184,7 +1184,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
               const diffMs = Math.max(0, expiry - now);
               const hours = Math.floor(diffMs / (1000 * 60 * 60));
               const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-              const isXp = id === "boost-2x-xp";
+              const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
+              const isXp = id === "boost-xp-2x" || id === "boost-2x-xp" || id.includes("xp");
               
               return (
                 <div 
@@ -1196,7 +1197,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
                 >
                   <span className="text-base">{isXp ? "⚡" : "🪙"}</span>
                   <span className="font-manrope font-extrabold uppercase text-[11px]">{isXp ? "2x XP Boost:" : "2x Coin Boost:"}</span>
-                  <span className="font-mono text-white tracking-wider">{hours}h {mins}m left</span>
+                  <span className="font-mono text-white tracking-wider">{hours.toString().padStart(2, '0')}:{mins.toString().padStart(2, '0')}:{secs.toString().padStart(2, '0')}</span>
                 </div>
               );
             })}
