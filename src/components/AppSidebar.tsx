@@ -120,16 +120,9 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       whileHover="hover"
                       initial="rest"
                     >
-                      <motion.div
-                        className="flex-shrink-0 text-amber-400"
-                        variants={{
-                          rest: { scale: 1, rotate: 0 },
-                          hover: { scale: 1.25, rotate: 360 },
-                        }}
-                        transition={{ duration: 0.5, ease: "easeInOut" }}
-                      >
+                      <div className="flex-shrink-0 text-white">
                         <InstagramLikeStar />
-                      </motion.div>
+                      </div>
                       <motion.span
                         animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
                         transition={{ duration: 0.15 }}

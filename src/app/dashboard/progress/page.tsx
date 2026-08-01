@@ -803,12 +803,12 @@ export default function ProgressPage() {
 
             {/* Graph Legend Key with Large Gear / Shield Icons */}
             <div className="flex items-center space-x-6 text-xs font-mono">
-              <div className="flex items-center gap-2.5 bg-purple-500/10 border border-purple-500/30 px-3.5 py-2 rounded-xl">
-                <img src="/images/xp-shield.png" alt="XP Shield" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+              <div className="flex items-center gap-3 bg-purple-500/10 border border-purple-500/30 px-4 py-2.5 rounded-2xl">
+                <img src="/images/xp-shield-clean.png" alt="XP Shield" className="w-12 h-12 object-contain drop-shadow-[0_0_15px_rgba(168,85,247,0.7)]" />
                 <span className="text-purple-300 font-extrabold text-sm">XP Earned (Purple)</span>
               </div>
-              <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/30 px-3.5 py-2 rounded-xl">
-                <img src="/images/coin-boost.png" alt="Coin Boost" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+              <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/30 px-4 py-2.5 rounded-2xl">
+                <img src="/images/coin-icon-clean.png" alt="Coin" className="w-12 h-12 object-contain drop-shadow-[0_0_15px_rgba(245,158,11,0.7)]" />
                 <span className="text-amber-300 font-extrabold text-sm">Coins Earned (Yellow)</span>
               </div>
             </div>
@@ -866,20 +866,20 @@ export default function ProgressPage() {
                     initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-3 z-30 pointer-events-none bg-neutral-900/95 border border-white/20 p-3.5 rounded-xl shadow-2xl backdrop-blur-md flex items-center space-x-4 transition-all duration-100"
+                    className="absolute top-3 z-30 pointer-events-none bg-neutral-900/95 border border-white/20 p-4 rounded-2xl shadow-2xl backdrop-blur-md flex items-center space-x-4 transition-all duration-100"
                     style={{
                       left: `${Math.max(6, Math.min(70, (activeHoverPoint.x / 700) * 100))}%`
                     }}
                   >
                     <div className="text-left font-mono">
-                      <span className="text-[10px] text-white/50 uppercase tracking-widest block font-bold">{activeHoverPoint.dateStr}</span>
-                      <div className="flex items-center space-x-3.5 mt-1 text-xs">
-                        <span className="flex items-center gap-1.5 text-purple-300 font-extrabold">
-                          <img src="/images/xp-shield.png" alt="XP" className="w-5 h-5 object-contain" />
+                      <span className="text-[11px] text-white/50 uppercase tracking-widest block font-bold">{activeHoverPoint.dateStr}</span>
+                      <div className="flex items-center space-x-4 mt-1.5 text-xs">
+                        <span className="flex items-center gap-2 text-purple-300 font-extrabold text-sm">
+                          <img src="/images/xp-shield-clean.png" alt="XP" className="w-6 h-6 object-contain" />
                           +{activeHoverPoint.xpVal} XP
                         </span>
-                        <span className="flex items-center gap-1.5 text-amber-300 font-extrabold">
-                          <img src="/images/coin-boost.png" alt="Coins" className="w-5 h-5 object-contain" />
+                        <span className="flex items-center gap-2 text-amber-300 font-extrabold text-sm">
+                          <img src="/images/coin-icon-clean.png" alt="Coins" className="w-6 h-6 object-contain" />
                           +{activeHoverPoint.coinVal} Coins
                         </span>
                       </div>
