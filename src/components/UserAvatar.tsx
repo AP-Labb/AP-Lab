@@ -35,6 +35,9 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
   const hasGoldenHalo = activeFrame === "gear-golden-halo";
   const hasAstronautHelmet = activeFrame === "gear-astronaut-helmet" || activeFrame === "gear-helmet" || activeFrame === "helmet";
   const hasTrafficCone = activeFrame === "gear-traffic-cone" || activeFrame === "traffic-cone";
+  const hasEinsteinHair = activeFrame === "gear-einstein-hair" || activeFrame === "einstein-hair";
+  const hasGoldenFrame = activeFrame === "gear-golden-frame" || activeFrame === "golden-frame";
+  const hasGraduationCap = activeFrame === "gear-graduation-cap" || activeFrame === "graduation-cap";
 
   const initial = (name || "S").charAt(0).toUpperCase();
 
@@ -132,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Enlarged so user's PFP circle fits 100% neatly inside visor circle) */}
+      {/* 10. Astronaut Helmet (Significantly larger framing pfp perfectly inside visor) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[34%] left-1/2 -translate-x-1/2 w-[185%] h-[185%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[230%] h-[230%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -174,6 +177,33 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
           src="/images/avatar-gear/traffic-cone.png" 
           alt="Traffic Cone" 
           className="absolute -top-[55%] left-1/2 -translate-x-1/2 w-[115%] h-[110%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+        />
+      )}
+
+      {/* 15. Einstein Hair */}
+      {hasEinsteinHair && (
+        <img 
+          src="/images/avatar-gear/einstein-hair.png" 
+          alt="Einstein Hair" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[140%] h-[110%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+        />
+      )}
+
+      {/* 16. Golden Frame (10,000 Coins) */}
+      {hasGoldenFrame && (
+        <img 
+          src="/images/avatar-gear/golden-frame.png" 
+          alt="Golden Frame" 
+          className="absolute -top-[7%] left-1/2 -translate-x-1/2 w-[114%] h-[114%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+        />
+      )}
+
+      {/* 17. Graduation Cap */}
+      {hasGraduationCap && (
+        <img 
+          src="/images/avatar-gear/graduation-cap.png" 
+          alt="Graduation Cap" 
+          className="absolute -top-[45%] left-1/2 -translate-x-1/2 w-[130%] h-[100%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
     </div>

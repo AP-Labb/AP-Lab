@@ -285,7 +285,63 @@ const GEAR_ITEMS = [
     )
   },
 
-  // 14. Custom Name Color Customization (Solid White background with smooth rainbow colorshift)
+  // 14. Traffic Cone Hat
+  { 
+    id: "gear-traffic-cone", 
+    name: "Traffic Cone Hat", 
+    desc: "Vibrant orange safety traffic cone hat", 
+    cost: 80, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#fff7ed] border-orange-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-traffic-cone" size="xl" />
+    )
+  },
+
+  // 15. Einstein Hair
+  { 
+    id: "gear-einstein-hair", 
+    name: "Einstein Hair", 
+    desc: "Wild scientist white hair wig", 
+    cost: 150, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#f8fafc] border-slate-200 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-einstein-hair" size="xl" />
+    )
+  },
+
+  // 16. Graduation Cap
+  { 
+    id: "gear-graduation-cap", 
+    name: "Graduation Cap", 
+    desc: "Classic black academic mortarboard cap", 
+    cost: 100, 
+    bgColor: "bg-neutral-900 border-neutral-800", 
+    innerBg: "bg-[#f1f5f9] border-slate-300 flex items-center justify-center h-48 rounded-2xl shadow-inner",
+    type: "hat",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-graduation-cap" size="xl" />
+    )
+  },
+
+  // 17. 24k Golden Frame (Exalted 10,000 Coins Item)
+  { 
+    id: "gear-golden-frame", 
+    name: "24k Golden Frame", 
+    desc: "Prestige 24k solid gold avatar ring frame", 
+    cost: 10000, 
+    bgColor: "bg-gradient-to-b from-amber-900/60 to-yellow-950/80 border-amber-500/50", 
+    innerBg: "bg-gradient-to-br from-amber-400/20 via-yellow-500/10 to-amber-600/20 border-amber-400/50 flex items-center justify-center h-48 rounded-2xl shadow-[inset_0_0_20px_rgba(245,158,11,0.2)]",
+    type: "frame",
+    renderAccessory: (userPhoto?: string, userName?: string) => (
+      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-golden-frame" size="xl" />
+    )
+  },
+
+  // 18. Custom Name Color Customization (LAST ITEM IN STORE)
   { 
     id: "custom-name-color", 
     name: "Custom Name Color", 
@@ -297,25 +353,11 @@ const GEAR_ITEMS = [
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">
         <span 
-          className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-gradient drop-shadow-sm select-none"
+          className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm select-none"
         >
           {userName || "Scholar"}
         </span>
       </div>
-    )
-  },
-
-  // 15. Traffic Cone Hat
-  { 
-    id: "gear-traffic-cone", 
-    name: "Traffic Cone Hat", 
-    desc: "Vibrant orange safety traffic cone hat", 
-    cost: 80, 
-    bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-[#fff7ed] border-orange-200/60 flex items-center justify-center h-48 rounded-2xl shadow-inner",
-    type: "hat",
-    renderAccessory: (userPhoto?: string, userName?: string) => (
-      <UserAvatar photoURL={userPhoto} name={userName} activeFrame="gear-traffic-cone" size="xl" />
     )
   },
 ];
@@ -431,7 +473,7 @@ export default function ShopPage() {
                     <div className={cn(item.innerBg, "group-hover:scale-[1.02] transition-transform")}>
                       {item.id === "custom-name-color" ? (
                         <div className="flex flex-col items-center justify-center h-full w-full">
-                          <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center animate-rainbow-gradient drop-shadow-sm select-none">
+                          <span className="font-manrope font-black text-3xl sm:text-4xl tracking-tight text-center bg-gradient-to-r from-red-500 via-amber-400 via-emerald-400 via-cyan-400 via-blue-500 via-purple-500 to-red-500 bg-[length:200%_200%] animate-gradient-x bg-clip-text text-transparent drop-shadow-sm select-none">
                             {userName}
                           </span>
                         </div>
@@ -542,9 +584,9 @@ export default function ShopPage() {
                     <h3 className="font-manrope font-extrabold text-2xl sm:text-3xl text-white tracking-tight">
                       {selectedStoreItem.name}
                     </h3>
-                    <div className="flex items-center space-x-3.5 mt-3">
-                      <img src="/images/coin-zoomed.png" alt="Coin" className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0" />
-                      <span className="font-manrope font-black text-4xl text-amber-400">{selectedStoreItem.cost}</span>
+                    <div className="flex items-center space-x-4 mt-3">
+                      <img src="/images/coin-zoomed.png" alt="Coin" className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 transform scale-110 drop-shadow-md" />
+                      <span className="font-manrope font-black text-4xl sm:text-5xl text-amber-400">{selectedStoreItem.cost}</span>
                     </div>
                   <p className="text-xs text-white/50 font-manrope mt-2 leading-relaxed">
                     {selectedStoreItem.desc}
