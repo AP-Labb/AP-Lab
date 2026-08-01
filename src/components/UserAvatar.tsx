@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Moved up just a bit more & enlarged for a 100% perfect fit) */}
+      {/* 10. Astronaut Helmet (Moved up higher & enlarged so user avatar fits 100% inside visor window) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[82%] left-1/2 -translate-x-1/2 w-[280%] h-[280%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[88%] left-1/2 -translate-x-1/2 w-[290%] h-[290%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -189,12 +189,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 16. Golden Frame (Even larger 24k Gold Frame wrapping perfectly around avatar circle) */}
+      {/* 16. Golden Frame (Larger 24k Gold Frame wrapping perfectly around avatar circle) */}
       {hasGoldenFrame && (
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[44%] left-1/2 -translate-x-1/2 w-[188%] h-[188%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[196%] h-[196%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 

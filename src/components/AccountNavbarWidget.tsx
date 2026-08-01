@@ -9,6 +9,8 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { UserDisplayName } from "@/components/UserDisplayName";
 import { cn } from "@/lib/utils";
 
+import { ActiveBoostHUD } from "@/components/ActiveBoostHUD";
+
 interface AccountNavbarWidgetProps {
   onOpenProfile: () => void;
 }
@@ -21,24 +23,25 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
   const isLightMode = progress?.theme === "light";
 
   const displayName = progress?.displayName || currentUser?.displayName || "Scholar";
-  const initials = displayName
-    ? displayName.split(" ").map((n) => n[0]).join("").toUpperCase().substring(0, 2)
-    : "AP";
   const photoURL = currentUser?.photoURL || progress?.photoURL || "";
   const totalXp = progress?.xp || 0;
   const level = progress?.level || 1;
 
   return (
     <>
-      {/* Single Unified Rectangle Capsule containing Profile + Gear Icon inside */}
-      <div 
-        className={cn(
-          "flex items-center space-x-2.5 px-3 py-1.5 rounded-2xl border transition-all duration-300 shadow-md select-none group",
-          isLightMode 
-            ? "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-900" 
-            : "bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
-        )}
-      >
+      <div className="flex items-center space-x-2 my-auto">
+        {/* Active Boost 2x Countdown Timers on Course Page Top Bar */}
+        <ActiveBoostHUD />
+
+        {/* Single Compact Rectangle Capsule containing Profile + Gear Icon */}
+        <div 
+          className={cn(
+            "flex items-center space-x-2 px-3 py-1 rounded-full border transition-all duration-300 shadow-md select-none group transform scale-95 origin-right",
+            isLightMode 
+              ? "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-900" 
+              : "bg-white/5 hover:bg-white/10 border-white/10 hover:border-white/20 text-white"
+          )}
+        >
         {/* Left Section: Clickable Profile Info (Avatar, Name, XP) */}
         <button
           onClick={onOpenProfile}
@@ -80,6 +83,7 @@ export function AccountNavbarWidget({ onOpenProfile }: AccountNavbarWidgetProps)
           <Settings className="w-4 h-4 hover:rotate-180 transition-transform duration-700 ease-in-out" />
         </button>
       </div>
+    </div>
 
       {/* Settings Modal (Portalized to document.body) */}
       <SettingsModal

@@ -181,19 +181,19 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
           {/* Centered Morphing Badge Frame */}
           <div className="relative w-44 h-44 flex items-center justify-center">
             
-            {/* Faster/Smoother Spinning Old Badge */}
+            {/* Faster/Smoother Spinning Old Badge into New Badge */}
             {!isMorphed && (
               <motion.div
                 key="old-badge"
                 initial={{ scale: 1, rotate: 0, opacity: 1 }}
                 animate={{ 
-                  scale: [1, 1.15, 0],
-                  rotate: [0, 180, 540],
-                  opacity: [1, 1, 0]
+                  scale: [1, 1.1, 0.9],
+                  rotate: [0, 360, 1080],
+                  opacity: [1, 1, 1]
                 }}
                 transition={{ 
                   duration: 0.9,
-                  ease: [0.16, 1, 0.3, 1]
+                  ease: "easeIn"
                 }}
                 className="absolute flex items-center justify-center"
               >
@@ -201,17 +201,15 @@ function LevelUpModal({ oldLevel, newLevel, onClose }: LevelUpModalProps) {
               </motion.div>
             )}
  
-            {/* Exploding/Glowing New Badge */}
+            {/* Exploding/Glowing New Badge continuing spin */}
             {isMorphed && (
               <motion.div
                 key="new-badge"
-                initial={{ scale: 0.2, rotate: -180, opacity: 0 }}
-                animate={{ scale: 1.2, rotate: 0, opacity: 1 }}
+                initial={{ scale: 0.5, rotate: -720, opacity: 0.5 }}
+                animate={{ scale: [0.5, 1.3, 1], rotate: 0, opacity: 1 }}
                 transition={{ 
-                  type: "spring",
-                  stiffness: 220,
-                  damping: 14,
-                  mass: 0.6
+                  duration: 0.6,
+                  ease: [0.16, 1, 0.3, 1]
                 }}
                 className="relative"
               >
