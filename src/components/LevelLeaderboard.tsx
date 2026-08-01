@@ -16,6 +16,9 @@ interface LeaderboardUser {
   photoURL?: string;
   xp?: number;
   level?: number;
+  activeAvatarFrame?: string;
+  activeNameGradient?: string;
+  activeNameColor?: string;
 }
 
 export function LevelLeaderboard() {
@@ -99,34 +102,33 @@ export function LevelLeaderboard() {
     currentUserIndex = rankAbove;
     currentUserObj = {
       uid: activeUid,
-      displayName: currentUser?.displayName || progress?.displayName || "Yash Patil",
-      photoURL: currentUser?.photoURL || progress?.photoURL || "/images/yash-patil.png",
+      displayName: progress?.displayName || currentUser?.displayName || "AP Scholar",
+      photoURL: progress?.photoURL || currentUser?.photoURL || "",
       xp: userXp,
       level: progress?.level || 1,
+      activeAvatarFrame: progress?.activeAvatarFrame,
+      activeNameColor: progress?.activeNameColor,
     };
   }
 
   const isUserInTop10 = currentUserIndex < 10;
 
-  const renderRow = (user: LeaderboardUser, actualRankIndex: number, forceCurrentUser: boolean = false) => {
+  const renderRow = (user: LeaderboardUser, actualRankIndex: number, isCurrentUser: boolean) => {
     const rankInfo = getRankStyle(actualRankIndex);
-    const initials = user.displayName
-      ? user.displayName.split(" ").map((n) => n[0]).join("").toUpperCase().substring(0, 2)
-      : "AP";
-    const isCurrentUser = forceCurrentUser || user.uid === activeUid;
+    const activeFrame = isCurrentUser ? (progress?.activeAvatarFrame || user.activeAvatarFrame) : user.activeAvatarFrame;
+    const activeNameColor = isCurrentUser ? (progress?.activeNameColor || user.activeNameColor) : user.activeNameColor;
 
     return (
       <motion.div
-        key={`${user.uid}-${actualRankIndex}`}
-        initial={{ opacity: 0, y: 15 }}
+        key={user.uid}
+        initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: Math.min(actualRankIndex * 0.04, 0.4) }}
+        exit={{ opacity: 0, y: -10 }}
         className={cn(
-          "flex items-center justify-between p-4 md:px-6 rounded-2xl border transition-all duration-300",
-          isCurrentUser 
-            ? "border-emerald-500/40 bg-emerald-950/25 shadow-[0_0_25px_rgba(16,185,129,0.18)]"
-            : rankInfo.rowClass,
-          !isCurrentUser && rankInfo.glowClass
+          "flex items-center justify-between p-4 md:px-6 rounded-2xl border transition-all duration-300 select-none",
+          rankInfo.rowClass,
+          rankInfo.glowClass,
+          isCurrentUser && "ring-2 ring-emerald-500/50 bg-emerald-500/10 border-emerald-500/40"
         )}
       >
         <div className="flex items-center space-x-4">
@@ -145,7 +147,7 @@ export function LevelLeaderboard() {
           <UserAvatar 
             photoURL={user.photoURL} 
             name={user.displayName} 
-            activeFrame={isCurrentUser ? progress?.activeAvatarFrame : null} 
+            activeFrame={activeFrame} 
             size="md" 
           />
 
@@ -154,7 +156,7 @@ export function LevelLeaderboard() {
             <span className="font-manrope font-bold text-white text-sm md:text-base leading-tight flex items-center gap-2">
               <UserDisplayName 
                 name={user.displayName || "AP Scholar"} 
-                activeNameColor={isCurrentUser ? progress?.activeNameColor : null} 
+                activeNameColor={activeNameColor} 
                 className={cn(
                   "font-extrabold text-sm md:text-base",
                   isCurrentUser && progress?.activeNameGradient === "grad-fire" && "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent",

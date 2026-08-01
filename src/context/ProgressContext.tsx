@@ -611,8 +611,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
 
       const now = Date.now();
       const activeBoosts = progress.activeBoosts || {};
-      const hasXpBoost = (activeBoosts["boost-2x-xp"] || 0) > now;
-      const hasCoinBoost = (activeBoosts["boost-2x-coin"] || 0) > now;
+      const hasXpBoost = Object.entries(activeBoosts).some(([k, expiry]) => (k.includes("xp") || k === "boost-xp-2x") && typeof expiry === "number" && (expiry as number) > now);
+      const hasCoinBoost = Object.entries(activeBoosts).some(([k, expiry]) => (k.includes("coin") || k === "boost-coin-2x") && typeof expiry === "number" && (expiry as number) > now);
 
       const rawXp = isFirstTime ? 100 : 0;
       const rawCredits = canEarnCredits ? 50 : 0;
@@ -711,8 +711,8 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       
       const now = Date.now();
       const activeBoosts = progress.activeBoosts || {};
-      const hasXpBoost = (activeBoosts["boost-2x-xp"] || 0) > now;
-      const hasCoinBoost = (activeBoosts["boost-2x-coin"] || 0) > now;
+      const hasXpBoost = Object.entries(activeBoosts).some(([k, expiry]) => (k.includes("xp") || k === "boost-xp-2x") && typeof expiry === "number" && (expiry as number) > now);
+      const hasCoinBoost = Object.entries(activeBoosts).some(([k, expiry]) => (k.includes("coin") || k === "boost-coin-2x") && typeof expiry === "number" && (expiry as number) > now);
 
       const rawXp = isCorrect ? (isCompleted ? 5 : 10) : 0;
       const rawCredits = canEarnQCredits ? 5 : 0;
@@ -1062,12 +1062,17 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   const addCredits = async (amount: number, reason?: string) => {
+    const now = Date.now();
+    const activeBoosts = progress.activeBoosts || {};
+    const hasCoinBoost = Object.entries(activeBoosts).some(([k, expiry]) => (k.includes("coin") || k === "boost-coin-2x") && typeof expiry === "number" && (expiry as number) > now);
+    const effectiveAmount = hasCoinBoost ? amount * 2 : amount;
+
     const currentCreds = progress.credits || 0;
-    const totalEarned = (progress.totalCreditsEarned || 0) + amount;
-    const newCreds = currentCreds + amount;
+    const totalEarned = (progress.totalCreditsEarned || 0) + effectiveAmount;
+    const newCreds = currentCreds + effectiveAmount;
     const updated = { ...progress, credits: newCreds, totalCreditsEarned: totalEarned };
     setProgress(updated);
-    if (reason) triggerXpToast(0, reason, "question", amount);
+    if (reason) triggerXpToast(0, reason, "question", effectiveAmount);
     if (currentUser) {
       const localKey = `ap-lab-progress-${currentUser.uid}`;
       try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
@@ -1221,40 +1226,6 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       recordMockExamAttempt, claimSocialXp, updatePreferences, spendCredits, addCredits, buyItem, equipItem, useBoostItem
     }}>
       {children}
-
-      {/* Top Center Active Boosts HUD */}
-      {(() => {
-        const activeBoosts = progress.activeBoosts || {};
-        const now = Date.now();
-        const activeList = Object.entries(activeBoosts).filter(([_, expiry]) => expiry > now);
-        if (activeList.length === 0) return null;
-
-        return (
-          <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[99999] flex items-center space-x-3 pointer-events-none">
-            {activeList.map(([id, expiry]) => {
-              const diffMs = Math.max(0, expiry - now);
-              const hours = Math.floor(diffMs / (1000 * 60 * 60));
-              const mins = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-              const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
-              const isXp = id === "boost-xp-2x" || id === "boost-2x-xp" || id.includes("xp");
-              
-              return (
-                <div 
-                  key={id} 
-                  className={cn(
-                    "px-4 py-1.5 rounded-full border shadow-2xl backdrop-blur-md flex items-center space-x-2 font-mono font-bold text-xs pointer-events-auto animate-pulse",
-                    isXp ? "bg-purple-950/90 border-purple-500/50 text-purple-300 shadow-[0_0_20px_rgba(168,85,247,0.4)]" : "bg-amber-950/90 border-amber-500/50 text-amber-300 shadow-[0_0_20px_rgba(245,158,11,0.4)]"
-                  )}
-                >
-                  <span className="text-base">{isXp ? "⚡" : "🪙"}</span>
-                  <span className="font-manrope font-extrabold uppercase text-[11px]">{isXp ? "2x XP Boost:" : "2x Coin Boost:"}</span>
-                  <span className="font-mono text-white tracking-wider">{hours.toString().padStart(2, '0')}:{mins.toString().padStart(2, '0')}:{secs.toString().padStart(2, '0')}</span>
-                </div>
-              );
-            })}
-          </div>
-        );
-      })()}
       
       {/* Level Up Modal */}
       <AnimatePresence>

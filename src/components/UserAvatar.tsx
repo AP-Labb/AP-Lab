@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Moved up more & enlarged so user's PFP fits 100% perfectly inside visor bubble) */}
+      {/* 10. Astronaut Helmet (Moved up even more & enlarged so user's PFP fits 100% perfectly inside visor bubble) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[62%] left-1/2 -translate-x-1/2 w-[250%] h-[250%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[76%] left-1/2 -translate-x-1/2 w-[270%] h-[270%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -189,12 +189,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 16. Golden Frame (Much larger 24k Gold Frame wrapping perfectly around avatar circle) */}
+      {/* 16. Golden Frame (Even larger 24k Gold Frame wrapping perfectly around avatar circle) */}
       {hasGoldenFrame && (
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[24%] left-1/2 -translate-x-1/2 w-[148%] h-[148%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[34%] left-1/2 -translate-x-1/2 w-[168%] h-[168%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 

@@ -5,10 +5,12 @@ import { useProgress } from "@/context/ProgressContext";
 
 export function ActiveBoostHUD() {
   const { progress } = useProgress();
-  const [now, setNow] = useState(Date.now());
+  const [now, setNow] = useState<number>(Date.now());
 
   useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
+    const timer = setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -24,6 +26,7 @@ export function ActiveBoostHUD() {
 
   return (
     <div className="flex items-center space-x-2 select-none z-50 shrink-0">
+      {/* 2x XP Boost Minimalist Pill */}
       {xpExpiry > now && (() => {
         const diffMs = Math.max(0, xpExpiry - now);
         const hours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -31,14 +34,15 @@ export function ActiveBoostHUD() {
         const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
         const formatted = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         return (
-          <div className="px-3 py-1.5 rounded-full border shadow-lg flex items-center space-x-1.5 font-mono font-bold text-xs bg-purple-950/90 border-purple-500/50 text-purple-300 shadow-[0_0_15px_rgba(168,85,247,0.4)] animate-pulse">
-            <span className="text-sm">⚡</span>
-            <span className="font-manrope font-extrabold uppercase text-[10px] sm:text-[11px] whitespace-nowrap">2x XP:</span>
+          <div className="px-3 py-1.5 rounded-full border border-purple-800/60 bg-[#241338] text-purple-200 flex items-center space-x-2 font-mono text-xs shadow-sm">
+            <img src="/images/xp-shield-zoomed.png" alt="XP Shield" className="w-4.5 h-4.5 object-contain shrink-0" />
+            <span className="font-manrope font-extrabold uppercase text-[10px] sm:text-[11px] text-purple-300 whitespace-nowrap">2x XP:</span>
             <span className="font-mono text-white tracking-wider text-[11px] sm:text-xs">{formatted}</span>
           </div>
         );
       })()}
 
+      {/* 2x Coins Boost Minimalist Pill */}
       {coinExpiry > now && (() => {
         const diffMs = Math.max(0, coinExpiry - now);
         const hours = Math.floor(diffMs / (1000 * 60 * 60));
@@ -46,9 +50,9 @@ export function ActiveBoostHUD() {
         const secs = Math.floor((diffMs % (1000 * 60)) / 1000);
         const formatted = `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         return (
-          <div className="px-3 py-1.5 rounded-full border shadow-lg flex items-center space-x-1.5 font-mono font-bold text-xs bg-amber-950/90 border-amber-500/50 text-amber-300 shadow-[0_0_15px_rgba(245,158,11,0.4)] animate-pulse">
-            <span className="text-sm">🪙</span>
-            <span className="font-manrope font-extrabold uppercase text-[10px] sm:text-[11px] whitespace-nowrap">2x Coins:</span>
+          <div className="px-3 py-1.5 rounded-full border border-amber-800/60 bg-[#332509] text-amber-200 flex items-center space-x-2 font-mono text-xs shadow-sm">
+            <img src="/images/coin-zoomed.png" alt="Coin" className="w-4.5 h-4.5 object-contain shrink-0" />
+            <span className="font-manrope font-extrabold uppercase text-[10px] sm:text-[11px] text-amber-300 whitespace-nowrap">2x Coins:</span>
             <span className="font-mono text-white tracking-wider text-[11px] sm:text-xs">{formatted}</span>
           </div>
         );

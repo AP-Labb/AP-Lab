@@ -161,6 +161,9 @@ export async function GET(req: NextRequest) {
               photoURL: data.photoURL || "",
               xp: data.xp || 0,
               level: data.level || getLevelForXp(data.xp || 0),
+              activeAvatarFrame: data.activeAvatarFrame || "",
+              activeNameGradient: data.activeNameGradient || "",
+              activeNameColor: data.activeNameColor || null,
             });
           }
         });
@@ -182,6 +185,9 @@ export async function GET(req: NextRequest) {
             photoURL: data.photoURL || "",
             xp: data.xp || 0,
             level: data.level || getLevelForXp(data.xp || 0),
+            activeAvatarFrame: data.activeAvatarFrame || "",
+            activeNameGradient: data.activeNameGradient || "",
+            activeNameColor: data.activeNameColor || null,
           });
         }
       } catch (err) {
