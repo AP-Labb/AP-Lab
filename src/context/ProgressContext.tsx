@@ -1116,27 +1116,47 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     return true;
   };
 
-  const equipItem = async (itemType: string, itemId: string) => {
+  const equipItem = async (itemType: string, itemId: string, customColorHex?: string) => {
     const isGradient = itemType === "gradient";
+    const isColorPicker = itemType === "color-picker" || itemId === "custom-name-color";
+    const activeFrame = !isGradient && !isColorPicker ? itemId : progress.activeAvatarFrame;
+    const activeGrad = isGradient ? itemId : (isColorPicker ? "" : progress.activeNameGradient);
+    const activeNameColor = isColorPicker 
+      ? (customColorHex || progress.activeNameColor || "rainbow") 
+      : progress.activeNameColor;
+
     const updated: UserProgress = {
       ...progress,
-      activeAvatarFrame: !isGradient ? itemId : progress.activeAvatarFrame,
-      activeNameGradient: isGradient ? itemId : progress.activeNameGradient,
+      activeAvatarFrame: activeFrame,
+      activeNameGradient: activeGrad,
+      activeNameColor
     };
     setProgress(updated);
     if (currentUser) {
       const localKey = `ap-lab-progress-${currentUser.uid}`;
       try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
       setDoc(doc(db, "userProgress", currentUser.uid), {
-        activeAvatarFrame: updated.activeAvatarFrame,
-        activeNameGradient: updated.activeNameGradient
+        activeAvatarFrame: activeFrame,
+        activeNameGradient: activeGrad,
+        activeNameColor
       }, { merge: true }).catch(() => {});
     }
   };
 
   const useBoostItem = async (boostId: string): Promise<boolean> => {
     const inv = progress.inventory || [];
-    const idx = inv.indexOf(boostId);
+    let idx = inv.indexOf(boostId);
+    let matchedId = boostId;
+
+    if (idx === -1) {
+      if (boostId.includes("xp")) {
+        matchedId = inv.find(i => i.includes("xp")) || boostId;
+      } else if (boostId.includes("coin")) {
+        matchedId = inv.find(i => i.includes("coin")) || boostId;
+      }
+      idx = inv.indexOf(matchedId);
+    }
+
     if (idx === -1) return false;
     
     // Remove one instance of boost item from inventory
@@ -1145,7 +1165,17 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     
     // Set 10 hour expiry timestamp (10 * 60 * 60 * 1000 = 36000000ms)
     const activeBoosts = { ...(progress.activeBoosts || {}) };
-    activeBoosts[boostId] = Date.now() + 10 * 60 * 60 * 1000;
+    const expiryTime = Date.now() + 10 * 60 * 60 * 1000;
+
+    activeBoosts[boostId] = expiryTime;
+    activeBoosts[matchedId] = expiryTime;
+    if (boostId.includes("xp")) {
+      activeBoosts["boost-xp-2x"] = expiryTime;
+      activeBoosts["boost-2x-xp"] = expiryTime;
+    } else if (boostId.includes("coin")) {
+      activeBoosts["boost-coin-2x"] = expiryTime;
+      activeBoosts["boost-2x-coin"] = expiryTime;
+    }
     
     const updated: UserProgress = {
       ...progress,

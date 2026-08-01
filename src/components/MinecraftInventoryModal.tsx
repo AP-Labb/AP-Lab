@@ -37,8 +37,8 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
   const uniqueItems = Object.keys(itemCounts);
 
   const getItemDetails = (id: string) => {
-    if (id === "boost-2x-xp") return { name: "2x XP Boost", type: "boost", desc: "Grants 2x Double XP for 10 hours", icon: "/images/2x-xp-boost.png" };
-    if (id === "boost-2x-coin") return { name: "2x Coin Boost", type: "boost", desc: "Grants 2x Double Coins for 10 hours", icon: "/images/2x-coin-boost.png" };
+    if (id === "boost-2x-xp" || id === "boost-xp-2x") return { name: "2x XP Boost", type: "boost", desc: "Grants 2x Double XP for 10 hours", icon: "/images/2x-xp-boost.png" };
+    if (id === "boost-2x-coin" || id === "boost-coin-2x") return { name: "2x Coin Boost", type: "boost", desc: "Grants 2x Double Coins for 10 hours", icon: "/images/2x-coin-boost.png" };
     if (id === "gear-top-hat") return { name: "Top Hat", type: "frame", desc: "Black magician top hat", icon: "/images/avatar-gear/top-hat.png" };
     if (id === "gear-purple-beanie") return { name: "Purple Beanie", type: "frame", desc: "Winter beanie with pom pom", icon: "/images/avatar-gear/purple-beanie.png" };
     if (id === "gear-purple-party-hat") return { name: "Purple Party Hat", type: "frame", desc: "Striped party cone hat", icon: "/images/avatar-gear/purple-party-hat.png" };
@@ -56,10 +56,10 @@ export function MinecraftInventoryModal({ isOpen, onClose }: MinecraftInventoryM
   };
 
   const handleSlotClick = async (itemId: string) => {
-    if (itemId === "boost-2x-xp" || itemId === "boost-2x-coin") {
+    if (itemId.includes("boost") || itemId.includes("2x")) {
       const ok = await useBoostItem?.(itemId);
       if (ok) {
-        setActiveMsg(`Activated 10-Hour ${itemId === "boost-2x-xp" ? "2x XP" : "2x Coin"} Boost!`);
+        setActiveMsg(`Activated 10-Hour ${itemId.includes("xp") ? "2x XP" : "2x Coin"} Boost!`);
         setTimeout(() => setActiveMsg(null), 3000);
       }
     } else {

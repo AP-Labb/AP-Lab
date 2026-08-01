@@ -122,21 +122,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 9. Face Mask (Dramatically larger, stretching completely across mouth and lower face) */}
+      {/* 9. Face Mask (Stretching completely from left edge to right edge across lower face) */}
       {hasFaceMask && (
         <img 
           src="/images/avatar-gear/face-mask.png" 
           alt="Face Mask" 
-          className="absolute top-[26%] left-1/2 -translate-x-1/2 w-[122%] h-[75%] object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute top-[30%] left-1/2 -translate-x-1/2 w-[138%] h-[85%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 10. Astronaut Helmet (Enclosing the entire avatar circle inside the clear visor bubble) */}
+      {/* 10. Astronaut Helmet (Positioned so avatar circle fits 100% inside clear visor circle) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[240%] h-[240%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[28%] left-1/2 -translate-x-1/2 w-[160%] h-[160%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -149,21 +149,21 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 12. Heart Necklace (Dramatically larger, stretching from left-center edge to right-center edge) */}
+      {/* 12. Heart Necklace (Stretching from center left edge to center right edge) */}
       {hasHeartNecklace && (
         <img 
           src="/images/avatar-gear/heart-necklace.png" 
           alt="Heart Necklace" 
-          className="absolute -bottom-[14%] left-1/2 -translate-x-1/2 w-[130%] h-[90%] object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -bottom-[18%] left-1/2 -translate-x-1/2 w-[145%] h-[100%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
-      {/* 13. Gold Chain (Dramatically larger, stretching from left-center edge to right-center edge) */}
+      {/* 13. Gold Chain (Stretching from center left edge to center right edge) */}
       {hasGoldChain && (
         <img 
           src="/images/avatar-gear/gold-chain.png" 
           alt="Gold Chain" 
-          className="absolute -bottom-[12%] left-1/2 -translate-x-1/2 w-[130%] h-[85%] object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -bottom-[16%] left-1/2 -translate-x-1/2 w-[145%] h-[95%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
     </div>
