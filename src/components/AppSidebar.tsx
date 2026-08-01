@@ -79,8 +79,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
     { label: "Review", href: "#review", icon: "review" },
     { label: "Quests", href: "/dashboard/quests", icon: Award },
     { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
-    { label: "AI Assistant", href: "/assistant", icon: "panda" },
-    { label: "Shop", href: "/shop", icon: ShoppingBag },
+    { label: "AI Assistant", href: "/dashboard/assistant", icon: "panda" },
+    { label: "Shop", href: "/dashboard/shop", icon: ShoppingBag },
   ];
 
   return (
@@ -120,7 +120,16 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       whileHover="hover"
                       initial="rest"
                     >
-                      <InstagramLikeStar />
+                      <motion.div
+                        className="flex-shrink-0 text-amber-400"
+                        variants={{
+                          rest: { scale: 1, rotate: 0 },
+                          hover: { scale: 1.25, rotate: 360 },
+                        }}
+                        transition={{ duration: 0.5, ease: "easeInOut" }}
+                      >
+                        <InstagramLikeStar />
+                      </motion.div>
                       <motion.span
                         animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
                         transition={{ duration: 0.15 }}
@@ -149,20 +158,24 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                           className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]"
                           variants={{
                             rest: { scale: 1 },
-                            hover: { scale: 1.2 }
+                            hover: { scale: 1.1 }
                           }}
                           transition={{ duration: 0.3 }}
                         >
                           {[
-                            { height: "40%" },
-                            { height: "70%" },
-                            { height: "55%" },
-                            { height: "90%" }
+                            { rest: "40%", hover: "85%" },
+                            { rest: "75%", hover: "45%" },
+                            { rest: "55%", hover: "95%" },
+                            { rest: "90%", hover: "65%" }
                           ].map((bar, i) => (
-                            <div 
+                            <motion.div 
                               key={i} 
                               className="flex-1 rounded-sm bg-current" 
-                              style={{ height: bar.height }}
+                              variants={{
+                                rest: { height: bar.rest },
+                                hover: { height: bar.hover }
+                              }}
+                              transition={{ duration: 0.35, ease: "easeInOut", delay: i * 0.05 }}
                             />
                           ))}
                         </motion.div>

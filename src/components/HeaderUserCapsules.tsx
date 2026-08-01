@@ -342,10 +342,10 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                   </button>
                 </div>
 
-                {/* Simplistic 100 Badges Grid */}
+                {/* Spacious 100 Badges Grid (Zero Overlap, No Level Text Cutoffs) */}
                 <div 
                   data-lenis-prevent="true"
-                  className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-2.5 p-1"
+                  className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-3.5 p-3"
                 >
                   {Array.from({ length: 100 }, (_, i) => i + 1).map((lvl) => {
                     const isCurrent = level === lvl;
@@ -355,18 +355,15 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                       <div
                         key={lvl}
                         className={cn(
-                          "p-2.5 rounded-2xl border flex flex-col items-center justify-center space-y-1 text-center transition-all",
+                          "p-3 rounded-2xl border flex items-center justify-center text-center transition-all min-h-[72px] w-full",
                           isCurrent 
-                            ? "bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.3)] font-bold" 
+                            ? "bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)] font-bold scale-105" 
                             : (isUnlocked 
-                                ? "bg-white/5 border-white/10 hover:bg-white/10" 
-                                : "bg-white/[0.02] border-white/5 opacity-35 grayscale")
+                                ? "bg-white/5 border-white/10 hover:bg-white/15 hover:border-white/20" 
+                                : "bg-white/[0.02] border-white/5 opacity-30 grayscale")
                         )}
                       >
-                        <LevelBadge level={lvl} size="sm" />
-                        <span className={cn("font-mono text-[11px]", isCurrent ? "text-emerald-300 font-extrabold" : "text-white/70")}>
-                          {lvl}
-                        </span>
+                        <LevelBadge level={lvl} size="md" />
                       </div>
                     );
                   })}

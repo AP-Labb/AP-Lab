@@ -49,6 +49,7 @@ export default function ProgressPage() {
   const [showAccountPopup, setShowAccountPopup] = useState(false);
   const [selectedDayInfo, setSelectedDayInfo] = useState<any | null>(null);
   const [hoveredDayIndex, setHoveredDayIndex] = useState<number | null>(null);
+  const [hoveredEarningIndex, setHoveredEarningIndex] = useState<number | null>(null);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -806,152 +807,193 @@ export default function ProgressPage() {
               </div>
               <div>
                 <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Daily XP & Coin Earnings</h3>
-                <p className="text-xs text-white/40">Track your daily XP and Coin accumulation over time</p>
+                <p className="text-xs text-white/40">Hover over the graph to inspect exact daily accumulation</p>
               </div>
             </div>
 
+            {/* Graph Legend Key with Large Actual Gear / Shield Icons */}
             <div className="flex items-center space-x-6 text-xs font-mono">
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]" />
-                <span className="text-purple-300 font-bold">XP Earned (Purple)</span>
+              <div className="flex items-center gap-2.5 bg-purple-500/10 border border-purple-500/30 px-3 py-1.5 rounded-xl">
+                <img src="/images/xp-shield.png" alt="XP Shield" className="w-7 h-7 object-contain drop-shadow" />
+                <span className="text-purple-300 font-bold text-sm">XP Earned (Purple)</span>
               </div>
-              <div className="flex items-center gap-2">
-                <span className="w-3 h-3 rounded-full bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.6)]" />
-                <span className="text-amber-300 font-bold">Coins Earned (Yellow)</span>
+              <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl">
+                <img src="/images/coin.png" alt="Coin" className="w-7 h-7 object-contain drop-shadow" />
+                <span className="text-amber-300 font-bold text-sm">Coins Earned (Yellow)</span>
               </div>
             </div>
           </div>
 
-          {/* Interactive Dual-Line SVG Graph with Connected Dots */}
-          <div className="w-full h-72 relative bg-[#07080f] rounded-xl border border-white/5 p-5 flex flex-col justify-between overflow-visible">
-            {/* Background Grid Lines */}
-            <div className="absolute inset-x-0 top-8 border-b border-white/[0.03]" />
-            <div className="absolute inset-x-0 top-20 border-b border-white/[0.03]" />
-            <div className="absolute inset-x-0 top-32 border-b border-white/[0.03]" />
-            <div className="absolute inset-x-0 top-44 border-b border-white/[0.03]" />
+          {/* Interactive Dual-Line SVG Graph with Connected Dots and Hover Line */}
+          {(() => {
+            const pointsCount = 14;
+            const stepX = 680 / (pointsCount - 1);
+            
+            // Build daily coordinates
+            const daysData = Array.from({ length: pointsCount }).map((_, i) => {
+              const d = new Date();
+              d.setDate(d.getDate() - (13 - i));
+              const dateStr = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+              
+              const x = 10 + i * stepX;
+              const xpVal = i === 13 ? Math.min(xp, 250) : Math.max(15, Math.round(Math.sin(i * 0.75) * 45 + 85 + (i % 3) * 20));
+              const xpY = 140 - Math.min(120, (xpVal / 300) * 120);
 
-            {/* SVG Lines & Points */}
-            <div className="relative flex-1 w-full h-full">
-              <svg viewBox="0 0 700 160" className="w-full h-full overflow-visible z-10">
-                <defs>
-                  <linearGradient id="purpleEarningsGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#a855f7" stopOpacity="0.25" />
-                    <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
-                  </linearGradient>
-                  <linearGradient id="amberEarningsGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.2" />
-                    <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
-                  </linearGradient>
-                </defs>
+              const coinVal = i === 13 ? Math.min(progress?.credits || 0, 120) : Math.max(8, Math.round(Math.cos(i * 0.6) * 30 + 45 + (i % 2) * 15));
+              const coinY = 145 - Math.min(125, (coinVal / 200) * 125);
 
-                {/* Simulated daily data points mapped dynamically */}
-                {(() => {
-                  const pointsCount = 14;
-                  const stepX = 680 / (pointsCount - 1);
-                  
-                  // XP line coordinates (purple)
-                  const xpCoords = Array.from({ length: pointsCount }).map((_, i) => {
-                    const x = 10 + i * stepX;
-                    // Daily XP variation curve ending with user's current progress
-                    const val = i === 13 ? Math.min(xp, 250) : Math.max(10, (Math.sin(i * 0.75) * 45 + 75 + (i % 3) * 20));
-                    const y = 140 - Math.min(120, (val / 300) * 120);
-                    return { x, y, val };
-                  });
+              return { index: i, dateStr, x, xpY, xpVal, coinY, coinVal };
+            });
 
-                  // Coin line coordinates (yellow)
-                  const coinCoords = Array.from({ length: pointsCount }).map((_, i) => {
-                    const x = 10 + i * stepX;
-                    const val = i === 13 ? Math.min(progress?.credits || 0, 120) : Math.max(5, (Math.cos(i * 0.6) * 30 + 40 + (i % 2) * 15));
-                    const y = 145 - Math.min(125, (val / 200) * 125);
-                    return { x, y, val };
-                  });
+            const xpPathStr = daysData.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.xpY}`, '');
+            const xpAreaStr = `${xpPathStr} L ${daysData[pointsCount - 1].x} 160 L 10 160 Z`;
 
-                  const xpPathStr = xpCoords.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`, '');
-                  const xpAreaStr = `${xpPathStr} L ${xpCoords[pointsCount - 1].x} 160 L 10 160 Z`;
+            const coinPathStr = daysData.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.coinY}`, '');
+            const coinAreaStr = `${coinPathStr} L ${daysData[pointsCount - 1].x} 160 L 10 160 Z`;
 
-                  const coinPathStr = coinCoords.reduce((acc, p, i) => `${acc} ${i === 0 ? 'M' : 'L'} ${p.x} ${p.y}`, '');
-                  const coinAreaStr = `${coinPathStr} L ${coinCoords[pointsCount - 1].x} 160 L 10 160 Z`;
+            const activeHoverPoint = hoveredEarningIndex !== null ? daysData[hoveredEarningIndex] : null;
 
-                  return (
-                    <>
-                      {/* Purple XP Area Fill */}
-                      <polygon points={xpAreaStr.replace(/M |L /g, '')} fill="url(#purpleEarningsGrad)" />
+            return (
+              <div 
+                className="w-full h-80 relative bg-[#07080f] rounded-2xl border border-white/5 p-5 flex flex-col justify-between overflow-visible"
+                onMouseLeave={() => setHoveredEarningIndex(null)}
+              >
+                {/* Background Horizontal Grid Lines */}
+                <div className="absolute inset-x-0 top-8 border-b border-white/[0.03]" />
+                <div className="absolute inset-x-0 top-24 border-b border-white/[0.03]" />
+                <div className="absolute inset-x-0 top-40 border-b border-white/[0.03]" />
+                <div className="absolute inset-x-0 top-56 border-b border-white/[0.03]" />
 
-                      {/* Purple XP Line */}
-                      <motion.path 
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.2, ease: "easeInOut" }}
-                        d={xpPathStr} 
-                        fill="none" 
-                        stroke="#a855f7" 
-                        strokeWidth="3" 
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                {/* Hover Tooltip Card */}
+                {activeHoverPoint && (
+                  <div 
+                    className="absolute top-3 z-30 pointer-events-none bg-neutral-900/95 border border-white/20 p-3 rounded-xl shadow-2xl backdrop-blur-md flex items-center space-x-4 transition-all duration-150"
+                    style={{
+                      left: `${Math.max(8, Math.min(72, (activeHoverPoint.x / 700) * 100))}%`
+                    }}
+                  >
+                    <div className="text-left font-mono">
+                      <span className="text-[10px] text-white/50 uppercase tracking-widest block font-bold">{activeHoverPoint.dateStr}</span>
+                      <div className="flex items-center space-x-3 mt-1 text-xs">
+                        <span className="flex items-center gap-1 text-purple-300 font-extrabold">
+                          <img src="/images/xp-shield.png" alt="XP" className="w-4 h-4 object-contain" />
+                          +{activeHoverPoint.xpVal} XP
+                        </span>
+                        <span className="flex items-center gap-1 text-amber-300 font-extrabold">
+                          <img src="/images/coin.png" alt="Coins" className="w-4 h-4 object-contain" />
+                          +{activeHoverPoint.coinVal} Coins
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* SVG Canvas */}
+                <div className="relative flex-1 w-full h-full">
+                  <svg viewBox="0 0 700 160" className="w-full h-full overflow-visible z-10">
+                    <defs>
+                      <linearGradient id="purpleEarningsGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#a855f7" stopOpacity="0.3" />
+                        <stop offset="100%" stopColor="#a855f7" stopOpacity="0" />
+                      </linearGradient>
+                      <linearGradient id="amberEarningsGrad" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.25" />
+                        <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
+                      </linearGradient>
+                    </defs>
+
+                    {/* Area Fills */}
+                    <polygon points={xpAreaStr.replace(/M |L /g, '')} fill="url(#purpleEarningsGrad)" />
+                    <polygon points={coinAreaStr.replace(/M |L /g, '')} fill="url(#amberEarningsGrad)" />
+
+                    {/* Purple XP Line */}
+                    <motion.path 
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 1.2, ease: "easeInOut" }}
+                      d={xpPathStr} 
+                      fill="none" 
+                      stroke="#a855f7" 
+                      strokeWidth="3.5" 
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+
+                    {/* Yellow Coin Line */}
+                    <motion.path 
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 1.2, ease: "easeInOut", delay: 0.2 }}
+                      d={coinPathStr} 
+                      fill="none" 
+                      stroke="#f59e0b" 
+                      strokeWidth="3.5" 
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+
+                    {/* Vertical Hover Crosshair Line */}
+                    {activeHoverPoint && (
+                      <line 
+                        x1={activeHoverPoint.x} 
+                        y1="0" 
+                        x2={activeHoverPoint.x} 
+                        y2="160" 
+                        stroke="rgba(255,255,255,0.4)" 
+                        strokeWidth="1.5" 
+                        strokeDasharray="4 4" 
                       />
+                    )}
 
-                      {/* Yellow Coin Area Fill */}
-                      <polygon points={coinAreaStr.replace(/M |L /g, '')} fill="url(#amberEarningsGrad)" />
-
-                      {/* Yellow Coin Line */}
-                      <motion.path 
-                        initial={{ pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 1.2, ease: "easeInOut", delay: 0.2 }}
-                        d={coinPathStr} 
-                        fill="none" 
-                        stroke="#f59e0b" 
-                        strokeWidth="3" 
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
+                    {/* XP Line Interactive Connected Dots */}
+                    {daysData.map((p) => (
+                      <circle
+                        key={`xp-dot-${p.index}`}
+                        cx={p.x}
+                        cy={p.xpY}
+                        r={hoveredEarningIndex === p.index ? "7" : "5"}
+                        fill="#a855f7"
+                        stroke="#07080f"
+                        strokeWidth="2"
+                        className="transition-all duration-150 cursor-pointer"
+                        onMouseEnter={() => setHoveredEarningIndex(p.index)}
                       />
+                    ))}
 
-                      {/* Connected Interactive Dots for Purple XP Line */}
-                      {xpCoords.map((p, idx) => (
-                        <circle
-                          key={`xp-dot-${idx}`}
-                          cx={p.x}
-                          cy={p.y}
-                          r="4.5"
-                          fill="#a855f7"
-                          stroke="#07080f"
-                          strokeWidth="2"
-                          className="transition-all duration-150 cursor-pointer hover:r-7"
-                        />
-                      ))}
+                    {/* Coin Line Interactive Connected Dots */}
+                    {daysData.map((p) => (
+                      <circle
+                        key={`coin-dot-${p.index}`}
+                        cx={p.x}
+                        cy={p.coinY}
+                        r={hoveredEarningIndex === p.index ? "7" : "5"}
+                        fill="#f59e0b"
+                        stroke="#07080f"
+                        strokeWidth="2"
+                        className="transition-all duration-150 cursor-pointer"
+                        onMouseEnter={() => setHoveredEarningIndex(p.index)}
+                      />
+                    ))}
+                  </svg>
+                </div>
 
-                      {/* Connected Interactive Dots for Yellow Coin Line */}
-                      {coinCoords.map((p, idx) => (
-                        <circle
-                          key={`coin-dot-${idx}`}
-                          cx={p.x}
-                          cy={p.y}
-                          r="4.5"
-                          fill="#f59e0b"
-                          stroke="#07080f"
-                          strokeWidth="2"
-                          className="transition-all duration-150 cursor-pointer hover:r-7"
-                        />
-                      ))}
-                    </>
-                  );
-                })()}
-              </svg>
-            </div>
-
-            {/* X-Axis Day Labels */}
-            <div className="flex justify-between items-center text-[10px] font-mono text-white/40 pt-2 border-t border-white/5 px-2">
-              {Array.from({ length: 14 }).map((_, i) => {
-                const d = new Date();
-                d.setDate(d.getDate() - (13 - i));
-                return (
-                  <span key={i} className="hover:text-white transition-colors cursor-default">
-                    {d.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' })}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
+                {/* X-Axis Day Labels */}
+                <div className="flex justify-between items-center text-[11px] font-mono text-white/50 pt-3 border-t border-white/10 px-2">
+                  {daysData.map((p) => (
+                    <span 
+                      key={p.index} 
+                      onMouseEnter={() => setHoveredEarningIndex(p.index)}
+                      className={`cursor-pointer transition-all ${
+                        hoveredEarningIndex === p.index ? "text-white font-extrabold scale-110" : "hover:text-white/80"
+                      }`}
+                    >
+                      {p.dateStr}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            );
+          })()}
         </motion.div>
 
 
@@ -973,44 +1015,61 @@ export default function ProgressPage() {
           </div>
 
           {/* Clean SVG Pie / Donut Chart & Legend */}
-          <div className="flex flex-col md:flex-row items-center justify-around gap-8 bg-[#07080f] border border-white/5 rounded-2xl p-6">
+          <div className="flex flex-col md:flex-row items-center justify-around gap-10 bg-[#07080f] border border-white/5 rounded-2xl p-8">
             
-            {/* SVG Pie Chart SVG */}
-            <div className="relative w-48 h-48 flex items-center justify-center shrink-0">
+            {/* SVG Pie Chart */}
+            <div className="relative w-56 h-56 flex items-center justify-center shrink-0">
               {(() => {
+                // Dynamically read opened course slugs from localStorage + completed topics + activity logs
+                let openedSlugs: string[] = [];
+                try {
+                  openedSlugs = JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]");
+                } catch (e) {}
+
                 const completed = progress?.completedTopics || [];
-                // Categorize completed topics by opened course
-                const counts: Record<string, { name: string; color: string; count: number }> = {};
-                
-                const COURSE_COLORS: Record<string, { name: string; color: string }> = {
-                  "ap-bio": { name: "AP® Biology", color: "#0088ff" },
-                  "ap-chem": { name: "AP® Chemistry", color: "#a484d7" },
-                  "ap-physics": { name: "AP® Physics C", color: "#38bdf8" },
-                  "ap-ush": { name: "AP® US History", color: "#f59e0b" },
-                  "ap-psych": { name: "AP® Psychology", color: "#ec4899" },
-                  "ap-eng": { name: "AP® English", color: "#8b5cf6" },
-                  "ap-calc": { name: "AP® Calculus BC", color: "#10b981" },
-                  "ap-stats": { name: "AP® Statistics", color: "#34d399" },
-                  "ap-csa": { name: "AP® Comp Sci A", color: "#06b6d4" },
+                const COURSE_MAP: Record<string, { name: string; color: string }> = {
+                  "ap-biology": { name: "AP® Biology", color: "#0088ff" },
+                  "ap-chemistry": { name: "AP® Chemistry", color: "#a484d7" },
+                  "ap-physics-c": { name: "AP® Physics C", color: "#38bdf8" },
+                  "ap-us-history": { name: "AP® US History", color: "#f59e0b" },
+                  "ap-psychology": { name: "AP® Psychology", color: "#ec4899" },
+                  "ap-english": { name: "AP® English", color: "#8b5cf6" },
+                  "ap-calculus-bc": { name: "AP® Calculus BC", color: "#10b981" },
+                  "ap-statistics": { name: "AP® Statistics", color: "#34d399" },
+                  "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#06b6d4" },
                 };
 
+                const counts: Record<string, { name: string; color: string; count: number }> = {};
+
+                // Include all accessed courses
+                openedSlugs.forEach(slug => {
+                  const info = COURSE_MAP[slug] || { 
+                    name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
+                    color: "#6366f1" 
+                  };
+                  counts[slug] = { name: info.name, color: info.color, count: 25 };
+                });
+
+                // Add topic completion counts
                 completed.forEach(topicId => {
-                  const key = topicId.split("-").slice(0, 2).join("-");
-                  const info = COURSE_COLORS[key] || { name: key.toUpperCase(), color: "#3b82f6" };
+                  const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
+                  const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
+                  const info = COURSE_MAP[key] || { name: "AP® Subject", color: "#3b82f6" };
                   if (!counts[key]) {
                     counts[key] = { name: info.name, color: info.color, count: 0 };
                   }
-                  counts[key].count += 1;
+                  counts[key].count += 15;
                 });
 
-                // Default fallback if no completed topics yet: show AP Bio, AP Chem, AP Calc
-                const items = Object.values(counts);
+                let items = Object.values(counts);
+
+                // Default fallbacks if user hasn't opened courses yet
                 if (items.length === 0) {
-                  items.push(
+                  items = [
                     { name: "AP® Biology", color: "#0088ff", count: 45 },
                     { name: "AP® Chemistry", color: "#a484d7", count: 35 },
                     { name: "AP® Calculus BC", color: "#10b981", count: 20 }
-                  );
+                  ];
                 }
 
                 const total = items.reduce((sum, item) => sum + item.count, 0);
@@ -1033,13 +1092,13 @@ export default function ProgressPage() {
                             r="15.91549430918954"
                             fill="transparent"
                             stroke={item.color}
-                            strokeWidth="10"
+                            strokeWidth="11"
                             strokeDasharray={strokeDasharray}
                             strokeDashoffset={strokeDashoffset}
                             initial={{ opacity: 0 }}
                             animate={{ opacity: 1 }}
                             transition={{ duration: 0.6, delay: idx * 0.1 }}
-                            className="transition-all hover:opacity-80 cursor-pointer"
+                            className="transition-all hover:opacity-85 cursor-pointer"
                           />
                         );
                       })}
@@ -1047,11 +1106,11 @@ export default function ProgressPage() {
 
                     {/* Donut Center Label */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-                      <span className="font-instrument text-2xl font-extrabold text-white leading-none">
+                      <span className="font-instrument text-3xl font-extrabold text-white leading-none">
                         {items.length}
                       </span>
-                      <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest mt-1">
-                        Subjects
+                      <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">
+                        Opened Courses
                       </span>
                     </div>
                   </>
@@ -1062,37 +1121,52 @@ export default function ProgressPage() {
             {/* Side Legend showing course percentages */}
             <div className="flex-1 w-full space-y-3 font-manrope">
               {(() => {
+                let openedSlugs: string[] = [];
+                try {
+                  openedSlugs = JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]");
+                } catch (e) {}
+
                 const completed = progress?.completedTopics || [];
-                const counts: Record<string, { name: string; color: string; count: number }> = {};
-                
-                const COURSE_COLORS: Record<string, { name: string; color: string }> = {
-                  "ap-bio": { name: "AP® Biology", color: "#0088ff" },
-                  "ap-chem": { name: "AP® Chemistry", color: "#a484d7" },
-                  "ap-physics": { name: "AP® Physics C", color: "#38bdf8" },
-                  "ap-ush": { name: "AP® US History", color: "#f59e0b" },
-                  "ap-psych": { name: "AP® Psychology", color: "#ec4899" },
-                  "ap-eng": { name: "AP® English", color: "#8b5cf6" },
-                  "ap-calc": { name: "AP® Calculus BC", color: "#10b981" },
-                  "ap-stats": { name: "AP® Statistics", color: "#34d399" },
-                  "ap-csa": { name: "AP® Comp Sci A", color: "#06b6d4" },
+                const COURSE_MAP: Record<string, { name: string; color: string }> = {
+                  "ap-biology": { name: "AP® Biology", color: "#0088ff" },
+                  "ap-chemistry": { name: "AP® Chemistry", color: "#a484d7" },
+                  "ap-physics-c": { name: "AP® Physics C", color: "#38bdf8" },
+                  "ap-us-history": { name: "AP® US History", color: "#f59e0b" },
+                  "ap-psychology": { name: "AP® Psychology", color: "#ec4899" },
+                  "ap-english": { name: "AP® English", color: "#8b5cf6" },
+                  "ap-calculus-bc": { name: "AP® Calculus BC", color: "#10b981" },
+                  "ap-statistics": { name: "AP® Statistics", color: "#34d399" },
+                  "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#06b6d4" },
                 };
 
+                const counts: Record<string, { name: string; color: string; count: number }> = {};
+
+                openedSlugs.forEach(slug => {
+                  const info = COURSE_MAP[slug] || { 
+                    name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
+                    color: "#6366f1" 
+                  };
+                  counts[slug] = { name: info.name, color: info.color, count: 25 };
+                });
+
                 completed.forEach(topicId => {
-                  const key = topicId.split("-").slice(0, 2).join("-");
-                  const info = COURSE_COLORS[key] || { name: key.toUpperCase(), color: "#3b82f6" };
+                  const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
+                  const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
+                  const info = COURSE_MAP[key] || { name: "AP® Subject", color: "#3b82f6" };
                   if (!counts[key]) {
                     counts[key] = { name: info.name, color: info.color, count: 0 };
                   }
-                  counts[key].count += 1;
+                  counts[key].count += 15;
                 });
 
-                const items = Object.values(counts);
+                let items = Object.values(counts);
+
                 if (items.length === 0) {
-                  items.push(
+                  items = [
                     { name: "AP® Biology", color: "#0088ff", count: 45 },
                     { name: "AP® Chemistry", color: "#a484d7", count: 35 },
                     { name: "AP® Calculus BC", color: "#10b981", count: 20 }
-                  );
+                  ];
                 }
 
                 const total = items.reduce((sum, item) => sum + item.count, 0);
@@ -1100,12 +1174,12 @@ export default function ProgressPage() {
                 return items.map((item, idx) => {
                   const percent = Math.round((item.count / total) * 100);
                   return (
-                    <div key={idx} className="flex items-center justify-between p-2.5 rounded-xl border border-white/5 bg-white/[0.01]">
+                    <div key={idx} className="flex items-center justify-between p-3 rounded-xl border border-white/5 bg-white/[0.01] hover:bg-white/[0.04] transition-all">
                       <div className="flex items-center space-x-3">
-                        <span className="w-3 h-3 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
-                        <span className="font-bold text-xs text-white/90">{item.name}</span>
+                        <span className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm" style={{ backgroundColor: item.color }} />
+                        <span className="font-bold text-sm text-white/90">{item.name}</span>
                       </div>
-                      <span className="font-mono font-extrabold text-xs text-white/70">{percent}%</span>
+                      <span className="font-mono font-extrabold text-sm text-white/80">{percent}%</span>
                     </div>
                   );
                 });

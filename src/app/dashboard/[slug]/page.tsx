@@ -1568,6 +1568,20 @@ export default function APDynamicCoursePage() {
   const router = useRouter();
   const slug = params?.slug as string;
 
+  useEffect(() => {
+    if (slug) {
+      try {
+        const stored: string[] = JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]");
+        if (!stored.includes(slug)) {
+          stored.push(slug);
+          localStorage.setItem("ap_accessed_courses", JSON.stringify(stored));
+        }
+      } catch (e) {
+        console.error("Error saving accessed course:", e);
+      }
+    }
+  }, [slug]);
+
   const course = courseRegistry[slug];
   
   const { progress, completeTopic } = useProgress();
