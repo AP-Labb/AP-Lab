@@ -680,7 +680,11 @@ export default function Dashboard() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {folder.classes.map((cls, cIdx) => {
-                    const isEnrolled = progress?.selectedClasses?.includes(cls.name);
+                    const isEnrolled = (progress?.selectedClasses || [])?.some((c: string) => 
+                      c.toLowerCase().includes(cls.name.toLowerCase()) || 
+                      cls.name.toLowerCase().includes(c.toLowerCase()) || 
+                      c.toLowerCase().includes(cls.slug.toLowerCase())
+                    ) || (typeof window !== "undefined" && (JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]") as string[]).includes(cls.slug));
                     const progressPercent = classProgressMap[cls.slug] || 0;
                     const courseData = courseRegistry[cls.slug];
                     const unitsCount = courseData?.units?.length || 8;

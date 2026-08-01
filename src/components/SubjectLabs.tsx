@@ -363,7 +363,6 @@ export function SubjectLabs() {
 
           {/* Card 2: AP Calculus (Small Card) */}
           {(() => {
-            const isSelected = progress?.selectedClasses?.some((c: string) => c.toLowerCase().includes("calc"));
             return (
               <motion.div 
                 initial={{ opacity: 0, y: 30 }}
@@ -374,19 +373,8 @@ export function SubjectLabs() {
                 onMouseLeave={() => setHoveredCard(null)}
                 onClick={() => setActiveCourse("calculus")}
                 whileHover={{ y: -6 }}
-                className={cn(
-                  "lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)]",
-                  isSelected 
-                    ? "border-2 border-emerald-500/80 shadow-[0_0_30px_rgba(16,185,129,0.25)] bg-gradient-to-br from-[#121212] via-[#121212] to-emerald-950/20" 
-                    : "border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
-                )}
+                className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
               >
-                {isSelected && (
-                  <div className="absolute top-4 right-4 bg-emerald-500/20 border border-emerald-500/40 text-emerald-400 font-manrope font-bold text-[10px] uppercase tracking-wider px-3 py-1 rounded-full flex items-center gap-1.5 shadow-sm z-20">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                    Enrolled Course
-                  </div>
-                )}
             <Cursor
               attachToParent
               variants={{
@@ -654,7 +642,7 @@ export function SubjectLabs() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
-              className="relative w-full max-w-5xl bg-[#0a0a0c] border border-white/10 rounded-[32px] shadow-[0_30px_70px_rgba(0,0,0,0.9)] overflow-hidden max-h-[90vh] flex flex-col z-10"
+              className="relative w-full max-w-5xl bg-[#0a0a0c] border border-white/10 rounded-[32px] shadow-[0_30px_70px_rgba(0,0,0,0.9)] overflow-hidden max-h-[88vh] flex flex-col z-10"
             >
               {/* Colored accent line at the top */}
               <div 
@@ -667,13 +655,16 @@ export function SubjectLabs() {
               {/* Close Button */}
               <button
                 onClick={() => setActiveCourse(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/5 hover:bg-white/10 text-white/50 hover:text-white transition-all z-20 border border-white/5"
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-30 border border-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
 
               {/* Scrollable Container */}
-              <div className="p-8 md:p-12 overflow-y-auto w-full max-h-[90vh] no-scrollbar">
+              <div 
+                data-lenis-prevent="true" 
+                className="p-6 md:p-10 overflow-y-auto w-full max-h-[85vh] space-y-6 flex-1 min-h-0 custom-scrollbar"
+              >
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-stretch">
                   
                   {/* Left Column: General Info, Badges, Stats & Highlights */}
