@@ -166,7 +166,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                         </motion.div>
                       ) : item.icon === "panda" ? (
                         <motion.div 
-                          className="w-5 h-5 shrink-0 flex items-center justify-center"
+                          className="w-7 h-7 shrink-0 flex items-center justify-center -ml-1"
                           variants={{
                             rest: { scale: 1, rotate: 0 },
                             hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0] }

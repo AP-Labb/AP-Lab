@@ -598,17 +598,17 @@ export default function Dashboard() {
         {/* UPPER REGION: Header with PixelBlast Background */}
         <div className="relative w-full flex flex-col items-center pt-16 pb-12 px-6 z-40 overflow-hidden">
           {/* Liquid Gradient WebGL Background */}
-          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-65">
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-55">
             <LiquidGradientCanvas
-              colors={["#2e1065", "#701a75", "#3b0f6f", "#0284c7", "#8b2fc9"]}
-              speed={0.6}
-              scale={0.5}
-              seed={15}
-              exposure={1.2}
-              contrast={1.15}
+              colors={["#030514", "#0f172a", "#1e1b4b", "#2e1065", "#0c1938"]}
+              speed={0.45}
+              scale={0.45}
+              seed={18}
+              exposure={1.1}
+              contrast={1.05}
               className="w-full h-full"
             />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#03040a]/20 via-[#03040a]/40 to-[#060712]" />
+            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#03040a]/40 to-[#060712]" />
           </div>
 
           {/* Header Section */}

@@ -131,12 +131,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Extra Large, completely enclosing the avatar circle in the glass visor) */}
+      {/* 10. Astronaut Helmet (Enclosing the entire avatar circle inside the clear visor bubble) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[42%] left-1/2 -translate-x-1/2 w-[210%] h-[210%] object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[48%] left-1/2 -translate-x-1/2 w-[240%] h-[240%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
