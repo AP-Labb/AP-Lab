@@ -135,12 +135,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 10. Astronaut Helmet (Moved up even more & enlarged so user's PFP fits 100% perfectly inside visor bubble) */}
+      {/* 10. Astronaut Helmet (Moved up just a bit more & enlarged for a 100% perfect fit) */}
       {hasAstronautHelmet && (
         <img 
           src="/images/avatar-gear/astronaut-helmet.png" 
           alt="Astronaut Helmet" 
-          className="absolute -top-[76%] left-1/2 -translate-x-1/2 w-[270%] h-[270%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
+          className="absolute -top-[82%] left-1/2 -translate-x-1/2 w-[280%] h-[280%] max-w-none object-contain z-30 pointer-events-none drop-shadow-xl" 
         />
       )}
 
@@ -180,12 +180,12 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         />
       )}
 
-      {/* 15. Einstein Hair (Bigger & positioned naturally over avatar head) */}
+      {/* 15. Einstein Hair (Even bigger & positioned better over avatar head) */}
       {hasEinsteinHair && (
         <img 
           src="/images/avatar-gear/einstein-hair.png" 
           alt="Einstein Hair" 
-          className="absolute -top-[54%] left-1/2 -translate-x-1/2 w-[160%] h-[125%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[60%] left-1/2 -translate-x-1/2 w-[180%] h-[140%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 
@@ -194,7 +194,7 @@ export function UserAvatar({ photoURL, name = "Scholar", activeFrame, size = "md
         <img 
           src="/images/avatar-gear/golden-frame.png" 
           alt="Golden Frame" 
-          className="absolute -top-[34%] left-1/2 -translate-x-1/2 w-[168%] h-[168%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
+          className="absolute -top-[44%] left-1/2 -translate-x-1/2 w-[188%] h-[188%] max-w-none object-contain z-20 pointer-events-none drop-shadow-md" 
         />
       )}
 

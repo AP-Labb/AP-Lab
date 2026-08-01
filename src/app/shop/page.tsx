@@ -348,7 +348,7 @@ const GEAR_ITEMS = [
     desc: "Choose any custom color hex for your display name across the site", 
     cost: 120, 
     bgColor: "bg-neutral-900 border-neutral-800", 
-    innerBg: "bg-white border-neutral-200 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
+    innerBg: "bg-[#090a10] border-white/15 flex items-center justify-center h-48 rounded-2xl shadow-inner p-4",
     type: "color-picker",
     renderAccessory: (userPhoto?: string, userName?: string) => (
       <div className="flex flex-col items-center justify-center h-full w-full">

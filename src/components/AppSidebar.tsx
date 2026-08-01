@@ -353,7 +353,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <ProgressProfileModal isOpen={showProgressProfile} onClose={() => setShowProgressProfile(false)} />
       <MinecraftInventoryModal isOpen={showMinecraftInventory} onClose={() => setShowMinecraftInventory(false)} />
-      <ActiveBoostsTimer />
     </>
   );
 }
