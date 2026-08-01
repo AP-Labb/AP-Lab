@@ -345,7 +345,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 {/* Spacious 100 Badges Grid (Zero Overlap, No Level Text Cutoffs) */}
                 <div 
                   data-lenis-prevent="true"
-                  className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-4 sm:grid-cols-6 md:grid-cols-10 gap-3.5 p-3"
+                  className="flex-1 overflow-y-auto custom-scrollbar grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2.5 p-3"
                 >
                   {Array.from({ length: 100 }, (_, i) => i + 1).map((lvl) => {
                     const isCurrent = level === lvl;
@@ -355,15 +355,15 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                       <div
                         key={lvl}
                         className={cn(
-                          "p-3 rounded-2xl border flex items-center justify-center text-center transition-all min-h-[72px] w-full",
+                          "p-2 rounded-2xl border flex items-center justify-center text-center transition-all min-h-[60px] w-full relative overflow-hidden",
                           isCurrent 
-                            ? "bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)] font-bold scale-105" 
+                            ? "bg-emerald-500/20 border-emerald-400 ring-2 ring-emerald-400 shadow-[0_0_20px_rgba(16,185,129,0.4)] font-bold scale-105 z-10" 
                             : (isUnlocked 
                                 ? "bg-white/5 border-white/10 hover:bg-white/15 hover:border-white/20" 
                                 : "bg-white/[0.02] border-white/5 opacity-30 grayscale")
                         )}
                       >
-                        <LevelBadge level={lvl} size="md" />
+                        <LevelBadge level={lvl} size="sm" showLabel={false} />
                       </div>
                     );
                   })}

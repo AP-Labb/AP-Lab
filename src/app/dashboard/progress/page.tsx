@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   Flame, Calendar, Trophy, Mail, User, X, GraduationCap,
   Clock, Target, CheckCircle2, ChevronLeft, ChevronRight, Activity,
-  BookOpen, MessageSquare, Sparkles, LogOut, Home, LayoutDashboard, BarChart2, Star, Settings, Award, ShoppingBag
+  BookOpen, MessageSquare, Sparkles, LogOut, Home, LayoutDashboard, BarChart2, Star, Settings, Award, ShoppingBag, TrendingUp
 } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
@@ -313,17 +313,7 @@ export default function ProgressPage() {
 
         <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8 pb-20 text-left">
 
-        {/* Header Block */}
-        <div className="flex flex-col space-y-4 md:flex-row md:justify-between md:items-center md:space-y-0">
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-white/30 font-bold">Analytics</span>
-            </div>
-            <h1 className="font-instrument text-3xl font-bold tracking-tight text-white mt-1">
-              Progress
-            </h1>
-          </div>
-        </div>
+
 
         {/* Level Progression Banner */}
         <motion.div 
@@ -803,28 +793,28 @@ export default function ProgressPage() {
           <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
             <div className="flex items-center space-x-3">
               <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/50">
-                <BarChart2 className="w-4.5 h-4.5 text-purple-400" />
+                <TrendingUp className="w-4.5 h-4.5 text-white/60" />
               </div>
               <div>
                 <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Daily XP & Coin Earnings</h3>
-                <p className="text-xs text-white/40">Hover over the graph to inspect exact daily accumulation</p>
+                <p className="text-xs text-white/40">Hover anywhere across the chart to inspect daily accumulation</p>
               </div>
             </div>
 
-            {/* Graph Legend Key with Large Actual Gear / Shield Icons */}
+            {/* Graph Legend Key with Large Gear / Shield Icons */}
             <div className="flex items-center space-x-6 text-xs font-mono">
-              <div className="flex items-center gap-2.5 bg-purple-500/10 border border-purple-500/30 px-3 py-1.5 rounded-xl">
-                <img src="/images/xp-shield.png" alt="XP Shield" className="w-7 h-7 object-contain drop-shadow" />
-                <span className="text-purple-300 font-bold text-sm">XP Earned (Purple)</span>
+              <div className="flex items-center gap-2.5 bg-purple-500/10 border border-purple-500/30 px-3.5 py-2 rounded-xl">
+                <img src="/images/xp-shield.png" alt="XP Shield" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(168,85,247,0.5)]" />
+                <span className="text-purple-300 font-extrabold text-sm">XP Earned (Purple)</span>
               </div>
-              <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/30 px-3 py-1.5 rounded-xl">
-                <img src="/images/coin.png" alt="Coin" className="w-7 h-7 object-contain drop-shadow" />
-                <span className="text-amber-300 font-bold text-sm">Coins Earned (Yellow)</span>
+              <div className="flex items-center gap-2.5 bg-amber-500/10 border border-amber-500/30 px-3.5 py-2 rounded-xl">
+                <img src="/images/coin-boost.png" alt="Coin Boost" className="w-9 h-9 object-contain drop-shadow-[0_0_10px_rgba(245,158,11,0.5)]" />
+                <span className="text-amber-300 font-extrabold text-sm">Coins Earned (Yellow)</span>
               </div>
             </div>
           </div>
 
-          {/* Interactive Dual-Line SVG Graph with Connected Dots and Hover Line */}
+          {/* Interactive Dual-Line SVG Graph with Smooth Container Mouse Hover */}
           {(() => {
             const pointsCount = 14;
             const stepX = 680 / (pointsCount - 1);
@@ -855,7 +845,13 @@ export default function ProgressPage() {
 
             return (
               <div 
-                className="w-full h-80 relative bg-[#07080f] rounded-2xl border border-white/5 p-5 flex flex-col justify-between overflow-visible"
+                className="w-full h-84 relative bg-[#07080f] rounded-2xl border border-white/5 p-5 flex flex-col justify-between overflow-visible cursor-crosshair"
+                onMouseMove={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const mouseX = e.clientX - rect.left;
+                  const idx = Math.max(0, Math.min(13, Math.round((mouseX / rect.width) * 13)));
+                  setHoveredEarningIndex(idx);
+                }}
                 onMouseLeave={() => setHoveredEarningIndex(null)}
               >
                 {/* Background Horizontal Grid Lines */}
@@ -864,28 +860,31 @@ export default function ProgressPage() {
                 <div className="absolute inset-x-0 top-40 border-b border-white/[0.03]" />
                 <div className="absolute inset-x-0 top-56 border-b border-white/[0.03]" />
 
-                {/* Hover Tooltip Card */}
+                {/* Smooth Hover Tooltip Card */}
                 {activeHoverPoint && (
-                  <div 
-                    className="absolute top-3 z-30 pointer-events-none bg-neutral-900/95 border border-white/20 p-3 rounded-xl shadow-2xl backdrop-blur-md flex items-center space-x-4 transition-all duration-150"
+                  <motion.div 
+                    initial={{ opacity: 0, y: -5 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-3 z-30 pointer-events-none bg-neutral-900/95 border border-white/20 p-3.5 rounded-xl shadow-2xl backdrop-blur-md flex items-center space-x-4 transition-all duration-100"
                     style={{
-                      left: `${Math.max(8, Math.min(72, (activeHoverPoint.x / 700) * 100))}%`
+                      left: `${Math.max(6, Math.min(70, (activeHoverPoint.x / 700) * 100))}%`
                     }}
                   >
                     <div className="text-left font-mono">
                       <span className="text-[10px] text-white/50 uppercase tracking-widest block font-bold">{activeHoverPoint.dateStr}</span>
-                      <div className="flex items-center space-x-3 mt-1 text-xs">
-                        <span className="flex items-center gap-1 text-purple-300 font-extrabold">
-                          <img src="/images/xp-shield.png" alt="XP" className="w-4 h-4 object-contain" />
+                      <div className="flex items-center space-x-3.5 mt-1 text-xs">
+                        <span className="flex items-center gap-1.5 text-purple-300 font-extrabold">
+                          <img src="/images/xp-shield.png" alt="XP" className="w-5 h-5 object-contain" />
                           +{activeHoverPoint.xpVal} XP
                         </span>
-                        <span className="flex items-center gap-1 text-amber-300 font-extrabold">
-                          <img src="/images/coin.png" alt="Coins" className="w-4 h-4 object-contain" />
+                        <span className="flex items-center gap-1.5 text-amber-300 font-extrabold">
+                          <img src="/images/coin-boost.png" alt="Coins" className="w-5 h-5 object-contain" />
                           +{activeHoverPoint.coinVal} Coins
                         </span>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
 
                 {/* SVG Canvas */}
@@ -939,8 +938,8 @@ export default function ProgressPage() {
                         y1="0" 
                         x2={activeHoverPoint.x} 
                         y2="160" 
-                        stroke="rgba(255,255,255,0.4)" 
-                        strokeWidth="1.5" 
+                        stroke="rgba(255,255,255,0.45)" 
+                        strokeWidth="2" 
                         strokeDasharray="4 4" 
                       />
                     )}
@@ -956,7 +955,6 @@ export default function ProgressPage() {
                         stroke="#07080f"
                         strokeWidth="2"
                         className="transition-all duration-150 cursor-pointer"
-                        onMouseEnter={() => setHoveredEarningIndex(p.index)}
                       />
                     ))}
 
@@ -971,7 +969,6 @@ export default function ProgressPage() {
                         stroke="#07080f"
                         strokeWidth="2"
                         className="transition-all duration-150 cursor-pointer"
-                        onMouseEnter={() => setHoveredEarningIndex(p.index)}
                       />
                     ))}
                   </svg>
@@ -982,7 +979,6 @@ export default function ProgressPage() {
                   {daysData.map((p) => (
                     <span 
                       key={p.index} 
-                      onMouseEnter={() => setHoveredEarningIndex(p.index)}
                       className={`cursor-pointer transition-all ${
                         hoveredEarningIndex === p.index ? "text-white font-extrabold scale-110" : "hover:text-white/80"
                       }`}
@@ -1006,7 +1002,7 @@ export default function ProgressPage() {
         >
           <div className="flex items-center space-x-3">
             <div className="w-9 h-9 rounded-xl bg-white/5 border border-white/5 flex items-center justify-center text-white/50">
-              <BookOpen className="w-4.5 h-4.5 text-emerald-400" />
+              <BookOpen className="w-4.5 h-4.5 text-white/60" />
             </div>
             <div>
               <h3 className="text-sm font-bold font-manrope uppercase tracking-wider text-white">Subject Study Time Distribution</h3>
@@ -1017,10 +1013,9 @@ export default function ProgressPage() {
           {/* Clean SVG Pie / Donut Chart & Legend */}
           <div className="flex flex-col md:flex-row items-center justify-around gap-10 bg-[#07080f] border border-white/5 rounded-2xl p-8">
             
-            {/* SVG Pie Chart */}
-            <div className="relative w-56 h-56 flex items-center justify-center shrink-0">
+            {/* Enlarged SVG Pie Chart Container */}
+            <div className="relative w-64 h-64 flex items-center justify-center shrink-0">
               {(() => {
-                // Dynamically read opened course slugs from localStorage + completed topics + activity logs
                 let openedSlugs: string[] = [];
                 try {
                   openedSlugs = JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]");
@@ -1041,7 +1036,6 @@ export default function ProgressPage() {
 
                 const counts: Record<string, { name: string; color: string; count: number }> = {};
 
-                // Include all accessed courses
                 openedSlugs.forEach(slug => {
                   const info = COURSE_MAP[slug] || { 
                     name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
@@ -1050,7 +1044,6 @@ export default function ProgressPage() {
                   counts[slug] = { name: info.name, color: info.color, count: 25 };
                 });
 
-                // Add topic completion counts
                 completed.forEach(topicId => {
                   const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
                   const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
@@ -1063,7 +1056,6 @@ export default function ProgressPage() {
 
                 let items = Object.values(counts);
 
-                // Default fallbacks if user hasn't opened courses yet
                 if (items.length === 0) {
                   items = [
                     { name: "AP® Biology", color: "#0088ff", count: 45 },
@@ -1075,13 +1067,17 @@ export default function ProgressPage() {
                 const total = items.reduce((sum, item) => sum + item.count, 0);
                 let cumulativePercent = 0;
 
+                // Radius=28, Circumference = 2 * PI * 28 = 175.929
+                const R = 28;
+                const C = 2 * Math.PI * R;
+
                 return (
                   <>
                     <svg viewBox="0 0 100 100" className="w-full h-full transform -rotate-90 overflow-visible">
                       {items.map((item, idx) => {
-                        const percent = (item.count / total) * 100;
-                        const strokeDasharray = `${percent} ${100 - percent}`;
-                        const strokeDashoffset = -cumulativePercent;
+                        const percent = (item.count / total);
+                        const strokeDasharray = `${percent * C} ${C * (1 - percent)}`;
+                        const strokeDashoffset = -(cumulativePercent * C);
                         cumulativePercent += percent;
 
                         return (
@@ -1089,10 +1085,10 @@ export default function ProgressPage() {
                             key={idx}
                             cx="50"
                             cy="50"
-                            r="15.91549430918954"
+                            r={R}
                             fill="transparent"
                             stroke={item.color}
-                            strokeWidth="11"
+                            strokeWidth="12"
                             strokeDasharray={strokeDasharray}
                             strokeDashoffset={strokeDashoffset}
                             initial={{ opacity: 0 }}
@@ -1104,12 +1100,12 @@ export default function ProgressPage() {
                       })}
                     </svg>
 
-                    {/* Donut Center Label */}
+                    {/* Donut Center Label - Spacious & Clean */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
                       <span className="font-instrument text-3xl font-extrabold text-white leading-none">
                         {items.length}
                       </span>
-                      <span className="text-[10px] font-mono text-white/40 uppercase tracking-widest mt-1">
+                      <span className="text-[9px] font-mono text-white/40 uppercase tracking-widest mt-1">
                         Opened Courses
                       </span>
                     </div>
