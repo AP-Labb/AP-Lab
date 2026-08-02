@@ -801,24 +801,20 @@ export default function ProgressPage() {
               </div>
             </div>
 
-            {/* Graph Legend Key with Large Clear Images on Dark Cards with White Fill Icons */}
-            <div className="flex items-center space-x-4 text-xs font-mono">
-              <div className="flex items-center gap-3 bg-[#0c0d16] text-white px-4 py-2.5 rounded-2xl shadow-xl border border-white/10">
-                <div className="w-12 h-12 bg-white rounded-2xl p-2 flex items-center justify-center shrink-0 shadow-md">
-                  <img src="/images/xp-shield-clean.png" alt="XP Shield" className="w-full h-full object-contain" />
-                </div>
+            {/* Graph Legend Key with Large Clear Images without white boxes */}
+            <div className="flex items-center space-x-5 text-xs font-mono">
+              <div className="flex items-center gap-3.5 bg-[#0c0d16] text-white px-5 py-3 rounded-2xl shadow-xl border border-white/10">
+                <img src="/images/graph-xp-new.png" alt="XP Shield" className="w-16 h-16 object-contain shrink-0 drop-shadow-md" />
                 <div className="flex flex-col text-left">
-                  <span className="font-extrabold text-sm text-purple-300">XP Earned</span>
-                  <span className="text-[10px] text-white/50 font-bold">Total: {xp} XP</span>
+                  <span className="font-extrabold text-base text-purple-300">XP Earned</span>
+                  <span className="text-xs text-white/60 font-bold">Total: {xp} XP</span>
                 </div>
               </div>
-              <div className="flex items-center gap-3 bg-[#0c0d16] text-white px-4 py-2.5 rounded-2xl shadow-xl border border-white/10">
-                <div className="w-12 h-12 bg-white rounded-2xl p-2 flex items-center justify-center shrink-0 shadow-md">
-                  <img src="/images/coin-icon-clean.png" alt="Coin" className="w-full h-full object-contain" />
-                </div>
+              <div className="flex items-center gap-3.5 bg-[#0c0d16] text-white px-5 py-3 rounded-2xl shadow-xl border border-white/10">
+                <img src="/images/graph-coin-new.png" alt="Coin" className="w-16 h-16 object-contain shrink-0 drop-shadow-md" />
                 <div className="flex flex-col text-left">
-                  <span className="font-extrabold text-sm text-amber-300">Coins Earned</span>
-                  <span className="text-[10px] text-white/50 font-bold">Total: {progress?.credits || 0} Coins</span>
+                  <span className="font-extrabold text-base text-amber-300">Coins Earned</span>
+                  <span className="text-xs text-white/60 font-bold">Total: {progress?.credits || 0} Coins</span>
                 </div>
               </div>
             </div>
@@ -912,15 +908,11 @@ export default function ProgressPage() {
                       <span className="text-[11px] text-white/50 uppercase tracking-widest block font-bold">{activeHoverPoint.dateStr}</span>
                       <div className="flex items-center space-x-4 mt-1.5 text-xs">
                         <span className="flex items-center gap-2 text-purple-300 font-extrabold text-sm">
-                          <div className="w-7 h-7 bg-white rounded-full p-1 flex items-center justify-center shrink-0 shadow-sm">
-                            <img src="/images/xp-shield-clean.png" alt="XP" className="w-full h-full object-contain" />
-                          </div>
+                          <img src="/images/graph-xp-new.png" alt="XP" className="w-7 h-7 object-contain shrink-0" />
                           +{activeHoverPoint.xpVal} XP
                         </span>
                         <span className="flex items-center gap-2 text-amber-300 font-extrabold text-sm">
-                          <div className="w-7 h-7 bg-white rounded-full p-1 flex items-center justify-center shrink-0 shadow-sm">
-                            <img src="/images/coin-icon-clean.png" alt="Coins" className="w-full h-full object-contain" />
-                          </div>
+                          <img src="/images/graph-coin-new.png" alt="Coins" className="w-7 h-7 object-contain shrink-0" />
                           +{activeHoverPoint.coinVal} Coins
                         </span>
                       </div>

@@ -592,41 +592,42 @@ export default function Dashboard() {
 
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-clip md:pl-16 relative">
+        {/* Full-width Space Textured Grainient Background stretching to left side navbar */}
+        <div className="absolute top-0 left-0 right-0 h-[480px] pointer-events-none z-0 overflow-hidden opacity-80">
+          <Grainient
+            color1="#4c1d95"
+            color2="#2e1065"
+            color3="#020307"
+            timeSpeed={0.08}
+            colorBalance={0.05}
+            warpStrength={0.5}
+            warpFrequency={3.0}
+            warpSpeed={0.5}
+            warpAmplitude={30.0}
+            blendAngle={45.0}
+            blendSoftness={0.1}
+            rotationAmount={100.0}
+            noiseScale={1.5}
+            grainAmount={0.16}
+            grainScale={2.2}
+            grainAnimated={false}
+            contrast={1.4}
+            gamma={1.0}
+            saturation={1.3}
+            centerX={0.1}
+            centerY={-0.1}
+            zoom={0.9}
+            className="w-full h-full"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#03040a]/40 to-[#060712]" />
+        </div>
+
         <UniversalTopHeader />
 
-        <main className="flex-1 w-full flex flex-col items-center z-10">
+        <main className="flex-1 w-full flex flex-col items-center z-10 relative">
         
-        {/* UPPER REGION: Header with PixelBlast Background */}
-        <div className="relative w-full flex flex-col items-center pt-16 pb-12 px-6 z-40 overflow-hidden">
-          {/* Space Textured Grainient Background */}
-          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden opacity-75">
-            <Grainient
-              color1="#ffffff"
-              color2="#5b21b6"
-              color3="#020307"
-              timeSpeed={0.08}
-              colorBalance={0.05}
-              warpStrength={0.5}
-              warpFrequency={3.0}
-              warpSpeed={0.5}
-              warpAmplitude={30.0}
-              blendAngle={45.0}
-              blendSoftness={0.1}
-              rotationAmount={100.0}
-              noiseScale={1.5}
-              grainAmount={0.16}
-              grainScale={2.2}
-              grainAnimated={false}
-              contrast={1.4}
-              gamma={1.0}
-              saturation={1.3}
-              centerX={0.1}
-              centerY={-0.1}
-              zoom={0.9}
-              className="w-full h-full"
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#03040a]/40 to-[#060712]" />
-          </div>
+        {/* UPPER REGION: Header */}
+        <div className="relative w-full flex flex-col items-center pt-12 pb-10 px-6 z-40 overflow-hidden">
 
           {/* Header Section */}
           <div className="text-center mb-6 flex flex-col items-center justify-center relative z-10">
