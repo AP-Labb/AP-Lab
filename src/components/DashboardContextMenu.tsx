@@ -264,7 +264,7 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
             <button
               onClick={() => {
                 setVisible(false);
-                setShowSettingsModal(true);
+                router.push("/dashboard/settings");
               }}
               className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
             >

@@ -36,7 +36,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
   const level = progress?.level || 1;
   const credits = progress?.credits || 0;
   const streak = progress?.streakCount || 0;
-  const hasStreak = streak > 0;
+  const hasStreak = streak >= 2;
 
   // XP Progress math matching uploaded Knowt screenshot
   const currentLevelThreshold = getXpThresholdForLevel(level);

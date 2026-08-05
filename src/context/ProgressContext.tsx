@@ -48,6 +48,7 @@ interface UserProgress {
   courseBg?: string;
   bio?: string;
   location?: string;
+  profileBannerColor?: string;
 }
 
 interface ProgressContextType {
@@ -58,7 +59,7 @@ interface ProgressContextType {
   recordTutorMessage: () => Promise<void>;
   recordMockExamAttempt: (correctCount: number, totalQuestions: number) => Promise<void>;
   claimSocialXp?: (taskName: string, xpAmount: number) => Promise<void>;
-  updatePreferences?: (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string; bio?: string; location?: string; graduationYear?: string | number | null }) => Promise<void>;
+  updatePreferences?: (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string; bio?: string; location?: string; graduationYear?: string | number | null; profileBannerColor?: string }) => Promise<void>;
   spendCredits?: (amount: number) => Promise<boolean>;
   addCredits?: (amount: number, reason?: string) => Promise<void>;
   equipItem?: (itemType: string, itemId: string) => Promise<void>;
@@ -1007,7 +1008,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, [progress?.theme]);
 
-  const updatePreferences = async (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string; bio?: string; location?: string; graduationYear?: string | number | null }) => {
+  const updatePreferences = async (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string; bio?: string; location?: string; graduationYear?: string | number | null; profileBannerColor?: string }) => {
     try {
       // 1. Instant DOM sync
       if (prefs.theme) {

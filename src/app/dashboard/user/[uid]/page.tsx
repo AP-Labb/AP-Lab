@@ -96,6 +96,7 @@ interface UserProfile {
   activeNameGradient: string;
   bio?: string;
   location?: string;
+  profileBannerColor?: string;
   enrolledCourses: string[];
   totalStudyMinutes: number;
   streakDays: number;
@@ -146,6 +147,7 @@ export default function UserProfilePage() {
         activeNameGradient: progress.activeNameGradient || "",
         bio: progress.bio || "",
         location: progress.location || "United States",
+        profileBannerColor: progress.profileBannerColor || "#7b39fc",
         enrolledCourses: (progress as any).selectedClasses || [],
         totalStudyMinutes: 0,
         streakDays: (progress as any).streakCount || 0,
@@ -214,8 +216,16 @@ export default function UserProfilePage() {
             >
               {/* HERO PROFILE HEADER */}
               <div className="relative bg-[#090a12] border border-white/[0.08] rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)]">
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-purple-500/40 to-transparent absolute top-0 left-0 right-0" />
-                <div className="absolute -top-10 left-1/4 w-80 h-40 bg-violet-900/15 blur-[90px] rounded-full pointer-events-none" />
+                <div
+                  className="h-1 w-full absolute top-0 left-0 right-0"
+                  style={{
+                    background: `linear-gradient(to right, transparent, ${user.profileBannerColor || "#7b39fc"}, transparent)`,
+                  }}
+                />
+                <div
+                  className="absolute -top-10 left-1/4 w-80 h-40 blur-[90px] rounded-full pointer-events-none opacity-20"
+                  style={{ backgroundColor: user.profileBannerColor || "#7b39fc" }}
+                />
 
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative z-10">
                   {/* Left Column: Avatar & User Metadata */}
@@ -262,13 +272,13 @@ export default function UserProfilePage() {
                       {/* Action Button: Edit Profile (Only for own profile) */}
                       {isOwnProfile && (
                         <div className="pt-2 flex items-center gap-3">
-                          <button
-                            onClick={() => setShowSettingsModal(true)}
+                          <Link
+                            href="/dashboard/settings?tab=account"
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-sm active:scale-95"
                           >
                             <Edit3 className="w-3.5 h-3.5 text-violet-400" />
                             <span>Edit Profile</span>
-                          </button>
+                          </Link>
                         </div>
                       )}
                     </div>

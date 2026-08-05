@@ -503,12 +503,9 @@ export default function ProgressPage() {
               {/* Central Streak Flame Widget */}
               <div className={`flex flex-col items-center py-4 rounded-xl border relative overflow-hidden w-full transition-all duration-300 ${streakStyle.borderColor} ${streakStyle.bgClass}`}>
                 <div className={`absolute inset-0 bg-gradient-to-br ${streakStyle.glowClass} pointer-events-none -z-10`} />
-                <motion.div 
-                  animate={streakStyle.animateProps as any}
-                  className="flex items-center justify-center w-20 h-20 mb-2"
-                >
+                <div className="flex items-center justify-center w-20 h-20 mb-2">
                   <StreakFlameIcon streakCount={streakCount} sizeClassName="w-16 h-16" />
-                </motion.div>
+                </div>
                 <div className="font-instrument text-3xl font-extrabold text-white">
                   {streakCount} <span className="text-xs font-manrope font-bold text-white/50 uppercase tracking-widest">Days</span>
                 </div>

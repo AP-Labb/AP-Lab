@@ -10,11 +10,11 @@ interface StreakFlameIconProps {
 }
 
 export function getStreakFlameSrc(streakCount: number = 0): string {
-  if (streakCount <= 0) {
-    return "/images/streak-zero.png"; // Dotted White (0 days / no streak)
+  if (streakCount < 2) {
+    return "/images/streak-zero.png"; // Dotted White (0 or 1 day: requires 2 consecutive days to start streak!)
   }
   if (streakCount < 7) {
-    return "/images/streak-orange.png"; // Normal Orange (1-6 days)
+    return "/images/streak-orange.png"; // Normal Orange (2-6 days)
   }
   if (streakCount < 14) {
     return "/images/streak-bronze.png"; // Bronze (7-13 days)
@@ -29,7 +29,7 @@ export function getStreakFlameSrc(streakCount: number = 0): string {
 }
 
 export function getStreakTierName(streakCount: number = 0): string {
-  if (streakCount <= 0) return "No Streak";
+  if (streakCount < 2) return "No Streak (Log in 2 days in a row)";
   if (streakCount < 7) return "Active Streak";
   if (streakCount < 14) return "Bronze Streak";
   if (streakCount < 30) return "Silver Streak";

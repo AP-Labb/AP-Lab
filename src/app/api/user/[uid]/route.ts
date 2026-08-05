@@ -55,6 +55,7 @@ export async function GET(
       activeNameGradient: data.activeNameGradient || "",
       bio: data.bio || "",
       location: data.location || "",
+      profileBannerColor: data.profileBannerColor || "#7b39fc",
       enrolledCourses: data.enrolledCourses || data.selectedClasses || [],
       coursesProgress: data.coursesProgress || {},
       totalStudyMinutes: data.totalStudyMinutes || 0,

@@ -275,16 +275,14 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   <div className="h-px bg-white/[0.07] mx-1 mb-1" />
 
                   {/* 1. Settings */}
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      setShowSettingsModal(true);
-                    }}
+                  <Link
+                    href="/dashboard/settings"
+                    onClick={() => setShowProfileMenu(false)}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
                     <Settings className="w-4 h-4 text-white/50" />
                     <span>Settings</span>
-                  </button>
+                  </Link>
 
                   {/* 2. My Profile */}
                   <Link
