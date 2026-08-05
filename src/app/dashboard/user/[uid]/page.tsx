@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,7 +15,6 @@ import { UserDisplayName } from "@/components/UserDisplayName";
 import { LevelBadge } from "@/components/LevelBadge";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
-import { getXpThresholdForLevel } from "@/lib/xpProgression";
 import { StreakFlameIcon } from "@/components/StreakFlameIcon";
 import { cn } from "@/lib/utils";
 
@@ -61,12 +60,16 @@ export default function UserProfilePage() {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [isTogglingFollow, setIsTogglingFollow] = useState(false);
+
+  // Dynamic Banner Color state with event listener for instant settings sync
+  const [bannerColorState, setBannerColorState] = useState<string>("#7b39fc");
 
   // Followers / Following Modal state
   const [showFollowModal, setShowFollowModal] = useState(false);
   const [followModalTab, setFollowModalTab] = useState<"followers" | "following">("followers");
 
-  const isOwnProfile = uid === currentUser?.uid || uid === progress?.uid;
+  const isOwnProfile = uid === currentUser?.uid || uid === progress?.uid || uid === "me";
 
   useEffect(() => {
     if (!uid) return;
@@ -77,12 +80,30 @@ export default function UserProfilePage() {
         return res.json();
       })
       .then((data) => {
-        if (data && !data.error) setProfile(data);
-        else if (data?.error) setNotFound(true);
+        if (data && !data.error) {
+          setProfile(data);
+          if (data.profileBannerColor) setBannerColorState(data.profileBannerColor);
+        } else if (data?.error) {
+          setNotFound(true);
+        }
         setLoading(false);
       })
       .catch(() => { setNotFound(true); setLoading(false); });
   }, [uid]);
+
+  // Sync banner color from localStorage & progress context
+  useEffect(() => {
+    const savedColor = progress?.profileBannerColor || (typeof window !== "undefined" ? localStorage.getItem("ap-lab-banner-color") : null);
+    if (savedColor) setBannerColorState(savedColor);
+
+    const handleColorEvent = (e: any) => {
+      const newColor = e?.detail || localStorage.getItem("ap-lab-banner-color");
+      if (newColor) setBannerColorState(newColor);
+    };
+
+    window.addEventListener("profile-banner-color-changed", handleColorEvent);
+    return () => window.removeEventListener("profile-banner-color-changed", handleColorEvent);
+  }, [progress?.profileBannerColor]);
 
   const liveProfile: UserProfile | null = isOwnProfile && progress
     ? {
@@ -101,7 +122,7 @@ export default function UserProfilePage() {
         activeNameGradient: progress.activeNameGradient || "",
         bio: progress.bio || "",
         location: progress.location || "",
-        profileBannerColor: progress.profileBannerColor || "#7b39fc",
+        profileBannerColor: progress.profileBannerColor || bannerColorState || "#7b39fc",
         enrolledCourses: (progress as any).selectedClasses || [],
         totalStudyMinutes: 45,
         streakDays: (progress as any).streakCount || 0,
@@ -120,16 +141,21 @@ export default function UserProfilePage() {
   const isFollowingThisUser = uid ? myFollowingList.includes(uid) : false;
 
   const handleFollowToggle = async () => {
-    if (!uid || isOwnProfile || !toggleFollow) return;
-    const isNowFollowing = await toggleFollow(uid);
-    setProfile((prev) => {
-      if (!prev) return prev;
-      const myUid = currentUser?.uid || progress.uid || "me";
-      const updatedFollowers = isNowFollowing
-        ? [...(prev.followers || []), myUid]
-        : (prev.followers || []).filter((id) => id !== myUid);
-      return { ...prev, followers: updatedFollowers };
-    });
+    if (!uid || isOwnProfile || !toggleFollow || isTogglingFollow) return;
+    setIsTogglingFollow(true);
+    try {
+      const isNowFollowing = await toggleFollow(uid);
+      setProfile((prev) => {
+        if (!prev) return prev;
+        const myUid = currentUser?.uid || progress.uid || "me";
+        const updatedFollowers = isNowFollowing
+          ? Array.from(new Set([...(prev.followers || []), myUid]))
+          : (prev.followers || []).filter((id) => id !== myUid);
+        return { ...prev, followers: updatedFollowers };
+      });
+    } finally {
+      setTimeout(() => setIsTogglingFollow(false), 300);
+    }
   };
 
   const handleShareProfile = () => {
@@ -152,8 +178,8 @@ export default function UserProfilePage() {
   const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
   const username = (user?.email || "scholar@aplab.com").split("@")[0].toLowerCase();
   
-  // Theme Banner Color (User preference or default primary purple)
-  const themeBannerColor = user?.profileBannerColor || "#7b39fc";
+  // Theme Banner Color (User preference, state, or default purple)
+  const themeBannerColor = user?.profileBannerColor || bannerColorState || "#7b39fc";
 
   // Active list for modal
   const activeFollowListUids = followModalTab === "followers" ? userFollowers : userFollowing;
@@ -186,16 +212,16 @@ export default function UserProfilePage() {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {/* EXPANDED PROFILE BANNER CARD WITH GUARANTEED DYNAMIC TEXTURED COLOR TINT */}
+              {/* EXPANDED PROFILE BANNER CARD WITH DYNAMIC BACKGROUND COLOR TINTING */}
               <div className="relative border border-white/15 rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.95)] p-8 sm:p-12 py-16 sm:py-20 text-center min-h-[580px] sm:min-h-[620px] flex flex-col items-center justify-between">
                 
                 {/* DYNAMIC TEXTURED MESH GRADIENT BACKGROUND */}
                 <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                  {/* Dynamic Base Gradient */}
+                  {/* Dynamic Base Gradient using themeBannerColor */}
                   <div
                     className="absolute inset-0 transition-colors duration-500"
                     style={{
-                      background: `radial-gradient(circle at 50% 30%, ${themeBannerColor}ee 0%, ${themeBannerColor}88 40%, ${themeBannerColor}33 75%, #080912 100%)`,
+                      background: `radial-gradient(circle at 50% 30%, ${themeBannerColor}ee 0%, ${themeBannerColor}99 40%, ${themeBannerColor}33 75%, #080912 100%)`,
                     }}
                   />
 
@@ -222,7 +248,7 @@ export default function UserProfilePage() {
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
-                {/* TOP RIGHT SHARE BUTTON (MATCHING KNOWT SCREENSHOT: CIRCLE WITH UPLOAD TRAY ICON) */}
+                {/* TOP RIGHT SHARE BUTTON */}
                 <button
                   type="button"
                   onClick={handleShareProfile}
@@ -232,16 +258,16 @@ export default function UserProfilePage() {
                   <Upload className="w-5 h-5 text-white stroke-[2.2]" />
                 </button>
 
-                {/* SCATTERED FLOATING STAT CAPSULES (SOFT PASTEL TINTED BACKGROUNDS WITH DARK BOLD TEXT MATCHING KNOWT SCREENSHOT 2) */}
+                {/* SCATTERED FLOATING STAT CAPSULES (ROTATED + PASTEL TINTED BACKGROUNDS + LARGER ICONS) */}
                 
                 {/* 1. XP Capsule (Top Left) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 left-12 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-extrabold text-sm shadow-xl -rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
+                  className="hidden md:flex absolute top-12 left-12 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-extrabold text-sm shadow-xl -rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-6 h-6 object-contain" />
+                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-7 h-7 object-contain" />
                   <span>{xp.toLocaleString()} XP</span>
                 </motion.div>
 
@@ -250,9 +276,9 @@ export default function UserProfilePage() {
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 left-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-extrabold text-sm shadow-xl rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
+                  className="hidden md:flex absolute top-48 left-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-extrabold text-sm shadow-xl rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-6 h-6" />
+                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-7 h-7" />
                   <span>{user.streakDays || 0} day Streak</span>
                 </motion.div>
 
@@ -261,9 +287,9 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-extrabold text-sm shadow-xl -rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
+                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-extrabold text-sm shadow-xl -rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-6 h-6 object-contain" />
+                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-7 h-7 object-contain" />
                   <span>{(user.credits || 0).toLocaleString()} Coins</span>
                 </motion.div>
 
@@ -272,18 +298,18 @@ export default function UserProfilePage() {
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 right-24 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-extrabold text-sm shadow-xl rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
+                  className="hidden md:flex absolute top-12 right-24 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-extrabold text-sm shadow-xl rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <Target className="w-5 h-5 text-[#115e59]" />
+                  <Target className="w-6 h-6 text-[#115e59]" />
                   <span>{accuracy}% Accuracy</span>
                 </motion.div>
 
-                {/* 5. Scholar Level Capsule (Middle Right - Actual User Level Badge!) */}
+                {/* 5. Scholar Level Capsule (Middle Right - CLEAN HEIGHT & ACTUAL USER LEVEL BADGE ONLY!) */}
                 <motion.div
                   initial={{ x: 10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 right-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-extrabold text-sm shadow-xl -rotate-5 hover:rotate-0 transition-transform cursor-default z-20"
+                  className="hidden md:flex absolute top-48 right-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-extrabold text-sm shadow-xl -rotate-5 hover:rotate-0 transition-transform cursor-default z-20"
                 >
                   <LevelBadge level={level} size="sm" />
                   <span>Level {level}</span>
@@ -294,9 +320,9 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-extrabold text-sm shadow-xl rotate-3 hover:rotate-0 transition-transform cursor-default z-20"
+                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-extrabold text-sm shadow-xl rotate-3 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <Clock className="w-5 h-5 text-[#075985]" />
+                  <Clock className="w-6 h-6 text-[#075985]" />
                   <span>{user.totalStudyMinutes || 45}m Study Time</span>
                 </motion.div>
 
@@ -324,18 +350,19 @@ export default function UserProfilePage() {
                       ) : (
                         <button
                           type="button"
+                          disabled={isTogglingFollow}
                           onClick={handleFollowToggle}
                           className={cn(
-                            "inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95",
+                            "inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95 disabled:opacity-50",
                             isFollowingThisUser
-                              ? "bg-white/15 hover:bg-red-500/20 border border-white/25 text-white hover:text-red-400"
+                              ? "bg-[#0c0e18] hover:bg-[#151724] border border-white/25 text-white"
                               : "bg-white text-black hover:bg-neutral-200"
                           )}
                         >
                           {isFollowingThisUser ? (
                             <>
-                              <UserCheck className="w-4 h-4 text-emerald-400" />
-                              <span>Following</span>
+                              <UserCheck className="w-4 h-4 text-white stroke-[2.5]" />
+                              <span className="text-white">Following</span>
                             </>
                           ) : (
                             <>
@@ -429,25 +456,30 @@ export default function UserProfilePage() {
         </main>
       </div>
 
-      {/* COPIED TO CLIPBOARD DARK MODE TOAST NOTIFICATION (EXACT MATCH FOR SCREENSHOT 1) */}
+      {/* COPIED TO CLIPBOARD DARK MODE TOAST NOTIFICATION (TOP CENTER WITH ANIMATED CHECKMARK!) */}
       <AnimatePresence>
         {showToast && (
           <motion.div
-            initial={{ opacity: 0, y: -20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            initial={{ opacity: 0, y: -30, x: "-50%", scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, x: "-50%", scale: 1 }}
+            exit={{ opacity: 0, y: -20, x: "-50%", scale: 0.9 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-8 left-8 sm:left-12 z-[999999] bg-[#0c0e18] border border-white/25 text-white px-5 py-3.5 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.95)] flex items-center gap-3 font-manrope font-extrabold text-base tracking-tight"
+            className="fixed top-8 left-1/2 -translate-x-1/2 z-[999999] bg-[#0c0e18] border border-white/25 text-white px-6 py-3.5 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.95)] flex items-center gap-3.5 font-manrope font-extrabold text-base tracking-tight"
           >
-            <div className="w-7 h-7 rounded-full bg-[#2dd4bf] text-black flex items-center justify-center shrink-0 shadow-md">
+            <motion.div
+              initial={{ scale: 0, rotate: -45 }}
+              animate={{ scale: 1, rotate: 0 }}
+              transition={{ type: "spring", stiffness: 450, damping: 16 }}
+              className="w-7 h-7 rounded-full bg-[#2dd4bf] text-black flex items-center justify-center shrink-0 shadow-md"
+            >
               <Check className="w-4 h-4 text-black stroke-[3.5]" />
-            </div>
+            </motion.div>
             <span className="text-white font-manrope font-extrabold text-base">Copied to clipboard!</span>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* FOLLOWERS / FOLLOWING MODAL */}
+      {/* FOLLOWERS / FOLLOWING MODAL (WITH ACCURATE USER PROFILE PICTURE, BADGE, AND LEVEL!) */}
       <AnimatePresence>
         {showFollowModal && (
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
@@ -504,13 +536,22 @@ export default function UserProfilePage() {
                   </div>
                 ) : (
                   activeFollowListUids.map((scholarUid) => {
-                    const scholarData = SCHOLAR_DIRECTORY[scholarUid] || {
-                      uid: scholarUid,
-                      name: scholarUid === "me" || scholarUid === currentUser?.uid ? (progress?.displayName || "You") : `Scholar (${scholarUid.slice(0, 6)})`,
-                      photoURL: "",
-                      level: 10,
-                      avatarFrame: "",
-                    };
+                    const isMe = scholarUid === "me" || scholarUid === currentUser?.uid || scholarUid === progress?.uid;
+                    const scholarData = isMe
+                      ? {
+                          uid: currentUser?.uid || progress?.uid || "me",
+                          name: progress?.displayName || currentUser?.displayName || "You",
+                          photoURL: progress?.photoURL || currentUser?.photoURL || "",
+                          level: progress?.level || level,
+                          avatarFrame: progress?.activeAvatarFrame || "",
+                        }
+                      : (SCHOLAR_DIRECTORY[scholarUid] || {
+                          uid: scholarUid,
+                          name: `Scholar (${scholarUid.slice(0, 6)})`,
+                          photoURL: "",
+                          level: 10,
+                          avatarFrame: "",
+                        });
 
                     return (
                       <div

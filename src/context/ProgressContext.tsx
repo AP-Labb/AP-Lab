@@ -1243,19 +1243,24 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
   };
 
   const toggleFollow = async (targetUid: string): Promise<boolean> => {
-    if (!progress.uid || progress.uid === targetUid) return false;
+    const myUid = currentUser?.uid || progress.uid || "me";
+    if (!myUid || myUid === targetUid) return false;
+
     const currentFollowing = progress.following || ["bot-1", "bot-2"];
     const isFollowing = currentFollowing.includes(targetUid);
     const newFollowing = isFollowing
       ? currentFollowing.filter((id) => id !== targetUid)
-      : [...currentFollowing, targetUid];
+      : Array.from(new Set([...currentFollowing, targetUid]));
 
     const updated = { ...progress, following: newFollowing };
     setProgress(updated);
 
-    if (currentUser) {
-      const localKey = `ap-lab-progress-${currentUser.uid}`;
-      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+    const localKey = currentUser?.uid ? `ap-lab-progress-${currentUser.uid}` : "ap-lab-progress-guest";
+    try {
+      localStorage.setItem(localKey, JSON.stringify(updated));
+    } catch (e) {}
+
+    if (currentUser?.uid) {
       setDoc(doc(db, "userProgress", currentUser.uid), {
         following: newFollowing
       }, { merge: true }).catch(() => {});

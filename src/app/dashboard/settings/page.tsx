@@ -96,9 +96,11 @@ export default function SettingsPage() {
 
   const handleBannerColorChange = (colorHex: string) => {
     setSelectedBannerColor(colorHex);
-    setHasModifiedColor(true);
     if (typeof window !== "undefined") {
-      try { localStorage.setItem("aplab-banner-color", colorHex); } catch (e) {}
+      try {
+        localStorage.setItem("ap-lab-banner-color", colorHex);
+        window.dispatchEvent(new CustomEvent("profile-banner-color-changed", { detail: colorHex }));
+      } catch (e) {}
     }
     if (updatePreferences) {
       updatePreferences({ profileBannerColor: colorHex });
