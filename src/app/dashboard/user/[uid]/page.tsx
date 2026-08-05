@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Trophy, Zap, Target, Clock, Flame, CheckCircle, User,
-  MapPin, Calendar, Edit3, UserPlus, UserCheck, X, Share2
+  MapPin, Calendar, Edit3, UserPlus, UserCheck, X, Share2, Upload, Check
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -222,14 +222,14 @@ export default function UserProfilePage() {
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
-                {/* TOP RIGHT SHARE BUTTON */}
+                {/* TOP RIGHT SHARE BUTTON (MATCHING KNOWT SCREENSHOT: CIRCLE WITH UPLOAD TRAY ICON) */}
                 <button
                   type="button"
                   onClick={handleShareProfile}
-                  className="absolute top-8 right-8 z-30 w-11 h-11 rounded-full bg-black/20 hover:bg-black/40 border border-white/25 text-white flex items-center justify-center transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95"
+                  className="absolute top-8 right-8 z-30 w-11 h-11 rounded-full bg-black/20 hover:bg-black/40 border border-white/30 text-white flex items-center justify-center transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95"
                   title="Share Profile Link"
                 >
-                  <Share2 className="w-5 h-5 text-white" />
+                  <Upload className="w-5 h-5 text-white stroke-[2.2]" />
                 </button>
 
                 {/* SCATTERED FLOATING STAT CAPSULES (SOFT PASTEL TINTED BACKGROUNDS WITH DARK BOLD TEXT MATCHING KNOWT SCREENSHOT 2) */}
@@ -429,20 +429,20 @@ export default function UserProfilePage() {
         </main>
       </div>
 
-      {/* COPIED TO CLIPBOARD DARK MODE TOAST NOTIFICATION (MATCHING SCREENSHOT 1!) */}
+      {/* COPIED TO CLIPBOARD DARK MODE TOAST NOTIFICATION (EXACT MATCH FOR SCREENSHOT 1) */}
       <AnimatePresence>
         {showToast && (
           <motion.div
             initial={{ opacity: 0, y: -20, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.9 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="fixed top-8 left-1/2 -translate-x-1/2 z-[999999] bg-[#0e101a] border border-white/20 text-white px-6 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] flex items-center gap-3 font-manrope font-extrabold text-sm"
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed top-8 left-8 sm:left-12 z-[999999] bg-[#0c0e18] border border-white/25 text-white px-5 py-3.5 rounded-2xl shadow-[0_24px_60px_rgba(0,0,0,0.95)] flex items-center gap-3 font-manrope font-extrabold text-base tracking-tight"
           >
-            <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-              <CheckCircle className="w-4 h-4 stroke-[3]" />
+            <div className="w-7 h-7 rounded-full bg-[#2dd4bf] text-black flex items-center justify-center shrink-0 shadow-md">
+              <Check className="w-4 h-4 text-black stroke-[3.5]" />
             </div>
-            <span>Copied to clipboard!</span>
+            <span className="text-white font-manrope font-extrabold text-base">Copied to clipboard!</span>
           </motion.div>
         )}
       </AnimatePresence>
