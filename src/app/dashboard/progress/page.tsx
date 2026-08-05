@@ -23,6 +23,7 @@ import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { AppSidebar } from "@/components/AppSidebar";
+import { StreakFlameIcon } from "@/components/StreakFlameIcon";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import { UserDisplayName } from "@/components/UserDisplayName";
 
@@ -506,7 +507,7 @@ export default function ProgressPage() {
                   animate={streakStyle.animateProps as any}
                   className="flex items-center justify-center w-16 h-16 mb-2"
                 >
-                  <Flame className={`w-10 h-10 ${streakStyle.flameColor}`} />
+                  <StreakFlameIcon streakCount={streakCount} sizeClassName="w-12 h-12" />
                 </motion.div>
                 <div className="font-instrument text-3xl font-extrabold text-white">
                   {streakCount} <span className="text-xs font-manrope font-bold text-white/50 uppercase tracking-widest">Days</span>

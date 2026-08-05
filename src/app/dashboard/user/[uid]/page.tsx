@@ -18,6 +18,7 @@ import { SettingsModal } from "@/components/SettingsModal";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { getXpThresholdForLevel } from "@/lib/xpProgression";
+import { StreakFlameIcon } from "@/components/StreakFlameIcon";
 
 const COURSE_META: Record<string, { name: string; accentColor: string; emoji: string; category: string }> = {
   "ap-biology":    { name: "AP® Biology",          accentColor: "#22c55e", emoji: "🧬", category: "Science" },
@@ -276,7 +277,9 @@ export default function UserProfilePage() {
                   >
                     <div className="flex items-center justify-between text-white/40">
                       <span className="text-[10px] font-mono font-bold tracking-widest uppercase">{item.label}</span>
-                      {item.img ? (
+                      {item.label === "STREAK" ? (
+                        <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-5 h-5" />
+                      ) : item.img ? (
                         <img src={item.img} alt={item.label} className="w-5 h-5 object-contain" />
                       ) : (
                         <item.icon className={`w-4 h-4 ${item.color}`} />

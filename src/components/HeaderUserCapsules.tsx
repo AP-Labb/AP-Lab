@@ -13,6 +13,7 @@ import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { cn } from "@/lib/utils";
 
 import { ActiveBoostHUD } from "@/components/ActiveBoostHUD";
+import { StreakFlameIcon } from "@/components/StreakFlameIcon";
 
 interface HeaderUserCapsulesProps {
   onOpenProfile?: () => void;
@@ -94,10 +95,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
             )}
             title={`${streak} Day Study Streak`}
           >
-            <Flame className={cn(
-              "w-6 h-6 transition-transform",
-              hasStreak ? "text-orange-400 fill-orange-400" : "text-white/40 fill-white/40"
-            )} />
+            <StreakFlameIcon streakCount={streak} sizeClassName="w-6 h-6" />
             <span className="font-manrope font-extrabold text-lg leading-none">
               {streak}
             </span>
@@ -118,7 +116,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
               >
                 {/* Large Flame Icon + Streak Count */}
                 <div className="flex items-center justify-center space-x-2 mb-2">
-                  <Flame className={cn("w-9 h-9", hasStreak ? "text-orange-400 fill-orange-400" : "text-white/40 fill-white/40")} />
+                  <StreakFlameIcon streakCount={streak} sizeClassName="w-9 h-9" />
                   <span className="font-manrope font-extrabold text-4xl text-white">{streak}</span>
                 </div>
 
