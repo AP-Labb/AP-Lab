@@ -6,7 +6,7 @@ import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Trophy, Zap, Target, Clock, Flame, CheckCircle, User,
-  MapPin, Calendar, Edit3, UserPlus, UserCheck, X, Award
+  MapPin, Calendar, Edit3, UserPlus, UserCheck, X, Share2
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -60,6 +60,7 @@ export default function UserProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [showToast, setShowToast] = useState(false);
 
   // Followers / Following Modal state
   const [showFollowModal, setShowFollowModal] = useState(false);
@@ -112,7 +113,6 @@ export default function UserProfilePage() {
 
   const user = liveProfile || profile;
 
-  // Follow state for current user vs target user
   const userFollowers = user?.followers || ["bot-1", "bot-2", "bot-3", "bot-5"];
   const userFollowing = user?.following || ["bot-1", "bot-2"];
 
@@ -132,6 +132,14 @@ export default function UserProfilePage() {
     });
   };
 
+  const handleShareProfile = () => {
+    if (typeof window !== "undefined") {
+      navigator.clipboard.writeText(window.location.href);
+      setShowToast(true);
+      setTimeout(() => setShowToast(false), 2500);
+    }
+  };
+
   const openFollowModal = (tab: "followers" | "following") => {
     setFollowModalTab(tab);
     setShowFollowModal(true);
@@ -143,6 +151,8 @@ export default function UserProfilePage() {
   const totalCorrect = user?.totalQuestionsCorrect || 0;
   const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
   const username = (user?.email || "scholar@aplab.com").split("@")[0].toLowerCase();
+  
+  // Theme Banner Color (User preference or default primary purple)
   const themeBannerColor = user?.profileBannerColor || "#7b39fc";
 
   // Active list for modal
@@ -161,7 +171,7 @@ export default function UserProfilePage() {
         <main className="max-w-5xl mx-auto w-full px-4 sm:px-6 py-8 pb-24 space-y-6">
           {loading ? (
             <div className="space-y-6 animate-pulse">
-              <div className="h-96 bg-white/[0.03] rounded-3xl border border-white/5" />
+              <div className="h-[600px] bg-white/[0.03] rounded-3xl border border-white/5" />
             </div>
           ) : notFound ? (
             <div className="text-center py-24 border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
@@ -176,43 +186,60 @@ export default function UserProfilePage() {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {/* KNOWT-STYLE PROFILE BANNER CARD WITH DYNAMIC TEXTURED GRADIENT */}
-              <div className="relative bg-[#0e101a] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.9)] p-8 sm:p-12 text-center min-h-[460px] flex flex-col items-center justify-between">
+              {/* EXPANDED PROFILE BANNER CARD WITH GUARANTEED DYNAMIC TEXTURED COLOR TINT */}
+              <div className="relative border border-white/15 rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.95)] p-8 sm:p-12 py-16 sm:py-20 text-center min-h-[580px] sm:min-h-[620px] flex flex-col items-center justify-between">
                 
-                {/* DYNAMIC TEXTURED MESH GRADIENT BACKGROUND WITH NOISE OVERLAY */}
+                {/* DYNAMIC TEXTURED MESH GRADIENT BACKGROUND */}
                 <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
-                  {/* Base dynamic mesh gradient */}
+                  {/* Dynamic Base Gradient */}
                   <div
-                    className="absolute inset-0 transition-all duration-700"
+                    className="absolute inset-0 transition-colors duration-500"
                     style={{
-                      background: `radial-gradient(circle at 15% 20%, ${themeBannerColor}ff 0%, ${themeBannerColor}bb 35%, ${themeBannerColor}44 70%, #080912 100%)`,
+                      background: `radial-gradient(circle at 50% 30%, ${themeBannerColor}ee 0%, ${themeBannerColor}88 40%, ${themeBannerColor}33 75%, #080912 100%)`,
                     }}
                   />
-                  {/* Secondary color accent mesh */}
+
+                  {/* Ambient Glow Orbs */}
                   <div
-                    className="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full blur-[100px] opacity-60 transition-all duration-700 pointer-events-none"
+                    className="absolute top-10 left-10 w-96 h-96 rounded-full blur-[110px] opacity-70 transition-colors duration-500 pointer-events-none"
                     style={{ backgroundColor: themeBannerColor }}
                   />
+                  <div
+                    className="absolute bottom-10 right-10 w-96 h-96 rounded-full blur-[110px] opacity-70 transition-colors duration-500 pointer-events-none"
+                    style={{ backgroundColor: themeBannerColor }}
+                  />
+
                   {/* SVG Grain Noise Overlay */}
-                  <svg className="absolute inset-0 w-full h-full opacity-35 mix-blend-overlay pointer-events-none">
-                    <filter id="profileNoiseFilter">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+                  <svg className="absolute inset-0 w-full h-full opacity-30 mix-blend-overlay pointer-events-none">
+                    <filter id="profileNoiseFilterExpanded">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.75" numOctaves="3" stitchTiles="stitch" />
                       <feColorMatrix type="saturate" values="0" />
                     </filter>
-                    <rect width="100%" height="100%" filter="url(#profileNoiseFilter)" />
+                    <rect width="100%" height="100%" filter="url(#profileNoiseFilterExpanded)" />
                   </svg>
-                  {/* Dark Vignette Bottom Gradient */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e101a] via-transparent to-black/20 pointer-events-none" />
+
+                  {/* Soft Gradient Overlay for Depth */}
+                  <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/60 pointer-events-none" />
                 </div>
 
-                {/* SCATTERED FLOATING STAT CAPSULES (ROTATED AROUND BANNER LIKE KNOWT SCREENSHOT 1) */}
+                {/* TOP RIGHT SHARE BUTTON */}
+                <button
+                  type="button"
+                  onClick={handleShareProfile}
+                  className="absolute top-8 right-8 z-30 w-11 h-11 rounded-full bg-black/20 hover:bg-black/40 border border-white/25 text-white flex items-center justify-center transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95"
+                  title="Share Profile Link"
+                >
+                  <Share2 className="w-5 h-5 text-white" />
+                </button>
+
+                {/* SCATTERED FLOATING STAT CAPSULES (SOFT PASTEL TINTED BACKGROUNDS WITH DARK BOLD TEXT MATCHING KNOWT SCREENSHOT 2) */}
                 
                 {/* 1. XP Capsule (Top Left) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-10 left-10 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl -rotate-6 hover:rotate-0 transition-transform cursor-default z-10"
+                  className="hidden md:flex absolute top-12 left-12 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-extrabold text-sm shadow-xl -rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
                 >
                   <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-6 h-6 object-contain" />
                   <span>{xp.toLocaleString()} XP</span>
@@ -223,7 +250,7 @@ export default function UserProfilePage() {
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-36 left-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl rotate-4 hover:rotate-0 transition-transform cursor-default z-10"
+                  className="hidden md:flex absolute top-48 left-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-extrabold text-sm shadow-xl rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
                 >
                   <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-6 h-6" />
                   <span>{user.streakDays || 0} day Streak</span>
@@ -234,7 +261,7 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-12 left-12 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl -rotate-4 hover:rotate-0 transition-transform cursor-default z-10"
+                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-extrabold text-sm shadow-xl -rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
                 >
                   <img src="/images/coin-zoomed.png" alt="Coins" className="w-6 h-6 object-contain" />
                   <span>{(user.credits || 0).toLocaleString()} Coins</span>
@@ -245,37 +272,37 @@ export default function UserProfilePage() {
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-10 right-10 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl rotate-6 hover:rotate-0 transition-transform cursor-default z-10"
+                  className="hidden md:flex absolute top-12 right-24 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-extrabold text-sm shadow-xl rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <Target className="w-5 h-5 text-emerald-300" />
+                  <Target className="w-5 h-5 text-[#115e59]" />
                   <span>{accuracy}% Accuracy</span>
                 </motion.div>
 
-                {/* 5. Scholar Level Capsule (Middle Right) */}
+                {/* 5. Scholar Level Capsule (Middle Right - Actual User Level Badge!) */}
                 <motion.div
                   initial={{ x: 10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-36 right-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl -rotate-5 hover:rotate-0 transition-transform cursor-default z-10"
+                  className="hidden md:flex absolute top-48 right-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-extrabold text-sm shadow-xl -rotate-5 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <Award className="w-5 h-5 text-purple-300" />
+                  <LevelBadge level={level} size="sm" />
                   <span>Level {level}</span>
                 </motion.div>
 
-                {/* 6. Time Spent Capsule (Bottom Right - Replaced Courses!) */}
+                {/* 6. Time Spent Capsule (Bottom Right) */}
                 <motion.div
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-12 right-12 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl rotate-3 hover:rotate-0 transition-transform cursor-default z-10"
+                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-2.5 px-5 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-extrabold text-sm shadow-xl rotate-3 hover:rotate-0 transition-transform cursor-default z-20"
                 >
-                  <Clock className="w-5 h-5 text-blue-300" />
+                  <Clock className="w-5 h-5 text-[#075985]" />
                   <span>{user.totalStudyMinutes || 45}m Study Time</span>
                 </motion.div>
 
-                {/* CENTERED AVATAR & USER PROFILE DETAILS (MATCHING KNOWT SCREENSHOT 1) */}
+                {/* CENTERED AVATAR & USER DETAILS */}
                 <div className="relative z-20 flex flex-col items-center justify-center space-y-4 my-auto">
-                  {/* Large Centered Avatar with Edit Profile Button Attached Below */}
+                  {/* Large Centered Avatar with Edit Profile Button Below */}
                   <div className="relative flex flex-col items-center">
                     <UserAvatar
                       photoURL={user.photoURL}
@@ -284,12 +311,12 @@ export default function UserProfilePage() {
                       size="xl"
                     />
 
-                    {/* Edit Profile / Follow Button Centered Directly Below Avatar (Matching Knowt Screenshot 1!) */}
-                    <div className="mt-3">
+                    {/* Edit Profile / Follow Button Centered Directly Below Avatar */}
+                    <div className="mt-3.5">
                       {isOwnProfile ? (
                         <Link
                           href="/dashboard/settings?tab=account"
-                          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#141624] hover:bg-[#1a1d30] border border-white/20 text-white font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95"
+                          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#0e101a] hover:bg-[#151726] border border-white/25 text-white font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95"
                         >
                           <Edit3 className="w-3.5 h-3.5 text-white stroke-[2.5]" />
                           <span className="text-white">Edit Profile</span>
@@ -299,9 +326,9 @@ export default function UserProfilePage() {
                           type="button"
                           onClick={handleFollowToggle}
                           className={cn(
-                            "inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95",
+                            "inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-xl hover:scale-105 active:scale-95",
                             isFollowingThisUser
-                              ? "bg-white/15 hover:bg-red-500/20 border border-white/20 text-white hover:text-red-400"
+                              ? "bg-white/15 hover:bg-red-500/20 border border-white/25 text-white hover:text-red-400"
                               : "bg-white text-black hover:bg-neutral-200"
                           )}
                         >
@@ -321,24 +348,20 @@ export default function UserProfilePage() {
                     </div>
                   </div>
 
-                  {/* Centered User Display Name & Username Metadata */}
-                  <div className="space-y-1 text-center">
+                  {/* Centered User Display Name & Metadata (White MapPin Icon & Country Displayed!) */}
+                  <div className="space-y-1.5 text-center">
                     <UserDisplayName
                       name={user.displayName}
                       activeNameColor={user.activeNameColor}
                       className="font-manrope font-black text-3xl sm:text-4xl text-white tracking-tight leading-none drop-shadow-md"
                     />
-                    <div className="flex items-center justify-center gap-2 text-xs font-mono text-white/60">
+                    <div className="flex items-center justify-center gap-2 text-xs font-mono text-white/70">
                       <span>@{username}</span>
-                      {user.location && user.location.trim() !== "" && (
-                        <>
-                          <span>•</span>
-                          <span className="flex items-center gap-1">
-                            <MapPin className="w-3 h-3 text-violet-300" />
-                            {user.location}
-                          </span>
-                        </>
-                      )}
+                      <span>•</span>
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3.5 h-3.5 text-white shrink-0" />
+                        <span>{user.location && user.location.trim() !== "" ? user.location : "N/A"}</span>
+                      </span>
                       <span>•</span>
                       <span className="text-emerald-300 font-bold">Class of {user.graduationYear || "2028"}</span>
                     </div>
@@ -346,17 +369,17 @@ export default function UserProfilePage() {
 
                   {/* Bio Quote (if present) */}
                   {user.bio && user.bio.trim() !== "" && (
-                    <p className="text-xs text-white/80 font-manrope max-w-md mx-auto leading-relaxed italic bg-black/20 px-4 py-2 rounded-2xl border border-white/10 backdrop-blur-sm">
+                    <p className="text-xs text-white/90 font-manrope max-w-md mx-auto leading-relaxed italic bg-black/30 px-5 py-2.5 rounded-2xl border border-white/15 backdrop-blur-sm shadow-md">
                       "{user.bio}"
                     </p>
                   )}
 
-                  {/* Followers / Following / Badges Centered Pill Capsules (Matching Knowt Screenshot 1!) */}
-                  <div className="flex items-center justify-center gap-2.5 pt-2">
+                  {/* Followers & Following Centered Pill Capsules */}
+                  <div className="flex items-center justify-center gap-3 pt-2">
                     <button
                       type="button"
                       onClick={() => openFollowModal("followers")}
-                      className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-manrope font-bold transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+                      className="px-6 py-2.5 rounded-full bg-black/25 hover:bg-black/40 border border-white/20 text-white text-xs font-manrope font-bold transition-all cursor-pointer shadow-lg flex items-center gap-1.5 hover:scale-105"
                     >
                       <span className="font-extrabold font-mono text-white">{userFollowers.length}</span>
                       <span className="text-white/70">Followers</span>
@@ -365,43 +388,38 @@ export default function UserProfilePage() {
                     <button
                       type="button"
                       onClick={() => openFollowModal("following")}
-                      className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-manrope font-bold transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+                      className="px-6 py-2.5 rounded-full bg-black/25 hover:bg-black/40 border border-white/20 text-white text-xs font-manrope font-bold transition-all cursor-pointer shadow-lg flex items-center gap-1.5 hover:scale-105"
                     >
                       <span className="font-extrabold font-mono text-white">{userFollowing.length}</span>
                       <span className="text-white/70">Following</span>
                     </button>
-
-                    <div className="px-5 py-2 rounded-full bg-white/10 border border-white/15 text-white text-xs font-manrope font-bold shadow-md flex items-center gap-1.5">
-                      <span className="font-extrabold font-mono text-amber-300">15</span>
-                      <span className="text-white/70">Badges</span>
-                    </div>
                   </div>
                 </div>
 
                 {/* MOBILE STATS CAPSULES (Visible on mobile screens) */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full md:hidden relative z-20 pt-4 border-t border-white/10">
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full md:hidden relative z-20 pt-6 border-t border-white/15">
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#f3e8ff] border border-purple-300 text-xs font-extrabold text-[#581c87]">
                     <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 object-contain" />
                     <span>{xp.toLocaleString()} XP</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#fef3c7] border border-amber-300 text-xs font-extrabold text-[#78350f]">
                     <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-5 h-5" />
                     <span>{user.streakDays || 0}d Streak</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#fef08a] border border-yellow-300 text-xs font-extrabold text-[#713f12]">
                     <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
                     <span>{(user.credits || 0).toLocaleString()} Coins</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
-                    <Target className="w-4 h-4 text-emerald-300" />
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#ccfbf1] border border-teal-300 text-xs font-extrabold text-[#115e59]">
+                    <Target className="w-4 h-4 text-[#115e59]" />
                     <span>{accuracy}% Accuracy</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
-                    <Award className="w-4 h-4 text-purple-300" />
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#e0e7ff] border border-indigo-300 text-xs font-extrabold text-[#3730a3]">
+                    <LevelBadge level={level} size="sm" />
                     <span>Level {level}</span>
                   </div>
-                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
-                    <Clock className="w-4 h-4 text-blue-300" />
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#e0f2fe] border border-sky-300 text-xs font-extrabold text-[#075985]">
+                    <Clock className="w-4 h-4 text-[#075985]" />
                     <span>{user.totalStudyMinutes || 45}m Study</span>
                   </div>
                 </div>
@@ -411,7 +429,25 @@ export default function UserProfilePage() {
         </main>
       </div>
 
-      {/* FOLLOWERS / FOLLOWING MODAL (Matching Knowt Screenshot) */}
+      {/* COPIED TO CLIPBOARD DARK MODE TOAST NOTIFICATION (MATCHING SCREENSHOT 1!) */}
+      <AnimatePresence>
+        {showToast && (
+          <motion.div
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.9 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="fixed top-8 left-1/2 -translate-x-1/2 z-[999999] bg-[#0e101a] border border-white/20 text-white px-6 py-3.5 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] flex items-center gap-3 font-manrope font-extrabold text-sm"
+          >
+            <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+              <CheckCircle className="w-4 h-4 stroke-[3]" />
+            </div>
+            <span>Copied to clipboard!</span>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* FOLLOWERS / FOLLOWING MODAL */}
       <AnimatePresence>
         {showFollowModal && (
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">

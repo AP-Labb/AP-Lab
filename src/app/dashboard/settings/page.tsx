@@ -29,8 +29,7 @@ const BANNER_COLORS = [
   { id: "#6366f1", name: "Indigo", hex: "#6366f1" },
   { id: "#7b39fc", name: "Primary Purple", hex: "#7b39fc" },
   { id: "#ec4899", name: "Magenta", hex: "#ec4899" },
-  { id: "#f43f5e", name: "Rose", hex: "#f43f5e" },
-  { id: "#090a12", name: "Obsidian", hex: "#090a12" },
+  { id: "#1e202e", name: "Obsidian", hex: "#1e202e" },
 ];
 
 const GRADUATION_YEARS = ["2024", "2025", "2026", "2027", "2028", "2029", "2030", "Other"];
