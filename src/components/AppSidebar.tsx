@@ -249,7 +249,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -12, scale: 0.97 }}
                   transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  className="fixed bottom-6 left-[72px] w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[99999] text-left text-white flex flex-col space-y-0.5"
+                  className="fixed bottom-6 left-[64px] w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5"
                 >
                   {/* User header in menu */}
                   <div className="flex items-center gap-3 px-3 py-3 mb-1">
@@ -284,16 +284,14 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   </button>
 
                   {/* 2. My Profile */}
-                  <button
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      setShowProgressProfile(true);
-                    }}
+                  <Link
+                    href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
+                    onClick={() => setShowProfileMenu(false)}
                     className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
                     <User className="w-4 h-4 text-white/50" />
                     <span>My Profile</span>
-                  </button>
+                  </Link>
 
                   {/* 3. My Inventory */}
                   <button

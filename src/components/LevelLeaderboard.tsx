@@ -2,13 +2,14 @@
 
 import React, { useEffect, useState } from "react";
 import { LevelBadge } from "@/components/LevelBadge";
-import { Trophy, Crown, Award, User, MoreHorizontal } from "lucide-react";
+import { Trophy, Crown, Award, User, MoreHorizontal, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
 import { UserAvatar } from "@/components/UserAvatar";
 import { UserDisplayName } from "@/components/UserDisplayName";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface LeaderboardUser {
   uid: string;
@@ -20,6 +21,9 @@ interface LeaderboardUser {
   activeNameGradient?: string;
   activeNameColor?: string;
 }
+
+const isBot = (uid: string) =>
+  uid.startsWith("bot-") || uid.startsWith("placeholder-");
 
 export function LevelLeaderboard() {
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
@@ -49,54 +53,18 @@ export function LevelLeaderboard() {
 
   useEffect(() => {
     fetchLeaderboard(users.length === 0);
-    // Poll every 10 seconds to keep it fresh
     const interval = setInterval(() => fetchLeaderboard(false), 10000);
     return () => clearInterval(interval);
   }, [progress?.uid, progress?.xp, progress?.photoURL, progress?.displayName, currentUser?.uid]);
 
-  const getRankStyle = (index: number) => {
-    switch (index) {
-      case 0:
-        return {
-          rowClass: "bg-gradient-to-r from-yellow-500/10 via-amber-500/5 to-transparent border-amber-500/30",
-          medalColor: "text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.5)]",
-          glowClass: "shadow-[0_0_20px_rgba(245,158,11,0.15)]",
-          icon: <Crown className="w-5 h-5 text-amber-400 fill-amber-400 animate-bounce" />,
-        };
-      case 1:
-        return {
-          rowClass: "bg-gradient-to-r from-slate-300/10 via-slate-400/5 to-transparent border-slate-300/30",
-          medalColor: "text-slate-300 drop-shadow-[0_0_8px_rgba(203,213,225,0.4)]",
-          glowClass: "shadow-[0_0_15px_rgba(203,213,225,0.1)]",
-          icon: <Trophy className="w-5 h-5 text-slate-300 fill-slate-300" />,
-        };
-      case 2:
-        return {
-          rowClass: "bg-gradient-to-r from-amber-750/10 via-amber-800/5 to-transparent border-amber-800/30",
-          medalColor: "text-amber-700 drop-shadow-[0_0_8px_rgba(180,83,9,0.4)]",
-          glowClass: "shadow-[0_0_15px_rgba(180,83,9,0.1)]",
-          icon: <Award className="w-5 h-5 text-amber-700 fill-amber-700" />,
-        };
-      default:
-        return {
-          rowClass: "bg-white/[0.01] border-white/5 hover:bg-white/[0.02]",
-          medalColor: "text-white/40",
-          glowClass: "",
-          icon: null,
-        };
-    }
-  };
-
-  const top10 = users.slice(0, 10);
   const activeUid = progress?.uid || currentUser?.uid || "current-user";
-  
+
   let currentUserIndex = users.findIndex((u) => u.uid === activeUid);
   let currentUserObj: LeaderboardUser;
 
   if (currentUserIndex !== -1) {
     currentUserObj = users[currentUserIndex];
   } else {
-    // Calculate user position based on XP
     const userXp = progress?.xp || 0;
     const rankAbove = users.filter((u) => (u.xp || 0) > userXp).length;
     currentUserIndex = rankAbove;
@@ -112,11 +80,79 @@ export function LevelLeaderboard() {
   }
 
   const isUserInTop10 = currentUserIndex < 10;
+  const top3 = users.slice(0, 3);
+  const rest = users.slice(3, 10);
+
+  // Podium order: 2nd, 1st, 3rd
+  const podiumOrder = [top3[1], top3[0], top3[2]];
+  const podiumRanks = [1, 0, 2]; // actual rank indices for each podium position
+
+  const podiumConfig = [
+    {
+      height: "h-24",
+      labelHeight: "pt-24",
+      color: "#c0c0c0",
+      bgGlow: "from-slate-300/10",
+      borderColor: "border-slate-300/20",
+      badgeClass: "bg-slate-300/10 text-slate-200 border-slate-300/30",
+      icon: <Trophy className="w-4 h-4" />,
+      rankLabel: "#2",
+      avatarSize: "w-16 h-16" as const,
+      zOffset: -1,
+    },
+    {
+      height: "h-36",
+      labelHeight: "pt-36",
+      color: "#f59e0b",
+      bgGlow: "from-amber-400/15",
+      borderColor: "border-amber-400/30",
+      badgeClass: "bg-amber-400/15 text-amber-300 border-amber-400/30",
+      icon: <Crown className="w-5 h-5 fill-amber-400" />,
+      rankLabel: "#1",
+      avatarSize: "w-20 h-20" as const,
+      zOffset: 0,
+    },
+    {
+      height: "h-16",
+      labelHeight: "pt-16",
+      color: "#cd7f32",
+      bgGlow: "from-amber-700/10",
+      borderColor: "border-amber-700/20",
+      badgeClass: "bg-amber-700/10 text-amber-600 border-amber-700/20",
+      icon: <Award className="w-4 h-4" />,
+      rankLabel: "#3",
+      avatarSize: "w-14 h-14" as const,
+      zOffset: -1,
+    },
+  ];
+
+  const renderNameGradient = (user: LeaderboardUser, isCurrent: boolean) => {
+    const grad = isCurrent ? progress?.activeNameGradient : user.activeNameGradient;
+    const nameColor = isCurrent ? (progress?.activeNameColor || user.activeNameColor) : user.activeNameColor;
+    return (
+      <UserDisplayName
+        name={user.displayName || "AP Scholar"}
+        activeNameColor={nameColor}
+        className={cn(
+          "font-extrabold text-sm",
+          isCurrent && grad === "grad-fire" && "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent",
+          isCurrent && grad === "grad-ocean" && "bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent",
+          isCurrent && grad === "grad-gold" && "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-600 bg-clip-text text-transparent",
+          isCurrent && grad === "grad-holographic" && "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent"
+        )}
+      />
+    );
+  };
 
   const renderRow = (user: LeaderboardUser, actualRankIndex: number, isCurrentUser: boolean) => {
-    const rankInfo = getRankStyle(actualRankIndex);
     const activeFrame = isCurrentUser ? (progress?.activeAvatarFrame || user.activeAvatarFrame) : user.activeAvatarFrame;
-    const activeNameColor = isCurrentUser ? (progress?.activeNameColor || user.activeNameColor) : user.activeNameColor;
+    const showProfileLink = !isBot(user.uid);
+
+    const rankColors = [
+      "text-amber-400",
+      "text-slate-300",
+      "text-amber-700",
+    ];
 
     return (
       <motion.div
@@ -125,64 +161,63 @@ export function LevelLeaderboard() {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: -10 }}
         className={cn(
-          "flex items-center justify-between p-4 md:px-6 rounded-2xl border transition-all duration-300 select-none",
-          rankInfo.rowClass,
-          rankInfo.glowClass,
-          isCurrentUser && "ring-2 ring-emerald-500/50 bg-emerald-500/10 border-emerald-500/40"
+          "flex items-center justify-between p-4 md:px-5 rounded-2xl border transition-all duration-300 select-none",
+          actualRankIndex === 0 && "bg-gradient-to-r from-amber-500/8 to-transparent border-amber-500/20",
+          actualRankIndex === 1 && "bg-gradient-to-r from-slate-300/8 to-transparent border-slate-300/20",
+          actualRankIndex === 2 && "bg-gradient-to-r from-amber-800/8 to-transparent border-amber-800/20",
+          actualRankIndex >= 3 && "bg-white/[0.01] border-white/[0.05] hover:bg-white/[0.025]",
+          isCurrentUser && "ring-1 ring-emerald-500/40 bg-emerald-500/5 border-emerald-500/30"
         )}
       >
         <div className="flex items-center space-x-4">
-          {/* Rank Indicator */}
-          <div className="w-8 flex items-center justify-center shrink-0">
-            {rankInfo.icon ? (
-              rankInfo.icon
-            ) : (
-              <span className="font-mono text-xs sm:text-sm font-bold text-white/50">
-                #{actualRankIndex + 1}
-              </span>
-            )}
+          {/* Rank */}
+          <div className="w-7 flex items-center justify-center shrink-0">
+            <span className={cn(
+              "font-mono text-sm font-bold",
+              actualRankIndex < 3 ? rankColors[actualRankIndex] : "text-white/35"
+            )}>
+              #{actualRankIndex + 1}
+            </span>
           </div>
 
-          {/* Avatar with equipped active frame & accessories */}
-          <UserAvatar 
-            photoURL={user.photoURL} 
-            name={user.displayName} 
-            activeFrame={activeFrame} 
-            size="md" 
+          <UserAvatar
+            photoURL={user.photoURL}
+            name={user.displayName}
+            activeFrame={activeFrame}
+            size="md"
           />
 
-          {/* User Name & Level Badge */}
-          <div className="flex flex-col md:flex-row md:items-center space-y-1.5 md:space-y-0 md:space-x-3">
-            <span className="font-manrope font-bold text-white text-sm md:text-base leading-tight flex items-center gap-2">
-              <UserDisplayName 
-                name={user.displayName || "AP Scholar"} 
-                activeNameColor={activeNameColor} 
-                className={cn(
-                  "font-extrabold text-sm md:text-base",
-                  isCurrentUser && progress?.activeNameGradient === "grad-fire" && "bg-gradient-to-r from-red-500 via-orange-400 to-amber-300 bg-clip-text text-transparent",
-                  isCurrentUser && progress?.activeNameGradient === "grad-ocean" && "bg-gradient-to-r from-cyan-400 via-teal-300 to-blue-500 bg-clip-text text-transparent",
-                  isCurrentUser && progress?.activeNameGradient === "grad-gold" && "bg-gradient-to-r from-yellow-300 via-amber-400 to-yellow-600 bg-clip-text text-transparent",
-                  isCurrentUser && progress?.activeNameGradient === "grad-holographic" && "bg-gradient-to-r from-pink-500 via-purple-400 via-cyan-400 to-emerald-400 bg-clip-text text-transparent animate-pulse"
-                )}
-              />
+          <div className="flex flex-col md:flex-row md:items-center gap-1.5 md:gap-3">
+            <div className="flex items-center gap-2">
+              {renderNameGradient(user, isCurrentUser)}
               {isCurrentUser && (
-                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 border border-emerald-500/35 text-[9px] font-manrope font-black tracking-widest uppercase">
+                <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/15 text-emerald-400 border border-emerald-500/25 text-[9px] font-black tracking-widest uppercase">
                   YOU
                 </span>
               )}
-            </span>
+            </div>
             <LevelBadge level={user.level || 1} />
           </div>
         </div>
 
-        {/* XP display */}
-        <div className="text-right">
-          <span className="font-instrument italic font-bold text-base md:text-xl text-white block">
-            {user.xp?.toLocaleString()}
-          </span>
-          <span className="text-[9px] font-mono font-bold text-white/30 uppercase tracking-widest block">
-            TOTAL XP
-          </span>
+        <div className="flex items-center gap-4">
+          <div className="text-right">
+            <span className="font-instrument italic font-bold text-base md:text-lg text-white block">
+              {user.xp?.toLocaleString()}
+            </span>
+            <span className="text-[9px] font-mono font-bold text-white/25 uppercase tracking-widest block">
+              XP
+            </span>
+          </div>
+          {showProfileLink && (
+            <Link
+              href={`/dashboard/user/${user.uid}`}
+              className="flex items-center justify-center w-8 h-8 rounded-xl bg-white/[0.05] border border-white/[0.08] hover:bg-white/10 hover:border-white/20 transition-all flex-shrink-0"
+              title="View Profile"
+            >
+              <ChevronRight className="w-4 h-4 text-white/50" />
+            </Link>
+          )}
         </div>
       </motion.div>
     );
@@ -199,26 +234,33 @@ export function LevelLeaderboard() {
           Global Level Leaderboard
         </h2>
         <p className="font-inter text-white/50 text-xs md:text-sm max-w-md mx-auto mt-2 leading-relaxed">
-          The top 10 most active scholars on the AP Lab network. Gain XP by completing sections and checking your understanding.
+          The top scholars on the AP Lab network. Gain XP by completing sections and checking your understanding.
         </p>
       </div>
 
       {loading ? (
         <div className="space-y-3.5 py-2 animate-pulse">
+          {/* Podium skeleton */}
+          <div className="flex items-end justify-center gap-4 mb-8 h-52">
+            {[1,2,3].map(i => (
+              <div key={i} className={cn("flex flex-col items-center gap-3", i === 2 ? "mb-12" : i === 1 ? "" : "mb-8")}>
+                <div className="w-16 h-16 bg-white/5 rounded-2xl" />
+                <div className="w-20 h-4 bg-white/5 rounded" />
+                <div className={cn("w-28 rounded-t-xl bg-white/5", i === 1 ? "h-36" : i === 2 ? "h-24" : "h-16")} />
+              </div>
+            ))}
+          </div>
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="flex items-center justify-between p-4 md:px-6 rounded-2xl border border-white/5 bg-white/[0.01]">
               <div className="flex items-center space-x-4">
-                <div className="w-8 h-5 bg-white/5 rounded" />
+                <div className="w-7 h-5 bg-white/5 rounded" />
                 <div className="w-10 h-10 bg-white/5 rounded-xl" />
                 <div className="flex flex-col space-y-2">
                   <div className="w-28 h-4 bg-white/5 rounded" />
                   <div className="w-16 h-3 bg-white/5 rounded" />
                 </div>
               </div>
-              <div className="flex flex-col items-end space-y-2">
-                <div className="w-12 h-5 bg-white/5 rounded" />
-                <div className="w-8 h-2 bg-white/5 rounded" />
-              </div>
+              <div className="w-12 h-5 bg-white/5 rounded" />
             </div>
           ))}
         </div>
@@ -228,21 +270,114 @@ export function LevelLeaderboard() {
           <p className="text-white/40 font-inter text-sm">No leaderboard entries found yet. Be the first!</p>
         </div>
       ) : (
-        <div className="space-y-3.5">
-          <AnimatePresence>
-            {top10.map((user, index) => renderRow(user, index, user.uid === activeUid))}
+        <>
+          {/* PODIUM TOP 3 */}
+          {top3.length >= 3 && (
+            <div className="flex items-end justify-center gap-3 md:gap-5 mb-8">
+              {podiumOrder.map((user, podiumPos) => {
+                if (!user) return null;
+                const config = podiumConfig[podiumPos];
+                const actualRank = podiumRanks[podiumPos];
+                const isCurrent = user.uid === activeUid;
+                const showProfileLink = !isBot(user.uid);
+                const activeFrame = isCurrent ? (progress?.activeAvatarFrame || user.activeAvatarFrame) : user.activeAvatarFrame;
+                const nameColor = isCurrent ? (progress?.activeNameColor || user.activeNameColor) : user.activeNameColor;
 
-            {/* If user is below rank 10, ALWAYS render separator & user's personal row */}
-            {!isUserInTop10 && (
-              <React.Fragment key="user-below-rank-10">
-                <div className="flex items-center justify-center py-2 space-x-2 text-white/30">
-                  <MoreHorizontal className="w-5 h-5 animate-pulse" />
-                </div>
-                {renderRow(currentUserObj, currentUserIndex, true)}
-              </React.Fragment>
-            )}
-          </AnimatePresence>
-        </div>
+                return (
+                  <motion.div
+                    key={user.uid}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: podiumPos * 0.1, duration: 0.5, ease: "easeOut" }}
+                    className="flex flex-col items-center gap-0 flex-1 max-w-[180px]"
+                  >
+                    {/* Card above pedestal */}
+                    <div className={cn(
+                      "w-full bg-white/[0.03] border rounded-2xl p-3 flex flex-col items-center gap-2 mb-0 relative",
+                      config.borderColor,
+                      isCurrent && "ring-1 ring-emerald-500/40"
+                    )}>
+                      {/* Rank badge */}
+                      <div className={cn(
+                        "absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2.5 py-1 rounded-full border text-[10px] font-bold font-mono",
+                        config.badgeClass
+                      )}>
+                        {config.icon}
+                        <span>{config.rankLabel}</span>
+                      </div>
+
+                      <div className="mt-3">
+                        <UserAvatar
+                          photoURL={user.photoURL}
+                          name={user.displayName}
+                          activeFrame={activeFrame}
+                          size={actualRank === 0 ? "lg" : "md"}
+                        />
+                      </div>
+
+                      <UserDisplayName
+                        name={user.displayName || "AP Scholar"}
+                        activeNameColor={nameColor}
+                        className="font-manrope font-extrabold text-xs text-white text-center truncate w-full"
+                      />
+
+                      <LevelBadge level={user.level || 1} />
+
+                      <div className="flex items-center gap-1 text-[10px] font-mono font-bold" style={{ color: config.color }}>
+                        <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-4 h-4 object-contain" />
+                        <span>{user.xp?.toLocaleString()} XP</span>
+                      </div>
+
+                      {showProfileLink && (
+                        <Link
+                          href={`/dashboard/user/${user.uid}`}
+                          className="w-full text-center text-[10px] font-bold text-white/40 hover:text-white/80 transition-colors py-1 border-t border-white/[0.06] mt-1"
+                        >
+                          View Profile →
+                        </Link>
+                      )}
+
+                      {isCurrent && (
+                        <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">YOU</span>
+                      )}
+                    </div>
+
+                    {/* Pedestal */}
+                    <div
+                      className={cn(
+                        "w-full rounded-t-xl border-t border-l border-r flex items-start justify-center pt-2",
+                        config.height,
+                        config.borderColor,
+                        `bg-gradient-to-b ${config.bgGlow} to-transparent`
+                      )}
+                    >
+                      <span className="text-[10px] font-mono font-bold" style={{ color: config.color }}>
+                        {config.rankLabel}
+                      </span>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* ROWS #4–10 */}
+          <div className="space-y-2.5">
+            <AnimatePresence>
+              {rest.map((user, i) => renderRow(user, i + 3, user.uid === activeUid))}
+
+              {/* Current user if below top 10 */}
+              {!isUserInTop10 && (
+                <React.Fragment key="user-below-rank-10">
+                  <div className="flex items-center justify-center py-2 space-x-2 text-white/30">
+                    <MoreHorizontal className="w-5 h-5 animate-pulse" />
+                  </div>
+                  {renderRow(currentUserObj, currentUserIndex, true)}
+                </React.Fragment>
+              )}
+            </AnimatePresence>
+          </div>
+        </>
       )}
     </div>
   );

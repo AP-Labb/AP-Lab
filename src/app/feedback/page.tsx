@@ -68,13 +68,13 @@ export default function FeedbackPage() {
       <title>Feedback | AP Lab</title>
       <meta name="description" content="Share your AP Lab learning experience with the community." />
 
-      <div className="min-h-screen bg-[#070810] flex flex-col items-center justify-center relative overflow-hidden px-4 py-12">
-        {/* Subtle ambient glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[400px] bg-violet-900/20 blur-[120px] rounded-full pointer-events-none" />
-        <div className="absolute bottom-0 right-1/4 w-[400px] h-[300px] bg-indigo-900/15 blur-[100px] rounded-full pointer-events-none" />
+      <div className="min-h-screen bg-[#070810] flex flex-col items-center justify-start relative px-4 py-12">
+        {/* Subtle ambient glow - non-overflow-hidden so they don't clip form */}
+        <div className="fixed top-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-violet-900/15 blur-[140px] rounded-full pointer-events-none" />
+        <div className="fixed bottom-0 right-1/4 w-[500px] h-[400px] bg-indigo-900/10 blur-[120px] rounded-full pointer-events-none" />
 
         {/* Back button */}
-        <div className="w-full max-w-md mb-6">
+        <div className="w-full max-w-2xl mb-6">
           <Link
             href="/dashboard"
             className="inline-flex items-center gap-2 text-white/40 hover:text-white/80 text-sm font-manrope font-medium transition-colors"
@@ -88,10 +88,10 @@ export default function FeedbackPage() {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: "easeOut" }}
-          className="w-full max-w-md"
+          className="w-full max-w-2xl"
         >
           {/* Card */}
-          <div className="relative bg-[#0c0d17] border border-white/[0.08] rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.9)] overflow-hidden">
+          <div className="relative bg-[#0c0d17] border border-white/[0.08] rounded-3xl shadow-[0_32px_80px_rgba(0,0,0,0.9)]">
             {/* Top gradient bar */}
             <div className="h-px w-full bg-gradient-to-r from-transparent via-violet-500/40 to-transparent" />
 
