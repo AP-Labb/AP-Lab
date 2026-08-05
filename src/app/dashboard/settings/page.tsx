@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  User, Palette, Check, Volume2, ShieldAlert, Trash2, Edit3, Camera
+  User, Palette, Check, Volume2, ShieldAlert, Trash2, Edit3, Camera, Pipette
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -247,7 +247,7 @@ export default function SettingsPage() {
 
                 {/* Display Name */}
                 <div className="space-y-1.5 pt-2 border-t border-white/[0.06]">
-                  <label className="text-xs font-mono font-bold text-white/40 uppercase tracking-wider block">
+                  <label className="text-sm font-manrope font-bold text-white/90 block">
                     Name
                   </label>
                   <input
@@ -261,9 +261,9 @@ export default function SettingsPage() {
 
                 {/* Bio Field */}
                 <div className="space-y-1.5">
-                  <div className="flex justify-between items-center text-xs font-mono uppercase tracking-wider">
-                    <span className="text-white/40">Bio / About You</span>
-                    <span className={bioInput.length >= 150 ? "text-amber-400 font-bold" : "text-white/30"}>
+                  <div className="flex justify-between items-center text-sm font-manrope font-bold">
+                    <span className="text-white/90">Bio / About You</span>
+                    <span className={cn("text-xs font-mono font-normal", bioInput.length >= 150 ? "text-amber-400 font-bold" : "text-white/40")}>
                       {bioInput.length} / 160
                     </span>
                   </div>
@@ -281,7 +281,7 @@ export default function SettingsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Location Selector */}
                   <div className="space-y-1.5 relative">
-                    <span className="text-xs font-mono text-white/40 uppercase tracking-wider block">Location / Country</span>
+                    <span className="text-sm font-manrope font-bold text-white/90 block">Location / Country</span>
                     <button
                       type="button"
                       onClick={() => {
@@ -341,7 +341,7 @@ export default function SettingsPage() {
 
                   {/* Graduation Year Custom Pop-Down Dropdown */}
                   <div className="space-y-1.5 relative">
-                    <span className="text-xs font-mono text-white/40 uppercase tracking-wider block">Graduation Year</span>
+                    <span className="text-sm font-manrope font-bold text-white/90 block">Graduation Year</span>
                     <button
                       type="button"
                       onClick={() => {
@@ -428,7 +428,7 @@ export default function SettingsPage() {
 
                 {/* Profile Cover Banner Color Palette */}
                 <div className="space-y-3 pt-2 border-t border-white/[0.06]">
-                  <label className="text-xs font-mono font-bold text-white/50 uppercase tracking-wider block">
+                  <label className="text-sm font-manrope font-bold text-white/90 block">
                     Select cover color
                   </label>
                   <div className="flex flex-wrap items-center gap-3">
@@ -450,6 +450,28 @@ export default function SettingsPage() {
                         </button>
                       );
                     })}
+
+                    {/* Custom Eyedropper Color Picker Button */}
+                    <div className="relative inline-block">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const inputEl = document.getElementById("custom-color-picker-input");
+                          if (inputEl) inputEl.click();
+                        }}
+                        className="w-9 h-9 rounded-full bg-emerald-400/20 border-2 border-emerald-400/50 hover:bg-emerald-400/30 text-emerald-400 flex items-center justify-center transition-all cursor-pointer shadow-md hover:scale-105"
+                        title="Pick Custom Color"
+                      >
+                        <Pipette className="w-4 h-4 stroke-[2.5]" />
+                      </button>
+                      <input
+                        id="custom-color-picker-input"
+                        type="color"
+                        value={selectedBannerColor}
+                        onChange={(e) => handleBannerColorChange(e.target.value)}
+                        className="sr-only"
+                      />
+                    </div>
                   </div>
                 </div>
 

@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   LayoutDashboard, Award, ShoppingBag, Activity, 
-  Settings, User, FileText, Lock, Package, LogOut, ExternalLink, Trophy, MessageSquarePlus
+  Settings, User, FileText, Lock, Package, LogOut, ExternalLink, Trophy, MessageSquarePlus, Bell, CheckCheck, X
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
@@ -32,6 +32,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
+  const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showMinecraftInventory, setShowMinecraftInventory] = useState(false);
   const [showProgressProfile, setShowProgressProfile] = useState(false);
@@ -181,9 +183,46 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
             </div>
           </div>
 
-          {/* Bottom Section: Profile Button Capsule */}
+          {/* Bottom Section: Notifications & Profile Button Capsule */}
           <div className="relative flex flex-col gap-2 pb-6 w-full" ref={menuRef}>
             <div className="h-px bg-white/[0.08] mx-2 mb-2" />
+
+            {/* Notifications Trigger Item */}
+            <button
+              onClick={() => {
+                setShowNotificationsMenu((prev) => !prev);
+                setShowProfileMenu(false);
+                setHasUnreadNotifications(false);
+              }}
+              className={cn(
+                "flex items-center gap-3 w-full py-2.5 rounded-2xl transition-all duration-200 border cursor-pointer relative",
+                sidebarOpen ? "px-3 text-left justify-start" : "px-0 justify-center text-center",
+                showNotificationsMenu
+                  ? "bg-white/10 border-white/20 text-white shadow-lg"
+                  : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
+              )}
+            >
+              <div className="relative shrink-0 flex items-center justify-center">
+                <Bell className="w-5 h-5 text-white/80" />
+                {hasUnreadNotifications && (
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute -top-0.5 -right-0.5 shadow-sm" />
+                )}
+              </div>
+
+              <AnimatePresence>
+                {sidebarOpen && (
+                  <motion.span
+                    initial={{ opacity: 0, width: 0 }}
+                    animate={{ opacity: 1, width: "auto" }}
+                    exit={{ opacity: 0, width: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="text-xs font-manrope font-semibold whitespace-pre"
+                  >
+                    Notifications
+                  </motion.span>
+                )}
+              </AnimatePresence>
+            </button>
 
             {/* Profile Menu Trigger Capsule */}
             <button
@@ -227,17 +266,89 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               </AnimatePresence>
             </button>
 
-            {/* Dark page overlay behind popup */}
+            {/* Dark page overlay behind popups */}
             <AnimatePresence>
-              {showProfileMenu && (
+              {(showProfileMenu || showNotificationsMenu) && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   className="fixed inset-0 bg-black/40 z-[99998]"
-                  onClick={() => setShowProfileMenu(false)}
+                  onClick={() => {
+                    setShowProfileMenu(false);
+                    setShowNotificationsMenu(false);
+                  }}
                 />
+              )}
+            </AnimatePresence>
+
+            {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar */}
+            <AnimatePresence>
+              {showNotificationsMenu && (
+                <motion.div
+                  initial={{ opacity: 0, x: -12, scale: 0.97 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -12, scale: 0.97 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                  className={cn(
+                    "fixed bottom-16 w-80 bg-[#14151f] border border-white/10 rounded-3xl p-6 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
+                    sidebarOpen ? "left-[232px]" : "left-[68px]"
+                  )}
+                >
+                  {/* Notifications Header matching Knowt screenshot 2 */}
+                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                    <h3 className="font-manrope font-extrabold text-lg text-white">Notifications</h3>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        title="Mark all read"
+                        onClick={() => setHasUnreadNotifications(false)}
+                        className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                      >
+                        <CheckCheck className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        title="Settings"
+                        onClick={() => {
+                          setShowNotificationsMenu(false);
+                          router.push("/dashboard/settings");
+                        }}
+                        className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                      >
+                        <Settings className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        type="button"
+                        title="Close"
+                        onClick={() => setShowNotificationsMenu(false)}
+                        className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Empty Notifications View matching Knowt screenshot 2 */}
+                  <div className="py-6 text-center space-y-3">
+                    <div className="w-24 h-24 mx-auto flex items-center justify-center">
+                      <img
+                        src="/images/notification-bell.png"
+                        alt="No Notifications"
+                        className="w-20 h-20 object-contain drop-shadow-lg"
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <h4 className="font-manrope font-extrabold text-base text-white">
+                        No notifications yet
+                      </h4>
+                      <p className="text-xs font-manrope text-white/40">
+                        You're all caught up for now
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
               )}
             </AnimatePresence>
 
