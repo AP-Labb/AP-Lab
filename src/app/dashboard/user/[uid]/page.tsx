@@ -258,20 +258,28 @@ export default function UserProfilePage() {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {/* HERO PROFILE HEADER */}
-              <div className="relative bg-[#090a12] border border-white/[0.08] rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)]">
-                <div
-                  className="h-1 w-full absolute top-0 left-0 right-0"
-                  style={{
-                    background: `linear-gradient(to right, transparent, ${user.profileBannerColor || "#7b39fc"}, transparent)`,
-                  }}
-                />
-                <div
-                  className="absolute -top-10 left-1/4 w-80 h-40 blur-[90px] rounded-full pointer-events-none opacity-20"
-                  style={{ backgroundColor: user.profileBannerColor || "#7b39fc" }}
-                />
+              {/* HERO PROFILE HEADER WITH PREMIUM TEXTURED GRADIENT BANNER */}
+              <div className="relative bg-[#090a12] border border-white/[0.08] rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)]">
+                {/* Full-width Textured Gradient Banner */}
+                <div className="h-32 sm:h-40 w-full relative overflow-hidden">
+                  <div
+                    className="absolute inset-0 transition-colors duration-500"
+                    style={{
+                      background: `linear-gradient(135deg, ${user.profileBannerColor || "#7b39fc"}cc 0%, ${user.profileBannerColor || "#7b39fc"}33 60%, #090a12 100%)`,
+                    }}
+                  />
+                  {/* Subtle Geometric Texture Overlay */}
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.18),transparent_70%)] pointer-events-none" />
+                  <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.06)_1px,transparent_1px)] bg-[size:1.75rem_1.75rem] opacity-35 pointer-events-none" />
+                  {/* Ambient Color Glow */}
+                  <div
+                    className="absolute -top-10 left-1/3 w-96 h-48 blur-[80px] rounded-full pointer-events-none opacity-40"
+                    style={{ backgroundColor: user.profileBannerColor || "#7b39fc" }}
+                  />
+                </div>
 
-                <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative z-10">
+                <div className="p-6 sm:p-8 pt-0 relative z-10 -mt-14 sm:-mt-16">
+                  <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
                   {/* Left Column: Avatar & User Metadata */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 flex-1 min-w-0">
                     <UserAvatar
@@ -404,6 +412,7 @@ export default function UserProfilePage() {
                   </div>
                 </div>
               </div>
+            </div>
 
               {/* KEY STATS METRICS GRID */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">

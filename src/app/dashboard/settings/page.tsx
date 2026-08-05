@@ -241,7 +241,7 @@ export default function SettingsPage() {
                     <button
                       type="button"
                       onClick={() => setShowPfpModal(true)}
-                      className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#1c1e2e] border-2 border-[#090a12] text-white flex items-center justify-center shadow-lg hover:bg-white hover:text-black transition-all cursor-pointer"
+                      className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#1c1e2e] border-2 border-[#090a12] text-white flex items-center justify-center shadow-lg hover:bg-white hover:text-black transition-all cursor-pointer z-30"
                       title="Change PFP / Avatar Frame"
                     >
                       <Edit3 className="w-4 h-4 stroke-[2.5]" />
@@ -459,13 +459,17 @@ export default function SettingsPage() {
                           style={{ backgroundColor: color.hex }}
                           title={color.name}
                         >
-                          {isSelected && <Check className="w-4 h-4 text-white drop-shadow stroke-[3]" />}
+                          {isSelected && <Check className="w-4 h-4 text-black drop-shadow stroke-[3]" />}
                         </button>
                       );
                     })}
 
                     {/* Custom Color Picker Button (Eyedropper with 2D Canvas Gradient Picker) */}
-                    <CustomColorPicker color={selectedBannerColor} onChange={handleBannerColorChange} />
+                    <CustomColorPicker
+                      color={selectedBannerColor}
+                      isCustomActive={!BANNER_COLORS.some((c) => c.hex.toLowerCase() === selectedBannerColor.toLowerCase())}
+                      onChange={handleBannerColorChange}
+                    />
                   </div>
                 </div>
 
