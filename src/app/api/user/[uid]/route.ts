@@ -49,10 +49,12 @@ export async function GET(
       activeAvatarFrame: data.activeAvatarFrame || "",
       activeNameColor: data.activeNameColor || null,
       activeNameGradient: data.activeNameGradient || "",
-      enrolledCourses: data.enrolledCourses || [],
+      bio: data.bio || "",
+      location: data.location || "",
+      enrolledCourses: data.enrolledCourses || data.selectedClasses || [],
       coursesProgress: data.coursesProgress || {},
       totalStudyMinutes: data.totalStudyMinutes || 0,
-      streakDays: data.streakDays || 0,
+      streakDays: data.streakDays || data.streakCount || 0,
       createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
     });
   } catch (error: any) {

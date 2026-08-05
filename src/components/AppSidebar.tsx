@@ -249,7 +249,10 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -12, scale: 0.97 }}
                   transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  className="fixed bottom-6 left-[64px] w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5"
+                  className={cn(
+                    "fixed bottom-6 w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
+                    sidebarOpen ? "left-[232px]" : "left-[68px]"
+                  )}
                 >
                   {/* User header in menu */}
                   <div className="flex items-center gap-3 px-3 py-3 mb-1">

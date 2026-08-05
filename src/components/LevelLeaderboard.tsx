@@ -271,9 +271,9 @@ export function LevelLeaderboard() {
         </div>
       ) : (
         <>
-          {/* PODIUM TOP 3 */}
+          {/* PODIUM TOP 3 — Clean Elevated Cards */}
           {top3.length >= 3 && (
-            <div className="flex items-end justify-center gap-3 md:gap-5 mb-8">
+            <div className="grid grid-cols-3 gap-3 md:gap-4 mb-10 items-end">
               {podiumOrder.map((user, podiumPos) => {
                 if (!user) return null;
                 const config = podiumConfig[podiumPos];
@@ -286,75 +286,64 @@ export function LevelLeaderboard() {
                 return (
                   <motion.div
                     key={user.uid}
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 16 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: podiumPos * 0.1, duration: 0.5, ease: "easeOut" }}
-                    className="flex flex-col items-center gap-0 flex-1 max-w-[180px]"
-                  >
-                    {/* Card above pedestal */}
-                    <div className={cn(
-                      "w-full bg-white/[0.03] border rounded-2xl p-3 flex flex-col items-center gap-2 mb-0 relative",
+                    transition={{ delay: podiumPos * 0.1, duration: 0.4 }}
+                    className={cn(
+                      "relative bg-[#090b14] border rounded-2xl md:rounded-3xl p-4 sm:p-5 flex flex-col items-center text-center space-y-3 transition-all",
                       config.borderColor,
-                      isCurrent && "ring-1 ring-emerald-500/40"
-                    )}>
-                      {/* Rank badge */}
-                      <div className={cn(
-                        "absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-1 px-2.5 py-1 rounded-full border text-[10px] font-bold font-mono",
+                      actualRank === 0 ? "shadow-[0_0_30px_rgba(245,158,11,0.15)] pb-7" : actualRank === 1 ? "pb-5" : "pb-4"
+                    )}
+                  >
+                    {/* Top Rank Badge */}
+                    <div
+                      className={cn(
+                        "inline-flex items-center gap-1.5 px-3 py-1 rounded-full border text-xs font-bold font-mono shadow-sm",
                         config.badgeClass
-                      )}>
-                        {config.icon}
-                        <span>{config.rankLabel}</span>
-                      </div>
+                      )}
+                    >
+                      {config.icon}
+                      <span>Rank {config.rankLabel}</span>
+                    </div>
 
-                      <div className="mt-3">
-                        <UserAvatar
-                          photoURL={user.photoURL}
-                          name={user.displayName}
-                          activeFrame={activeFrame}
-                          size={actualRank === 0 ? "lg" : "md"}
-                        />
-                      </div>
+                    {/* Avatar */}
+                    <div className="pt-1">
+                      <UserAvatar
+                        photoURL={user.photoURL}
+                        name={user.displayName}
+                        activeFrame={activeFrame}
+                        size={actualRank === 0 ? "xl" : "lg"}
+                      />
+                    </div>
 
+                    {/* Name & Level */}
+                    <div className="w-full space-y-1">
                       <UserDisplayName
                         name={user.displayName || "AP Scholar"}
                         activeNameColor={nameColor}
-                        className="font-manrope font-extrabold text-xs text-white text-center truncate w-full"
+                        className="font-manrope font-extrabold text-sm sm:text-base text-white truncate w-full block"
                       />
-
-                      <LevelBadge level={user.level || 1} />
-
-                      <div className="flex items-center gap-1 text-[10px] font-mono font-bold" style={{ color: config.color }}>
-                        <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-4 h-4 object-contain" />
-                        <span>{user.xp?.toLocaleString()} XP</span>
+                      <div className="flex justify-center">
+                        <LevelBadge level={user.level || 1} />
                       </div>
-
-                      {showProfileLink && (
-                        <Link
-                          href={`/dashboard/user/${user.uid}`}
-                          className="w-full text-center text-[10px] font-bold text-white/40 hover:text-white/80 transition-colors py-1 border-t border-white/[0.06] mt-1"
-                        >
-                          View Profile →
-                        </Link>
-                      )}
-
-                      {isCurrent && (
-                        <span className="text-[9px] font-black uppercase tracking-widest text-emerald-400">YOU</span>
-                      )}
                     </div>
 
-                    {/* Pedestal */}
-                    <div
-                      className={cn(
-                        "w-full rounded-t-xl border-t border-l border-r flex items-start justify-center pt-2",
-                        config.height,
-                        config.borderColor,
-                        `bg-gradient-to-b ${config.bgGlow} to-transparent`
-                      )}
-                    >
-                      <span className="text-[10px] font-mono font-bold" style={{ color: config.color }}>
-                        {config.rankLabel}
-                      </span>
+                    {/* XP display */}
+                    <div className="pt-1">
+                      <div className="font-instrument italic font-bold text-base sm:text-lg text-white">
+                        {user.xp?.toLocaleString()} <span className="text-[10px] font-mono not-italic text-white/40">XP</span>
+                      </div>
                     </div>
+
+                    {/* Profile Button */}
+                    {showProfileLink && (
+                      <Link
+                        href={`/dashboard/user/${user.uid}`}
+                        className="w-full py-1.5 rounded-xl bg-white/[0.05] hover:bg-white/10 border border-white/10 text-[11px] font-manrope font-semibold text-white/80 hover:text-white transition-all block text-center"
+                      >
+                        View Profile
+                      </Link>
+                    )}
                   </motion.div>
                 );
               })}

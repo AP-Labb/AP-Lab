@@ -6,27 +6,29 @@ import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import {
   ArrowLeft, GraduationCap, Trophy, Zap, Target,
-  BookOpen, Clock, Flame, CheckCircle, User
+  BookOpen, Clock, Flame, CheckCircle, User, MapPin, Calendar,
+  Edit3, ShieldCheck, Star, Award
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import { UserAvatar } from "@/components/UserAvatar";
 import { UserDisplayName } from "@/components/UserDisplayName";
 import { LevelBadge } from "@/components/LevelBadge";
+import { SettingsModal } from "@/components/SettingsModal";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { getXpThresholdForLevel } from "@/lib/xpProgression";
 
-const COURSE_META: Record<string, { name: string; accentColor: string; emoji: string }> = {
-  "ap-biology":    { name: "AP® Biology",         accentColor: "#22c55e", emoji: "🧬" },
-  "ap-chemistry":  { name: "AP® Chemistry",        accentColor: "#00f2ff", emoji: "⚗️" },
-  "ap-physics-c":  { name: "AP® Physics C",        accentColor: "#818cf8", emoji: "⚡" },
-  "ap-ush":        { name: "AP® US History",       accentColor: "#fbbf24", emoji: "🏛️" },
-  "ap-psych":      { name: "AP® Psychology",       accentColor: "#7b39fc", emoji: "🧠" },
-  "ap-eng-lang":   { name: "AP® English Language", accentColor: "#fb7185", emoji: "✍️" },
-  "ap-calc-bc":    { name: "AP® Calculus BC",      accentColor: "#34d399", emoji: "∫" },
-  "ap-stats":      { name: "AP® Statistics",       accentColor: "#38bdf8", emoji: "📊" },
-  "ap-csa":        { name: "AP® Comp Sci A",       accentColor: "#a78bfa", emoji: "💻" },
+const COURSE_META: Record<string, { name: string; accentColor: string; emoji: string; category: string }> = {
+  "ap-biology":    { name: "AP® Biology",          accentColor: "#22c55e", emoji: "🧬", category: "Science" },
+  "ap-chemistry":  { name: "AP® Chemistry",        accentColor: "#00f2ff", emoji: "⚗️", category: "Science" },
+  "ap-physics-c":  { name: "AP® Physics C",        accentColor: "#818cf8", emoji: "⚡", category: "Science" },
+  "ap-ush":        { name: "AP® US History",       accentColor: "#fbbf24", emoji: "🏛️", category: "History" },
+  "ap-psych":      { name: "AP® Psychology",       accentColor: "#7b39fc", emoji: "🧠", category: "Social Science" },
+  "ap-eng-lang":   { name: "AP® English Language", accentColor: "#fb7185", emoji: "✍️", category: "English" },
+  "ap-calc-bc":    { name: "AP® Calculus BC",      accentColor: "#34d399", emoji: "∫", category: "Math" },
+  "ap-stats":      { name: "AP® Statistics",       accentColor: "#38bdf8", emoji: "📊", category: "Math" },
+  "ap-csa":        { name: "AP® Comp Sci A",       accentColor: "#a78bfa", emoji: "💻", category: "Computer Science" },
 };
 
 interface UserProfile {
@@ -43,6 +45,8 @@ interface UserProfile {
   activeAvatarFrame: string;
   activeNameColor: string | null;
   activeNameGradient: string;
+  bio?: string;
+  location?: string;
   enrolledCourses: string[];
   totalStudyMinutes: number;
   streakDays: number;
@@ -56,9 +60,9 @@ export default function UserProfilePage() {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
-  const isOwnProfile =
-    uid === currentUser?.uid || uid === progress?.uid;
+  const isOwnProfile = uid === currentUser?.uid || uid === progress?.uid;
 
   useEffect(() => {
     if (!uid) return;
@@ -76,7 +80,6 @@ export default function UserProfilePage() {
       .catch(() => { setNotFound(true); setLoading(false); });
   }, [uid]);
 
-  // For own profile, prefer live context data over API
   const liveProfile: UserProfile | null = isOwnProfile && progress
     ? {
         uid: currentUser?.uid || progress.uid || uid,
@@ -86,12 +89,14 @@ export default function UserProfilePage() {
         xp: progress.xp || 0,
         level: progress.level || 1,
         credits: progress.credits || 0,
-        graduationYear: progress.graduationYear || null,
+        graduationYear: progress.graduationYear || "2028",
         totalQuestionsAnswered: progress.totalQuestionsAnswered || 0,
         totalQuestionsCorrect: progress.totalQuestionsCorrect || 0,
         activeAvatarFrame: progress.activeAvatarFrame || "",
         activeNameColor: progress.activeNameColor || null,
         activeNameGradient: progress.activeNameGradient || "",
+        bio: progress.bio || "",
+        location: progress.location || "United States",
         enrolledCourses: (progress as any).selectedClasses || [],
         totalStudyMinutes: 0,
         streakDays: (progress as any).streakCount || 0,
@@ -106,195 +111,288 @@ export default function UserProfilePage() {
   const prevThreshold = getXpThresholdForLevel(level);
   const nextThreshold = getXpThresholdForLevel(level + 1);
   const xpInLevel = Math.max(0, xp - prevThreshold);
-  const xpNeeded = nextThreshold - prevThreshold;
+  const xpNeeded = Math.max(100, nextThreshold - prevThreshold);
   const progressPct = Math.min(100, Math.max(0, (xpInLevel / xpNeeded) * 100));
-  const accuracy =
-    (user?.totalQuestionsAnswered || 0) > 0
-      ? Math.round(((user?.totalQuestionsCorrect || 0) / (user?.totalQuestionsAnswered || 1)) * 100)
-      : 0;
+
+  const totalAnswered = user?.totalQuestionsAnswered || 0;
+  const totalCorrect = user?.totalQuestionsCorrect || 0;
+  const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
+  const enrolledCount = user?.enrolledCourses?.length || 0;
 
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
-      {/* Grid Background */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.05)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.05)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none z-0" />
+      {/* Background Grid */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none z-0" />
 
       <AppSidebar currentPath="/dashboard/leaderboard" />
 
       <div className="flex-1 flex flex-col min-h-screen md:pl-16 relative z-10">
         <UniversalTopHeader />
 
-        <main className="max-w-3xl mx-auto w-full px-4 sm:px-6 py-10 pb-24">
-          {/* Back */}
-          <Link
-            href="/dashboard/leaderboard"
-            className="inline-flex items-center gap-2 text-white/40 hover:text-white/70 text-sm font-medium transition-colors mb-8"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to Leaderboard
-          </Link>
+        <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 pb-24 space-y-6">
+          {/* Breadcrumb Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2 text-xs text-white/40 font-mono">
+              <Link href="/dashboard/leaderboard" className="hover:text-white transition-colors flex items-center gap-1">
+                <ArrowLeft className="w-3.5 h-3.5" /> Leaderboard
+              </Link>
+              <span>/</span>
+              <span className="text-white/80 font-bold">User Profile</span>
+            </div>
+          </div>
 
           {loading ? (
-            <div className="space-y-4 animate-pulse">
-              <div className="h-40 bg-white/[0.03] rounded-3xl border border-white/5" />
-              <div className="grid grid-cols-3 gap-3">
-                {[1,2,3].map(i => <div key={i} className="h-28 bg-white/[0.03] rounded-2xl border border-white/5" />)}
+            <div className="space-y-6 animate-pulse">
+              <div className="h-48 bg-white/[0.03] rounded-3xl border border-white/5" />
+              <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
+                {[1, 2, 3, 4, 5, 6].map((i) => (
+                  <div key={i} className="h-24 bg-white/[0.03] rounded-2xl border border-white/5" />
+                ))}
               </div>
             </div>
           ) : notFound ? (
-            <div className="text-center py-24 border border-dashed border-white/10 rounded-3xl">
-              <User className="w-10 h-10 text-white/20 mx-auto mb-3" />
-              <h2 className="text-white/60 font-bold text-lg font-manrope">Profile Not Found</h2>
-              <p className="text-white/30 text-sm mt-2">This may be a bot or the account doesn't exist.</p>
+            <div className="text-center py-24 border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
+              <User className="w-12 h-12 text-white/20 mx-auto mb-3" />
+              <h2 className="text-white/60 font-bold text-lg">Profile Not Found</h2>
+              <p className="text-white/30 text-sm mt-1">This user account could not be found.</p>
             </div>
           ) : user ? (
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: "easeOut" }}
-              className="space-y-5"
+              transition={{ duration: 0.4 }}
+              className="space-y-6"
             >
-              {/* Hero Card */}
-              <div className="relative bg-[#0a0b12] border border-white/[0.08] rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.7)]">
-                {/* Purple top gradient bar */}
-                <div className="h-px w-full bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
-                {/* Ambient glow */}
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-80 h-40 bg-violet-900/20 blur-[80px] rounded-full pointer-events-none" />
+              {/* HERO HEADER CARD (Stellar Style) */}
+              <div className="relative bg-[#090a12] border border-white/[0.08] rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)]">
+                {/* Glow bar */}
+                <div className="h-px w-full bg-gradient-to-r from-transparent via-purple-500/40 to-transparent absolute top-0 left-0 right-0" />
+                <div className="absolute -top-10 left-1/4 w-80 h-40 bg-violet-900/15 blur-[90px] rounded-full pointer-events-none" />
 
-                <div className="relative p-7 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-                  {/* Avatar */}
-                  <div className="relative flex-shrink-0">
+                <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative z-10">
+                  {/* Left Column: Avatar + Details */}
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 flex-1 min-w-0">
                     <UserAvatar
                       photoURL={user.photoURL}
                       name={user.displayName}
                       activeFrame={user.activeAvatarFrame}
                       size="xl"
                     />
-                    {isOwnProfile && (
-                      <span className="absolute -top-2 -right-2 bg-emerald-500 text-black text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-full border border-black/20">
-                        YOU
-                      </span>
-                    )}
-                  </div>
 
-                  {/* Info */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 flex-wrap mb-1">
-                      <UserDisplayName
-                        name={user.displayName}
-                        activeNameColor={user.activeNameColor}
-                        className="font-manrope font-extrabold text-2xl text-white tracking-tight"
-                      />
-                      <LevelBadge level={level} />
-                    </div>
-                    {user.graduationYear && (
-                      <div className="flex items-center gap-1.5 text-emerald-400 text-sm font-medium mb-2">
-                        <GraduationCap className="w-4 h-4" />
-                        <span>Class of {user.graduationYear}</span>
-                      </div>
-                    )}
-                    {/* Level progress bar */}
-                    <div className="mt-3">
-                      <div className="flex justify-between text-[10px] font-mono text-white/30 mb-1">
-                        <span>Level {level}</span>
-                        <span>{xpInLevel.toLocaleString()} / {xpNeeded.toLocaleString()} XP</span>
-                      </div>
-                      <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
-                        <motion.div
-                          className="h-full bg-gradient-to-r from-violet-500 to-purple-400 rounded-full"
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progressPct}%` }}
-                          transition={{ duration: 0.8, ease: "easeOut", delay: 0.3 }}
+                    <div className="space-y-2 min-w-0 flex-1">
+                      <div>
+                        <UserDisplayName
+                          name={user.displayName}
+                          activeNameColor={user.activeNameColor}
+                          className="font-manrope font-black text-2xl sm:text-3xl text-white tracking-tight leading-none"
                         />
                       </div>
+
+                      {/* Meta Info Row */}
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/50 font-manrope">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3.5 h-3.5 text-violet-400 shrink-0" />
+                          <span>{user.location || "United States"}</span>
+                        </div>
+                        {user.createdAt && (
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3.5 h-3.5 text-white/40 shrink-0" />
+                            <span>Member Since {new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
+                          </div>
+                        )}
+                        <div className="flex items-center gap-1 font-semibold text-emerald-400">
+                          <GraduationCap className="w-3.5 h-3.5 shrink-0" />
+                          <span>Class of {user.graduationYear || "2028"}</span>
+                        </div>
+                      </div>
+
+                      {/* Bio Text */}
+                      {user.bio && (
+                        <p className="text-xs text-white/70 font-manrope max-w-xl leading-relaxed pt-1 italic">
+                          "{user.bio}"
+                        </p>
+                      )}
+
+                      {/* Action Buttons (Edit Profile for own profile) */}
+                      {isOwnProfile && (
+                        <div className="pt-2 flex items-center gap-3">
+                          <button
+                            onClick={() => setShowSettingsModal(true)}
+                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-sm active:scale-95"
+                          >
+                            <Edit3 className="w-3.5 h-3.5 text-violet-400" />
+                            <span>Edit Profile</span>
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* XP & Coins */}
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.07] rounded-xl px-3 py-2">
-                      <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 object-contain" />
-                      <span className="font-bold text-white text-sm">{xp.toLocaleString()}<span className="text-white/30 font-normal ml-1 text-xs">XP</span></span>
+                  {/* Right Column: Scholar Level Box (Stellar style) */}
+                  <div className="w-full lg:w-72 bg-white/[0.03] border border-white/10 rounded-2xl p-4 shrink-0 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
+                        <GraduationCap className="w-4 h-4 text-violet-400" />
+                        <span>Scholar Level</span>
+                      </span>
+                      <LevelBadge level={level} />
                     </div>
-                    <div className="flex items-center gap-2 bg-white/[0.04] border border-white/[0.07] rounded-xl px-3 py-2">
-                      <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
-                      <span className="font-bold text-amber-400 text-sm">{(user.credits || 0).toLocaleString()}<span className="text-white/30 font-normal ml-1 text-xs">Coins</span></span>
+
+                    <div className="flex items-baseline justify-between">
+                      <span className="text-2xl font-black font-manrope text-white">Level {level}</span>
+                      <span className="text-xs font-mono text-white/40">{xpInLevel.toLocaleString()} XP</span>
+                    </div>
+
+                    {/* Progress Bar */}
+                    <div className="space-y-1">
+                      <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
+                        <motion.div
+                          initial={{ width: 0 }}
+                          animate={{ width: `${progressPct}%` }}
+                          transition={{ duration: 0.8, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-violet-500 to-purple-400 rounded-full"
+                        />
+                      </div>
+                      <div className="flex justify-between text-[10px] font-mono text-white/30">
+                        <span>{xpInLevel.toLocaleString()} XP</span>
+                        <span>{xpNeeded.toLocaleString()} next</span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {/* KEY METRICS ROW (6 Cards Grid) */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 {[
-                  { icon: Target, label: "Questions", value: (user.totalQuestionsAnswered || 0).toLocaleString(), color: "text-violet-400" },
-                  { icon: CheckCircle, label: "Correct", value: (user.totalQuestionsCorrect || 0).toLocaleString(), color: "text-emerald-400" },
-                  { icon: Trophy, label: "Accuracy", value: `${accuracy}%`, color: "text-amber-400" },
-                  { icon: Flame, label: "Streak", value: `${user.streakDays || 0}d`, color: "text-orange-400" },
-                ].map(({ icon: Icon, label, value, color }) => (
-                  <div key={label} className="bg-white/[0.03] border border-white/[0.06] rounded-2xl p-4 flex flex-col gap-2">
-                    <Icon className={`w-4 h-4 ${color}`} />
-                    <div>
-                      <div className={`font-instrument text-2xl font-bold ${color}`}>{value}</div>
-                      <div className="text-[10px] font-mono text-white/30 uppercase tracking-widest">{label}</div>
+                  { label: "XP", value: xp.toLocaleString(), icon: Trophy, color: "text-purple-400", img: "/images/xp-shield-zoomed.png" },
+                  { label: "COINS", value: (user.credits || 0).toLocaleString(), icon: Zap, color: "text-amber-400", img: "/images/coin-zoomed.png" },
+                  { label: "STREAK", value: `${user.streakDays || 0}d`, icon: Flame, color: "text-orange-400" },
+                  { label: "ACCURACY", value: `${accuracy}%`, icon: Target, color: "text-emerald-400" },
+                  { label: "COURSES", value: enrolledCount, icon: BookOpen, color: "text-blue-400" },
+                  { label: "QUESTIONS", value: totalAnswered.toLocaleString(), icon: CheckCircle, color: "text-cyan-400" },
+                ].map((item) => (
+                  <div
+                    key={item.label}
+                    className="bg-[#090a12] border border-white/[0.07] rounded-2xl p-4 flex flex-col justify-between hover:border-white/15 transition-all"
+                  >
+                    <div className="flex items-center justify-between text-white/40">
+                      <span className="text-[10px] font-mono font-bold tracking-widest uppercase">{item.label}</span>
+                      {item.img ? (
+                        <img src={item.img} alt={item.label} className="w-5 h-5 object-contain" />
+                      ) : (
+                        <item.icon className={`w-4 h-4 ${item.color}`} />
+                      )}
+                    </div>
+                    <div className={`font-instrument text-2xl font-bold ${item.color} mt-2`}>
+                      {item.value}
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Enrolled Courses */}
-              <div className="bg-[#0a0b12] border border-white/[0.07] rounded-3xl p-6">
-                <div className="flex items-center gap-2 mb-5">
-                  <BookOpen className="w-4 h-4 text-white/40" />
-                  <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-[0.18em]">
-                    Enrolled Courses
-                  </span>
+              {/* MAIN 2-COLUMN SECTION GRID */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                {/* Left 2 Columns: Courses Section */}
+                <div className="lg:col-span-2 space-y-4">
+                  <div className="bg-[#090a12] border border-white/[0.08] rounded-3xl p-6 space-y-5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <BookOpen className="w-5 h-5 text-violet-400" />
+                          <h3 className="font-manrope font-bold text-lg text-white">Courses</h3>
+                          <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-mono font-bold">
+                            {enrolledCount}
+                          </span>
+                        </div>
+                        <p className="text-xs text-white/40 font-manrope mt-0.5">
+                          Enrolled AP® courses and current mastery progress.
+                        </p>
+                      </div>
+                    </div>
+
+                    {enrolledCount === 0 ? (
+                      <div className="text-center py-12 border border-dashed border-white/10 rounded-2xl">
+                        <BookOpen className="w-8 h-8 text-white/20 mx-auto mb-2" />
+                        <p className="text-white/40 text-xs font-manrope">No courses enrolled yet.</p>
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {user.enrolledCourses.map((slug) => {
+                          const meta = COURSE_META[slug] || {
+                            name: slug.toUpperCase().replace("-", " "),
+                            accentColor: "#818cf8",
+                            emoji: "📚",
+                            category: "Course",
+                          };
+                          return (
+                            <Link
+                              key={slug}
+                              href={`/dashboard/${slug}`}
+                              className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/15 transition-all group"
+                            >
+                              <div
+                                className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0"
+                                style={{ backgroundColor: `${meta.accentColor}18`, border: `1px solid ${meta.accentColor}30` }}
+                              >
+                                {meta.emoji}
+                              </div>
+
+                              <div className="flex-1 min-w-0 space-y-1.5">
+                                <div className="flex items-center justify-between">
+                                  <span className="font-manrope font-bold text-sm text-white group-hover:text-violet-300 transition-colors truncate">
+                                    {meta.name}
+                                  </span>
+                                  <span className="text-xs font-mono font-bold text-white/40">Active</span>
+                                </div>
+
+                                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
+                                  <div
+                                    className="h-full rounded-full transition-all duration-500"
+                                    style={{ backgroundColor: meta.accentColor, width: "35%" }}
+                                  />
+                                </div>
+                              </div>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                {!user.enrolledCourses || user.enrolledCourses.length === 0 ? (
-                  <div className="text-center py-8 text-white/20 text-sm">
-                    No courses enrolled yet.
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {user.enrolledCourses.map((slug) => {
-                      const meta = COURSE_META[slug];
-                      if (!meta) return null;
-                      return (
-                        <Link
-                          key={slug}
-                          href={`/dashboard/${slug}`}
-                          className="flex items-center gap-3 p-4 rounded-2xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/10 transition-all group"
-                        >
-                          <div
-                            className="w-10 h-10 rounded-xl flex items-center justify-center text-lg flex-shrink-0"
-                            style={{ backgroundColor: `${meta.accentColor}20`, border: `1px solid ${meta.accentColor}30` }}
-                          >
-                            {meta.emoji}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="font-bold text-white text-sm truncate group-hover:text-violet-300 transition-colors">
-                              {meta.name}
-                            </div>
-                            <div className="text-[10px] text-white/30 font-mono uppercase tracking-wider">Enrolled</div>
-                          </div>
-                          <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ backgroundColor: meta.accentColor }} />
-                        </Link>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
+                {/* Right Column: Learning Snapshot */}
+                <div className="space-y-4">
+                  <div className="bg-[#090a12] border border-white/[0.08] rounded-3xl p-6 space-y-4">
+                    <div className="flex items-center gap-2">
+                      <ShieldCheck className="w-5 h-5 text-emerald-400" />
+                      <h3 className="font-manrope font-bold text-lg text-white">Learning Snapshot</h3>
+                    </div>
 
-              {/* Member since */}
-              {user.createdAt && (
-                <p className="text-center text-white/20 text-xs font-mono">
-                  Member since {new Date(user.createdAt).toLocaleDateString("en-US", { year: "numeric", month: "long" })}
-                </p>
-              )}
+                    <div className="space-y-3 pt-2">
+                      {[
+                        { label: "Questions Attempted", value: totalAnswered.toLocaleString() },
+                        { label: "Correct Answers", value: totalCorrect.toLocaleString() },
+                        { label: "Accuracy Rate", value: `${accuracy}%` },
+                        { label: "Current Level", value: `Level ${level}` },
+                        { label: "Total XP Earned", value: `${xp.toLocaleString()} XP` },
+                        { label: "Coin Balance", value: (user.credits || 0).toLocaleString() },
+                      ].map((stat) => (
+                        <div key={stat.label} className="flex items-center justify-between py-2 border-b border-white/[0.05] last:border-0 text-xs font-manrope">
+                          <span className="text-white/50">{stat.label}</span>
+                          <span className="font-bold text-white">{stat.value}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ) : null}
         </main>
       </div>
+
+      <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
     </div>
   );
 }

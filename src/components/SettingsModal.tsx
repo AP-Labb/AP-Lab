@@ -13,6 +13,17 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
+export const ALL_COUNTRIES = [
+  "United States", "Canada", "United Kingdom", "Australia", "India", "Germany", "France", "Japan",
+  "South Korea", "China", "Brazil", "Mexico", "Spain", "Italy", "Netherlands", "Sweden", "Norway",
+  "Switzerland", "Singapore", "New Zealand", "Ireland", "Belgium", "Denmark", "Finland", "Austria",
+  "Portugal", "Greece", "Poland", "Czech Republic", "Hungary", "Romania", "Turkey", "Egypt", "South Africa",
+  "Nigeria", "Kenya", "Morocco", "United Arab Emirates", "Saudi Arabia", "Qatar", "Israel", "Argentina",
+  "Chile", "Colombia", "Peru", "Philippines", "Vietnam", "Thailand", "Indonesia", "Malaysia", "Pakistan",
+  "Bangladesh", "Taiwan", "Hong Kong", "Puerto Rico", "Ukraine", "Iceland", "Luxembourg", "Estonia",
+  "Croatia", "Slovakia", "Slovenia", "Lithuania", "Latvia", "Bulgaria", "Cyprus", "Malta", "Other / Worldwide"
+];
+
 export const COURSE_BG_THEMES = [
   {
     id: "dark-matrix",
@@ -91,12 +102,20 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [savingName, setSavingName] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [voiceSetting, setVoiceSetting] = useState<string>("1");
+  const [bioInput, setBioInput] = useState<string>("");
+  const [locationInput, setLocationInput] = useState<string>("");
+  const [gradYearInput, setGradYearInput] = useState<string>("2028");
+  const [countrySearch, setCountrySearch] = useState<string>("");
+  const [showLocationDropdown, setShowLocationDropdown] = useState(false);
 
   useEffect(() => {
     if (progress) {
       if (progress.theme) setSelectedTheme(progress.theme);
       if (progress.courseBg) setSelectedBg(progress.courseBg);
       setNameInput(progress.displayName || currentUser?.displayName || "");
+      setBioInput(progress.bio || "");
+      setLocationInput(progress.location || "United States");
+      setGradYearInput(String(progress.graduationYear || "2028"));
     }
     if (typeof window !== "undefined") {
       const saved = localStorage.getItem("aplab_voice_setting") || "1";
@@ -137,22 +156,25 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
     }
   };
 
-  const handleSaveName = async (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!nameInput.trim()) return;
-
     setSavingName(true);
     try {
-      if (currentUser) {
+      if (currentUser && nameInput.trim()) {
         await updateProfile(currentUser, { displayName: nameInput.trim() });
       }
       if (updatePreferences) {
-        await updatePreferences({ displayName: nameInput.trim() });
+        await updatePreferences({
+          displayName: nameInput.trim(),
+          bio: bioInput.trim(),
+          location: locationInput,
+          graduationYear: gradYearInput,
+        });
       }
       setSavedSuccess(true);
       setTimeout(() => setSavedSuccess(false), 2500);
     } catch (err) {
-      console.error("Error saving display name:", err);
+      console.error("Error saving profile info:", err);
     } finally {
       setSavingName(false);
     }
@@ -273,28 +295,113 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
             </div>
 
-            {/* 2. Display Name Editor */}
-            <form onSubmit={handleSaveName} className="space-y-2.5">
-              <label className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-white/60" />
-                <span>Account Display Name</span>
-              </label>
-              
-              <div className="flex items-center gap-2">
+            {/* 2. Profile Information (Display Name, Bio, Location with Search, Graduation Year) */}
+            <form onSubmit={handleSaveProfile} className="space-y-4 pt-2 border-t border-white/10">
+              <div className="flex items-center justify-between">
+                <label className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-white/60" />
+                  <span>Profile Information</span>
+                </label>
+                <button
+                  type="submit"
+                  disabled={savingName}
+                  className="px-4 py-1.5 rounded-xl bg-white text-black font-manrope font-bold text-xs hover:bg-neutral-200 transition-colors disabled:opacity-50 shrink-0 cursor-pointer"
+                >
+                  {savingName ? "Saving..." : savedSuccess ? "Saved!" : "Save Profile"}
+                </button>
+              </div>
+
+              {/* Display Name */}
+              <div className="space-y-1.5">
+                <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">Display Name</span>
                 <input
                   type="text"
                   value={nameInput}
                   onChange={(e) => setNameInput(e.target.value)}
                   placeholder="Enter display name..."
-                  className="flex-1 bg-white/[0.04] border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-white/20 focus:outline-none focus:border-white/30 font-manrope font-medium text-xs transition-colors"
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-white/20 focus:outline-none focus:border-white/30 font-manrope font-medium text-xs transition-colors"
                 />
-                <button
-                  type="submit"
-                  disabled={savingName || !nameInput.trim()}
-                  className="px-4 py-2.5 rounded-xl bg-white text-black font-manrope font-bold text-xs hover:bg-neutral-200 transition-colors disabled:opacity-50 shrink-0 cursor-pointer"
-                >
-                  {savingName ? "Saving..." : savedSuccess ? "Saved" : "Save"}
-                </button>
+              </div>
+
+              {/* Bio Field with 160 character limit */}
+              <div className="space-y-1.5">
+                <div className="flex justify-between items-center text-[10px] font-mono uppercase tracking-wider">
+                  <span className="text-white/40">Bio / About You</span>
+                  <span className={bioInput.length >= 150 ? "text-amber-400 font-bold" : "text-white/30"}>
+                    {bioInput.length} / 160
+                  </span>
+                </div>
+                <textarea
+                  value={bioInput}
+                  maxLength={160}
+                  onChange={(e) => setBioInput(e.target.value)}
+                  placeholder="Tell scholars a bit about yourself..."
+                  rows={3}
+                  className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-3.5 py-2.5 text-white placeholder-white/20 focus:outline-none focus:border-white/30 font-manrope font-medium text-xs transition-colors resize-none"
+                />
+              </div>
+
+              {/* Location & Graduation Year Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Location Search Dropdown */}
+                <div className="space-y-1.5 relative">
+                  <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">Location / Country</span>
+                  <button
+                    type="button"
+                    onClick={() => setShowLocationDropdown(!showLocationDropdown)}
+                    className="w-full flex items-center justify-between bg-white/[0.04] border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs font-manrope text-left"
+                  >
+                    <span className="truncate">{locationInput || "Select country..."}</span>
+                    <span className="text-[10px] text-white/30">▼</span>
+                  </button>
+
+                  {/* Searchable Dropdown Popup */}
+                  {showLocationDropdown && (
+                    <div className="absolute top-full left-0 right-0 mt-1 bg-[#0e101a] border border-white/20 rounded-xl shadow-2xl p-2 z-50 max-h-48 overflow-y-auto custom-scrollbar">
+                      <input
+                        type="text"
+                        value={countrySearch}
+                        onChange={(e) => setCountrySearch(e.target.value)}
+                        placeholder="Search countries..."
+                        autoFocus
+                        className="w-full bg-white/[0.06] border border-white/10 rounded-lg px-2.5 py-1.5 text-white text-xs placeholder-white/30 mb-2 focus:outline-none"
+                      />
+                      <div className="space-y-0.5">
+                        {ALL_COUNTRIES.filter((c) => c.toLowerCase().includes(countrySearch.toLowerCase())).map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => {
+                              setLocationInput(c);
+                              setShowLocationDropdown(false);
+                            }}
+                            className={`w-full text-left px-2.5 py-1.5 rounded-lg text-xs font-manrope transition-colors ${
+                              locationInput === c ? "bg-white/20 text-white font-bold" : "text-white/70 hover:bg-white/10 hover:text-white"
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {/* Graduation Year Select */}
+                <div className="space-y-1.5">
+                  <span className="text-[10px] font-mono text-white/40 uppercase tracking-wider block">Graduation Year</span>
+                  <select
+                    value={gradYearInput}
+                    onChange={(e) => setGradYearInput(e.target.value)}
+                    className="w-full bg-[#0d0f19] border border-white/10 rounded-xl px-3.5 py-2.5 text-white text-xs font-manrope focus:outline-none"
+                  >
+                    {["2024", "2025", "2026", "2027", "2028", "2029", "2030", "Other"].map((yr) => (
+                      <option key={yr} value={yr} className="bg-[#0e101a] text-white">
+                        Class of {yr}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
             </form>
 
