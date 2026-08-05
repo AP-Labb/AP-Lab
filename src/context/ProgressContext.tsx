@@ -428,6 +428,16 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           });
         }
 
+        const following = Array.from(new Set([
+          ...(firestoreData.following || []),
+          ...(localProgress?.following || ["bot-1", "bot-2"]),
+        ]));
+
+        const followers = Array.from(new Set([
+          ...(firestoreData.followers || []),
+          ...(localProgress?.followers || ["bot-1", "bot-2", "bot-3", "bot-5"]),
+        ]));
+
         // Merge daily tutor message counts based on local date
         const todayStr = new Date().toLocaleDateString('en-CA'); // YYYY-MM-DD
         let mergedMessagesCount = localProgress?.dailyTutorMessagesCount || 0;
@@ -495,6 +505,11 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           goalScore: firestoreData.goalScore || localProgress?.goalScore || 5,
           usageIntents: firestoreData.usageIntents || localProgress?.usageIntents || [],
           selectedClasses: firestoreData.selectedClasses || localProgress?.selectedClasses || [],
+          bio: firestoreData.bio || localProgress?.bio || "",
+          location: firestoreData.location || localProgress?.location || "",
+          profileBannerColor: firestoreData.profileBannerColor || localProgress?.profileBannerColor || "#7b39fc",
+          following,
+          followers,
         };
 
         // Sync back to Firestore if Firestore is out of sync or guest migration is needed

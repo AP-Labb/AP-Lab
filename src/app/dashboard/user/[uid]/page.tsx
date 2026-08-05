@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -181,6 +181,9 @@ export default function UserProfilePage() {
   // Theme Banner Color (User preference, state, or default purple)
   const themeBannerColor = user?.profileBannerColor || bannerColorState || "#7b39fc";
 
+  // Bio resolution
+  const displayBio = user?.bio && user.bio.trim() !== "" ? user.bio.trim() : (isOwnProfile && progress?.bio && progress.bio.trim() !== "" ? progress.bio.trim() : "N/A");
+
   // Active list for modal
   const activeFollowListUids = followModalTab === "followers" ? userFollowers : userFollowing;
 
@@ -212,8 +215,8 @@ export default function UserProfilePage() {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {/* EXPANDED PROFILE BANNER CARD WITH DYNAMIC BACKGROUND COLOR TINTING */}
-              <div className="relative border border-white/15 rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.95)] p-8 sm:p-12 py-16 sm:py-20 text-center min-h-[580px] sm:min-h-[620px] flex flex-col items-center justify-between">
+              {/* PROFILE BANNER CARD WITH REDUCED CORNER ROUNDING (rounded-3xl) & DYNAMIC COLOR TINTING */}
+              <div className="relative border border-white/15 rounded-3xl overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.95)] p-8 sm:p-12 py-16 sm:py-20 text-center min-h-[580px] sm:min-h-[620px] flex flex-col items-center justify-between">
                 
                 {/* DYNAMIC TEXTURED MESH GRADIENT BACKGROUND */}
                 <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
@@ -258,14 +261,16 @@ export default function UserProfilePage() {
                   <Upload className="w-5 h-5 text-white stroke-[2.2]" />
                 </button>
 
-                {/* SCATTERED FLOATING STAT CAPSULES (ROTATED + PASTEL TINTED BACKGROUNDS + LARGER ICONS) */}
+                {/* SCATTERED FLOATING STAT CAPSULES WITH 3D TILT ANIMATION, PASTEL BACKGROUNDS & LARGER ICONS */}
                 
                 {/* 1. XP Capsule (Top Left) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 left-12 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-extrabold text-sm shadow-xl -rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 350 }}
+                  className="hidden md:flex absolute top-12 left-12 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-extrabold text-sm shadow-xl -rotate-6 transition-all cursor-default z-20"
                 >
                   <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-7 h-7 object-contain" />
                   <span>{xp.toLocaleString()} XP</span>
@@ -275,8 +280,10 @@ export default function UserProfilePage() {
                 <motion.div
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 left-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-extrabold text-sm shadow-xl rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 350 }}
+                  className="hidden md:flex absolute top-48 left-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-extrabold text-sm shadow-xl rotate-5 transition-all cursor-default z-20"
                 >
                   <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-7 h-7" />
                   <span>{user.streakDays || 0} day Streak</span>
@@ -286,8 +293,10 @@ export default function UserProfilePage() {
                 <motion.div
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-extrabold text-sm shadow-xl -rotate-4 hover:rotate-0 transition-transform cursor-default z-20"
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 350 }}
+                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-extrabold text-sm shadow-xl -rotate-4 transition-all cursor-default z-20"
                 >
                   <img src="/images/coin-zoomed.png" alt="Coins" className="w-7 h-7 object-contain" />
                   <span>{(user.credits || 0).toLocaleString()} Coins</span>
@@ -297,8 +306,10 @@ export default function UserProfilePage() {
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 right-24 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-extrabold text-sm shadow-xl rotate-6 hover:rotate-0 transition-transform cursor-default z-20"
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.1, type: "spring", stiffness: 350 }}
+                  className="hidden md:flex absolute top-12 right-24 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-extrabold text-sm shadow-xl rotate-6 transition-all cursor-default z-20"
                 >
                   <Target className="w-6 h-6 text-[#115e59]" />
                   <span>{accuracy}% Accuracy</span>
@@ -308,8 +319,10 @@ export default function UserProfilePage() {
                 <motion.div
                   initial={{ x: 10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 right-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-extrabold text-sm shadow-xl -rotate-5 hover:rotate-0 transition-transform cursor-default z-20"
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.2, type: "spring", stiffness: 350 }}
+                  className="hidden md:flex absolute top-48 right-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-extrabold text-sm shadow-xl -rotate-5 transition-all cursor-default z-20"
                 >
                   <LevelBadge level={level} size="sm" />
                   <span>Level {level}</span>
@@ -319,8 +332,10 @@ export default function UserProfilePage() {
                 <motion.div
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-extrabold text-sm shadow-xl rotate-3 hover:rotate-0 transition-transform cursor-default z-20"
+                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={{ delay: 0.3, type: "spring", stiffness: 350 }}
+                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-extrabold text-sm shadow-xl rotate-3 transition-all cursor-default z-20"
                 >
                   <Clock className="w-6 h-6 text-[#075985]" />
                   <span>{user.totalStudyMinutes || 45}m Study Time</span>
@@ -394,12 +409,10 @@ export default function UserProfilePage() {
                     </div>
                   </div>
 
-                  {/* Bio Quote (if present) */}
-                  {user.bio && user.bio.trim() !== "" && (
-                    <p className="text-xs text-white/90 font-manrope max-w-md mx-auto leading-relaxed italic bg-black/30 px-5 py-2.5 rounded-2xl border border-white/15 backdrop-blur-sm shadow-md">
-                      "{user.bio}"
-                    </p>
-                  )}
+                  {/* Bio Quote (Always Displayed!) */}
+                  <p className="text-xs text-white/90 font-manrope max-w-md mx-auto leading-relaxed italic bg-black/30 px-5 py-2.5 rounded-2xl border border-white/15 backdrop-blur-sm shadow-md">
+                    {displayBio !== "N/A" ? `"${displayBio}"` : "N/A"}
+                  </p>
 
                   {/* Followers & Following Centered Pill Capsules */}
                   <div className="flex items-center justify-center gap-3 pt-2">
@@ -437,7 +450,7 @@ export default function UserProfilePage() {
                     <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
                     <span>{(user.credits || 0).toLocaleString()} Coins</span>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#ccfbf1] border border-teal-300 text-xs font-extrabold text-[#115e59]">
+                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#ccfbf1] border border-[#2dd4bf] text-xs font-extrabold text-[#115e59]">
                     <Target className="w-4 h-4 text-[#115e59]" />
                     <span>{accuracy}% Accuracy</span>
                   </div>

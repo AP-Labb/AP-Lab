@@ -82,7 +82,7 @@ export default function SettingsPage() {
     if (typeof window !== "undefined") {
       const savedVoice = localStorage.getItem("aplab_voice_setting") || "1";
       setVoiceSetting(savedVoice);
-      const savedColor = localStorage.getItem("aplab-banner-color");
+      const savedColor = localStorage.getItem("ap-lab-banner-color");
       if (savedColor && !hasModifiedColor) {
         setSelectedBannerColor(savedColor);
       }
@@ -454,13 +454,17 @@ export default function SettingsPage() {
                           type="button"
                           onClick={() => handleBannerColorChange(color.hex)}
                           className={cn(
-                            "w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer border-2 relative",
-                            isSelected ? "border-white scale-110 shadow-lg" : "border-transparent opacity-80 hover:opacity-100 hover:scale-105"
+                            "w-9 h-9 rounded-full transition-all flex items-center justify-center cursor-pointer border-2 relative shadow-md",
+                            isSelected ? "border-white scale-110 ring-2 ring-white/50" : "border-transparent opacity-80 hover:opacity-100 hover:scale-105"
                           )}
                           style={{ backgroundColor: color.hex }}
                           title={color.name}
                         >
-                          {isSelected && <Check className="w-4 h-4 text-black drop-shadow stroke-[3]" />}
+                          {isSelected && (
+                            <div className="w-5 h-5 rounded-full bg-white/90 text-black flex items-center justify-center shadow-md">
+                              <Check className="w-3.5 h-3.5 text-black stroke-[3.5]" />
+                            </div>
+                          )}
                         </button>
                       );
                     })}
