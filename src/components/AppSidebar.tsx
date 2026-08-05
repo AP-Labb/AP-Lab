@@ -366,17 +366,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
                   <div className="h-px bg-white/[0.07] mx-1 mb-1" />
 
-                  {/* 1. Settings */}
-                  <Link
-                    href="/dashboard/settings"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <Settings className="w-4 h-4 text-white/50" />
-                    <span>Settings</span>
-                  </Link>
-
-                  {/* 2. My Profile */}
+                  {/* 1. My Profile */}
                   <Link
                     href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
                     onClick={() => setShowProfileMenu(false)}
@@ -386,8 +376,9 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     <span>My Profile</span>
                   </Link>
 
-                  {/* 3. My Inventory */}
+                  {/* 2. My Inventory */}
                   <button
+                    type="button"
                     onClick={() => {
                       setShowProfileMenu(false);
                       setShowMinecraftInventory(true);
@@ -398,7 +389,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     <span>My Inventory</span>
                   </button>
 
-                  {/* 4. Feedback */}
+                  {/* 3. Feedback */}
                   <Link
                     href="/feedback"
                     onClick={() => setShowProfileMenu(false)}
@@ -406,6 +397,16 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   >
                     <MessageSquarePlus className="w-4 h-4 text-white/50" />
                     <span>Feedback</span>
+                  </Link>
+
+                  {/* 4. Settings */}
+                  <Link
+                    href="/dashboard/settings"
+                    onClick={() => setShowProfileMenu(false)}
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
+                  >
+                    <Settings className="w-4 h-4 text-white/50" />
+                    <span>Settings</span>
                   </Link>
 
                   <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
