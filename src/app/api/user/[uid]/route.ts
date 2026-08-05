@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getAdminDb } from "@/lib/firebaseAdmin";
 import { getLevelForXp } from "@/lib/xpProgression";
+import { getBotProfile } from "@/lib/botProfiles";
 
 export const dynamic = "force-dynamic";
 
@@ -10,11 +11,14 @@ export async function GET(
 ) {
   const { uid } = params;
 
-  if (!uid || uid.startsWith("bot-") || uid.startsWith("placeholder-")) {
-    return NextResponse.json(
-      { error: "Bot or placeholder account — no real profile data." },
-      { status: 404 }
-    );
+  if (!uid) {
+    return NextResponse.json({ error: "Missing UID" }, { status: 400 });
+  }
+
+  // Check if it's a bot or placeholder account
+  const botProf = getBotProfile(uid);
+  if (botProf) {
+    return NextResponse.json(botProf);
   }
 
   try {

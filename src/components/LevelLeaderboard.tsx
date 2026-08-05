@@ -95,7 +95,7 @@ export function LevelLeaderboard() {
       bgGlow: "from-slate-300/10",
       borderColor: "border-slate-300/20",
       badgeClass: "bg-slate-300/10 text-slate-200 border-slate-300/30",
-      icon: <Trophy className="w-4 h-4" />,
+      icon: <img src="/images/rank-2-silver.png" alt="2nd Place" className="w-5 h-7 object-contain drop-shadow" />,
       rankLabel: "#2",
       avatarSize: "w-16 h-16" as const,
       zOffset: -1,
@@ -107,7 +107,7 @@ export function LevelLeaderboard() {
       bgGlow: "from-amber-400/15",
       borderColor: "border-amber-400/30",
       badgeClass: "bg-amber-400/15 text-amber-300 border-amber-400/30",
-      icon: <Crown className="w-5 h-5 fill-amber-400" />,
+      icon: <img src="/images/rank-1-crown.png" alt="1st Place Crown" className="w-8 h-6 object-contain drop-shadow-[0_0_8px_rgba(245,158,11,0.5)]" />,
       rankLabel: "#1",
       avatarSize: "w-20 h-20" as const,
       zOffset: 0,
@@ -119,7 +119,7 @@ export function LevelLeaderboard() {
       bgGlow: "from-amber-700/10",
       borderColor: "border-amber-700/20",
       badgeClass: "bg-amber-700/10 text-amber-600 border-amber-700/20",
-      icon: <Award className="w-4 h-4" />,
+      icon: <img src="/images/rank-3-bronze.png" alt="3rd Place" className="w-5 h-7 object-contain drop-shadow" />,
       rankLabel: "#3",
       avatarSize: "w-14 h-14" as const,
       zOffset: -1,
@@ -146,7 +146,7 @@ export function LevelLeaderboard() {
 
   const renderRow = (user: LeaderboardUser, actualRankIndex: number, isCurrentUser: boolean) => {
     const activeFrame = isCurrentUser ? (progress?.activeAvatarFrame || user.activeAvatarFrame) : user.activeAvatarFrame;
-    const showProfileLink = !isBot(user.uid);
+    const showProfileLink = true;
 
     const rankColors = [
       "text-amber-400",
@@ -279,7 +279,7 @@ export function LevelLeaderboard() {
                 const config = podiumConfig[podiumPos];
                 const actualRank = podiumRanks[podiumPos];
                 const isCurrent = user.uid === activeUid;
-                const showProfileLink = !isBot(user.uid);
+                const showProfileLink = true;
                 const activeFrame = isCurrent ? (progress?.activeAvatarFrame || user.activeAvatarFrame) : user.activeAvatarFrame;
                 const nameColor = isCurrent ? (progress?.activeNameColor || user.activeNameColor) : user.activeNameColor;
 

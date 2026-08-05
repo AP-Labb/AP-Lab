@@ -207,11 +207,9 @@ export default function UserProfilePage() {
                       </div>
 
                       {/* Bio Text */}
-                      {user.bio && (
-                        <p className="text-xs text-white/70 font-manrope max-w-xl leading-relaxed pt-1 italic">
-                          "{user.bio}"
-                        </p>
-                      )}
+                      <p className="text-xs text-white/80 font-manrope max-w-xl leading-relaxed pt-1.5 font-medium">
+                        "{user.bio || "AP Scholar studying for College Board exams on AP Lab."}"
+                      </p>
 
                       {/* Action Buttons (Edit Profile for own profile) */}
                       {isOwnProfile && (
