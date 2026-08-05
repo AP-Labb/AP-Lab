@@ -49,6 +49,8 @@ interface UserProgress {
   bio?: string;
   location?: string;
   profileBannerColor?: string;
+  followers?: string[];
+  following?: string[];
 }
 
 interface ProgressContextType {
@@ -59,6 +61,7 @@ interface ProgressContextType {
   recordTutorMessage: () => Promise<void>;
   recordMockExamAttempt: (correctCount: number, totalQuestions: number) => Promise<void>;
   claimSocialXp?: (taskName: string, xpAmount: number) => Promise<void>;
+  toggleFollow?: (targetUid: string) => Promise<boolean>;
   updatePreferences?: (prefs: { theme?: "dark" | "light"; courseBg?: string; displayName?: string; bio?: string; location?: string; graduationYear?: string | number | null; profileBannerColor?: string }) => Promise<void>;
   spendCredits?: (amount: number) => Promise<boolean>;
   addCredits?: (amount: number, reason?: string) => Promise<void>;
@@ -1238,10 +1241,31 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     return true;
   };
 
+  const toggleFollow = async (targetUid: string): Promise<boolean> => {
+    if (!progress.uid || progress.uid === targetUid) return false;
+    const currentFollowing = progress.following || ["bot-1", "bot-2"];
+    const isFollowing = currentFollowing.includes(targetUid);
+    const newFollowing = isFollowing
+      ? currentFollowing.filter((id) => id !== targetUid)
+      : [...currentFollowing, targetUid];
+
+    const updated = { ...progress, following: newFollowing };
+    setProgress(updated);
+
+    if (currentUser) {
+      const localKey = `ap-lab-progress-${currentUser.uid}`;
+      try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
+      setDoc(doc(db, "userProgress", currentUser.uid), {
+        following: newFollowing
+      }, { merge: true }).catch(() => {});
+    }
+    return !isFollowing;
+  };
+
   return (
     <ProgressContext.Provider value={{
       progress, loading, completeTopic, recordQuestionAttempt, recordTutorMessage,
-      recordMockExamAttempt, claimSocialXp, updatePreferences, spendCredits, addCredits, buyItem, equipItem, useBoostItem
+      recordMockExamAttempt, claimSocialXp, toggleFollow, updatePreferences, spendCredits, addCredits, buyItem, equipItem, useBoostItem
     }}>
       {children}
       

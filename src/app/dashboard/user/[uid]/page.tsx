@@ -2,23 +2,23 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
-import { motion } from "framer-motion";
+import { useParams, useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   ArrowLeft, GraduationCap, Trophy, Zap, Target,
   BookOpen, Clock, Flame, CheckCircle, User, MapPin, Calendar,
-  Edit3, ShieldCheck, ChevronRight
+  Edit3, ShieldCheck, ChevronRight, UserPlus, UserCheck, X
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import { UserAvatar } from "@/components/UserAvatar";
 import { UserDisplayName } from "@/components/UserDisplayName";
 import { LevelBadge } from "@/components/LevelBadge";
-import { SettingsModal } from "@/components/SettingsModal";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { getXpThresholdForLevel } from "@/lib/xpProgression";
 import { StreakFlameIcon } from "@/components/StreakFlameIcon";
+import { cn } from "@/lib/utils";
 
 const COURSE_META: Record<
   string,
@@ -80,6 +80,14 @@ const COURSE_META: Record<
   },
 };
 
+const SCHOLAR_DIRECTORY: Record<string, { uid: string; name: string; photoURL: string; level: number; avatarFrame: string }> = {
+  "bot-1": { uid: "bot-1", name: "Tyler Davis", photoURL: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format&fit=crop&q=80", level: 12, avatarFrame: "frame-gold" },
+  "bot-2": { uid: "bot-2", name: "Sofia Rodriguez", photoURL: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=400&auto=format&fit=crop&q=80", level: 10, avatarFrame: "frame-silver" },
+  "bot-3": { uid: "bot-3", name: "Alex Mercer", photoURL: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80", level: 9, avatarFrame: "" },
+  "bot-4": { uid: "bot-4", name: "Maya Patel", photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80", level: 8, avatarFrame: "" },
+  "bot-5": { uid: "bot-5", name: "Ishan Samani", photoURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80", level: 28, avatarFrame: "frame-gold" },
+};
+
 interface UserProfile {
   uid: string;
   displayName: string;
@@ -100,17 +108,23 @@ interface UserProfile {
   enrolledCourses: string[];
   totalStudyMinutes: number;
   streakDays: number;
+  followers?: string[];
+  following?: string[];
   createdAt: string | null;
 }
 
 export default function UserProfilePage() {
   const { uid } = useParams<{ uid: string }>();
+  const router = useRouter();
   const { currentUser } = useAuth();
-  const { progress } = useProgress();
+  const { progress, toggleFollow } = useProgress();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
-  const [showSettingsModal, setShowSettingsModal] = useState(false);
+
+  // Followers / Following Modal state
+  const [showFollowModal, setShowFollowModal] = useState(false);
+  const [followModalTab, setFollowModalTab] = useState<"followers" | "following">("followers");
 
   const isOwnProfile = uid === currentUser?.uid || uid === progress?.uid;
 
@@ -146,16 +160,43 @@ export default function UserProfilePage() {
         activeNameColor: progress.activeNameColor || null,
         activeNameGradient: progress.activeNameGradient || "",
         bio: progress.bio || "",
-        location: progress.location || "United States",
+        location: progress.location || "",
         profileBannerColor: progress.profileBannerColor || "#7b39fc",
         enrolledCourses: (progress as any).selectedClasses || [],
         totalStudyMinutes: 0,
         streakDays: (progress as any).streakCount || 0,
+        followers: progress.followers || ["bot-1", "bot-2", "bot-3", "bot-5"],
+        following: progress.following || ["bot-1", "bot-2"],
         createdAt: null,
       }
     : null;
 
   const user = liveProfile || profile;
+
+  // Follow state for current user vs target user
+  const userFollowers = user?.followers || ["bot-1", "bot-2", "bot-3", "bot-5"];
+  const userFollowing = user?.following || ["bot-1", "bot-2"];
+
+  const myFollowingList = progress?.following || ["bot-1", "bot-2"];
+  const isFollowingThisUser = uid ? myFollowingList.includes(uid) : false;
+
+  const handleFollowToggle = async () => {
+    if (!uid || isOwnProfile || !toggleFollow) return;
+    const isNowFollowing = await toggleFollow(uid);
+    setProfile((prev) => {
+      if (!prev) return prev;
+      const myUid = currentUser?.uid || progress.uid || "me";
+      const updatedFollowers = isNowFollowing
+        ? [...(prev.followers || []), myUid]
+        : (prev.followers || []).filter((id) => id !== myUid);
+      return { ...prev, followers: updatedFollowers };
+    });
+  };
+
+  const openFollowModal = (tab: "followers" | "following") => {
+    setFollowModalTab(tab);
+    setShowFollowModal(true);
+  };
 
   const level = user?.level || 1;
   const xp = user?.xp || 0;
@@ -169,6 +210,9 @@ export default function UserProfilePage() {
   const totalCorrect = user?.totalQuestionsCorrect || 0;
   const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
   const enrolledCount = user?.enrolledCourses?.length || 0;
+
+  // Active list for modal
+  const activeFollowListUids = followModalTab === "followers" ? userFollowers : userFollowing;
 
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
@@ -250,7 +294,7 @@ export default function UserProfilePage() {
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/50 font-manrope">
                         <div className="flex items-center gap-1">
                           <MapPin className="w-3.5 h-3.5 text-violet-400 shrink-0" />
-                          <span>{user.location || "United States"}</span>
+                          <span>{user.location && user.location.trim() !== "" ? user.location : "N/A"}</span>
                         </div>
                         {user.createdAt && (
                           <div className="flex items-center gap-1">
@@ -264,14 +308,35 @@ export default function UserProfilePage() {
                         </div>
                       </div>
 
-                      {/* Bio Quote */}
-                      <p className="text-xs text-white/80 font-manrope max-w-xl leading-relaxed pt-1 font-medium">
-                        "{user.bio || "AP Scholar studying for College Board exams on AP Lab."}"
+                      {/* Followers & Following Counts (Instagram Style) */}
+                      <div className="flex items-center gap-4 pt-0.5 text-xs font-manrope">
+                        <button
+                          type="button"
+                          onClick={() => openFollowModal("followers")}
+                          className="hover:underline cursor-pointer flex items-center gap-1 text-white/80"
+                        >
+                          <span className="font-extrabold text-white font-mono">{userFollowers.length}</span>
+                          <span className="text-white/40">Followers</span>
+                        </button>
+                        <span className="text-white/20">•</span>
+                        <button
+                          type="button"
+                          onClick={() => openFollowModal("following")}
+                          className="hover:underline cursor-pointer flex items-center gap-1 text-white/80"
+                        >
+                          <span className="font-extrabold text-white font-mono">{userFollowing.length}</span>
+                          <span className="text-white/40">Following</span>
+                        </button>
+                      </div>
+
+                      {/* Bio Quote (Defaults to N/A if empty) */}
+                      <p className="text-xs text-white/70 font-manrope max-w-xl leading-relaxed pt-1 font-medium">
+                        {user.bio && user.bio.trim() !== "" ? `"${user.bio}"` : "N/A"}
                       </p>
 
-                      {/* Action Button: Edit Profile (Only for own profile) */}
-                      {isOwnProfile && (
-                        <div className="pt-2 flex items-center gap-3">
+                      {/* Action Buttons: Follow/Unfollow vs Edit Profile */}
+                      <div className="pt-2 flex items-center gap-3">
+                        {isOwnProfile ? (
                           <Link
                             href="/dashboard/settings?tab=account"
                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-sm active:scale-95"
@@ -279,8 +344,31 @@ export default function UserProfilePage() {
                             <Edit3 className="w-3.5 h-3.5 text-violet-400" />
                             <span>Edit Profile</span>
                           </Link>
-                        </div>
-                      )}
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={handleFollowToggle}
+                            className={cn(
+                              "inline-flex items-center gap-2 px-5 py-2 rounded-xl font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-md active:scale-95",
+                              isFollowingThisUser
+                                ? "bg-white/10 hover:bg-red-500/20 border border-white/15 text-white hover:text-red-400"
+                                : "bg-white text-black hover:bg-neutral-200"
+                            )}
+                          >
+                            {isFollowingThisUser ? (
+                              <>
+                                <UserCheck className="w-4 h-4 text-emerald-400" />
+                                <span>Following</span>
+                              </>
+                            ) : (
+                              <>
+                                <UserPlus className="w-4 h-4 text-black" />
+                                <span>Follow</span>
+                              </>
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   </div>
 
@@ -471,7 +559,101 @@ export default function UserProfilePage() {
         </main>
       </div>
 
-      <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
+      {/* FOLLOWERS / FOLLOWING MODAL (Matching Knowt Screenshot 1) */}
+      <AnimatePresence>
+        {showFollowModal && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              className="bg-[#14151f] border border-white/10 rounded-3xl w-full max-w-md p-6 space-y-5 shadow-2xl relative"
+            >
+              {/* Close Button */}
+              <button
+                type="button"
+                onClick={() => setShowFollowModal(false)}
+                className="absolute top-5 right-5 w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+
+              {/* Tab Selector Pill Bar (Followers vs Following) */}
+              <div className="flex justify-center pt-2">
+                <div className="inline-flex p-1.5 rounded-full bg-white/10 border border-white/5 gap-1">
+                  <button
+                    type="button"
+                    onClick={() => setFollowModalTab("followers")}
+                    className={cn(
+                      "px-6 py-2 rounded-full text-xs font-manrope font-bold transition-all cursor-pointer",
+                      followModalTab === "followers"
+                        ? "bg-white text-black shadow-md"
+                        : "text-white/60 hover:text-white"
+                    )}
+                  >
+                    Followers ({userFollowers.length})
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setFollowModalTab("following")}
+                    className={cn(
+                      "px-6 py-2 rounded-full text-xs font-manrope font-bold transition-all cursor-pointer",
+                      followModalTab === "following"
+                        ? "bg-white text-black shadow-md"
+                        : "text-white/60 hover:text-white"
+                    )}
+                  >
+                    Following ({userFollowing.length})
+                  </button>
+                </div>
+              </div>
+
+              {/* Scholars List */}
+              <div className="space-y-2.5 max-h-80 overflow-y-auto custom-scrollbar pr-1">
+                {activeFollowListUids.length === 0 ? (
+                  <div className="text-center py-8 text-white/40 text-xs font-manrope">
+                    No scholars listed yet.
+                  </div>
+                ) : (
+                  activeFollowListUids.map((scholarUid) => {
+                    const scholarData = SCHOLAR_DIRECTORY[scholarUid] || {
+                      uid: scholarUid,
+                      name: scholarUid === "me" || scholarUid === currentUser?.uid ? (progress?.displayName || "You") : `Scholar (${scholarUid.slice(0, 6)})`,
+                      photoURL: "",
+                      level: 10,
+                      avatarFrame: "",
+                    };
+
+                    return (
+                      <div
+                        key={scholarUid}
+                        onClick={() => {
+                          setShowFollowModal(false);
+                          router.push(`/dashboard/user/${scholarUid}`);
+                        }}
+                        className="flex items-center justify-between p-3 rounded-2xl bg-white/[0.03] hover:bg-white/[0.08] border border-white/5 transition-all cursor-pointer group"
+                      >
+                        <div className="flex items-center space-x-3 min-w-0">
+                          <UserAvatar
+                            photoURL={scholarData.photoURL}
+                            name={scholarData.name}
+                            activeFrame={scholarData.avatarFrame}
+                            size="md"
+                          />
+                          <span className="font-manrope font-extrabold text-sm text-white group-hover:text-purple-300 transition-colors truncate">
+                            {scholarData.name}
+                          </span>
+                        </div>
+                        <LevelBadge level={scholarData.level} />
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

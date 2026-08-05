@@ -60,6 +60,8 @@ export async function GET(
       coursesProgress: data.coursesProgress || {},
       totalStudyMinutes: data.totalStudyMinutes || 0,
       streakDays: data.streakDays || data.streakCount || 0,
+      followers: data.followers || ["bot-1", "bot-2", "bot-3"],
+      following: data.following || ["bot-1", "bot-2"],
       createdAt: data.createdAt?.toDate?.()?.toISOString() || null,
     });
   } catch (error: any) {

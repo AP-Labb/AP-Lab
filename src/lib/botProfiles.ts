@@ -19,6 +19,8 @@ export interface BotProfileData {
   enrolledCourses: string[];
   totalStudyMinutes: number;
   streakDays: number;
+  followers?: string[];
+  following?: string[];
   createdAt: string;
 }
 
@@ -284,6 +286,8 @@ export function getBotProfile(uid: string): BotProfileData | null {
       enrolledCourses: courses[num % courses.length],
       totalStudyMinutes: Math.floor(xp * 0.25),
       streakDays: (num % 12) + 1,
+      followers: ["bot-1", "bot-2", "bot-3"].filter((b) => b !== uid),
+      following: ["bot-1", "bot-2"].filter((b) => b !== uid),
       createdAt: "2026-01-01T00:00:00.000Z",
     };
   }
