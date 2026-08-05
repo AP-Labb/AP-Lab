@@ -95,7 +95,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
             )}
             title={`${streak} Day Study Streak`}
           >
-            <StreakFlameIcon streakCount={streak} sizeClassName="w-6 h-6" />
+            <StreakFlameIcon streakCount={streak} sizeClassName="w-8 h-8" />
             <span className="font-manrope font-extrabold text-lg leading-none">
               {streak}
             </span>
@@ -115,8 +115,8 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 )}
               >
                 {/* Large Flame Icon + Streak Count */}
-                <div className="flex items-center justify-center space-x-2 mb-2">
-                  <StreakFlameIcon streakCount={streak} sizeClassName="w-9 h-9" />
+                <div className="flex items-center justify-center space-x-3 mb-2">
+                  <StreakFlameIcon streakCount={streak} sizeClassName="w-14 h-14" />
                   <span className="font-manrope font-extrabold text-4xl text-white">{streak}</span>
                 </div>
 

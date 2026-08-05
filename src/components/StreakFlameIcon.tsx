@@ -11,8 +11,7 @@ interface StreakFlameIconProps {
 
 export function getStreakFlameSrc(streakCount: number = 0): string {
   if (streakCount <= 0) {
-    // No streak — using orange or dotted white flame
-    return "/images/streak-orange.png";
+    return "/images/streak-zero.png"; // Dotted White (0 days / no streak)
   }
   if (streakCount < 7) {
     return "/images/streak-orange.png"; // Normal Orange (1-6 days)
@@ -41,10 +40,9 @@ export function getStreakTierName(streakCount: number = 0): string {
 export function StreakFlameIcon({
   streakCount = 0,
   className,
-  sizeClassName = "w-6 h-6",
+  sizeClassName = "w-7 h-7",
 }: StreakFlameIconProps) {
   const imageSrc = getStreakFlameSrc(streakCount);
-  const isZero = streakCount <= 0;
 
   return (
     <img
@@ -53,7 +51,6 @@ export function StreakFlameIcon({
       className={cn(
         "object-contain inline-block shrink-0 transition-transform duration-300 hover:scale-110",
         sizeClassName,
-        isZero && "opacity-40 grayscale-[0.6]",
         className
       )}
     />

@@ -240,13 +240,18 @@ export function LevelLeaderboard() {
 
       {loading ? (
         <div className="space-y-3.5 py-2 animate-pulse">
-          {/* Podium skeleton */}
-          <div className="flex items-end justify-center gap-4 mb-8 h-52">
-            {[1,2,3].map(i => (
-              <div key={i} className={cn("flex flex-col items-center gap-3", i === 2 ? "mb-12" : i === 1 ? "" : "mb-8")}>
-                <div className="w-16 h-16 bg-white/5 rounded-2xl" />
-                <div className="w-20 h-4 bg-white/5 rounded" />
-                <div className={cn("w-28 rounded-t-xl bg-white/5", i === 1 ? "h-36" : i === 2 ? "h-24" : "h-16")} />
+          {/* Top 3 Card Grid Skeleton */}
+          <div className="grid grid-cols-3 gap-3 md:gap-4 mb-10 items-end">
+            {[1, 2, 3].map((i) => (
+              <div
+                key={i}
+                className="bg-white/[0.02] border border-white/5 rounded-2xl md:rounded-3xl p-5 flex flex-col items-center text-center space-y-3"
+              >
+                <div className="w-16 h-5 bg-white/5 rounded-full" />
+                <div className="w-16 h-16 bg-white/5 rounded-full" />
+                <div className="w-24 h-4 bg-white/5 rounded" />
+                <div className="w-16 h-3 bg-white/5 rounded" />
+                <div className="w-full h-8 bg-white/5 rounded-xl mt-2" />
               </div>
             ))}
           </div>

@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 import {
   ArrowLeft, GraduationCap, Trophy, Zap, Target,
   BookOpen, Clock, Flame, CheckCircle, User, MapPin, Calendar,
-  Edit3, ShieldCheck, Star, Award
+  Edit3, ShieldCheck, ChevronRight
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -20,16 +20,64 @@ import { useProgress } from "@/context/ProgressContext";
 import { getXpThresholdForLevel } from "@/lib/xpProgression";
 import { StreakFlameIcon } from "@/components/StreakFlameIcon";
 
-const COURSE_META: Record<string, { name: string; accentColor: string; emoji: string; category: string }> = {
-  "ap-biology":    { name: "AP® Biology",          accentColor: "#22c55e", emoji: "🧬", category: "Science" },
-  "ap-chemistry":  { name: "AP® Chemistry",        accentColor: "#00f2ff", emoji: "⚗️", category: "Science" },
-  "ap-physics-c":  { name: "AP® Physics C",        accentColor: "#818cf8", emoji: "⚡", category: "Science" },
-  "ap-ush":        { name: "AP® US History",       accentColor: "#fbbf24", emoji: "🏛️", category: "History" },
-  "ap-psych":      { name: "AP® Psychology",       accentColor: "#7b39fc", emoji: "🧠", category: "Social Science" },
-  "ap-eng-lang":   { name: "AP® English Language", accentColor: "#fb7185", emoji: "✍️", category: "English" },
-  "ap-calc-bc":    { name: "AP® Calculus BC",      accentColor: "#34d399", emoji: "∫", category: "Math" },
-  "ap-stats":      { name: "AP® Statistics",       accentColor: "#38bdf8", emoji: "📊", category: "Math" },
-  "ap-csa":        { name: "AP® Comp Sci A",       accentColor: "#a78bfa", emoji: "💻", category: "Computer Science" },
+const COURSE_META: Record<
+  string,
+  { name: string; accentColor: string; category: string; thumbnail: string }
+> = {
+  "ap-biology": {
+    name: "AP® Biology",
+    accentColor: "#22c55e",
+    category: "STEM & Sciences",
+    thumbnail: "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&q=80",
+  },
+  "ap-chemistry": {
+    name: "AP® Chemistry",
+    accentColor: "#00f2ff",
+    category: "STEM & Sciences",
+    thumbnail: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80",
+  },
+  "ap-physics-c": {
+    name: "AP® Physics C",
+    accentColor: "#818cf8",
+    category: "STEM & Sciences",
+    thumbnail: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=800&q=80",
+  },
+  "ap-ush": {
+    name: "AP® US History",
+    accentColor: "#fbbf24",
+    category: "Humanities & Arts",
+    thumbnail: "https://images.unsplash.com/photo-1579783902614-a3fb3927b675?w=800&q=80",
+  },
+  "ap-psych": {
+    name: "AP® Psychology",
+    accentColor: "#7b39fc",
+    category: "Humanities & Arts",
+    thumbnail: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=800&q=80",
+  },
+  "ap-eng-lang": {
+    name: "AP® English Language",
+    accentColor: "#fb7185",
+    category: "Humanities & Arts",
+    thumbnail: "https://images.unsplash.com/photo-1455390582262-044cdead277a?w=800&q=80",
+  },
+  "ap-calc-bc": {
+    name: "AP® Calculus BC",
+    accentColor: "#34d399",
+    category: "Mathematical Logic",
+    thumbnail: "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&q=80",
+  },
+  "ap-stats": {
+    name: "AP® Statistics",
+    accentColor: "#38bdf8",
+    category: "Mathematical Logic",
+    thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
+  },
+  "ap-csa": {
+    name: "AP® Comp Sci A",
+    accentColor: "#a78bfa",
+    category: "Mathematical Logic",
+    thumbnail: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
+  },
 };
 
 interface UserProfile {
@@ -131,7 +179,7 @@ export default function UserProfilePage() {
         <UniversalTopHeader />
 
         <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 pb-24 space-y-6">
-          {/* Breadcrumb Header */}
+          {/* Navigation Breadcrumb */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 text-xs text-white/40 font-mono">
               <Link href="/dashboard/leaderboard" className="hover:text-white transition-colors flex items-center gap-1">
@@ -155,7 +203,7 @@ export default function UserProfilePage() {
             <div className="text-center py-24 border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
               <User className="w-12 h-12 text-white/20 mx-auto mb-3" />
               <h2 className="text-white/60 font-bold text-lg">Profile Not Found</h2>
-              <p className="text-white/30 text-sm mt-1">This user account could not be found.</p>
+              <p className="text-white/30 text-sm mt-1">This user profile could not be found.</p>
             </div>
           ) : user ? (
             <motion.div
@@ -164,14 +212,13 @@ export default function UserProfilePage() {
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {/* HERO HEADER CARD (Stellar Style) */}
+              {/* HERO PROFILE HEADER */}
               <div className="relative bg-[#090a12] border border-white/[0.08] rounded-3xl p-6 sm:p-8 overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)]">
-                {/* Glow bar */}
                 <div className="h-px w-full bg-gradient-to-r from-transparent via-purple-500/40 to-transparent absolute top-0 left-0 right-0" />
                 <div className="absolute -top-10 left-1/4 w-80 h-40 bg-violet-900/15 blur-[90px] rounded-full pointer-events-none" />
 
                 <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative z-10">
-                  {/* Left Column: Avatar + Details */}
+                  {/* Left Column: Avatar & User Metadata */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 flex-1 min-w-0">
                     <UserAvatar
                       photoURL={user.photoURL}
@@ -189,7 +236,7 @@ export default function UserProfilePage() {
                         />
                       </div>
 
-                      {/* Meta Info Row */}
+                      {/* Location & Academic Details */}
                       <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/50 font-manrope">
                         <div className="flex items-center gap-1">
                           <MapPin className="w-3.5 h-3.5 text-violet-400 shrink-0" />
@@ -207,12 +254,12 @@ export default function UserProfilePage() {
                         </div>
                       </div>
 
-                      {/* Bio Text */}
-                      <p className="text-xs text-white/80 font-manrope max-w-xl leading-relaxed pt-1.5 font-medium">
+                      {/* Bio Quote */}
+                      <p className="text-xs text-white/80 font-manrope max-w-xl leading-relaxed pt-1 font-medium">
                         "{user.bio || "AP Scholar studying for College Board exams on AP Lab."}"
                       </p>
 
-                      {/* Action Buttons (Edit Profile for own profile) */}
+                      {/* Action Button: Edit Profile (Only for own profile) */}
                       {isOwnProfile && (
                         <div className="pt-2 flex items-center gap-3">
                           <button
@@ -227,7 +274,7 @@ export default function UserProfilePage() {
                     </div>
                   </div>
 
-                  {/* Right Column: Scholar Level Box (Stellar style) */}
+                  {/* Right Column: Scholar Level Progress */}
                   <div className="w-full lg:w-72 bg-white/[0.03] border border-white/10 rounded-2xl p-4 shrink-0 space-y-3">
                     <div className="flex items-center justify-between">
                       <span className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-widest flex items-center gap-1.5">
@@ -242,7 +289,6 @@ export default function UserProfilePage() {
                       <span className="text-xs font-mono text-white/40">{xpInLevel.toLocaleString()} XP</span>
                     </div>
 
-                    {/* Progress Bar */}
                     <div className="space-y-1">
                       <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
                         <motion.div
@@ -261,7 +307,7 @@ export default function UserProfilePage() {
                 </div>
               </div>
 
-              {/* KEY METRICS ROW (6 Cards Grid) */}
+              {/* KEY STATS METRICS GRID */}
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
                 {[
                   { label: "XP", value: xp.toLocaleString(), icon: Trophy, color: "text-purple-400", img: "/images/xp-shield-zoomed.png" },
@@ -278,7 +324,7 @@ export default function UserProfilePage() {
                     <div className="flex items-center justify-between text-white/40">
                       <span className="text-[10px] font-mono font-bold tracking-widest uppercase">{item.label}</span>
                       {item.label === "STREAK" ? (
-                        <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-5 h-5" />
+                        <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-6 h-6" />
                       ) : item.img ? (
                         <img src={item.img} alt={item.label} className="w-5 h-5 object-contain" />
                       ) : (
@@ -292,7 +338,7 @@ export default function UserProfilePage() {
                 ))}
               </div>
 
-              {/* MAIN 2-COLUMN SECTION GRID */}
+              {/* MAIN CONTENT GRID: COURSES & LEARNING SNAPSHOT */}
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Left 2 Columns: Courses Section */}
                 <div className="lg:col-span-2 space-y-4">
@@ -302,7 +348,7 @@ export default function UserProfilePage() {
                         <div className="flex items-center gap-2">
                           <BookOpen className="w-5 h-5 text-violet-400" />
                           <h3 className="font-manrope font-bold text-lg text-white">Courses</h3>
-                          <span className="px-2 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-mono font-bold">
+                          <span className="px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-xs font-mono font-bold">
                             {enrolledCount}
                           </span>
                         </div>
@@ -318,40 +364,62 @@ export default function UserProfilePage() {
                         <p className="text-white/40 text-xs font-manrope">No courses enrolled yet.</p>
                       </div>
                     ) : (
-                      <div className="space-y-3">
+                      <div className="grid grid-cols-1 gap-3.5">
                         {user.enrolledCourses.map((slug) => {
                           const meta = COURSE_META[slug] || {
                             name: slug.toUpperCase().replace("-", " "),
                             accentColor: "#818cf8",
-                            emoji: "📚",
                             category: "Course",
+                            thumbnail: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80",
                           };
+
                           return (
                             <Link
                               key={slug}
                               href={`/dashboard/${slug}`}
-                              className="flex items-center gap-4 p-4 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:bg-white/[0.04] hover:border-white/15 transition-all group"
+                              className="group relative bg-white/[0.02] border border-white/[0.07] hover:border-white/20 rounded-2xl p-4 transition-all duration-300 flex flex-col sm:flex-row sm:items-center gap-4 overflow-hidden"
                             >
-                              <div
-                                className="w-12 h-12 rounded-2xl flex items-center justify-center text-xl shrink-0"
-                                style={{ backgroundColor: `${meta.accentColor}18`, border: `1px solid ${meta.accentColor}30` }}
-                              >
-                                {meta.emoji}
+                              {/* Course Thumbnail Image */}
+                              <div className="relative w-full sm:w-28 h-20 rounded-xl overflow-hidden shrink-0 border border-white/10">
+                                <img
+                                  src={meta.thumbnail}
+                                  alt={meta.name}
+                                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                                />
+                                <div className="absolute inset-0 bg-black/30 group-hover:bg-black/10 transition-colors" />
                               </div>
 
-                              <div className="flex-1 min-w-0 space-y-1.5">
+                              {/* Course Title & Details */}
+                              <div className="flex-1 min-w-0 space-y-2">
                                 <div className="flex items-center justify-between">
-                                  <span className="font-manrope font-bold text-sm text-white group-hover:text-violet-300 transition-colors truncate">
-                                    {meta.name}
-                                  </span>
-                                  <span className="text-xs font-mono font-bold text-white/40">Active</span>
+                                  <div>
+                                    <span className="text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider block">
+                                      {meta.category}
+                                    </span>
+                                    <h4 className="font-manrope font-extrabold text-base text-white group-hover:text-violet-300 transition-colors truncate">
+                                      {meta.name}
+                                    </h4>
+                                  </div>
+                                  <div className="flex items-center gap-1 text-xs font-mono font-bold text-white/50 group-hover:text-white transition-colors">
+                                    <span>View</span>
+                                    <ChevronRight className="w-3.5 h-3.5" />
+                                  </div>
                                 </div>
 
-                                <div className="h-1.5 w-full bg-white/[0.06] rounded-full overflow-hidden">
-                                  <div
-                                    className="h-full rounded-full transition-all duration-500"
-                                    style={{ backgroundColor: meta.accentColor, width: "35%" }}
-                                  />
+                                {/* Mastery Progress Bar */}
+                                <div className="space-y-1">
+                                  <div className="flex justify-between items-center text-[10px] font-mono">
+                                    <span className="text-white/40">Mastery Progress</span>
+                                    <span className="text-white font-bold" style={{ color: meta.accentColor }}>
+                                      Active
+                                    </span>
+                                  </div>
+                                  <div className="h-2 w-full bg-white/[0.06] rounded-full overflow-hidden">
+                                    <div
+                                      className="h-full rounded-full transition-all duration-500"
+                                      style={{ backgroundColor: meta.accentColor, width: "35%" }}
+                                    />
+                                  </div>
                                 </div>
                               </div>
                             </Link>
@@ -379,9 +447,9 @@ export default function UserProfilePage() {
                         { label: "Total XP Earned", value: `${xp.toLocaleString()} XP` },
                         { label: "Coin Balance", value: (user.credits || 0).toLocaleString() },
                       ].map((stat) => (
-                        <div key={stat.label} className="flex items-center justify-between py-2 border-b border-white/[0.05] last:border-0 text-xs font-manrope">
-                          <span className="text-white/50">{stat.label}</span>
-                          <span className="font-bold text-white">{stat.value}</span>
+                        <div key={stat.label} className="flex items-center justify-between py-2.5 border-b border-white/[0.05] last:border-0 text-xs font-manrope">
+                          <span className="text-white/50 font-medium">{stat.label}</span>
+                          <span className="font-bold text-white font-mono">{stat.value}</span>
                         </div>
                       ))}
                     </div>
