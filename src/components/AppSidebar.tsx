@@ -189,23 +189,23 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
             {/* Notifications Trigger Item */}
             <button
+              type="button"
               onClick={() => {
                 setShowNotificationsMenu((prev) => !prev);
                 setShowProfileMenu(false);
                 setHasUnreadNotifications(false);
               }}
               className={cn(
-                "flex items-center gap-3 w-full py-2.5 rounded-2xl transition-all duration-200 border cursor-pointer relative",
-                sidebarOpen ? "px-3 text-left justify-start" : "px-0 justify-center text-center",
+                "flex items-center gap-3 w-full h-11 px-2.5 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
                 showNotificationsMenu
                   ? "bg-white/10 border-white/20 text-white shadow-lg"
                   : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
               )}
             >
-              <div className="relative shrink-0 flex items-center justify-center">
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center relative">
                 <Bell className="w-5 h-5 text-white/80" />
                 {hasUnreadNotifications && (
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute -top-0.5 -right-0.5 shadow-sm" />
+                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute top-0 right-0 shadow-sm" />
                 )}
               </div>
 
@@ -216,7 +216,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     animate={{ opacity: 1, width: "auto" }}
                     exit={{ opacity: 0, width: 0 }}
                     transition={{ duration: 0.15 }}
-                    className="text-xs font-manrope font-semibold whitespace-pre"
+                    className="text-xs font-manrope font-semibold whitespace-pre truncate"
                   >
                     Notifications
                   </motion.span>
@@ -226,21 +226,21 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
             {/* Profile Menu Trigger Capsule */}
             <button
+              type="button"
               onClick={() => setShowProfileMenu((prev) => !prev)}
               className={cn(
-                "flex items-center gap-3 w-full py-2 rounded-2xl transition-all duration-200 border cursor-pointer",
-                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center",
+                "flex items-center gap-3 w-full h-11 px-2.5 rounded-2xl transition-colors duration-150 border cursor-pointer shrink-0",
                 showProfileMenu 
                   ? "bg-white/10 border-white/20 text-white shadow-lg" 
                   : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
               )}
             >
-              <div className="flex-shrink-0 flex items-center justify-center">
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center">
                 <UserAvatar 
                   photoURL={photoURL} 
                   name={displayName} 
                   activeFrame={progress?.activeAvatarFrame} 
-                  size="md" 
+                  size="sm" 
                 />
               </div>
 
@@ -266,24 +266,21 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               </AnimatePresence>
             </button>
 
-            {/* Dark page overlay behind popups */}
+            {/* Dark page overlay behind profile popup ONLY */}
             <AnimatePresence>
-              {(showProfileMenu || showNotificationsMenu) && (
+              {showProfileMenu && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
                   className="fixed inset-0 bg-black/40 z-[99998]"
-                  onClick={() => {
-                    setShowProfileMenu(false);
-                    setShowNotificationsMenu(false);
-                  }}
+                  onClick={() => setShowProfileMenu(false)}
                 />
               )}
             </AnimatePresence>
 
-            {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar */}
+            {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar (darker #0b0c16 theme) */}
             <AnimatePresence>
               {showNotificationsMenu && (
                 <motion.div
@@ -292,42 +289,21 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   exit={{ opacity: 0, x: -12, scale: 0.97 }}
                   transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                   className={cn(
-                    "fixed bottom-16 w-80 bg-[#14151f] border border-white/10 rounded-3xl p-6 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
+                    "fixed bottom-16 w-80 bg-[#0b0c16] border border-white/[0.12] rounded-3xl p-6 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
                     sidebarOpen ? "left-[232px]" : "left-[68px]"
                   )}
                 >
                   {/* Notifications Header matching Knowt screenshot 2 */}
                   <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
-                    <h3 className="font-manrope font-extrabold text-lg text-white">Notifications</h3>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        title="Mark all read"
-                        onClick={() => setHasUnreadNotifications(false)}
-                        className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                      >
-                        <CheckCheck className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        title="Settings"
-                        onClick={() => {
-                          setShowNotificationsMenu(false);
-                          router.push("/dashboard/settings");
-                        }}
-                        className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                      >
-                        <Settings className="w-3.5 h-3.5" />
-                      </button>
-                      <button
-                        type="button"
-                        title="Close"
-                        onClick={() => setShowNotificationsMenu(false)}
-                        className="w-7 h-7 rounded-full bg-white/[0.05] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
+                    <h3 className="font-manrope font-extrabold text-lg text-white tracking-tight">Notifications</h3>
+                    <button
+                      type="button"
+                      title="Close"
+                      onClick={() => setShowNotificationsMenu(false)}
+                      className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
 
                   {/* Empty Notifications View matching Knowt screenshot 2 */}

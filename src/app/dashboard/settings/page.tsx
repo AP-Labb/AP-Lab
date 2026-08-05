@@ -17,6 +17,8 @@ import { useAuth } from "@/context/AuthContext";
 import { updateProfile } from "firebase/auth";
 import { cn } from "@/lib/utils";
 
+import { CustomColorPicker } from "@/components/CustomColorPicker";
+
 const BANNER_COLORS = [
   { id: "#ef4444", name: "Coral Red", hex: "#ef4444" },
   { id: "#f59e0b", name: "Amber Gold", hex: "#f59e0b" },
@@ -64,6 +66,7 @@ export default function SettingsPage() {
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [hasModifiedColor, setHasModifiedColor] = useState(false);
 
   useEffect(() => {
     if (progress) {
@@ -73,13 +76,19 @@ export default function SettingsPage() {
       setBioInput(progress.bio || "");
       setLocationInput(progress.location || "");
       setGradYearInput(String(progress.graduationYear || "2028"));
-      setSelectedBannerColor(progress.profileBannerColor || "#7b39fc");
+      if (!hasModifiedColor && progress.profileBannerColor) {
+        setSelectedBannerColor(progress.profileBannerColor);
+      }
     }
     if (typeof window !== "undefined") {
       const savedVoice = localStorage.getItem("aplab_voice_setting") || "1";
       setVoiceSetting(savedVoice);
+      const savedColor = localStorage.getItem("aplab-banner-color");
+      if (savedColor && !hasModifiedColor) {
+        setSelectedBannerColor(savedColor);
+      }
     }
-  }, [progress, currentUser]);
+  }, [progress, currentUser, hasModifiedColor]);
 
   const handleTabChange = (tab: "account" | "customize") => {
     setActiveTab(tab);
@@ -88,6 +97,10 @@ export default function SettingsPage() {
 
   const handleBannerColorChange = (colorHex: string) => {
     setSelectedBannerColor(colorHex);
+    setHasModifiedColor(true);
+    if (typeof window !== "undefined") {
+      try { localStorage.setItem("aplab-banner-color", colorHex); } catch (e) {}
+    }
     if (updatePreferences) {
       updatePreferences({ profileBannerColor: colorHex });
     }
@@ -451,27 +464,8 @@ export default function SettingsPage() {
                       );
                     })}
 
-                    {/* Custom Eyedropper Color Picker Button */}
-                    <div className="relative inline-block">
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const inputEl = document.getElementById("custom-color-picker-input");
-                          if (inputEl) inputEl.click();
-                        }}
-                        className="w-9 h-9 rounded-full bg-emerald-400/20 border-2 border-emerald-400/50 hover:bg-emerald-400/30 text-emerald-400 flex items-center justify-center transition-all cursor-pointer shadow-md hover:scale-105"
-                        title="Pick Custom Color"
-                      >
-                        <Pipette className="w-4 h-4 stroke-[2.5]" />
-                      </button>
-                      <input
-                        id="custom-color-picker-input"
-                        type="color"
-                        value={selectedBannerColor}
-                        onChange={(e) => handleBannerColorChange(e.target.value)}
-                        className="sr-only"
-                      />
-                    </div>
+                    {/* Custom Color Picker Button (Eyedropper with 2D Canvas Gradient Picker) */}
+                    <CustomColorPicker color={selectedBannerColor} onChange={handleBannerColorChange} />
                   </div>
                 </div>
 

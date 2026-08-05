@@ -1038,6 +1038,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           }
           localStorage.setItem("ap-lab-theme", prefs.theme || progress?.theme || "dark");
           localStorage.setItem("ap-lab-course-bg", prefs.courseBg || progress?.courseBg || "dark-matrix");
+          localStorage.setItem("ap-lab-banner-color", prefs.profileBannerColor || progress?.profileBannerColor || "#7b39fc");
         } catch (e) {}
       }
 
