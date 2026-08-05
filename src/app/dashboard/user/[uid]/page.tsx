@@ -261,83 +261,71 @@ export default function UserProfilePage() {
                   <Upload className="w-5 h-5 text-white stroke-[2.2]" />
                 </button>
 
-                {/* SCATTERED FLOATING STAT CAPSULES WITH 3D TILT ANIMATION, PASTEL BACKGROUNDS & LARGER ICONS */}
+                {/* SCATTERED FLOATING STAT CAPSULES (PERMANENT TILT ANGLES, NO HOVER EFFECTS, EVEN LARGER IMAGES) */}
                 
-                {/* 1. XP Capsule (Top Left) */}
+                {/* 1. XP Capsule (Top Left - Tilted -6deg) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ delay: 0.1, type: "spring", stiffness: 350 }}
-                  className="hidden md:flex absolute top-12 left-12 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-extrabold text-sm shadow-xl -rotate-6 transition-all cursor-default z-20"
+                  transition={{ delay: 0.1 }}
+                  className="hidden md:flex absolute top-12 left-12 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-black text-sm shadow-xl -rotate-6 transform -rotate-6 cursor-default z-20"
                 >
-                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-7 h-7 object-contain" />
+                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-9 h-9 object-contain" />
                   <span>{xp.toLocaleString()} XP</span>
                 </motion.div>
 
-                {/* 2. Streak Capsule (Middle Left) */}
+                {/* 2. Streak Capsule (Middle Left - Tilted +5deg) */}
                 <motion.div
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ delay: 0.2, type: "spring", stiffness: 350 }}
-                  className="hidden md:flex absolute top-48 left-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-extrabold text-sm shadow-xl rotate-5 transition-all cursor-default z-20"
+                  transition={{ delay: 0.2 }}
+                  className="hidden md:flex absolute top-48 left-20 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-black text-sm shadow-xl rotate-5 transform rotate-5 cursor-default z-20"
                 >
-                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-7 h-7" />
+                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-9 h-9" />
                   <span>{user.streakDays || 0} day Streak</span>
                 </motion.div>
 
-                {/* 3. Coins Capsule (Bottom Left) */}
+                {/* 3. Coins Capsule (Bottom Left - Tilted -4deg) */}
                 <motion.div
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ delay: 0.3, type: "spring", stiffness: 350 }}
-                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-extrabold text-sm shadow-xl -rotate-4 transition-all cursor-default z-20"
+                  transition={{ delay: 0.3 }}
+                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-black text-sm shadow-xl -rotate-4 transform -rotate-4 cursor-default z-20"
                 >
-                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-7 h-7 object-contain" />
+                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-9 h-9 object-contain" />
                   <span>{(user.credits || 0).toLocaleString()} Coins</span>
                 </motion.div>
 
-                {/* 4. Accuracy Capsule (Top Right) */}
+                {/* 4. Accuracy Capsule (Top Right - Tilted +7deg) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ delay: 0.1, type: "spring", stiffness: 350 }}
-                  className="hidden md:flex absolute top-12 right-24 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-extrabold text-sm shadow-xl rotate-6 transition-all cursor-default z-20"
+                  transition={{ delay: 0.1 }}
+                  className="hidden md:flex absolute top-12 right-24 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-black text-sm shadow-xl rotate-7 transform rotate-7 cursor-default z-20"
                 >
-                  <Target className="w-6 h-6 text-[#115e59]" />
+                  <Target className="w-7 h-7 text-[#115e59]" />
                   <span>{accuracy}% Accuracy</span>
                 </motion.div>
 
-                {/* 5. Scholar Level Capsule (Middle Right - CLEAN HEIGHT & ACTUAL USER LEVEL BADGE ONLY!) */}
+                {/* 5. Level Capsule (Middle Right - Tilted -5deg - Level Badge & Level Number ONLY!) */}
                 <motion.div
                   initial={{ x: 10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ delay: 0.2, type: "spring", stiffness: 350 }}
-                  className="hidden md:flex absolute top-48 right-20 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-extrabold text-sm shadow-xl -rotate-5 transition-all cursor-default z-20"
+                  transition={{ delay: 0.2 }}
+                  className="hidden md:flex absolute top-48 right-20 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-black text-sm shadow-xl -rotate-5 transform -rotate-5 cursor-default z-20"
                 >
                   <LevelBadge level={level} size="sm" />
                   <span>Level {level}</span>
                 </motion.div>
 
-                {/* 6. Time Spent Capsule (Bottom Right) */}
+                {/* 6. Time Spent Capsule (Bottom Right - Tilted +4deg) */}
                 <motion.div
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
-                  whileHover={{ scale: 1.1, rotate: 0, zIndex: 30 }}
-                  whileTap={{ scale: 0.95 }}
-                  transition={{ delay: 0.3, type: "spring", stiffness: 350 }}
-                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-2.5 h-11 px-5 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-extrabold text-sm shadow-xl rotate-3 transition-all cursor-default z-20"
+                  transition={{ delay: 0.3 }}
+                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-black text-sm shadow-xl rotate-4 transform rotate-4 cursor-default z-20"
                 >
-                  <Clock className="w-6 h-6 text-[#075985]" />
+                  <Clock className="w-7 h-7 text-[#075985]" />
                   <span>{user.totalStudyMinutes || 45}m Study Time</span>
                 </motion.div>
 

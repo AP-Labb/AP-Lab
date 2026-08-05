@@ -268,7 +268,21 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               </AnimatePresence>
             </button>
 
-            {/* Dark backdrop overlay ONLY when profile menu is open (NO blur, NO backdrop for notifications) */}
+            {/* Transparent page freeze backdrop for Notifications menu (NO blur, NO darkening) */}
+            <AnimatePresence>
+              {showNotificationsMenu && (
+                <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  className="fixed inset-0 bg-transparent z-[99998]"
+                  onClick={() => setShowNotificationsMenu(false)}
+                />
+              )}
+            </AnimatePresence>
+
+            {/* Dark backdrop overlay ONLY when profile menu is open (NO blur) */}
             <AnimatePresence>
               {showProfileMenu && (
                 <motion.div
@@ -282,7 +296,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               )}
             </AnimatePresence>
 
-            {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar (w-96 dark #0b0c16 theme) */}
+            {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar */}
             <AnimatePresence>
               {showNotificationsMenu && (
                 <motion.div
@@ -295,8 +309,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     sidebarOpen ? "left-[232px]" : "left-[68px]"
                   )}
                 >
-                  {/* Notifications Header matching Knowt screenshot 2 */}
-                  <div className="flex items-center justify-between border-b border-white/[0.08] pb-3">
+                  {/* Notifications Header (NO line across top) */}
+                  <div className="flex items-center justify-between">
                     <h3 className="font-manrope font-extrabold text-lg text-white tracking-tight">Notifications</h3>
                     <button
                       type="button"
@@ -308,24 +322,46 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     </button>
                   </div>
 
-                  {/* Empty Notifications View matching Knowt screenshot 2 */}
-                  <div className="py-6 text-center space-y-3">
-                    <div className="w-24 h-24 mx-auto flex items-center justify-center">
-                      <img
-                        src="/images/notification-bell.png"
-                        alt="No Notifications"
-                        className="w-20 h-20 object-contain drop-shadow-lg"
-                      />
+                  {/* Notifications List or Empty View with Light Yellow Background Circle */}
+                  {progress?.followers && progress.followers.length > 0 ? (
+                    <div className="space-y-2.5 max-h-72 overflow-y-auto custom-scrollbar pr-1 py-1">
+                      {progress.followers.map((fUid) => (
+                        <div
+                          key={fUid}
+                          className="flex items-center space-x-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] transition-all"
+                        >
+                          <div className="w-9 h-9 rounded-full bg-purple-500/20 border border-purple-400/40 text-purple-300 font-bold flex items-center justify-center text-xs shrink-0">
+                            {fUid.slice(0, 2).toUpperCase()}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <p className="font-manrope font-bold text-xs text-white truncate">
+                              Scholar {fUid}
+                            </p>
+                            <p className="text-[10px] text-white/50">started following you</p>
+                          </div>
+                        </div>
+                      ))}
                     </div>
-                    <div className="space-y-1">
-                      <h4 className="font-manrope font-extrabold text-base text-white">
-                        No notifications yet
-                      </h4>
-                      <p className="text-xs font-manrope text-white/40">
-                        You're all caught up for now
-                      </p>
+                  ) : (
+                    <div className="py-6 text-center space-y-3">
+                      {/* Very Light Yellow Background Circle Behind Notification Bell */}
+                      <div className="w-24 h-24 rounded-full bg-[#fde047]/15 border border-[#fde047]/30 flex items-center justify-center mx-auto shadow-inner">
+                        <img
+                          src="/images/notification-bell.png"
+                          alt="No Notifications"
+                          className="w-16 h-16 object-contain drop-shadow-md"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <h4 className="font-manrope font-extrabold text-base text-white">
+                          No notifications yet
+                        </h4>
+                        <p className="text-xs font-manrope text-white/40">
+                          You're all caught up for now
+                        </p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </motion.div>
               )}
             </AnimatePresence>
