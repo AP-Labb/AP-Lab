@@ -5,24 +5,19 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
-  Home, LayoutDashboard, Star, Award, Bot, ShoppingBag, Activity, 
-  Settings, User, FileText, Lock, Package, LogOut, ExternalLink, Trophy
+  LayoutDashboard, Award, ShoppingBag, Activity, 
+  Settings, User, FileText, Lock, Package, LogOut, ExternalLink, Trophy, MessageSquarePlus
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
 import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
-import { ReviewModal } from "@/components/ReviewModal";
 import { SettingsModal } from "@/components/SettingsModal";
-import { AccountProfileModal } from "@/components/AccountProfileModal";
-import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { ProgressProfileModal } from "@/components/ProgressProfileModal";
-import { ActiveBoostsTimer } from "@/components/ActiveBoostsTimer";
 import { UserAvatar } from "@/components/UserAvatar";
 import { cn } from "@/lib/utils";
-
 import { UserDisplayName } from "@/components/UserDisplayName";
 
 interface AppSidebarProps {
@@ -37,7 +32,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const [showReviewModal, setShowReviewModal] = useState(false);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showMinecraftInventory, setShowMinecraftInventory] = useState(false);
   const [showProgressProfile, setShowProgressProfile] = useState(false);
@@ -76,7 +70,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Progress", href: "/dashboard/progress", icon: "progress" },
-    { label: "Review", href: "#review", icon: "review" },
     { label: "Quests", href: "/dashboard/quests", icon: Award },
     { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
     { label: "AI Assistant", href: "/dashboard/assistant", icon: "panda" },
@@ -110,29 +103,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
             <div className="flex flex-col gap-1">
               {navItems.map((item) => {
                 const isActive = pathname === item.href;
-
-                if (item.label === "Review") {
-                  return (
-                    <motion.button
-                      key={item.label}
-                      onClick={() => setShowReviewModal(true)}
-                      className="flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 text-white/60 hover:bg-white/[0.06] hover:text-white w-full group/star cursor-pointer text-left"
-                      whileHover="hover"
-                      initial="rest"
-                    >
-                      <div className="flex-shrink-0 text-white/60 group-hover/star:text-white transition-colors duration-200">
-                        <InstagramLikeStar />
-                      </div>
-                      <motion.span
-                        animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                        transition={{ duration: 0.15 }}
-                        className="text-sm font-manrope font-semibold whitespace-pre"
-                      >
-                        Review
-                      </motion.span>
-                    </motion.button>
-                  );
-                }
 
                 return (
                   <Link key={item.label} href={item.href} className="w-full">
@@ -257,25 +227,59 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               </AnimatePresence>
             </button>
 
-            {/* UNCLIPPED DARK FLOATING POPOVER MENU (Positioned FIXED outside sidebar bounds) */}
+            {/* Dark page overlay behind popup */}
             <AnimatePresence>
               {showProfileMenu && (
                 <motion.div
-                  initial={{ opacity: 0, y: 8, scale: 0.96 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 8, scale: 0.96 }}
-                  transition={{ duration: 0.18, ease: "easeOut" }}
-                  className="fixed bottom-16 left-3 w-60 bg-[#07080e] border border-white/20 rounded-2xl p-2 shadow-[0_20px_50px_rgba(0,0,0,0.9)] z-[999999] text-left text-white flex flex-col space-y-1"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="fixed inset-0 bg-black/40 z-[99998]"
+                  onClick={() => setShowProfileMenu(false)}
+                />
+              )}
+            </AnimatePresence>
+
+            {/* PROFILE POPOVER — slides out to the right of the sidebar */}
+            <AnimatePresence>
+              {showProfileMenu && (
+                <motion.div
+                  initial={{ opacity: 0, x: -12, scale: 0.97 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -12, scale: 0.97 }}
+                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                  className="fixed bottom-6 left-[72px] w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[99999] text-left text-white flex flex-col space-y-0.5"
                 >
+                  {/* User header in menu */}
+                  <div className="flex items-center gap-3 px-3 py-3 mb-1">
+                    <UserAvatar
+                      photoURL={photoURL}
+                      name={displayName}
+                      activeFrame={progress?.activeAvatarFrame}
+                      size="md"
+                    />
+                    <div className="flex flex-col min-w-0">
+                      <UserDisplayName
+                        name={displayName}
+                        activeNameColor={progress?.activeNameColor}
+                        className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate"
+                      />
+                      <span className="font-mono text-[10px] text-white/35 mt-0.5 truncate">{username}</span>
+                    </div>
+                  </div>
+
+                  <div className="h-px bg-white/[0.07] mx-1 mb-1" />
+
                   {/* 1. Settings */}
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
                       setShowSettingsModal(true);
                     }}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
-                    <Settings className="w-4 h-4 text-white/70" />
+                    <Settings className="w-4 h-4 text-white/50" />
                     <span>Settings</span>
                   </button>
 
@@ -285,66 +289,74 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       setShowProfileMenu(false);
                       setShowProgressProfile(true);
                     }}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
-                    <User className="w-4 h-4 text-white/70" />
+                    <User className="w-4 h-4 text-white/50" />
                     <span>My Profile</span>
                   </button>
 
-                  <div className="h-px bg-white/10 my-0.5" />
-
-                  {/* 3. My Inventory (White Package Icon) */}
+                  {/* 3. My Inventory */}
                   <button
                     onClick={() => {
                       setShowProfileMenu(false);
                       setShowMinecraftInventory(true);
                     }}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
-                    <Package className="w-4 h-4 text-white/70" />
+                    <Package className="w-4 h-4 text-white/50" />
                     <span>My Inventory</span>
                   </button>
 
-                  <div className="h-px bg-white/10 my-0.5" />
+                  {/* 4. Feedback */}
+                  <Link
+                    href="/feedback"
+                    onClick={() => setShowProfileMenu(false)}
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
+                  >
+                    <MessageSquarePlus className="w-4 h-4 text-white/50" />
+                    <span>Feedback</span>
+                  </Link>
 
-                  {/* 4. Terms of Service */}
+                  <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
+
+                  {/* 5. Terms of Service */}
                   <a
                     href="/terms"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
+                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
                     <div className="flex items-center space-x-3">
-                      <FileText className="w-4 h-4 text-white/70" />
+                      <FileText className="w-4 h-4 text-white/50" />
                       <span>Terms of Service</span>
                     </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-white/40" />
+                    <ExternalLink className="w-3.5 h-3.5 text-white/30" />
                   </a>
 
-                  {/* 5. Privacy Policy */}
+                  {/* 6. Privacy Policy */}
                   <a
                     href="/privacy"
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.08] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/90"
+                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
                   >
                     <div className="flex items-center space-x-3">
-                      <Lock className="w-4 h-4 text-white/70" />
+                      <Lock className="w-4 h-4 text-white/50" />
                       <span>Privacy Policy</span>
                     </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-white/40" />
+                    <ExternalLink className="w-3.5 h-3.5 text-white/30" />
                   </a>
 
-                  <div className="h-px bg-white/10 my-0.5" />
+                  <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
 
-                  {/* 6. Log Out */}
+                  {/* 7. Log Out */}
                   <button
                     onClick={handleSignOut}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-red-500/10 transition-all cursor-pointer text-xs font-manrope font-bold text-red-400"
+                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-red-500/10 transition-all cursor-pointer text-xs font-manrope font-bold text-red-400/80 hover:text-red-400"
                   >
-                    <LogOut className="w-4 h-4 text-red-400" />
+                    <LogOut className="w-4 h-4 text-red-400/70" />
                     <span>Log Out</span>
                   </button>
                 </motion.div>
@@ -355,7 +367,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
       </Sidebar>
     </aside>
 
-      <ReviewModal isOpen={showReviewModal} onClose={() => setShowReviewModal(false)} />
       <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       <ProgressProfileModal isOpen={showProgressProfile} onClose={() => setShowProgressProfile(false)} />
       <MinecraftInventoryModal isOpen={showMinecraftInventory} onClose={() => setShowMinecraftInventory(false)} />
