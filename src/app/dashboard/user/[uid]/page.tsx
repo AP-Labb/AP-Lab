@@ -24,6 +24,8 @@ const SCHOLAR_DIRECTORY: Record<string, { uid: string; name: string; photoURL: s
   "bot-3": { uid: "bot-3", name: "Alex Mercer", photoURL: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=400&auto=format&fit=crop&q=80", level: 9, avatarFrame: "" },
   "bot-4": { uid: "bot-4", name: "Maya Patel", photoURL: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80", level: 8, avatarFrame: "" },
   "bot-5": { uid: "bot-5", name: "Ishan Samani", photoURL: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80", level: 28, avatarFrame: "frame-gold" },
+  "OBbwOE": { uid: "OBbwOE", name: "Jordan Vance", photoURL: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80", level: 14, avatarFrame: "frame-silver" },
+  "ZAxTQF": { uid: "ZAxTQF", name: "Elena Rostova", photoURL: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=400&auto=format&fit=crop&q=80", level: 16, avatarFrame: "frame-gold" },
 };
 
 interface UserProfile {
@@ -134,11 +136,17 @@ export default function UserProfilePage() {
 
   const user = liveProfile || profile;
 
-  const userFollowers = user?.followers || ["bot-1", "bot-2", "bot-3", "bot-5"];
-  const userFollowing = user?.following || ["bot-1", "bot-2"];
-
   const myFollowingList = progress?.following || ["bot-1", "bot-2"];
   const isFollowingThisUser = uid ? myFollowingList.includes(uid) : false;
+
+  // PERMANENT FOLLOWER LIST SYNC (If current user follows this profile, ensure current user's UID is included permanently!)
+  const rawFollowers = user?.followers || ["bot-1", "bot-2", "bot-3", "bot-5"];
+  const myUid = currentUser?.uid || progress?.uid || "me";
+  const userFollowers = isFollowingThisUser
+    ? Array.from(new Set([...rawFollowers, myUid]))
+    : rawFollowers.filter((id) => id !== myUid);
+
+  const userFollowing = user?.following || ["bot-1", "bot-2", "OBbwOE", "ZAxTQF"];
 
   const handleFollowToggle = async () => {
     if (!uid || isOwnProfile || !toggleFollow || isTogglingFollow) return;
@@ -147,7 +155,6 @@ export default function UserProfilePage() {
       const isNowFollowing = await toggleFollow(uid);
       setProfile((prev) => {
         if (!prev) return prev;
-        const myUid = currentUser?.uid || progress.uid || "me";
         const updatedFollowers = isNowFollowing
           ? Array.from(new Set([...(prev.followers || []), myUid]))
           : (prev.followers || []).filter((id) => id !== myUid);
@@ -186,6 +193,28 @@ export default function UserProfilePage() {
 
   // Active list for modal
   const activeFollowListUids = followModalTab === "followers" ? userFollowers : userFollowing;
+
+  // Helper to map scholar UIDs to clean names, avatars, and levels
+  const getScholarInfo = (sUid: string) => {
+    if (sUid === "me" || sUid === currentUser?.uid || sUid === progress?.uid) {
+      return {
+        uid: sUid,
+        name: progress?.displayName || currentUser?.displayName || "You",
+        photoURL: progress?.photoURL || currentUser?.photoURL || "",
+        level: progress?.level || level,
+        avatarFrame: progress?.activeAvatarFrame || "",
+      };
+    }
+    if (SCHOLAR_DIRECTORY[sUid]) return SCHOLAR_DIRECTORY[sUid];
+
+    return {
+      uid: sUid,
+      name: sUid.length < 8 ? `Scholar ${sUid}` : "AP Scholar",
+      photoURL: `https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80`,
+      level: 12,
+      avatarFrame: "frame-silver",
+    };
+  };
 
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
@@ -261,16 +290,16 @@ export default function UserProfilePage() {
                   <Upload className="w-5 h-5 text-white stroke-[2.2]" />
                 </button>
 
-                {/* SCATTERED FLOATING STAT CAPSULES (PERMANENT TILT ANGLES, NO HOVER EFFECTS, EVEN LARGER IMAGES) */}
+                {/* SCATTERED FLOATING STAT CAPSULES (PERMANENT TILT ANGLES, NO HOVER EFFECTS, EVEN LARGER IMAGES w-11 h-11) */}
                 
                 {/* 1. XP Capsule (Top Left - Tilted -6deg) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 left-12 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-black text-sm shadow-xl -rotate-6 transform -rotate-6 cursor-default z-20"
+                  className="hidden md:flex absolute top-12 left-12 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-black text-base shadow-xl -rotate-6 transform -rotate-6 cursor-default z-20"
                 >
-                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-9 h-9 object-contain" />
+                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-11 h-11 object-contain drop-shadow-md" />
                   <span>{xp.toLocaleString()} XP</span>
                 </motion.div>
 
@@ -279,9 +308,9 @@ export default function UserProfilePage() {
                   initial={{ x: -10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 left-20 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-black text-sm shadow-xl rotate-5 transform rotate-5 cursor-default z-20"
+                  className="hidden md:flex absolute top-48 left-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-black text-base shadow-xl rotate-5 transform rotate-5 cursor-default z-20"
                 >
-                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-9 h-9" />
+                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-11 h-11" />
                   <span>{user.streakDays || 0} day Streak</span>
                 </motion.div>
 
@@ -290,9 +319,9 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-black text-sm shadow-xl -rotate-4 transform -rotate-4 cursor-default z-20"
+                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-black text-base shadow-xl -rotate-4 transform -rotate-4 cursor-default z-20"
                 >
-                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-9 h-9 object-contain" />
+                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-11 h-11 object-contain drop-shadow-md" />
                   <span>{(user.credits || 0).toLocaleString()} Coins</span>
                 </motion.div>
 
@@ -301,20 +330,20 @@ export default function UserProfilePage() {
                   initial={{ y: -10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 right-24 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-black text-sm shadow-xl rotate-7 transform rotate-7 cursor-default z-20"
+                  className="hidden md:flex absolute top-12 right-24 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-black text-base shadow-xl rotate-7 transform rotate-7 cursor-default z-20"
                 >
-                  <Target className="w-7 h-7 text-[#115e59]" />
+                  <Target className="w-8 h-8 text-[#115e59]" />
                   <span>{accuracy}% Accuracy</span>
                 </motion.div>
 
-                {/* 5. Level Capsule (Middle Right - Tilted -5deg - Level Badge & Level Number ONLY!) */}
+                {/* 5. Level Capsule (Middle Right - Tilted -5deg - ONLY LEVEL BADGE & LEVEL NUMBER!) */}
                 <motion.div
                   initial={{ x: 10, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 right-20 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-black text-sm shadow-xl -rotate-5 transform -rotate-5 cursor-default z-20"
+                  className="hidden md:flex absolute top-48 right-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-black text-base shadow-xl -rotate-5 transform -rotate-5 cursor-default z-20"
                 >
-                  <LevelBadge level={level} size="sm" />
+                  <LevelBadge level={level} size="sm" showLabel={false} />
                   <span>Level {level}</span>
                 </motion.div>
 
@@ -323,9 +352,9 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0 }}
                   animate={{ y: 0, opacity: 1 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-3 h-12 px-6 py-2.5 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-black text-sm shadow-xl rotate-4 transform rotate-4 cursor-default z-20"
+                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-black text-base shadow-xl rotate-4 transform rotate-4 cursor-default z-20"
                 >
-                  <Clock className="w-7 h-7 text-[#075985]" />
+                  <Clock className="w-8 h-8 text-[#075985]" />
                   <span>{user.totalStudyMinutes || 45}m Study Time</span>
                 </motion.div>
 
@@ -427,27 +456,27 @@ export default function UserProfilePage() {
                 {/* MOBILE STATS CAPSULES (Visible on mobile screens) */}
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full md:hidden relative z-20 pt-6 border-t border-white/15">
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#f3e8ff] border border-purple-300 text-xs font-extrabold text-[#581c87]">
-                    <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 object-contain" />
+                    <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-6 h-6 object-contain" />
                     <span>{xp.toLocaleString()} XP</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#fef3c7] border border-amber-300 text-xs font-extrabold text-[#78350f]">
-                    <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-5 h-5" />
+                    <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-6 h-6" />
                     <span>{user.streakDays || 0}d Streak</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#fef08a] border border-yellow-300 text-xs font-extrabold text-[#713f12]">
-                    <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
+                    <img src="/images/coin-zoomed.png" alt="Coins" className="w-6 h-6 object-contain" />
                     <span>{(user.credits || 0).toLocaleString()} Coins</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#ccfbf1] border border-[#2dd4bf] text-xs font-extrabold text-[#115e59]">
-                    <Target className="w-4 h-4 text-[#115e59]" />
+                    <Target className="w-5 h-5 text-[#115e59]" />
                     <span>{accuracy}% Accuracy</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#e0e7ff] border border-indigo-300 text-xs font-extrabold text-[#3730a3]">
-                    <LevelBadge level={level} size="sm" />
+                    <LevelBadge level={level} size="sm" showLabel={false} />
                     <span>Level {level}</span>
                   </div>
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#e0f2fe] border border-sky-300 text-xs font-extrabold text-[#075985]">
-                    <Clock className="w-4 h-4 text-[#075985]" />
+                    <Clock className="w-5 h-5 text-[#075985]" />
                     <span>{user.totalStudyMinutes || 45}m Study</span>
                   </div>
                 </div>
@@ -480,7 +509,7 @@ export default function UserProfilePage() {
         )}
       </AnimatePresence>
 
-      {/* FOLLOWERS / FOLLOWING MODAL (WITH ACCURATE USER PROFILE PICTURE, BADGE, AND LEVEL!) */}
+      {/* FOLLOWERS / FOLLOWING MODAL (CLEAN MAPPED NAMES, AVATARS, AND LEVEL BADGES!) */}
       <AnimatePresence>
         {showFollowModal && (
           <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
@@ -537,23 +566,7 @@ export default function UserProfilePage() {
                   </div>
                 ) : (
                   activeFollowListUids.map((scholarUid) => {
-                    const isMe = scholarUid === "me" || scholarUid === currentUser?.uid || scholarUid === progress?.uid;
-                    const scholarData = isMe
-                      ? {
-                          uid: currentUser?.uid || progress?.uid || "me",
-                          name: progress?.displayName || currentUser?.displayName || "You",
-                          photoURL: progress?.photoURL || currentUser?.photoURL || "",
-                          level: progress?.level || level,
-                          avatarFrame: progress?.activeAvatarFrame || "",
-                        }
-                      : (SCHOLAR_DIRECTORY[scholarUid] || {
-                          uid: scholarUid,
-                          name: `Scholar (${scholarUid.slice(0, 6)})`,
-                          photoURL: "",
-                          level: 10,
-                          avatarFrame: "",
-                        });
-
+                    const scholarData = getScholarInfo(scholarUid);
                     return (
                       <div
                         key={scholarUid}
@@ -574,7 +587,7 @@ export default function UserProfilePage() {
                             {scholarData.name}
                           </span>
                         </div>
-                        <LevelBadge level={scholarData.level} />
+                        <LevelBadge level={scholarData.level} showLabel={false} />
                       </div>
                     );
                   })

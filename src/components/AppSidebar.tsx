@@ -37,6 +37,26 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const [showSettingsModal, setShowSettingsModal] = useState(false);
   const [showMinecraftInventory, setShowMinecraftInventory] = useState(false);
   const [showProgressProfile, setShowProgressProfile] = useState(false);
+  const [notificationsCleared, setNotificationsCleared] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isCleared = localStorage.getItem("aplab_notifications_cleared") === "true";
+      setNotificationsCleared(isCleared);
+    }
+  }, []);
+
+  const handleOpenNotifications = () => {
+    setShowNotificationsMenu((prev) => {
+      const next = !prev;
+      if (next && !notificationsCleared) {
+        setNotificationsCleared(true);
+        try { localStorage.setItem("aplab_notifications_cleared", "true"); } catch (e) {}
+      }
+      return next;
+    });
+    setShowProfileMenu(false);
+  };
 
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -190,11 +210,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
             {/* Notifications Trigger Item */}
             <button
               type="button"
-              onClick={() => {
-                setShowNotificationsMenu((prev) => !prev);
-                setShowProfileMenu(false);
-                setHasUnreadNotifications(false);
-              }}
+              onClick={handleOpenNotifications}
               className={cn(
                 "flex items-center gap-3 w-full h-11 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
                 sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center",
@@ -323,7 +339,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                   </div>
 
                   {/* Notifications List or Empty View with Light Yellow Background Circle */}
-                  {progress?.followers && progress.followers.length > 0 ? (
+                  {!notificationsCleared && progress?.followers && progress.followers.length > 0 ? (
                     <div className="space-y-2.5 max-h-72 overflow-y-auto custom-scrollbar pr-1 py-1">
                       {progress.followers.map((fUid) => (
                         <div
