@@ -268,19 +268,16 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               </AnimatePresence>
             </button>
 
-            {/* Dark page freeze backdrop overlay when profile or notifications menu is open */}
+            {/* Dark backdrop overlay ONLY when profile menu is open (NO blur, NO backdrop for notifications) */}
             <AnimatePresence>
-              {(showProfileMenu || showNotificationsMenu) && (
+              {showProfileMenu && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.2 }}
-                  className="fixed inset-0 bg-black/40 backdrop-blur-[1px] z-[99998]"
-                  onClick={() => {
-                    setShowProfileMenu(false);
-                    setShowNotificationsMenu(false);
-                  }}
+                  className="fixed inset-0 bg-black/40 z-[99998]"
+                  onClick={() => setShowProfileMenu(false)}
                 />
               )}
             </AnimatePresence>
@@ -346,8 +343,12 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     sidebarOpen ? "left-[232px]" : "left-[68px]"
                   )}
                 >
-                  {/* User header in menu */}
-                  <div className="flex items-center gap-3 px-3 py-3 mb-1">
+                  {/* Clickable User header in menu (Opens user profile!) */}
+                  <Link
+                    href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
+                    onClick={() => setShowProfileMenu(false)}
+                    className="flex items-center gap-3 px-3 py-3 mb-1 hover:bg-white/[0.06] rounded-xl transition-all cursor-pointer group"
+                  >
                     <UserAvatar
                       photoURL={photoURL}
                       name={displayName}
@@ -358,11 +359,11 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       <UserDisplayName
                         name={displayName}
                         activeNameColor={progress?.activeNameColor}
-                        className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate"
+                        className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate group-hover:text-purple-300 transition-colors"
                       />
                       <span className="font-mono text-[10px] text-white/35 mt-0.5 truncate">{username}</span>
                     </div>
-                  </div>
+                  </Link>
 
                   <div className="h-px bg-white/[0.07] mx-1 mb-1" />
 

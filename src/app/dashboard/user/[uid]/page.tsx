@@ -5,8 +5,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Trophy, Zap, Target, BookOpen, Flame, CheckCircle, User,
-  MapPin, Calendar, Edit3, UserPlus, UserCheck, X
+  Trophy, Zap, Target, Clock, Flame, CheckCircle, User,
+  MapPin, Calendar, Edit3, UserPlus, UserCheck, X, Award
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -102,7 +102,7 @@ export default function UserProfilePage() {
         location: progress.location || "",
         profileBannerColor: progress.profileBannerColor || "#7b39fc",
         enrolledCourses: (progress as any).selectedClasses || [],
-        totalStudyMinutes: 0,
+        totalStudyMinutes: 45,
         streakDays: (progress as any).streakCount || 0,
         followers: progress.followers || ["bot-1", "bot-2", "bot-3", "bot-5"],
         following: progress.following || ["bot-1", "bot-2"],
@@ -139,21 +139,14 @@ export default function UserProfilePage() {
 
   const level = user?.level || 1;
   const xp = user?.xp || 0;
-  const prevThreshold = getXpThresholdForLevel(level);
-  const nextThreshold = getXpThresholdForLevel(level + 1);
-  const xpInLevel = Math.max(0, xp - prevThreshold);
-  const xpNeeded = Math.max(100, nextThreshold - prevThreshold);
-  const progressPct = Math.min(100, Math.max(0, (xpInLevel / xpNeeded) * 100));
-
   const totalAnswered = user?.totalQuestionsAnswered || 0;
   const totalCorrect = user?.totalQuestionsCorrect || 0;
   const accuracy = totalAnswered > 0 ? Math.round((totalCorrect / totalAnswered) * 100) : 0;
-  const enrolledCount = user?.enrolledCourses?.length || 0;
+  const username = (user?.email || "scholar@aplab.com").split("@")[0].toLowerCase();
+  const themeBannerColor = user?.profileBannerColor || "#7b39fc";
 
   // Active list for modal
   const activeFollowListUids = followModalTab === "followers" ? userFollowers : userFollowing;
-
-  const themeBannerColor = user?.profileBannerColor || "#7b39fc";
 
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
@@ -165,15 +158,10 @@ export default function UserProfilePage() {
       <div className="flex-1 flex flex-col min-h-screen md:pl-16 relative z-10">
         <UniversalTopHeader />
 
-        <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 py-8 pb-24 space-y-6">
+        <main className="max-w-5xl mx-auto w-full px-4 sm:px-6 py-8 pb-24 space-y-6">
           {loading ? (
             <div className="space-y-6 animate-pulse">
-              <div className="h-64 bg-white/[0.03] rounded-3xl border border-white/5" />
-              <div className="grid grid-cols-2 sm:grid-cols-6 gap-3">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-28 bg-white/[0.03] rounded-2xl border border-white/5" />
-                ))}
-              </div>
+              <div className="h-96 bg-white/[0.03] rounded-3xl border border-white/5" />
             </div>
           ) : notFound ? (
             <div className="text-center py-24 border border-dashed border-white/10 rounded-3xl bg-white/[0.01]">
@@ -183,39 +171,112 @@ export default function UserProfilePage() {
             </div>
           ) : user ? (
             <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, scale: 0.98 }}
+              animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4 }}
               className="space-y-6"
             >
-              {/* HERO PROFILE SECTION WITH FULL TEXTURED GRADIENT BANNER */}
-              <div className="relative bg-[#090a12] border border-white/[0.08] rounded-3xl overflow-hidden shadow-[0_24px_60px_rgba(0,0,0,0.8)] space-y-6 p-6 sm:p-8">
-                {/* Textured Gradient Banner (Matches User's Noise Texture Image & Tints Dynamically) */}
-                <div className="absolute top-0 left-0 right-0 h-44 sm:h-52 overflow-hidden pointer-events-none z-0">
-                  <img
-                    src="/images/profile-banner-texture.jpg"
-                    alt="Profile Banner Texture"
-                    className="w-full h-full object-cover object-center transition-all duration-500 opacity-90"
-                  />
-                  {/* Dynamic Color Tint Layer */}
+              {/* KNOWT-STYLE PROFILE BANNER CARD WITH DYNAMIC TEXTURED GRADIENT */}
+              <div className="relative bg-[#0e101a] border border-white/10 rounded-[2.5rem] overflow-hidden shadow-[0_32px_80px_rgba(0,0,0,0.9)] p-8 sm:p-12 text-center min-h-[460px] flex flex-col items-center justify-between">
+                
+                {/* DYNAMIC TEXTURED MESH GRADIENT BACKGROUND WITH NOISE OVERLAY */}
+                <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
+                  {/* Base dynamic mesh gradient */}
                   <div
-                    className="absolute inset-0 transition-colors duration-500 mix-blend-color opacity-90"
-                    style={{ backgroundColor: themeBannerColor }}
-                  />
-                  {/* Soft Light Tint Overlay for Rich Vibrancy */}
-                  <div
-                    className="absolute inset-0 transition-colors duration-500 opacity-60 mix-blend-soft-light"
+                    className="absolute inset-0 transition-all duration-700"
                     style={{
-                      background: `linear-gradient(135deg, ${themeBannerColor}ff 0%, ${themeBannerColor}44 60%, #000000 100%)`,
+                      background: `radial-gradient(circle at 15% 20%, ${themeBannerColor}ff 0%, ${themeBannerColor}bb 35%, ${themeBannerColor}44 70%, #080912 100%)`,
                     }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#090a12]/50 to-[#090a12] pointer-events-none" />
+                  {/* Secondary color accent mesh */}
+                  <div
+                    className="absolute -top-24 -right-24 w-[500px] h-[500px] rounded-full blur-[100px] opacity-60 transition-all duration-700 pointer-events-none"
+                    style={{ backgroundColor: themeBannerColor }}
+                  />
+                  {/* SVG Grain Noise Overlay */}
+                  <svg className="absolute inset-0 w-full h-full opacity-35 mix-blend-overlay pointer-events-none">
+                    <filter id="profileNoiseFilter">
+                      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch" />
+                      <feColorMatrix type="saturate" values="0" />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#profileNoiseFilter)" />
+                  </svg>
+                  {/* Dark Vignette Bottom Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0e101a] via-transparent to-black/20 pointer-events-none" />
                 </div>
 
-                {/* Hero Header Content */}
-                <div className="flex flex-col lg:flex-row items-start justify-between gap-6 relative z-10 pt-10 sm:pt-12">
-                  {/* Left Column: Avatar & User Details */}
-                  <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 flex-1 min-w-0">
+                {/* SCATTERED FLOATING STAT CAPSULES (ROTATED AROUND BANNER LIKE KNOWT SCREENSHOT 1) */}
+                
+                {/* 1. XP Capsule (Top Left) */}
+                <motion.div
+                  initial={{ y: -10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                  className="hidden md:flex absolute top-10 left-10 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl -rotate-6 hover:rotate-0 transition-transform cursor-default z-10"
+                >
+                  <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-6 h-6 object-contain" />
+                  <span>{xp.toLocaleString()} XP</span>
+                </motion.div>
+
+                {/* 2. Streak Capsule (Middle Left) */}
+                <motion.div
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="hidden md:flex absolute top-36 left-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl rotate-4 hover:rotate-0 transition-transform cursor-default z-10"
+                >
+                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-6 h-6" />
+                  <span>{user.streakDays || 0} day Streak</span>
+                </motion.div>
+
+                {/* 3. Coins Capsule (Bottom Left) */}
+                <motion.div
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="hidden md:flex absolute bottom-12 left-12 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl -rotate-4 hover:rotate-0 transition-transform cursor-default z-10"
+                >
+                  <img src="/images/coin-zoomed.png" alt="Coins" className="w-6 h-6 object-contain" />
+                  <span>{(user.credits || 0).toLocaleString()} Coins</span>
+                </motion.div>
+
+                {/* 4. Accuracy Capsule (Top Right) */}
+                <motion.div
+                  initial={{ y: -10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.1 }}
+                  className="hidden md:flex absolute top-10 right-10 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl rotate-6 hover:rotate-0 transition-transform cursor-default z-10"
+                >
+                  <Target className="w-5 h-5 text-emerald-300" />
+                  <span>{accuracy}% Accuracy</span>
+                </motion.div>
+
+                {/* 5. Scholar Level Capsule (Middle Right) */}
+                <motion.div
+                  initial={{ x: 10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.2 }}
+                  className="hidden md:flex absolute top-36 right-20 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl -rotate-5 hover:rotate-0 transition-transform cursor-default z-10"
+                >
+                  <Award className="w-5 h-5 text-purple-300" />
+                  <span>Level {level}</span>
+                </motion.div>
+
+                {/* 6. Time Spent Capsule (Bottom Right - Replaced Courses!) */}
+                <motion.div
+                  initial={{ y: 10, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 }}
+                  className="hidden md:flex absolute bottom-12 right-12 items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/15 backdrop-blur-xl border border-white/25 text-white font-manrope font-extrabold text-sm shadow-xl rotate-3 hover:rotate-0 transition-transform cursor-default z-10"
+                >
+                  <Clock className="w-5 h-5 text-blue-300" />
+                  <span>{user.totalStudyMinutes || 45}m Study Time</span>
+                </motion.div>
+
+                {/* CENTERED AVATAR & USER PROFILE DETAILS (MATCHING KNOWT SCREENSHOT 1) */}
+                <div className="relative z-20 flex flex-col items-center justify-center space-y-4 my-auto">
+                  {/* Large Centered Avatar with Edit Profile Button Attached Below */}
+                  <div className="relative flex flex-col items-center">
                     <UserAvatar
                       photoURL={user.photoURL}
                       name={user.displayName}
@@ -223,153 +284,126 @@ export default function UserProfilePage() {
                       size="xl"
                     />
 
-                    <div className="space-y-2 min-w-0 flex-1">
-                      <div>
-                        <UserDisplayName
-                          name={user.displayName}
-                          activeNameColor={user.activeNameColor}
-                          className="font-manrope font-black text-2xl sm:text-3xl text-white tracking-tight leading-none"
-                        />
-                      </div>
-
-                      {/* Location & Academic Details */}
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-white/60 font-manrope">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-3.5 h-3.5 text-violet-400 shrink-0" />
-                          <span>{user.location && user.location.trim() !== "" ? user.location : "N/A"}</span>
-                        </div>
-                        {user.createdAt && (
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5 text-white/40 shrink-0" />
-                            <span>Member Since {new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}</span>
-                          </div>
-                        )}
-                        <div className="flex items-center gap-1 font-semibold text-emerald-400">
-                          <span>Class of {user.graduationYear || "2028"}</span>
-                        </div>
-                      </div>
-
-                      {/* Followers & Following Counts */}
-                      <div className="flex items-center gap-4 pt-0.5 text-xs font-manrope">
+                    {/* Edit Profile / Follow Button Centered Directly Below Avatar (Matching Knowt Screenshot 1!) */}
+                    <div className="mt-3">
+                      {isOwnProfile ? (
+                        <Link
+                          href="/dashboard/settings?tab=account"
+                          className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#141624] hover:bg-[#1a1d30] border border-white/20 text-white font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95"
+                        >
+                          <Edit3 className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+                          <span className="text-white">Edit Profile</span>
+                        </Link>
+                      ) : (
                         <button
                           type="button"
-                          onClick={() => openFollowModal("followers")}
-                          className="hover:underline cursor-pointer flex items-center gap-1 text-white/80"
+                          onClick={handleFollowToggle}
+                          className={cn(
+                            "inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-lg hover:scale-105 active:scale-95",
+                            isFollowingThisUser
+                              ? "bg-white/15 hover:bg-red-500/20 border border-white/20 text-white hover:text-red-400"
+                              : "bg-white text-black hover:bg-neutral-200"
+                          )}
                         >
-                          <span className="font-extrabold text-white font-mono">{userFollowers.length}</span>
-                          <span className="text-white/40">Followers</span>
+                          {isFollowingThisUser ? (
+                            <>
+                              <UserCheck className="w-4 h-4 text-emerald-400" />
+                              <span>Following</span>
+                            </>
+                          ) : (
+                            <>
+                              <UserPlus className="w-4 h-4 text-black" />
+                              <span>Follow</span>
+                            </>
+                          )}
                         </button>
-                        <span className="text-white/20">•</span>
-                        <button
-                          type="button"
-                          onClick={() => openFollowModal("following")}
-                          className="hover:underline cursor-pointer flex items-center gap-1 text-white/80"
-                        >
-                          <span className="font-extrabold text-white font-mono">{userFollowing.length}</span>
-                          <span className="text-white/40">Following</span>
-                        </button>
-                      </div>
-
-                      {/* Bio Quote */}
-                      <p className="text-xs text-white/70 font-manrope max-w-xl leading-relaxed pt-1 font-medium">
-                        {user.bio && user.bio.trim() !== "" ? `"${user.bio}"` : "N/A"}
-                      </p>
-
-                      {/* Action Buttons: Follow/Unfollow vs Edit Profile */}
-                      <div className="pt-2 flex items-center gap-3">
-                        {isOwnProfile ? (
-                          <Link
-                            href="/dashboard/settings?tab=account"
-                            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/10 hover:bg-white/20 border border-white/15 text-white font-manrope font-bold text-xs transition-all cursor-pointer shadow-sm active:scale-95"
-                          >
-                            <Edit3 className="w-3.5 h-3.5 text-violet-400" />
-                            <span>Edit Profile</span>
-                          </Link>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={handleFollowToggle}
-                            className={cn(
-                              "inline-flex items-center gap-2 px-5 py-2 rounded-xl font-manrope font-extrabold text-xs transition-all cursor-pointer shadow-md active:scale-95",
-                              isFollowingThisUser
-                                ? "bg-white/10 hover:bg-red-500/20 border border-white/15 text-white hover:text-red-400"
-                                : "bg-white text-black hover:bg-neutral-200"
-                            )}
-                          >
-                            {isFollowingThisUser ? (
-                              <>
-                                <UserCheck className="w-4 h-4 text-emerald-400" />
-                                <span>Following</span>
-                              </>
-                            ) : (
-                              <>
-                                <UserPlus className="w-4 h-4 text-black" />
-                                <span>Follow</span>
-                              </>
-                            )}
-                          </button>
-                        )}
-                      </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Right Column: Level Badge & Level Progress Bar (Scholar Level text and icon removed) */}
-                  <div className="w-full lg:w-72 bg-[#0d0f1a]/80 backdrop-blur-md border border-white/10 rounded-2xl p-4 shrink-0 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <span className="text-2xl font-black font-manrope text-white">Level {level}</span>
-                      <LevelBadge level={level} />
+                  {/* Centered User Display Name & Username Metadata */}
+                  <div className="space-y-1 text-center">
+                    <UserDisplayName
+                      name={user.displayName}
+                      activeNameColor={user.activeNameColor}
+                      className="font-manrope font-black text-3xl sm:text-4xl text-white tracking-tight leading-none drop-shadow-md"
+                    />
+                    <div className="flex items-center justify-center gap-2 text-xs font-mono text-white/60">
+                      <span>@{username}</span>
+                      {user.location && user.location.trim() !== "" && (
+                        <>
+                          <span>•</span>
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-violet-300" />
+                            {user.location}
+                          </span>
+                        </>
+                      )}
+                      <span>•</span>
+                      <span className="text-emerald-300 font-bold">Class of {user.graduationYear || "2028"}</span>
                     </div>
+                  </div>
 
-                    <div className="space-y-1">
-                      <div className="h-2 w-full bg-white/10 rounded-full overflow-hidden">
-                        <motion.div
-                          initial={{ width: 0 }}
-                          animate={{ width: `${progressPct}%` }}
-                          transition={{ duration: 0.8, ease: "easeOut" }}
-                          className="h-full rounded-full"
-                          style={{ backgroundColor: themeBannerColor }}
-                        />
-                      </div>
-                      <div className="flex justify-between text-[10px] font-mono text-white/40">
-                        <span>{xpInLevel.toLocaleString()} XP</span>
-                        <span>{xpNeeded.toLocaleString()} next</span>
-                      </div>
+                  {/* Bio Quote (if present) */}
+                  {user.bio && user.bio.trim() !== "" && (
+                    <p className="text-xs text-white/80 font-manrope max-w-md mx-auto leading-relaxed italic bg-black/20 px-4 py-2 rounded-2xl border border-white/10 backdrop-blur-sm">
+                      "{user.bio}"
+                    </p>
+                  )}
+
+                  {/* Followers / Following / Badges Centered Pill Capsules (Matching Knowt Screenshot 1!) */}
+                  <div className="flex items-center justify-center gap-2.5 pt-2">
+                    <button
+                      type="button"
+                      onClick={() => openFollowModal("followers")}
+                      className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-manrope font-bold transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+                    >
+                      <span className="font-extrabold font-mono text-white">{userFollowers.length}</span>
+                      <span className="text-white/70">Followers</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => openFollowModal("following")}
+                      className="px-5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white text-xs font-manrope font-bold transition-all cursor-pointer shadow-md flex items-center gap-1.5"
+                    >
+                      <span className="font-extrabold font-mono text-white">{userFollowing.length}</span>
+                      <span className="text-white/70">Following</span>
+                    </button>
+
+                    <div className="px-5 py-2 rounded-full bg-white/10 border border-white/15 text-white text-xs font-manrope font-bold shadow-md flex items-center gap-1.5">
+                      <span className="font-extrabold font-mono text-amber-300">15</span>
+                      <span className="text-white/70">Badges</span>
                     </div>
                   </div>
                 </div>
 
-                {/* STATS CONTAINERS MOVED UP INSIDE THE HERO CARD */}
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5 relative z-10 pt-4 border-t border-white/[0.08]">
-                  {[
-                    { label: "XP", value: xp.toLocaleString(), color: "text-purple-400", img: "/images/xp-shield-zoomed.png" },
-                    { label: "COINS", value: (user.credits || 0).toLocaleString(), color: "text-amber-400", img: "/images/coin-zoomed.png" },
-                    { label: "STREAK", value: `${user.streakDays || 0}d`, color: "text-orange-400" },
-                    { label: "ACCURACY", value: `${accuracy}%`, icon: Target, color: "text-emerald-400" },
-                    { label: "COURSES", value: enrolledCount, icon: BookOpen, color: "text-blue-400" },
-                    { label: "QUESTIONS", value: totalAnswered.toLocaleString(), icon: CheckCircle, color: "text-cyan-400" },
-                  ].map((item) => {
-                    const Icon = item.icon;
-                    return (
-                      <div
-                        key={item.label}
-                        className="bg-[#0b0d18]/90 border border-white/[0.08] rounded-2xl p-4 flex flex-col justify-between hover:border-white/20 transition-all shadow-lg"
-                      >
-                        <div className="flex items-center justify-between text-white/50">
-                          <span className="text-[10px] font-mono font-extrabold tracking-widest uppercase">{item.label}</span>
-                          {item.label === "STREAK" ? (
-                            <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-12 h-12" />
-                          ) : item.img ? (
-                            <img src={item.img} alt={item.label} className="w-12 h-12 object-contain" />
-                          ) : Icon ? (
-                            <Icon className={`w-10 h-10 ${item.color}`} />
-                          ) : null}
-                        </div>
-                        <div className={`font-instrument text-2xl font-bold ${item.color} mt-3`}>
-                          {item.value}
-                        </div>
-                      </div>
-                    );
-                  })}
+                {/* MOBILE STATS CAPSULES (Visible on mobile screens) */}
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 w-full md:hidden relative z-20 pt-4 border-t border-white/10">
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                    <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-5 h-5 object-contain" />
+                    <span>{xp.toLocaleString()} XP</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                    <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-5 h-5" />
+                    <span>{user.streakDays || 0}d Streak</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                    <img src="/images/coin-zoomed.png" alt="Coins" className="w-5 h-5 object-contain" />
+                    <span>{(user.credits || 0).toLocaleString()} Coins</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                    <Target className="w-4 h-4 text-emerald-300" />
+                    <span>{accuracy}% Accuracy</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                    <Award className="w-4 h-4 text-purple-300" />
+                    <span>Level {level}</span>
+                  </div>
+                  <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/10 border border-white/15 text-xs font-bold text-white">
+                    <Clock className="w-4 h-4 text-blue-300" />
+                    <span>{user.totalStudyMinutes || 45}m Study</span>
+                  </div>
                 </div>
               </div>
             </motion.div>
