@@ -252,30 +252,39 @@ function MousePushedWrapper({ children, className, style, animate, transition }:
   const y = useSpring(0, { stiffness: 80, damping: 15 });
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const elemX = rect.left + rect.width / 2;
-      const elemY = rect.top + rect.height / 2;
-      
-      const dx = elemX - e.clientX;
-      const dy = elemY - e.clientY;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-      const pushRadius = 240;
+    let ticking = false;
 
-      if (distance < pushRadius) {
-        const force = (pushRadius - distance) / pushRadius;
-        const pushAmount = force * 50;
-        const angle = Math.atan2(dy, dx);
-        x.set(Math.cos(angle) * pushAmount);
-        y.set(Math.sin(angle) * pushAmount);
-      } else {
-        x.set(0);
-        y.set(0);
-      }
+    const handleMouseMove = (e: MouseEvent) => {
+      if (ticking || !ref.current) return;
+      ticking = true;
+
+      requestAnimationFrame(() => {
+        if (ref.current) {
+          const rect = ref.current.getBoundingClientRect();
+          const elemX = rect.left + rect.width / 2;
+          const elemY = rect.top + rect.height / 2;
+          
+          const dx = elemX - e.clientX;
+          const dy = elemY - e.clientY;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          const pushRadius = 240;
+
+          if (distance < pushRadius) {
+            const force = (pushRadius - distance) / pushRadius;
+            const pushAmount = force * 50;
+            const angle = Math.atan2(dy, dx);
+            x.set(Math.cos(angle) * pushAmount);
+            y.set(Math.sin(angle) * pushAmount);
+          } else {
+            x.set(0);
+            y.set(0);
+          }
+        }
+        ticking = false;
+      });
     };
 
-    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, [x, y]);
 
@@ -365,7 +374,7 @@ export function HeroSection() {
         <img 
           src="/images/HERONEW.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover opacity-95 brightness-[1.1] contrast-[1.05]"
+          className="w-full h-full object-cover object-top translate-y-6 sm:translate-y-8 opacity-95 brightness-[1.1] contrast-[1.05]"
         />
         {/* Darkening Overlay ONLY in the center going out a little bit */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.92)_0%,rgba(5,7,15,0.65)_35%,transparent_65%)]" />

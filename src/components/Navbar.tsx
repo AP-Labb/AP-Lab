@@ -208,7 +208,9 @@ export function Navbar() {
       <div 
         className="fixed top-0 left-0 right-0 z-50 pointer-events-none flex justify-center"
       >
-        <nav className="pointer-events-auto transition-all duration-500 ease-in-out flex items-center justify-between text-white relative mt-4 sm:mt-5 w-[92%] sm:w-[94%] max-w-7xl rounded-full border border-white/15 px-6 sm:px-8 md:px-10 py-3 bg-[#08090e]/75 backdrop-blur-2xl shadow-[0_12px_40px_0_rgba(0,0,0,0.8)]">
+        <nav className="pointer-events-auto transition-all duration-500 ease-in-out flex items-center justify-between text-white relative mt-4 sm:mt-5 w-[92%] sm:w-[94%] max-w-7xl rounded-full border border-white/20 px-6 sm:px-8 md:px-10 py-3 bg-[#080911]/60 backdrop-blur-[36px] shadow-[0_20px_60px_rgba(0,0,0,0.7),inset_0_1px_1px_rgba(255,255,255,0.45),inset_0_-1px_1px_rgba(0,0,0,0.4)] overflow-hidden">
+          {/* Liquid Glass Highlight Sheen Overlay */}
+          <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/[0.14] via-transparent to-black/20 pointer-events-none" />
           {/* Left Container: Logo */}
           <div className="flex-1 flex justify-start">
             <Link 
