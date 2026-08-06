@@ -346,12 +346,22 @@ export function HeroSection() {
     setSpringPos((prev) => ({ ...prev, y: latestY }));
   });
 
+  const [cartoonFrame, setCartoonFrame] = useState(0);
+
   useEffect(() => {
-    const interval = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % words.length);
-    }, 3000);
-    return () => clearInterval(interval);
+    // Choppy static frame swap every 220ms (classic 12fps/8fps cartoon line-boil style!)
+    const frameInterval = setInterval(() => {
+      setCartoonFrame((prev) => (prev + 1) % 4);
+    }, 220);
+    return () => clearInterval(frameInterval);
   }, []);
+
+  const CARTOON_PATHS = [
+    "M 2,7 Q 25,3 50,7 T 98,6",
+    "M 2,5 Q 25,8 50,4 T 98,7",
+    "M 2,8 Q 25,2 50,8 T 98,5",
+    "M 2,6 Q 25,6 50,6 T 98,7"
+  ];
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
@@ -398,37 +408,26 @@ export function HeroSection() {
           For the love of{" "}
           <span className="relative inline-block text-white pb-2 whitespace-nowrap">
             knowledge.
-            {/* CARTOONY HAND-DRAWN HIGHLIGHTER STROKE WITH LINE-BOIL ANIMATION */}
+            {/* VINTAGE CHOPPY CARTOON HIGHLIGHTER STROKE (NO GLOW, DELAYED FOR PRELOADER, STATIC FRAME SWAPS) */}
             <motion.svg
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.95 }}
-              transition={{ duration: 0.3 }}
+              transition={{ delay: 1.2, duration: 0.3 }}
               className="absolute -bottom-1.5 left-0 w-full h-4 overflow-visible pointer-events-none z-10"
               viewBox="0 0 100 12"
               preserveAspectRatio="none"
             >
               <motion.path
                 initial={{ pathLength: 0 }}
-                animate={{
-                  pathLength: 1,
-                  d: [
-                    "M 2,7 Q 25,3 50,7 T 98,6",
-                    "M 2,5 Q 25,8 50,5 T 98,7",
-                    "M 2,8 Q 25,2 50,8 T 98,5",
-                    "M 2,6 Q 25,6 50,6 T 98,7",
-                    "M 2,7 Q 25,3 50,7 T 98,6"
-                  ]
-                }}
-                transition={{
-                  pathLength: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
-                  d: { repeat: Infinity, duration: 1.4, ease: "linear" }
-                }}
+                animate={{ pathLength: 1 }}
+                transition={{ delay: 1.2, duration: 0.8, ease: "easeInOut" }}
+                d={CARTOON_PATHS[cartoonFrame]}
                 fill="none"
                 stroke="#20c997"
-                strokeWidth="6"
+                strokeWidth="5"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="opacity-90 drop-shadow-[0_0_10px_rgba(32,201,151,0.7)]"
+                className="opacity-90"
               />
             </motion.svg>
           </span>

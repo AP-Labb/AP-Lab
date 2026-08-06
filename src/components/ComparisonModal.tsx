@@ -152,12 +152,12 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100vh", opacity: 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-5xl bg-[#080914] border border-white/15 rounded-3xl overflow-hidden shadow-[0_32px_120px_rgba(0,0,0,1)] z-10 flex flex-col max-h-[85vh] my-auto"
+            className="relative w-full max-w-5xl bg-[#080914] border border-white/15 rounded-3xl overflow-hidden shadow-[0_32px_120px_rgba(0,0,0,1)] z-10 flex flex-col max-h-[92vh] my-auto"
           >
             {/* Small Close Button (Top Right Inside Modal) */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-40 w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white/70 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
+              className="absolute top-3.5 right-3.5 z-40 w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white/70 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
               title="Close"
             >
               <X className="w-3.5 h-3.5" />
@@ -166,57 +166,57 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
             {/* Matrix Table */}
             <div 
               data-lenis-prevent="true"
-              className="flex-1 overflow-x-auto overflow-y-auto p-4 sm:p-6 pt-10 custom-scrollbar"
+              className="flex-1 overflow-x-auto overflow-y-auto p-3 sm:p-5 pt-8 custom-scrollbar"
             >
-              <table className="w-full text-left border-collapse min-w-[840px]">
+              <table className="w-full text-left border-collapse min-w-[780px]">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="py-4 px-5 text-xs font-mono uppercase tracking-wider text-white/40 font-bold w-[26%]">
+                    <th className="py-2.5 px-4 text-[11px] font-mono uppercase tracking-wider text-white/40 font-bold w-[26%]">
                       Feature Comparison
                     </th>
 
-                    {/* AP Lab Column Header */}
-                    <th className="py-4 px-5 text-center bg-white/[0.06] border-x border-t border-white/20 rounded-t-2xl">
-                      <div className="flex items-center justify-center space-x-2 py-1.5">
-                        <Activity className="w-5 h-5 text-white" />
-                        <span className="text-sm sm:text-base font-extrabold text-white tracking-tight font-manrope">
+                    {/* AP Lab Column Header - Forced 1 Horizontal Line */}
+                    <th className="py-2.5 px-4 text-center bg-white/[0.06] border-x border-t border-white/20 rounded-t-2xl">
+                      <div className="flex items-center justify-center space-x-2 py-1 whitespace-nowrap">
+                        <Activity className="w-4 h-4 text-white shrink-0" />
+                        <span className="text-sm font-extrabold text-white tracking-tight font-manrope whitespace-nowrap">
                           AP Lab
                         </span>
                       </div>
                     </th>
 
                     {/* Khan Academy Header Logo */}
-                    <th className="py-4 px-5 text-center">
-                      <div className="flex items-center justify-center h-9">
-                        <img src="/images/logos/khan.png" alt="Khan Academy" className="h-6 sm:h-7 object-contain max-w-[130px] filter brightness-110" />
+                    <th className="py-2.5 px-4 text-center">
+                      <div className="flex items-center justify-center h-7">
+                        <img src="/images/logos/khan.png" alt="Khan Academy" className="h-5 sm:h-6 object-contain max-w-[120px] filter brightness-110" />
                       </div>
                     </th>
 
                     {/* Fiveable Header Logo */}
-                    <th className="py-4 px-5 text-center">
-                      <div className="flex items-center justify-center h-9">
-                        <img src="/images/logos/fiveable.png" alt="Fiveable" className="h-6 sm:h-7 object-contain max-w-[120px] filter brightness-110" />
+                    <th className="py-2.5 px-4 text-center">
+                      <div className="flex items-center justify-center h-7">
+                        <img src="/images/logos/fiveable.png" alt="Fiveable" className="h-5 sm:h-6 object-contain max-w-[110px] filter brightness-110" />
                       </div>
                     </th>
 
                     {/* Knowt Header Logo */}
-                    <th className="py-4 px-5 text-center">
-                      <div className="flex items-center justify-center h-9">
-                        <img src="/images/logos/knowt.png" alt="Knowt" className="h-6 sm:h-7 object-contain max-w-[110px] filter brightness-110" />
+                    <th className="py-2.5 px-4 text-center">
+                      <div className="flex items-center justify-center h-7">
+                        <img src="/images/logos/knowt.png" alt="Knowt" className="h-5 sm:h-6 object-contain max-w-[100px] filter brightness-110" />
                       </div>
                     </th>
 
                     {/* Quizlet Header Logo */}
-                    <th className="py-4 px-5 text-center">
-                      <div className="flex items-center justify-center h-9">
-                        <img src="/images/logos/quizlet.png" alt="Quizlet" className="h-6 sm:h-7 object-contain max-w-[120px] filter brightness-110" />
+                    <th className="py-2.5 px-4 text-center">
+                      <div className="flex items-center justify-center h-7">
+                        <img src="/images/logos/quizlet.png" alt="Quizlet" className="h-5 sm:h-6 object-contain max-w-[110px] filter brightness-110" />
                       </div>
                     </th>
 
                     {/* Brilliant Header Logo */}
-                    <th className="py-4 px-5 text-center">
-                      <div className="flex items-center justify-center h-9">
-                        <img src="/images/logos/brilliant.png" alt="Brilliant" className="h-6 sm:h-7 object-contain max-w-[130px] filter invert brightness-200" />
+                    <th className="py-2.5 px-4 text-center">
+                      <div className="flex items-center justify-center h-7">
+                        <img src="/images/logos/brilliant.png" alt="Brilliant" className="h-5 sm:h-6 object-contain max-w-[120px] filter invert brightness-200" />
                       </div>
                     </th>
                   </tr>
@@ -230,28 +230,28 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
                         key={row.feature} 
                         className={`hover:bg-white/[0.02] transition-colors ${isLastRow ? "bg-white/[0.04] font-bold" : ""}`}
                       >
-                        <td className="py-4 px-5 text-xs sm:text-sm font-manrope font-semibold text-white/90">
+                        <td className="py-2.5 px-4 text-xs font-manrope font-semibold text-white/90">
                           {row.feature}
                         </td>
 
-                        {/* AP Lab Highlight Cell */}
-                        <td className={`py-4 px-5 text-center bg-white/[0.04] border-x border-white/15 ${isLastRow ? "border-b rounded-b-2xl" : ""}`}>
+                        {/* AP Lab Highlight Cell - NO BLUR OVERLAY */}
+                        <td className={`py-2.5 px-4 text-center bg-white/[0.04] border-x border-white/15 ${isLastRow ? "border-b rounded-b-2xl" : ""}`}>
                           {renderCellContent(row.apLab, true)}
                         </td>
 
-                        <td className="py-4 px-5 text-center">
+                        <td className="py-2.5 px-4 text-center">
                           {renderCellContent(row.khan)}
                         </td>
-                        <td className="py-4 px-5 text-center">
+                        <td className="py-2.5 px-4 text-center">
                           {renderCellContent(row.fiveable)}
                         </td>
-                        <td className="py-4 px-5 text-center">
+                        <td className="py-2.5 px-4 text-center">
                           {renderCellContent(row.knowt)}
                         </td>
-                        <td className="py-4 px-5 text-center">
+                        <td className="py-2.5 px-4 text-center">
                           {renderCellContent(row.quizlet)}
                         </td>
-                        <td className="py-4 px-5 text-center">
+                        <td className="py-2.5 px-4 text-center">
                           {renderCellContent(row.brilliant)}
                         </td>
                       </tr>
