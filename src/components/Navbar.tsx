@@ -210,16 +210,16 @@ export function Navbar() {
       >
         <nav 
           className={cn(
-            "pointer-events-auto transition-all duration-500 ease-out flex items-center justify-between text-white relative mt-4 sm:mt-5 w-[92%] sm:w-[94%] max-w-7xl rounded-full px-6 sm:px-8 md:px-10 py-3 overflow-hidden",
+            "pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between text-white relative mt-3 sm:mt-4 w-[92%] sm:w-[94%] max-w-6xl rounded-full px-6 sm:px-8 py-2.5 overflow-hidden",
             isScrolled
-              ? "bg-[#080911]/80 backdrop-blur-2xl border border-white/20 shadow-[0_16px_50px_rgba(0,0,0,0.75),inset_0_1px_1px_rgba(255,255,255,0.4)]"
+              ? "bg-[#0c0d16]/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
               : "bg-transparent border border-transparent shadow-none"
           )}
         >
-          {/* Liquid Glass Highlight Sheen Overlay (Only visible when scrolled) */}
+          {/* Subtle Clean Frosted Sheen */}
           <div 
             className={cn(
-              "absolute inset-0 rounded-full bg-gradient-to-b from-white/[0.14] via-transparent to-black/20 pointer-events-none transition-opacity duration-500",
+              "absolute inset-0 rounded-full bg-white/[0.03] pointer-events-none transition-opacity duration-300",
               isScrolled ? "opacity-100" : "opacity-0"
             )}
           />

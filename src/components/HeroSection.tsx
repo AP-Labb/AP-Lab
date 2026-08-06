@@ -355,27 +355,16 @@ export function HeroSection() {
 
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-between pt-16 sm:pt-20 md:pt-24 pb-8 px-4 sm:px-6 md:px-12 overflow-hidden text-center z-10">
-      {/* Liquid Gradient WebGL Background for Top Hero Section */}
-      <div className="absolute inset-x-0 top-0 h-[650px] z-0 pointer-events-none opacity-45 overflow-hidden select-none">
-        <LiquidGradientCanvas 
-          colors={["#050714", "#1a0b36", "#3b0f6f", "#081b3b"]}
-          speed={0.5}
-          scale={0.4}
-          seed={12}
-          exposure={1.15}
-          contrast={1.1}
-          className="w-full h-full"
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#03040a]/40 to-[#03040a]" />
-      </div>
-
-      {/* Base Background Image (HERONEW.png) - Bright on Left & Right, Dark Only in Center */}
+      {/* Base Background Image (HERONEW.png) - Moved UP with top darkening gradient for 100% legibility */}
       <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden select-none">
         <img 
           src="/images/HERONEW.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover object-top translate-y-1 sm:translate-y-2 opacity-95 brightness-[1.1] contrast-[1.05]"
+          className="w-full h-full object-cover object-top translate-y-0 scale-105 opacity-95 brightness-[1.1] contrast-[1.05]"
         />
+        {/* Dark Gradient Overlay ONLY at the top under Nav Bar text for crisp legibility */}
+        <div className="absolute top-0 left-0 right-0 h-44 bg-gradient-to-b from-[#03040a] via-[#03040a]/85 to-transparent z-10" />
+
         {/* Darkening Overlay ONLY in the center going out a little bit */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.92)_0%,rgba(5,7,15,0.65)_35%,transparent_65%)]" />
       </div>
@@ -404,7 +393,7 @@ export function HeroSection() {
           </button>
         </div>
 
-        {/* Massive Headline (Fully responsive sizing for laptop & mobile screens) */}
+        {/* Massive Headline */}
         <h1 className="font-inter font-bold text-white text-4xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[96px] leading-[1.08] mb-6 sm:mb-8 tracking-tight max-w-5xl text-center select-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.95)]">
           For the love <br />
           <motion.span 
@@ -420,13 +409,13 @@ export function HeroSection() {
               of{" "}
             </motion.span>
             <span className="w-[0.25em]" />
-            <span className="relative inline-grid grid-cols-1 grid-rows-1 justify-items-center align-middle">
+            <span className="relative inline-grid grid-cols-1 grid-rows-1 justify-items-center align-middle pb-2">
               <AnimatePresence mode="popLayout">
                 <motion.span
                   key={words[wordIndex]}
                   layout="position"
                   transition={layoutTransition}
-                  className="col-start-1 row-start-1 inline-flex select-none text-white pb-1 whitespace-nowrap"
+                  className="col-start-1 row-start-1 inline-flex select-none text-white pb-1 whitespace-nowrap relative"
                 >
                   {(words[wordIndex] + ".").split("").map((char, index) => (
                     <motion.span
@@ -441,6 +430,31 @@ export function HeroSection() {
                       {char}
                     </motion.span>
                   ))}
+
+                  {/* LOW-FPS STEP-BY-STEP HAND-DRAWN HIGHLIGHTER UNDERLINE ANIMATION */}
+                  <motion.svg
+                    key={`highlighter-${words[wordIndex]}`}
+                    initial={{ pathLength: 0, opacity: 0 }}
+                    animate={{ pathLength: 1, opacity: 0.9 }}
+                    transition={{
+                      duration: 0.45,
+                      ease: [0.16, 1, 0.3, 1], // Low-FPS hand-drawn stroke feel
+                      delay: 0.12,
+                    }}
+                    className="absolute -bottom-1 left-0 w-full h-3 overflow-visible pointer-events-none z-10"
+                    viewBox="0 0 100 12"
+                    preserveAspectRatio="none"
+                  >
+                    <motion.path
+                      d="M 2,7 Q 25,3 50,7 T 98,6"
+                      fill="none"
+                      stroke="#20c997"
+                      strokeWidth="5.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="opacity-85 drop-shadow-[0_0_8px_rgba(32,201,151,0.6)]"
+                    />
+                  </motion.svg>
                 </motion.span>
               </AnimatePresence>
             </span>
