@@ -86,15 +86,15 @@ export const DesktopSidebar = ({
   return (
     <motion.div
       className={cn(
-        "h-screen px-2 py-4 hidden md:flex md:flex-col justify-between bg-[#05060c] border-r border-white/15 flex-shrink-0 fixed top-0 left-0 bottom-0 z-[999999] overflow-x-hidden overflow-y-auto shadow-[10px_0_40px_rgba(0,0,0,0.95)]",
+        "h-screen px-2 py-3 hidden md:flex md:flex-col justify-between bg-[#05060c] border-r border-white/15 flex-shrink-0 fixed top-0 left-0 bottom-0 z-[999999] overflow-hidden shadow-[10px_0_40px_rgba(0,0,0,0.95)] select-none",
         className
       )}
       animate={{
-        width: animate ? (open ? "220px" : "56px") : "220px",
+        width: animate ? (open ? "224px" : "60px") : "224px",
       }}
       transition={{ 
-        duration: 0.35, 
-        ease: [0.32, 0.72, 0, 1],
+        duration: 0.25, 
+        ease: [0.16, 1, 0.3, 1],
       }}
       onMouseEnter={() => setOpen(true)}
       onMouseLeave={() => setOpen(false)}

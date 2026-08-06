@@ -300,8 +300,8 @@ export default function UserProfilePage() {
 
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
-      {/* Background Grid */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none z-0" />
+      {/* Background Grid (Slightly more visible: opacity 0.07) */}
+      <div className="fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.07)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.07)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none z-0" />
 
       <AppSidebar currentPath="/dashboard/leaderboard" />
 
@@ -372,14 +372,14 @@ export default function UserProfilePage() {
                   <Upload className="w-5 h-5 text-white stroke-[2.2]" />
                 </button>
 
-                {/* SCATTERED FLOATING STAT CAPSULES (EXPLICIT FRAMER MOTION ROTATION -7deg, +6deg, -5deg, +8deg, -6deg, +5deg) */}
+                {/* SCATTERED FLOATING STAT CAPSULES (EXPLICIT ROTATION, REDUCED DROP SHADOW shadow-md) */}
                 
                 {/* 1. XP Capsule (Top Left - Tilted -7deg) */}
                 <motion.div
                   initial={{ y: -10, opacity: 0, rotate: -7 }}
                   animate={{ y: 0, opacity: 1, rotate: -7 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 left-12 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-black text-base shadow-xl cursor-default z-20"
+                  className="hidden md:flex absolute top-12 left-12 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#f3e8ff] border border-purple-300 text-[#581c87] font-manrope font-black text-base shadow-md cursor-default z-20"
                 >
                   <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-11 h-11 object-contain drop-shadow-md" />
                   <span>{xp.toLocaleString()} XP</span>
@@ -390,7 +390,7 @@ export default function UserProfilePage() {
                   initial={{ x: -10, opacity: 0, rotate: 6 }}
                   animate={{ x: 0, opacity: 1, rotate: 6 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 left-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-black text-base shadow-xl cursor-default z-20"
+                  className="hidden md:flex absolute top-48 left-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-black text-base shadow-md cursor-default z-20"
                 >
                   <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-11 h-11" />
                   <span>{user.streakDays || 0} day Streak</span>
@@ -401,7 +401,7 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0, rotate: -5 }}
                   animate={{ y: 0, opacity: 1, rotate: -5 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-black text-base shadow-xl cursor-default z-20"
+                  className="hidden md:flex absolute bottom-16 left-16 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef08a] border border-yellow-300 text-[#713f12] font-manrope font-black text-base shadow-md cursor-default z-20"
                 >
                   <img src="/images/coin-zoomed.png" alt="Coins" className="w-11 h-11 object-contain drop-shadow-md" />
                   <span>{(user.credits || 0).toLocaleString()} Coins</span>
@@ -412,7 +412,7 @@ export default function UserProfilePage() {
                   initial={{ y: -10, opacity: 0, rotate: 8 }}
                   animate={{ y: 0, opacity: 1, rotate: 8 }}
                   transition={{ delay: 0.1 }}
-                  className="hidden md:flex absolute top-12 right-24 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-black text-base shadow-xl cursor-default z-20"
+                  className="hidden md:flex absolute top-12 right-24 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#ccfbf1] border border-teal-300 text-[#115e59] font-manrope font-black text-base shadow-md cursor-default z-20"
                 >
                   <Target className="w-8 h-8 text-[#115e59]" />
                   <span>{accuracy}% Accuracy</span>
@@ -423,7 +423,7 @@ export default function UserProfilePage() {
                   initial={{ x: 10, opacity: 0, rotate: -6 }}
                   animate={{ x: 0, opacity: 1, rotate: -6 }}
                   transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 right-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-black text-base shadow-xl cursor-default z-20"
+                  className="hidden md:flex absolute top-48 right-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#e0e7ff] border border-indigo-300 text-[#3730a3] font-manrope font-black text-base shadow-md cursor-default z-20"
                 >
                   <LevelBadge level={level} size="sm" showLabel={false} />
                   <span>Level {level}</span>
@@ -434,22 +434,35 @@ export default function UserProfilePage() {
                   initial={{ y: 10, opacity: 0, rotate: 5 }}
                   animate={{ y: 0, opacity: 1, rotate: 5 }}
                   transition={{ delay: 0.3 }}
-                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-black text-base shadow-xl cursor-default z-20"
+                  className="hidden md:flex absolute bottom-16 right-16 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#e0f2fe] border border-sky-300 text-[#075985] font-manrope font-black text-base shadow-md cursor-default z-20"
                 >
                   <Clock className="w-8 h-8 text-[#075985]" />
                   <span>{user.totalStudyMinutes || 45}m Study Time</span>
                 </motion.div>
 
-                {/* CENTERED AVATAR & USER DETAILS */}
+                {/* CENTERED AVATAR & USER DETAILS WITH GLOBAL RANK BADGE */}
                 <div className="relative z-20 flex flex-col items-center justify-center space-y-4 my-auto">
-                  {/* Large Centered Avatar with Edit Profile Button Below */}
+                  {/* Large Centered Avatar with Global Rank Circle Badge & Edit Profile Button */}
                   <div className="relative flex flex-col items-center">
-                    <UserAvatar
-                      photoURL={user.photoURL}
-                      name={user.displayName}
-                      activeFrame={user.activeAvatarFrame}
-                      size="xl"
-                    />
+                    <div className="relative">
+                      <UserAvatar
+                        photoURL={user.photoURL}
+                        name={user.displayName}
+                        activeFrame={user.activeAvatarFrame}
+                        size="xl"
+                      />
+
+                      {/* Global Rank Badge Circle (Top Right of Avatar) */}
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
+                        className="absolute -top-1 -right-1 z-30 w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 border-2 border-[#090b14] text-black font-manrope font-black text-xs flex items-center justify-center shadow-lg cursor-default"
+                        title="Global Rank"
+                      >
+                        #{user.level ? Math.max(1, 100 - user.level * 3) : 93}
+                      </motion.div>
+                    </div>
 
                     {/* Edit Profile / Follow Button Centered Directly Below Avatar */}
                     <div className="mt-3.5">

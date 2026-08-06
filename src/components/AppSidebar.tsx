@@ -203,23 +203,23 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
             </div>
           </div>
 
-          {/* Bottom Section: Notifications & Profile Button Capsule */}
-          <div className="relative flex flex-col gap-2 pb-6 w-full" ref={menuRef}>
-            <div className="h-px bg-white/[0.08] mx-2 mb-2" />
+          {/* Bottom Section: Notifications & Profile Button Capsule (Positioned close to bottom) */}
+          <div className="relative flex flex-col gap-1.5 pb-1 mb-0 w-full shrink-0" ref={menuRef}>
+            <div className="h-px bg-white/[0.08] mx-1 mb-1" />
 
             {/* Notifications Trigger Item */}
             <button
               type="button"
               onClick={handleOpenNotifications}
               className={cn(
-                "flex items-center gap-3 w-full h-11 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
-                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center",
+                "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
+                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
                 showNotificationsMenu
                   ? "bg-white/10 border-white/20 text-white shadow-lg"
                   : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
               )}
             >
-              <div className="w-9 h-9 shrink-0 flex items-center justify-center relative">
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center relative mx-auto">
                 <Bell className="w-5 h-5 text-white/80" />
                 {hasUnreadNotifications && (
                   <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute top-0.5 right-0.5 shadow-sm" />
@@ -246,14 +246,14 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               type="button"
               onClick={() => setShowProfileMenu((prev) => !prev)}
               className={cn(
-                "flex items-center gap-3 w-full h-11 rounded-2xl transition-colors duration-150 border cursor-pointer shrink-0",
-                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center",
+                "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer shrink-0",
+                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
                 showProfileMenu 
                   ? "bg-white/10 border-white/20 text-white shadow-lg" 
                   : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
               )}
             >
-              <div className="w-9 h-9 shrink-0 flex items-center justify-center">
+              <div className="w-8 h-8 shrink-0 flex items-center justify-center mx-auto">
                 <UserAvatar 
                   photoURL={photoURL} 
                   name={displayName} 
@@ -360,12 +360,12 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     </div>
                   ) : (
                     <div className="py-6 text-center space-y-3">
-                      {/* Very Light Yellow Background Circle Behind Notification Bell */}
-                      <div className="w-24 h-24 rounded-full bg-[#fde047]/15 border border-[#fde047]/30 flex items-center justify-center mx-auto shadow-inner">
+                      {/* VERY Light Simple Plain Yellow Circle Behind Notification Bell */}
+                      <div className="w-20 h-20 rounded-full bg-[#fef08a] flex items-center justify-center mx-auto shadow-sm">
                         <img
                           src="/images/notification-bell.png"
                           alt="No Notifications"
-                          className="w-16 h-16 object-contain drop-shadow-md"
+                          className="w-12 h-12 object-contain"
                         />
                       </div>
                       <div className="space-y-1">
