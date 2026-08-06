@@ -374,7 +374,7 @@ export function HeroSection() {
         <img 
           src="/images/HERONEW.png" 
           alt="Hero Background" 
-          className="w-full h-full object-cover object-top translate-y-6 sm:translate-y-8 opacity-95 brightness-[1.1] contrast-[1.05]"
+          className="w-full h-full object-cover object-top translate-y-1 sm:translate-y-2 opacity-95 brightness-[1.1] contrast-[1.05]"
         />
         {/* Darkening Overlay ONLY in the center going out a little bit */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(5,7,15,0.92)_0%,rgba(5,7,15,0.65)_35%,transparent_65%)]" />
