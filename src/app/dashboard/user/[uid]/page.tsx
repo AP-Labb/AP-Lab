@@ -460,7 +460,16 @@ export default function UserProfilePage() {
                         className="absolute -top-1 -right-1 z-30 w-9 h-9 rounded-full bg-gradient-to-br from-amber-400 via-yellow-400 to-amber-500 border-2 border-[#090b14] text-black font-manrope font-black text-xs flex items-center justify-center shadow-lg cursor-default"
                         title="Global Rank"
                       >
-                        #{user.level ? Math.max(1, 100 - user.level * 3) : 93}
+                        #{
+                          xp >= 20000 ? 1 :
+                          xp >= 15000 ? 2 :
+                          xp >= 10000 ? 3 :
+                          xp >= 7500  ? 5 :
+                          xp >= 5000  ? 8 :
+                          xp >= 3000  ? 12 :
+                          xp >= 1500  ? 18 :
+                          xp >= 500   ? 27 : 42
+                        }
                       </motion.div>
                     </div>
 

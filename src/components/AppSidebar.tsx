@@ -1,24 +1,23 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  LayoutDashboard, Award, ShoppingBag, Activity, 
-  Settings, User, FileText, Lock, Package, LogOut, ExternalLink, Trophy, MessageSquarePlus, Bell, CheckCheck, X
+import {
+  LayoutDashboard, Award, Trophy, ShoppingBag, Bell, LogOut,
+  X, Check, Activity, BookOpen, User
 } from "lucide-react";
+import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
-import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
-import { SettingsModal } from "@/components/SettingsModal";
-import { signOut } from "firebase/auth";
 import { auth } from "@/lib/firebase";
-import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
-import { ProgressProfileModal } from "@/components/ProgressProfileModal";
+import { signOut } from "firebase/auth";
 import { UserAvatar } from "@/components/UserAvatar";
-import { cn } from "@/lib/utils";
 import { UserDisplayName } from "@/components/UserDisplayName";
+import { LevelBadge } from "@/components/LevelBadge";
+import { SettingsModal } from "@/components/SettingsModal";
+import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
   currentPath?: string;
@@ -35,8 +34,6 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const [showNotificationsMenu, setShowNotificationsMenu] = useState(false);
   const [hasUnreadNotifications, setHasUnreadNotifications] = useState(true);
   const [showSettingsModal, setShowSettingsModal] = useState(false);
-  const [showMinecraftInventory, setShowMinecraftInventory] = useState(false);
-  const [showProgressProfile, setShowProgressProfile] = useState(false);
   const [notificationsCleared, setNotificationsCleared] = useState(false);
 
   useEffect(() => {
@@ -102,419 +99,392 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
     <>
       <aside className="fixed top-0 left-0 h-screen z-[9999] flex-shrink-0">
         <Sidebar open={sidebarOpen} setOpen={setSidebarOpen} animate={true}>
-          <SidebarBody className="justify-between gap-6 h-screen overflow-y-auto">
-          <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {/* Top Logo */}
-            <Link href="/" className="flex items-center gap-3 px-2 py-2.5 mb-4 group">
-              <Activity className="w-5 h-5 text-white flex-shrink-0" />
-              <motion.span
-                animate={{
-                  display: sidebarOpen ? "inline-block" : "none",
-                  opacity: sidebarOpen ? 1 : 0,
-                }}
-                transition={{ duration: 0.15 }}
-                className="font-manrope font-extrabold text-white tracking-tight whitespace-pre text-base"
-              >
-                AP Lab
-              </motion.span>
-            </Link>
-
-            <div className="h-px bg-white/[0.08] mb-4 mx-2" />
-
-            {/* Navigation Links */}
-            <div className="flex flex-col gap-1">
-              {navItems.map((item) => {
-                const isActive = pathname === item.href;
-
-                return (
-                  <Link key={item.label} href={item.href} className="w-full">
-                    <motion.div
-                      className={cn(
-                        "flex items-center gap-3 px-2 py-2.5 rounded-xl transition-all duration-200 w-full",
-                        isActive
-                          ? "bg-white/10 text-white font-bold border border-white/10 shadow-sm"
-                          : "text-white/60 hover:bg-white/[0.06] hover:text-white font-semibold"
-                      )}
-                      whileHover="hover"
-                      initial="rest"
-                    >
-                      {item.icon === "progress" ? (
-                        <motion.div 
-                          className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]"
-                          variants={{
-                            rest: { scale: 1 },
-                            hover: { scale: 1.1 }
-                          }}
-                          transition={{ duration: 0.3 }}
-                        >
-                          {[
-                            { rest: "40%", hover: "85%" },
-                            { rest: "75%", hover: "45%" },
-                            { rest: "55%", hover: "95%" },
-                            { rest: "90%", hover: "65%" }
-                          ].map((bar, i) => (
-                            <motion.div 
-                              key={i} 
-                              className="flex-1 rounded-sm bg-current" 
-                              variants={{
-                                rest: { height: bar.rest },
-                                hover: { height: bar.hover }
-                              }}
-                              transition={{ duration: 0.35, ease: "easeInOut", delay: i * 0.05 }}
-                            />
-                          ))}
-                        </motion.div>
-                      ) : item.icon === "panda" ? (
-                        <motion.div 
-                          className="w-7 h-7 shrink-0 flex items-center justify-center -ml-1"
-                          variants={{
-                            rest: { scale: 1, rotate: 0 },
-                            hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0] }
-                          }}
-                          transition={{ duration: 0.4 }}
-                        >
-                          <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
-                        </motion.div>
-                      ) : (
-                        <motion.div
-                          variants={{
-                            rest: { scale: 1, rotate: 0 },
-                            hover: { scale: 1.22, rotate: 8 }
-                          }}
-                          transition={{ duration: 0.25, ease: "easeOut" }}
-                          className="flex-shrink-0"
-                        >
-                          {/* @ts-ignore */}
-                          <item.icon className="w-5 h-5" />
-                        </motion.div>
-                      )}
-
-                      <motion.span
-                        animate={{ display: sidebarOpen ? "inline-block" : "none", opacity: sidebarOpen ? 1 : 0 }}
-                        transition={{ duration: 0.15 }}
-                        className="text-sm font-manrope whitespace-pre"
-                      >
-                        {item.label}
-                      </motion.span>
-                    </motion.div>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Bottom Section: Notifications & Profile Button Capsule (Positioned close to bottom) */}
-          <div className="relative flex flex-col gap-1.5 pb-1 mb-0 w-full shrink-0" ref={menuRef}>
-            <div className="h-px bg-white/[0.08] mx-1 mb-1" />
-
-            {/* Notifications Trigger Item */}
-            <button
-              type="button"
-              onClick={handleOpenNotifications}
-              className={cn(
-                "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
-                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
-                showNotificationsMenu
-                  ? "bg-white/10 border-white/20 text-white shadow-lg"
-                  : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
-              )}
-            >
-              <div className="w-8 h-8 shrink-0 flex items-center justify-center relative mx-auto">
-                <Bell className="w-5 h-5 text-white/80" />
-                {hasUnreadNotifications && (
-                  <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute top-0.5 right-0.5 shadow-sm" />
+          <SidebarBody className="justify-between h-screen overflow-hidden py-3 px-2">
+            <div className="flex flex-col flex-1 overflow-hidden w-full">
+              {/* Top Logo */}
+              <Link 
+                href="/" 
+                className={cn(
+                  "flex items-center gap-3 py-2 mb-3 group rounded-xl transition-all cursor-pointer",
+                  sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto w-full"
                 )}
-              </div>
-
-              <AnimatePresence>
+              >
+                <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
                 {sidebarOpen && (
                   <motion.span
                     initial={{ opacity: 0, width: 0 }}
                     animate={{ opacity: 1, width: "auto" }}
                     exit={{ opacity: 0, width: 0 }}
-                    transition={{ duration: 0.15 }}
-                    className="text-xs font-manrope font-semibold whitespace-pre truncate"
+                    className="font-manrope font-black text-lg text-white tracking-tight whitespace-nowrap truncate"
                   >
-                    Notifications
+                    AP Lab
                   </motion.span>
                 )}
-              </AnimatePresence>
-            </button>
+              </Link>
 
-            {/* Profile Menu Trigger Capsule */}
-            <button
-              type="button"
-              onClick={() => setShowProfileMenu((prev) => !prev)}
-              className={cn(
-                "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer shrink-0",
-                sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
-                showProfileMenu 
-                  ? "bg-white/10 border-white/20 text-white shadow-lg" 
-                  : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
-              )}
-            >
-              <div className="w-8 h-8 shrink-0 flex items-center justify-center mx-auto">
-                <UserAvatar 
-                  photoURL={photoURL} 
-                  name={displayName} 
-                  activeFrame={progress?.activeAvatarFrame} 
-                  size="sm" 
-                />
+              <div className="h-px bg-white/[0.08] mx-1 mb-3" />
+
+              {/* Nav Items List */}
+              <div className="space-y-1 w-full">
+                {navItems.map((item) => {
+                  const isActive = pathname === item.href || (item.href !== "/dashboard" && pathname.startsWith(item.href));
+                  return (
+                    <Link key={item.href} href={item.href}>
+                      <motion.div
+                        className={cn(
+                          "flex items-center gap-3 w-full h-10 rounded-2xl transition-all duration-150 border cursor-pointer select-none",
+                          sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
+                          isActive
+                            ? "bg-white/10 border-white/20 text-white shadow-md font-bold"
+                            : "border-transparent text-white/60 hover:bg-white/[0.06] hover:text-white"
+                        )}
+                        whileHover="hover"
+                        initial="rest"
+                      >
+                        <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                          {item.icon === "progress" ? (
+                            <motion.div 
+                              className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]"
+                              variants={{
+                                rest: { scale: 1 },
+                                hover: { scale: 1.1 }
+                              }}
+                              transition={{ duration: 0.3 }}
+                            >
+                              {[
+                                { rest: "40%", hover: "85%" },
+                                { rest: "75%", hover: "45%" },
+                                { rest: "55%", hover: "95%" },
+                                { rest: "90%", hover: "65%" }
+                              ].map((bar, i) => (
+                                <motion.div 
+                                  key={i} 
+                                  className="flex-1 rounded-sm bg-current" 
+                                  variants={{
+                                    rest: { height: bar.rest },
+                                    hover: { height: bar.hover }
+                                  }}
+                                  transition={{ duration: 0.35, ease: "easeInOut", delay: i * 0.05 }}
+                                />
+                              ))}
+                            </motion.div>
+                          ) : item.icon === "panda" ? (
+                            <motion.div 
+                              className="w-6 h-6 shrink-0 flex items-center justify-center"
+                              variants={{
+                                rest: { scale: 1, rotate: 0 },
+                                hover: { scale: 1.25, rotate: [0, -10, 10, -5, 0] }
+                              }}
+                              transition={{ duration: 0.4 }}
+                            >
+                              <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
+                            </motion.div>
+                          ) : (
+                            <motion.div
+                              variants={{
+                                rest: { scale: 1, rotate: 0 },
+                                hover: { scale: 1.22, rotate: 8 }
+                              }}
+                              transition={{ duration: 0.25, ease: "easeOut" }}
+                              className="flex-shrink-0"
+                            >
+                              {/* @ts-ignore */}
+                              <item.icon className="w-5 h-5" />
+                            </motion.div>
+                          )}
+                        </div>
+
+                        {sidebarOpen && (
+                          <motion.span
+                            initial={{ opacity: 0, width: 0 }}
+                            animate={{ opacity: 1, width: "auto" }}
+                            exit={{ opacity: 0, width: 0 }}
+                            transition={{ duration: 0.15 }}
+                            className="text-sm font-manrope font-semibold whitespace-nowrap truncate"
+                          >
+                            {item.label}
+                          </motion.span>
+                        )}
+                      </motion.div>
+                    </Link>
+                  );
+                })}
               </div>
+            </div>
 
+            {/* Bottom Section: Notifications & Profile Button Capsule */}
+            <div className="relative flex flex-col gap-1.5 pb-1 mb-0 w-full shrink-0" ref={menuRef}>
+              <div className="h-px bg-white/[0.08] mx-1 mb-1" />
+
+              {/* Notifications Trigger Item */}
+              <button
+                type="button"
+                onClick={handleOpenNotifications}
+                className={cn(
+                  "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
+                  sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
+                  showNotificationsMenu
+                    ? "bg-white/10 border-white/20 text-white shadow-lg"
+                    : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
+                )}
+              >
+                <div className="w-8 h-8 shrink-0 flex items-center justify-center relative">
+                  <Bell className="w-5 h-5 text-white/80" />
+                  {hasUnreadNotifications && !notificationsCleared && (
+                    <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute top-0.5 right-0.5 shadow-sm" />
+                  )}
+                </div>
+
+                <AnimatePresence>
+                  {sidebarOpen && (
+                    <motion.span
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="text-sm font-manrope font-semibold whitespace-nowrap truncate"
+                    >
+                      Notifications
+                    </motion.span>
+                  )}
+                </AnimatePresence>
+              </button>
+
+              {/* Profile Menu Trigger Capsule */}
+              <button
+                type="button"
+                onClick={() => setShowProfileMenu((prev) => !prev)}
+                className={cn(
+                  "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer shrink-0",
+                  sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
+                  showProfileMenu 
+                    ? "bg-white/10 border-white/20 text-white shadow-lg" 
+                    : "border-transparent text-white/70 hover:bg-white/[0.06] hover:text-white"
+                )}
+              >
+                <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                  <UserAvatar 
+                    photoURL={photoURL} 
+                    name={displayName} 
+                    activeFrame={progress?.activeAvatarFrame} 
+                    size="sm" 
+                  />
+                </div>
+
+                <AnimatePresence>
+                  {sidebarOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, width: 0 }}
+                      animate={{ opacity: 1, width: "auto" }}
+                      exit={{ opacity: 0, width: 0 }}
+                      transition={{ duration: 0.15 }}
+                      className="flex flex-col min-w-0 text-left"
+                    >
+                      <UserDisplayName 
+                        name={displayName} 
+                        activeNameColor={progress?.activeNameColor} 
+                        className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate" 
+                      />
+                      <span className="font-mono text-[10px] text-white/35 truncate mt-0.5">@{username}</span>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+
+              {/* Transparent page freeze backdrop for Notifications menu (NO blur, NO darkening) */}
               <AnimatePresence>
-                {sidebarOpen && (
+                {showNotificationsMenu && (
                   <motion.div
-                    initial={{ opacity: 0, width: 0 }}
-                    animate={{ opacity: 1, width: "auto" }}
-                    exit={{ opacity: 0, width: 0 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.15 }}
+                    className="fixed inset-0 bg-transparent z-[99998]"
+                    onClick={() => setShowNotificationsMenu(false)}
+                  />
+                )}
+              </AnimatePresence>
+
+              {/* Dark backdrop overlay ONLY when profile menu is open (NO blur) */}
+              <AnimatePresence>
+                {showProfileMenu && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="flex flex-col items-start text-left overflow-hidden min-w-0 flex-1"
+                    className="fixed inset-0 bg-black/40 z-[99998]"
+                    onClick={() => setShowProfileMenu(false)}
+                  />
+                )}
+              </AnimatePresence>
+
+              {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar */}
+              <AnimatePresence>
+                {showNotificationsMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -12, scale: 0.97 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -12, scale: 0.97 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className={cn(
+                      "fixed bottom-16 w-96 bg-[#0b0c16] border border-white/[0.12] rounded-3xl p-7 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
+                      sidebarOpen ? "left-[236px]" : "left-[72px]"
+                    )}
                   >
-                    <UserDisplayName 
-                      name={displayName} 
-                      activeNameColor={progress?.activeNameColor} 
-                      className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate max-w-[110px]" 
-                    />
-                    <span className="font-mono font-medium text-[10px] text-white/40 tracking-wider mt-0.5 truncate max-w-[110px]">
-                      {username}
-                    </span>
+                    {/* Notifications Header (NO line across top) */}
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-manrope font-extrabold text-lg text-white tracking-tight">Notifications</h3>
+                      <button
+                        type="button"
+                        title="Close"
+                        onClick={() => setShowNotificationsMenu(false)}
+                        className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+
+                    {/* Notifications List or Empty View with LIGHTER Plain Yellow Circle */}
+                    {!notificationsCleared && progress?.followers && progress.followers.length > 0 ? (
+                      <div className="space-y-2.5 max-h-72 overflow-y-auto custom-scrollbar pr-1 py-1">
+                        {progress.followers.map((fUid) => (
+                          <div
+                            key={fUid}
+                            className="flex items-center space-x-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] transition-all"
+                          >
+                            <div className="w-9 h-9 rounded-full bg-purple-500/20 border border-purple-400/40 text-purple-300 font-bold flex items-center justify-center text-xs shrink-0">
+                              {fUid.slice(0, 2).toUpperCase()}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <p className="font-manrope font-bold text-xs text-white truncate">
+                                Scholar {fUid}
+                              </p>
+                              <p className="text-[10px] text-white/50">started following you</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="py-6 text-center space-y-3">
+                        {/* SOFT LIGHTER PLAIN YELLOW CIRCLE BEHIND BELL */}
+                        <div className="w-20 h-20 rounded-full bg-[#fef9c3]/70 border border-[#fef08a] flex items-center justify-center mx-auto shadow-sm">
+                          <img
+                            src="/images/notification-bell.png"
+                            alt="No Notifications"
+                            className="w-12 h-12 object-contain"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <h4 className="font-manrope font-extrabold text-base text-white">
+                            No notifications yet
+                          </h4>
+                          <p className="text-xs font-manrope text-white/40">
+                            You're all caught up for now
+                          </p>
+                        </div>
+                      </div>
+                    )}
                   </motion.div>
                 )}
               </AnimatePresence>
-            </button>
 
-            {/* Transparent page freeze backdrop for Notifications menu (NO blur, NO darkening) */}
-            <AnimatePresence>
-              {showNotificationsMenu && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                  className="fixed inset-0 bg-transparent z-[99998]"
-                  onClick={() => setShowNotificationsMenu(false)}
-                />
-              )}
-            </AnimatePresence>
+              {/* PROFILE POPOVER — slides out to the right of the sidebar */}
+              <AnimatePresence>
+                {showProfileMenu && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -12, scale: 0.97 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -12, scale: 0.97 }}
+                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+                    className={cn(
+                      "fixed bottom-6 w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
+                      sidebarOpen ? "left-[236px]" : "left-[72px]"
+                    )}
+                  >
+                    {/* Clickable User header in menu (Opens user profile!) */}
+                    <Link
+                      href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-3 mb-1 hover:bg-white/[0.06] rounded-xl transition-all cursor-pointer group"
+                    >
+                      <UserAvatar
+                        photoURL={photoURL}
+                        name={displayName}
+                        activeFrame={progress?.activeAvatarFrame}
+                        size="md"
+                      />
+                      <div className="flex flex-col min-w-0">
+                        <UserDisplayName
+                          name={displayName}
+                          activeNameColor={progress?.activeNameColor}
+                          className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate group-hover:text-purple-300 transition-colors"
+                        />
+                        <span className="font-mono text-[10px] text-white/35 mt-0.5 truncate">@{username}</span>
+                      </div>
+                    </Link>
 
-            {/* Dark backdrop overlay ONLY when profile menu is open (NO blur) */}
-            <AnimatePresence>
-              {showProfileMenu && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.2 }}
-                  className="fixed inset-0 bg-black/40 z-[99998]"
-                  onClick={() => setShowProfileMenu(false)}
-                />
-              )}
-            </AnimatePresence>
+                    <div className="h-px bg-white/[0.08] my-1" />
 
-            {/* NOTIFICATIONS POPOVER — slides out to the right of the sidebar */}
-            <AnimatePresence>
-              {showNotificationsMenu && (
-                <motion.div
-                  initial={{ opacity: 0, x: -12, scale: 0.97 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -12, scale: 0.97 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  className={cn(
-                    "fixed bottom-16 w-96 bg-[#0b0c16] border border-white/[0.12] rounded-3xl p-7 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
-                    sidebarOpen ? "left-[232px]" : "left-[68px]"
-                  )}
-                >
-                  {/* Notifications Header (NO line across top) */}
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-manrope font-extrabold text-lg text-white tracking-tight">Notifications</h3>
+                    <Link
+                      href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                    >
+                      <User className="w-4 h-4 text-purple-400" />
+                      <span>My Profile</span>
+                    </Link>
+
+                    <Link
+                      href="/dashboard/shop"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                    >
+                      <ShoppingBag className="w-4 h-4 text-amber-400" />
+                      <span>My Inventory</span>
+                    </Link>
+
+                    <Link
+                      href="/feedback"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                    >
+                      <BookOpen className="w-4 h-4 text-cyan-400" />
+                      <span>Feedback</span>
+                    </Link>
+
+                    <Link
+                      href="/dashboard/settings"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                    >
+                      <Activity className="w-4 h-4 text-emerald-400" />
+                      <span>Settings</span>
+                    </Link>
+
+                    <div className="h-px bg-white/[0.08] my-1" />
+
                     <button
                       type="button"
-                      title="Close"
-                      onClick={() => setShowNotificationsMenu(false)}
-                      className="w-7 h-7 rounded-full bg-white/[0.06] hover:bg-white/15 text-white/60 hover:text-white flex items-center justify-center transition-colors cursor-pointer"
+                      onClick={handleSignOut}
+                      className="flex items-center gap-3 w-full px-3 py-2 text-xs font-manrope font-semibold text-red-400 hover:bg-red-500/10 rounded-xl transition-colors cursor-pointer text-left"
                     >
-                      <X className="w-4 h-4" />
+                      <LogOut className="w-4 h-4 text-red-400" />
+                      <span>Sign Out</span>
                     </button>
-                  </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          </SidebarBody>
+        </Sidebar>
+      </aside>
 
-                  {/* Notifications List or Empty View with Light Yellow Background Circle */}
-                  {!notificationsCleared && progress?.followers && progress.followers.length > 0 ? (
-                    <div className="space-y-2.5 max-h-72 overflow-y-auto custom-scrollbar pr-1 py-1">
-                      {progress.followers.map((fUid) => (
-                        <div
-                          key={fUid}
-                          className="flex items-center space-x-3 p-3 rounded-2xl bg-white/[0.04] border border-white/10 hover:bg-white/[0.08] transition-all"
-                        >
-                          <div className="w-9 h-9 rounded-full bg-purple-500/20 border border-purple-400/40 text-purple-300 font-bold flex items-center justify-center text-xs shrink-0">
-                            {fUid.slice(0, 2).toUpperCase()}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="font-manrope font-bold text-xs text-white truncate">
-                              Scholar {fUid}
-                            </p>
-                            <p className="text-[10px] text-white/50">started following you</p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="py-6 text-center space-y-3">
-                      {/* VERY Light Simple Plain Yellow Circle Behind Notification Bell */}
-                      <div className="w-20 h-20 rounded-full bg-[#fef08a] flex items-center justify-center mx-auto shadow-sm">
-                        <img
-                          src="/images/notification-bell.png"
-                          alt="No Notifications"
-                          className="w-12 h-12 object-contain"
-                        />
-                      </div>
-                      <div className="space-y-1">
-                        <h4 className="font-manrope font-extrabold text-base text-white">
-                          No notifications yet
-                        </h4>
-                        <p className="text-xs font-manrope text-white/40">
-                          You're all caught up for now
-                        </p>
-                      </div>
-                    </div>
-                  )}
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            {/* PROFILE POPOVER — slides out to the right of the sidebar */}
-            <AnimatePresence>
-              {showProfileMenu && (
-                <motion.div
-                  initial={{ opacity: 0, x: -12, scale: 0.97 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -12, scale: 0.97 }}
-                  transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                  className={cn(
-                    "fixed bottom-6 w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
-                    sidebarOpen ? "left-[232px]" : "left-[68px]"
-                  )}
-                >
-                  {/* Clickable User header in menu (Opens user profile!) */}
-                  <Link
-                    href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center gap-3 px-3 py-3 mb-1 hover:bg-white/[0.06] rounded-xl transition-all cursor-pointer group"
-                  >
-                    <UserAvatar
-                      photoURL={photoURL}
-                      name={displayName}
-                      activeFrame={progress?.activeAvatarFrame}
-                      size="md"
-                    />
-                    <div className="flex flex-col min-w-0">
-                      <UserDisplayName
-                        name={displayName}
-                        activeNameColor={progress?.activeNameColor}
-                        className="font-manrope font-extrabold text-xs text-white tracking-tight leading-none truncate group-hover:text-purple-300 transition-colors"
-                      />
-                      <span className="font-mono text-[10px] text-white/35 mt-0.5 truncate">{username}</span>
-                    </div>
-                  </Link>
-
-                  <div className="h-px bg-white/[0.07] mx-1 mb-1" />
-
-                  {/* 1. My Profile */}
-                  <Link
-                    href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <User className="w-4 h-4 text-white/50" />
-                    <span>My Profile</span>
-                  </Link>
-
-                  {/* 2. My Inventory */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowProfileMenu(false);
-                      setShowMinecraftInventory(true);
-                    }}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <Package className="w-4 h-4 text-white/50" />
-                    <span>My Inventory</span>
-                  </button>
-
-                  {/* 3. Feedback */}
-                  <Link
-                    href="/feedback"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <MessageSquarePlus className="w-4 h-4 text-white/50" />
-                    <span>Feedback</span>
-                  </Link>
-
-                  {/* 4. Settings */}
-                  <Link
-                    href="/dashboard/settings"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <Settings className="w-4 h-4 text-white/50" />
-                    <span>Settings</span>
-                  </Link>
-
-                  <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
-
-                  {/* 5. Terms of Service */}
-                  <a
-                    href="/terms"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <FileText className="w-4 h-4 text-white/50" />
-                      <span>Terms of Service</span>
-                    </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-                  </a>
-
-                  {/* 6. Privacy Policy */}
-                  <a
-                    href="/privacy"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={() => setShowProfileMenu(false)}
-                    className="flex items-center justify-between w-full px-3 py-2.5 rounded-xl hover:bg-white/[0.07] transition-all cursor-pointer text-xs font-manrope font-semibold text-white/80 hover:text-white"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Lock className="w-4 h-4 text-white/50" />
-                      <span>Privacy Policy</span>
-                    </div>
-                    <ExternalLink className="w-3.5 h-3.5 text-white/30" />
-                  </a>
-
-                  <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
-
-                  {/* 7. Log Out */}
-                  <button
-                    onClick={handleSignOut}
-                    className="flex items-center space-x-3 w-full px-3 py-2.5 rounded-xl hover:bg-red-500/10 transition-all cursor-pointer text-xs font-manrope font-bold text-red-400/80 hover:text-red-400"
-                  >
-                    <LogOut className="w-4 h-4 text-red-400/70" />
-                    <span>Log Out</span>
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-        </SidebarBody>
-      </Sidebar>
-    </aside>
-
-      <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
-      <ProgressProfileModal isOpen={showProgressProfile} onClose={() => setShowProgressProfile(false)} />
-      <MinecraftInventoryModal isOpen={showMinecraftInventory} onClose={() => setShowMinecraftInventory(false)} />
+      {showSettingsModal && (
+        <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
+      )}
     </>
   );
 }
