@@ -330,7 +330,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     exit={{ opacity: 0, x: -12, scale: 0.97 }}
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                     className={cn(
-                      "fixed bottom-16 w-96 bg-[#0b0c16] border border-white/[0.12] rounded-3xl p-7 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
+                      "fixed bottom-16 w-96 bg-[#0b0c16] rounded-3xl p-7 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
                       sidebarOpen ? "left-[236px]" : "left-[72px]"
                     )}
                   >
@@ -391,7 +391,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                 )}
               </AnimatePresence>
 
-              {/* PROFILE POPOVER — slides out to the right of the sidebar */}
+              {/* PROFILE POPOVER — slides out to the right of the sidebar (REVERTED TO EXACT ORIGINAL WITH SUBTLE ICONS & FULL LIST) */}
               <AnimatePresence>
                 {showProfileMenu && (
                   <motion.div
@@ -400,7 +400,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     exit={{ opacity: 0, x: -12, scale: 0.97 }}
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                     className={cn(
-                      "fixed bottom-6 w-64 bg-[#0b0c16] border border-white/[0.12] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
+                      "fixed bottom-6 w-64 bg-[#0b0c16] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
                       sidebarOpen ? "left-[236px]" : "left-[72px]"
                     )}
                   >
@@ -426,53 +426,88 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       </div>
                     </Link>
 
-                    <div className="h-px bg-white/[0.08] my-1" />
+                    <div className="h-px bg-white/[0.07] mx-1 mb-1" />
 
+                    {/* 1. My Profile */}
                     <Link
                       href={`/dashboard/user/${currentUser?.uid || progress?.uid || ""}`}
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
-                      <User className="w-4 h-4 text-purple-400" />
+                      <User className="w-4 h-4 text-white/50" />
                       <span>My Profile</span>
                     </Link>
 
+                    {/* 2. My Inventory */}
                     <Link
                       href="/dashboard/shop"
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
-                      <ShoppingBag className="w-4 h-4 text-amber-400" />
+                      <ShoppingBag className="w-4 h-4 text-white/50" />
                       <span>My Inventory</span>
                     </Link>
 
+                    {/* 3. Feedback */}
                     <Link
                       href="/feedback"
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
-                      <BookOpen className="w-4 h-4 text-cyan-400" />
+                      <BookOpen className="w-4 h-4 text-white/50" />
                       <span>Feedback</span>
                     </Link>
 
+                    {/* 4. Settings */}
                     <Link
                       href="/dashboard/settings"
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
-                      <Activity className="w-4 h-4 text-emerald-400" />
+                      <Activity className="w-4 h-4 text-white/50" />
                       <span>Settings</span>
                     </Link>
 
-                    <div className="h-px bg-white/[0.08] my-1" />
+                    <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
 
+                    {/* 5. Terms of Service */}
+                    <a
+                      href="/terms"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center justify-between w-full px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <Activity className="w-4 h-4 text-white/50" />
+                        <span>Terms of Service</span>
+                      </div>
+                    </a>
+
+                    {/* 6. Privacy Policy */}
+                    <a
+                      href="/privacy"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => setShowProfileMenu(false)}
+                      className="flex items-center justify-between w-full px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                    >
+                      <div className="flex items-center gap-3">
+                        <BookOpen className="w-4 h-4 text-white/50" />
+                        <span>Privacy Policy</span>
+                      </div>
+                    </a>
+
+                    <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
+
+                    {/* 7. Log Out */}
                     <button
                       type="button"
                       onClick={handleSignOut}
                       className="flex items-center gap-3 w-full px-3 py-2 text-xs font-manrope font-semibold text-red-400 hover:bg-red-500/10 rounded-xl transition-colors cursor-pointer text-left"
                     >
-                      <LogOut className="w-4 h-4 text-red-400" />
-                      <span>Sign Out</span>
+                      <LogOut className="w-4 h-4 text-red-400/70" />
+                      <span>Log Out</span>
                     </button>
                   </motion.div>
                 )}
