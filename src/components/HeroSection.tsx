@@ -395,70 +395,43 @@ export function HeroSection() {
 
         {/* Massive Headline */}
         <h1 className="font-inter font-bold text-white text-4xl sm:text-6xl md:text-7xl lg:text-[88px] xl:text-[96px] leading-[1.08] mb-6 sm:mb-8 tracking-tight max-w-5xl text-center select-none drop-shadow-[0_6px_30px_rgba(0,0,0,0.95)]">
-          For the love <br />
-          <motion.span 
-            layout="position" 
-            transition={layoutTransition} 
-            className="inline-flex items-center justify-center"
-          >
-            <motion.span 
-              layout="position" 
-              transition={layoutTransition} 
-              className="inline-block"
+          For the love of{" "}
+          <span className="relative inline-block text-white pb-2 whitespace-nowrap">
+            knowledge.
+            {/* CARTOONY HAND-DRAWN HIGHLIGHTER STROKE WITH LINE-BOIL ANIMATION */}
+            <motion.svg
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.95 }}
+              transition={{ duration: 0.3 }}
+              className="absolute -bottom-1.5 left-0 w-full h-4 overflow-visible pointer-events-none z-10"
+              viewBox="0 0 100 12"
+              preserveAspectRatio="none"
             >
-              of{" "}
-            </motion.span>
-            <span className="w-[0.25em]" />
-            <span className="relative inline-grid grid-cols-1 grid-rows-1 justify-items-center align-middle pb-2">
-              <AnimatePresence mode="popLayout">
-                <motion.span
-                  key={words[wordIndex]}
-                  layout="position"
-                  transition={layoutTransition}
-                  className="col-start-1 row-start-1 inline-flex select-none text-white pb-1 whitespace-nowrap relative"
-                >
-                  {(words[wordIndex] + ".").split("").map((char, index) => (
-                    <motion.span
-                      key={index}
-                      custom={index}
-                      variants={charVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="inline-block whitespace-pre"
-                    >
-                      {char}
-                    </motion.span>
-                  ))}
-
-                  {/* LOW-FPS STEP-BY-STEP HAND-DRAWN HIGHLIGHTER UNDERLINE ANIMATION */}
-                  <motion.svg
-                    key={`highlighter-${words[wordIndex]}`}
-                    initial={{ pathLength: 0, opacity: 0 }}
-                    animate={{ pathLength: 1, opacity: 0.9 }}
-                    transition={{
-                      duration: 0.45,
-                      ease: [0.16, 1, 0.3, 1], // Low-FPS hand-drawn stroke feel
-                      delay: 0.12,
-                    }}
-                    className="absolute -bottom-1 left-0 w-full h-3 overflow-visible pointer-events-none z-10"
-                    viewBox="0 0 100 12"
-                    preserveAspectRatio="none"
-                  >
-                    <motion.path
-                      d="M 2,7 Q 25,3 50,7 T 98,6"
-                      fill="none"
-                      stroke="#20c997"
-                      strokeWidth="5.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      className="opacity-85 drop-shadow-[0_0_8px_rgba(32,201,151,0.6)]"
-                    />
-                  </motion.svg>
-                </motion.span>
-              </AnimatePresence>
-            </span>
-          </motion.span>
+              <motion.path
+                initial={{ pathLength: 0 }}
+                animate={{
+                  pathLength: 1,
+                  d: [
+                    "M 2,7 Q 25,3 50,7 T 98,6",
+                    "M 2,5 Q 25,8 50,5 T 98,7",
+                    "M 2,8 Q 25,2 50,8 T 98,5",
+                    "M 2,6 Q 25,6 50,6 T 98,7",
+                    "M 2,7 Q 25,3 50,7 T 98,6"
+                  ]
+                }}
+                transition={{
+                  pathLength: { duration: 0.6, ease: [0.16, 1, 0.3, 1] },
+                  d: { repeat: Infinity, duration: 1.4, ease: "linear" }
+                }}
+                fill="none"
+                stroke="#20c997"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="opacity-90 drop-shadow-[0_0_10px_rgba(32,201,151,0.7)]"
+              />
+            </motion.svg>
+          </span>
         </h1>
 
         {/* Subtitle */}

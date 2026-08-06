@@ -206,13 +206,13 @@ export function Navbar() {
     <>
       {/* Sticky Top Wrapper */}
       <div 
-        className="fixed top-0 left-0 right-0 z-50 pointer-events-none flex justify-center"
+        className="fixed top-0 left-0 right-0 z-[999999] pointer-events-none flex justify-center"
       >
         <nav 
           className={cn(
-            "pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between text-white relative mt-3 sm:mt-4 w-[92%] sm:w-[94%] max-w-6xl rounded-full px-6 sm:px-8 py-2.5 overflow-hidden",
+            "pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between text-white relative mt-3 sm:mt-4 w-[94%] sm:w-[96%] max-w-7xl rounded-full px-6 sm:px-8 py-2.5 overflow-visible",
             isScrolled
-              ? "bg-[#0c0d16]/80 backdrop-blur-xl border border-white/10 shadow-[0_8px_30px_rgba(0,0,0,0.5)]"
+              ? "bg-[#0c0d16]/85 backdrop-blur-xl border border-white/10 shadow-[0_12px_40px_rgba(0,0,0,0.6)]"
               : "bg-transparent border border-transparent shadow-none"
           )}
         >
@@ -267,7 +267,7 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.99 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 pt-2.5 w-[710px] z-50 pointer-events-auto"
+                    className="absolute top-full left-0 pt-2.5 w-[710px] z-[1000000] pointer-events-auto"
                   >
                     <div className="bg-[#08090e] border border-white/10 rounded-2xl shadow-[0_30px_80px_rgba(0,0,0,0.95)] backdrop-blur-3xl overflow-hidden text-left grid grid-cols-[240px_1fr]">
 
@@ -369,7 +369,7 @@ export function Navbar() {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 6, scale: 0.99 }}
                     transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 pt-2.5 w-[710px] z-50 pointer-events-auto"
+                    className="absolute top-full left-0 pt-2.5 w-[710px] z-[1000000] pointer-events-auto"
                   >
                     <div className="bg-[#08090e] border border-white/10 rounded-2xl p-4 sm:p-5 shadow-[0_30px_80px_rgba(0,0,0,0.95)] backdrop-blur-3xl grid grid-cols-[1fr_1.1fr] gap-5 text-left">
                       

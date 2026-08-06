@@ -146,34 +146,27 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
             }
           `}</style>
 
-          {/* Modal Content Box with Ultra-Smooth Slide-Up / Drag Down Transition */}
+          {/* Modal Content Box */}
           <motion.div
             initial={{ y: "100vh", opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: "100vh", opacity: 0 }}
             transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-6xl bg-[#080914] border border-white/15 rounded-3xl overflow-hidden shadow-[0_32px_120px_rgba(0,0,0,1)] z-10 flex flex-col max-h-[90vh] my-auto"
+            className="relative w-full max-w-5xl bg-[#080914] border border-white/15 rounded-3xl overflow-hidden shadow-[0_32px_120px_rgba(0,0,0,1)] z-10 flex flex-col max-h-[85vh] my-auto"
           >
-            {/* Header Bar */}
-            <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10 bg-white/[0.02]">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-extrabold font-manrope text-white tracking-tight">
-                  Why AP Lab is Superior
-                </h2>
-              </div>
-
-              <button
-                onClick={onClose}
-                className="p-2.5 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 hover:text-white transition-all cursor-pointer"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+            {/* Small Close Button (Top Right Inside Modal) */}
+            <button
+              onClick={onClose}
+              className="absolute top-4 right-4 z-40 w-7 h-7 rounded-full bg-white/10 hover:bg-white/25 text-white/70 hover:text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
+              title="Close"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
 
             {/* Matrix Table */}
             <div 
               data-lenis-prevent="true"
-              className="flex-1 overflow-x-auto overflow-y-auto p-4 sm:p-6 custom-scrollbar"
+              className="flex-1 overflow-x-auto overflow-y-auto p-4 sm:p-6 pt-10 custom-scrollbar"
             >
               <table className="w-full text-left border-collapse min-w-[840px]">
                 <thead>
