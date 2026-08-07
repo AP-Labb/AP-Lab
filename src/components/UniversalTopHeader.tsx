@@ -273,8 +273,8 @@ export function UniversalTopHeader() {
                           className="bg-[#28292e] hover:bg-[#303137] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-center justify-between group"
                         >
                           <div className="flex items-center space-x-3.5 min-w-0">
-                            <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                              <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-5 h-5 object-contain" />
+                            <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center shrink-0 p-1">
+                              <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-10 h-10 object-contain" />
                             </div>
                             <div className="min-w-0 text-left">
                               <h4 className="font-manrope font-bold text-xs text-white truncate group-hover:text-[#c4f2e3] transition-colors">

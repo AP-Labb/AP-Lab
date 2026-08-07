@@ -141,12 +141,12 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
             title={`${streak} Day Study Streak`}
           >
             <StreakFlameIcon streakCount={streak} sizeClassName="w-9 h-9" />
-            <span className="font-manrope font-extrabold text-lg leading-none text-white">
+            <span className="font-manrope font-extrabold text-lg leading-none text-orange-400">
               {streak}
             </span>
           </div>
 
-          {/* Streak Hover Menu matching uploaded image */}
+          {/* Streak Hover Menu */}
           <AnimatePresence>
             {activeMenu === "streak" && (
               <motion.div
@@ -154,40 +154,39 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-3 w-[340px] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[9999] text-center text-white"
+                className="absolute right-0 top-full mt-2.5 w-[310px] max-w-[92vw] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[28px] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[9999] text-center text-white flex flex-col items-center justify-center"
               >
-                {/* Large Flame Icon + Streak Count */}
-                <div className="flex items-center justify-center space-x-3 my-2">
-                  <StreakFlameIcon streakCount={streak} sizeClassName="w-28 h-28 shrink-0" />
-                  <span className="font-manrope font-black text-6xl text-[#f97316]">{streak}</span>
+                {/* Large Flame Icon + Streak Count Perfectly Centered */}
+                <div className="flex items-center justify-center space-x-3 my-1">
+                  <StreakFlameIcon streakCount={streak} sizeClassName="w-20 h-20 shrink-0" />
+                  <span className="font-manrope font-black text-5xl text-[#f97316]">{streak}</span>
                 </div>
 
                 {/* Encouragement Subtitle */}
-                <p className="text-sm font-manrope font-semibold text-white/90 leading-relaxed my-4 px-2">
+                <p className="text-xs font-manrope font-semibold text-white/90 leading-relaxed my-3 px-1 text-center">
                   Great job! Come back tomorrow to continue your streak!
                 </p>
 
-                {/* Weekday Flame/Circle Row Box */}
-                <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-4 sm:p-5 mb-5">
+                {/* Weekday Flame/Circle Row Box with Dotted Circle for Today */}
+                <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-3 sm:p-4 mb-4 w-full">
                   <div className="flex items-center justify-between">
                     {daysOfWeek.map((day, idx) => {
                       const isToday = idx === currentDayIndex;
-                      // Completed if streak >= 1 and this day falls within active streak window up to today
                       const isCompleted = streak >= 1 && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
 
                       return (
-                        <div key={idx} className="flex flex-col items-center space-y-2.5">
-                          <div className="w-12 h-12 flex items-center justify-center shrink-0">
+                        <div key={idx} className="flex flex-col items-center space-y-1.5">
+                          <div className={cn(
+                            "w-9 h-9 flex items-center justify-center shrink-0 rounded-full transition-all",
+                            isToday ? "border-2 border-dashed border-orange-400 bg-orange-500/10" : ""
+                          )}>
                             {isCompleted ? (
-                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-12 h-12" />
+                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-7 h-7" />
                             ) : (
-                              <div className={cn(
-                                "w-11 h-11 rounded-full transition-all",
-                                isToday ? "bg-white/10 border-2 border-dashed border-orange-400" : "bg-neutral-800/80 border border-white/5"
-                              )} />
+                              <div className="w-6 h-6 rounded-full bg-neutral-800/80 border border-white/5" />
                             )}
                           </div>
-                          <span className="text-xs font-manrope font-extrabold text-white">
+                          <span className="text-[11px] font-manrope font-extrabold text-white">
                             {day}
                           </span>
                         </div>
@@ -199,7 +198,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 {/* Single View Calendar Button */}
                 <button
                   onClick={() => router.push("/dashboard/progress")}
-                  className="w-full py-3.5 rounded-full bg-white hover:bg-neutral-200 text-black font-manrope font-black text-sm transition-all text-center cursor-pointer shadow-lg active:scale-95"
+                  className="w-full py-3 rounded-full bg-white hover:bg-neutral-200 text-black font-manrope font-black text-xs transition-all text-center cursor-pointer shadow-lg active:scale-95"
                 >
                   View Calendar
                 </button>
