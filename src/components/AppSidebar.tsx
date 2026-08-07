@@ -453,7 +453,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
 
                     {/* 3. Feedback */}
                     <Link
-                      href="/feedback"
+                      href="/dashboard/feedback"
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
