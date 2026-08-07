@@ -89,14 +89,14 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
           <div 
             className={cn(
               "h-12 flex items-center space-x-2.5 px-4 rounded-full transition-all cursor-pointer border shadow-md",
-              hasStreak 
+              streak >= 1 
                 ? "bg-[#2b170e] hover:bg-[#381e11] border-orange-500/40 text-orange-400" 
                 : "bg-[#14151f] hover:bg-[#1a1c2a] border-white/10 text-white/60"
             )}
             title={`${streak} Day Study Streak`}
           >
-            <StreakFlameIcon streakCount={streak} sizeClassName="w-8 h-8" />
-            <span className="font-manrope font-extrabold text-lg leading-none">
+            <StreakFlameIcon streakCount={streak} sizeClassName="w-9 h-9" />
+            <span className="font-manrope font-extrabold text-lg leading-none text-white">
               {streak}
             </span>
           </div>
@@ -109,42 +109,40 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className={cn(
-                  "absolute right-0 top-full mt-3 w-80 bg-[#161722] border-2 rounded-[28px] p-6 shadow-2xl z-[9999] text-center text-white",
-                  hasStreak ? "border-orange-500/50" : "border-white/15"
-                )}
+                className="absolute right-0 top-full mt-3 w-[340px] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[9999] text-center text-white"
               >
                 {/* Large Flame Icon + Streak Count */}
-                <div className="flex items-center justify-center space-x-3 mb-2">
+                <div className="flex items-center justify-center space-x-2.5 my-1">
                   <StreakFlameIcon streakCount={streak} sizeClassName="w-14 h-14" />
-                  <span className="font-manrope font-extrabold text-4xl text-white">{streak}</span>
+                  <span className="font-manrope font-black text-5xl text-[#f97316]">{streak}</span>
                 </div>
 
-                <p className="text-xs font-manrope font-medium text-white/60 mb-5">
-                  {hasStreak 
-                    ? "Great job! Keep up your daily study streak!" 
-                    : `${hoursRemaining}h ${minsRemaining}m remaining to start your streak!`}
+                {/* Encouragement Subtitle */}
+                <p className="text-sm font-manrope font-semibold text-white/90 leading-relaxed my-4 px-2">
+                  Great job! Come back tomorrow to continue your streak!
                 </p>
 
-                {/* Weekday Circles Box */}
-                <div className="bg-[#0b0c14] border border-white/10 rounded-2xl p-4 mb-6">
+                {/* Weekday Flame/Circle Row Box */}
+                <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-4 sm:p-5 mb-5">
                   <div className="flex items-center justify-between">
                     {daysOfWeek.map((day, idx) => {
                       const isToday = idx === currentDayIndex;
-                      // Mark completed if user has active streak and it falls within streakCount up to today
-                      const isCompleted = hasStreak && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
+                      // Completed if streak >= 1 and this day falls within active streak window up to today
+                      const isCompleted = streak >= 1 && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
 
                       return (
-                        <div key={idx} className="flex flex-col items-center space-y-2">
-                          <div className={cn(
-                            "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all",
-                            isCompleted 
-                              ? "bg-orange-500 text-black" 
-                              : (isToday ? "border-2 border-dashed border-orange-400 text-orange-400" : "bg-white/5 text-white/20")
-                          )}>
-                            {isCompleted ? "✓" : ""}
+                        <div key={idx} className="flex flex-col items-center space-y-2.5">
+                          <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                            {isCompleted ? (
+                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-7 h-7" />
+                            ) : (
+                              <div className={cn(
+                                "w-7 h-7 rounded-full transition-all",
+                                isToday ? "bg-white/10 border-2 border-dashed border-orange-400" : "bg-neutral-800/80 border border-white/5"
+                              )} />
+                            )}
                           </div>
-                          <span className={cn("text-xs font-bold font-mono", isToday ? "text-orange-400" : "text-white/50")}>
+                          <span className="text-xs font-manrope font-extrabold text-white">
                             {day}
                           </span>
                         </div>
@@ -153,10 +151,10 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                   </div>
                 </div>
 
-                {/* View Calendar Button */}
+                {/* Single View Calendar Button */}
                 <button
                   onClick={() => router.push("/dashboard/progress")}
-                  className="w-full py-3.5 rounded-full bg-white hover:bg-neutral-200 text-black font-manrope font-extrabold text-sm transition-all text-center cursor-pointer shadow-md"
+                  className="w-full py-3.5 rounded-full bg-white hover:bg-neutral-200 text-black font-manrope font-black text-sm transition-all text-center cursor-pointer shadow-lg active:scale-95"
                 >
                   View Calendar
                 </button>

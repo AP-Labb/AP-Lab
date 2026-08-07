@@ -462,6 +462,21 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
         const mergedXp = Math.max(firestoreData.xp || 0, localProgress?.xp || 0, guestProgress?.xp || 0);
         const mergedLevel = Math.max(getLevelForXp(mergedXp), firestoreData.level || 1, localProgress?.level || 1, guestProgress?.level || 1);
 
+        const lastActiveStr = firestoreData.streakLastActive || localProgress?.streakLastActive || guestProgress?.streakLastActive || "";
+        let calcStreak = Math.max(firestoreData.streakCount || 0, localProgress?.streakCount || 0, guestProgress?.streakCount || 0);
+
+        if (lastActiveStr && lastActiveStr !== todayStr) {
+          try {
+            const lastActiveDate = new Date(lastActiveStr + 'T00:00:00');
+            const todayDate = new Date(todayStr + 'T00:00:00');
+            const diffTime = todayDate.getTime() - lastActiveDate.getTime();
+            const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays > 1) {
+              calcStreak = 0;
+            }
+          } catch (e) {}
+        }
+
         const merged: UserProgress = {
           completedTopics,
           masteryScores,
@@ -484,9 +499,9 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           photoURL: firestoreData.photoURL || localProgress?.photoURL || currentUser.photoURL || "",
           email: firestoreData.email || localProgress?.email || currentUser.email || "",
           uid: firestoreData.uid || localProgress?.uid || currentUser.uid || "",
-          streakCount: Math.max(firestoreData.streakCount || 0, localProgress?.streakCount || 0, guestProgress?.streakCount || 0),
-          maxStreak: Math.max(firestoreData.maxStreak || 0, localProgress?.maxStreak || 0, guestProgress?.maxStreak || 0),
-          streakLastActive: firestoreData.streakLastActive || localProgress?.streakLastActive || guestProgress?.streakLastActive || "",
+          streakCount: calcStreak,
+          maxStreak: Math.max(firestoreData.maxStreak || 0, localProgress?.maxStreak || 0, guestProgress?.maxStreak || 0, calcStreak),
+          streakLastActive: lastActiveStr,
           credits: Math.max(firestoreData.credits || 0, localProgress?.credits || 0, guestProgress?.credits || 0),
           totalCreditsEarned: Math.max(firestoreData.totalCreditsEarned || 0, localProgress?.totalCreditsEarned || 0, guestProgress?.totalCreditsEarned || 0),
           earnedCreditIds: Array.from(new Set([...(firestoreData.earnedCreditIds || []), ...(localProgress?.earnedCreditIds || []), ...(guestProgress?.earnedCreditIds || [])])),

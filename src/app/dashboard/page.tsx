@@ -595,7 +595,7 @@ export default function Dashboard() {
         {/* Full-width Banner Image Background stretching to left side navbar */}
         <div className="absolute top-0 left-0 right-0 h-[480px] pointer-events-none z-0 overflow-hidden opacity-90">
           <img 
-            src="/images/BANNER.png" 
+            src="/images/BANNER2.png" 
             alt="AP Lab Dashboard Banner" 
             className="w-full h-full object-cover object-center"
           />

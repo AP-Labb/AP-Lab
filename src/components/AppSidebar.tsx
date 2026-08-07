@@ -6,7 +6,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   LayoutDashboard, Award, Trophy, ShoppingBag, Bell, LogOut,
-  X, Check, Activity, BookOpen, User
+  X, Check, Activity, BookOpen, User, Settings, MessageSquare, FileText, Shield, ExternalLink
 } from "lucide-react";
 import { Sidebar, SidebarBody } from "@/components/ui/sidebar";
 import { useAuth } from "@/context/AuthContext";
@@ -330,7 +330,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     exit={{ opacity: 0, x: -12, scale: 0.97 }}
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                     className={cn(
-                      "fixed bottom-16 w-96 bg-[#0b0c16] rounded-3xl p-7 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
+                      "fixed bottom-16 w-96 bg-[#08080c] border border-white/10 rounded-3xl p-7 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-4 transition-[left] duration-200",
                       sidebarOpen ? "left-[236px]" : "left-[72px]"
                     )}
                   >
@@ -369,8 +369,11 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       </div>
                     ) : (
                       <div className="py-6 text-center space-y-3">
-                        {/* SOFT LIGHTER PLAIN YELLOW CIRCLE BEHIND BELL */}
-                        <div className="w-20 h-20 rounded-full bg-[#fef9c3]/70 border border-[#fef08a] flex items-center justify-center mx-auto shadow-sm">
+                        {/* SOFT LIGHTER PLAIN YELLOW CIRCLE BEHIND BELL (SINGLE COLOR, NO BORDER) */}
+                        <div 
+                          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-sm"
+                          style={{ backgroundColor: "#fef9c3" }}
+                        >
                           <img
                             src="/images/notification-bell.png"
                             alt="No Notifications"
@@ -391,7 +394,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                 )}
               </AnimatePresence>
 
-              {/* PROFILE POPOVER — slides out to the right of the sidebar (REVERTED TO EXACT ORIGINAL WITH SUBTLE ICONS & FULL LIST) */}
+              {/* PROFILE POPOVER — slides out to the right of the sidebar */}
               <AnimatePresence>
                 {showProfileMenu && (
                   <motion.div
@@ -400,7 +403,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     exit={{ opacity: 0, x: -12, scale: 0.97 }}
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
                     className={cn(
-                      "fixed bottom-6 w-64 bg-[#0b0c16] rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
+                      "fixed bottom-6 w-64 bg-[#08080c] border border-white/10 rounded-2xl p-2 shadow-[0_24px_60px_rgba(0,0,0,0.95)] z-[1000001] text-left text-white flex flex-col space-y-0.5 transition-[left] duration-200",
                       sidebarOpen ? "left-[236px]" : "left-[72px]"
                     )}
                   >
@@ -454,7 +457,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
-                      <BookOpen className="w-4 h-4 text-white/50" />
+                      <MessageSquare className="w-4 h-4 text-white/50" />
                       <span>Feedback</span>
                     </Link>
 
@@ -464,7 +467,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       onClick={() => setShowProfileMenu(false)}
                       className="flex items-center gap-3 px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
                     >
-                      <Activity className="w-4 h-4 text-white/50" />
+                      <Settings className="w-4 h-4 text-white/50" />
                       <span>Settings</span>
                     </Link>
 
@@ -476,12 +479,13 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center justify-between w-full px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                      className="flex items-center justify-between w-full px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer group"
                     >
                       <div className="flex items-center gap-3">
-                        <Activity className="w-4 h-4 text-white/50" />
+                        <FileText className="w-4 h-4 text-white/50" />
                         <span>Terms of Service</span>
                       </div>
+                      <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
                     </a>
 
                     {/* 6. Privacy Policy */}
@@ -490,12 +494,13 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={() => setShowProfileMenu(false)}
-                      className="flex items-center justify-between w-full px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer"
+                      className="flex items-center justify-between w-full px-3 py-2 text-xs font-manrope font-semibold text-white/80 hover:bg-white/[0.08] hover:text-white rounded-xl transition-colors cursor-pointer group"
                     >
                       <div className="flex items-center gap-3">
-                        <BookOpen className="w-4 h-4 text-white/50" />
+                        <Shield className="w-4 h-4 text-white/50" />
                         <span>Privacy Policy</span>
                       </div>
+                      <ExternalLink className="w-3.5 h-3.5 text-white/40 group-hover:text-white transition-colors" />
                     </a>
 
                     <div className="h-px bg-white/[0.07] mx-1 my-0.5" />
