@@ -26,7 +26,7 @@ export function RewardNotificationOverlay() {
   const [activeEvent, setActiveEvent] = useState<RewardEventData | null>(null);
   const [displayXp, setDisplayXp] = useState(0);
   const [displayCoins, setDisplayCoins] = useState(0);
-  const [isComplete, setIsComplete] = useState(false);
+  const [isFlashActive, setIsFlashActive] = useState(false);
 
   useEffect(() => {
     const handleRewardEvent = (e: CustomEvent<RewardEventData>) => {
@@ -34,12 +34,12 @@ export function RewardNotificationOverlay() {
       setActiveEvent(data);
       setDisplayXp(0);
       setDisplayCoins(0);
-      setIsComplete(false);
+      setIsFlashActive(false);
 
       const targetXp = data.xp || 0;
       const targetCoins = data.coins || 0;
 
-      // Smooth Live Counting Animation over 650ms
+      // Ultra-smooth Live Counting Animation over 650ms
       const duration = 650;
       const startTime = performance.now();
 
@@ -47,8 +47,8 @@ export function RewardNotificationOverlay() {
         const elapsed = currentTime - startTime;
         const progress = Math.min(1, elapsed / duration);
         
-        // Smooth quadratic ease-out
-        const eased = 1 - Math.pow(1 - progress, 2);
+        // Smooth cubic ease-out
+        const eased = 1 - Math.pow(1 - progress, 3);
         
         setDisplayXp(Math.round(eased * targetXp));
         setDisplayCoins(Math.round(eased * targetCoins));
@@ -56,7 +56,8 @@ export function RewardNotificationOverlay() {
         if (progress < 1) {
           requestAnimationFrame(updateCounter);
         } else {
-          setIsComplete(true);
+          // Trigger brief 0.4s flash upon completion
+          setIsFlashActive(true);
         }
       };
 
@@ -65,7 +66,7 @@ export function RewardNotificationOverlay() {
       // Auto dismiss after 2.4 seconds
       const closeTimer = setTimeout(() => {
         setActiveEvent(null);
-        setIsComplete(false);
+        setIsFlashActive(false);
       }, 2400);
 
       return () => {
@@ -91,84 +92,90 @@ export function RewardNotificationOverlay() {
             className="absolute inset-0 bg-black/40"
           />
 
-          {/* Clean Center Content Container (No Rectangle Box!) */}
+          {/* Clean Center Content Container (No Glow, No Rectangle Box!) */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.85 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9, y: -15 }}
             transition={{ duration: 0.25, ease: "easeOut" }}
             className="relative z-10 flex items-center space-x-6 font-manrope select-none"
           >
-            {/* Left Side Clean Arrow (NO Circle Background!) */}
+            {/* Left Side Clean Arrow (NO Circle Background, NO Glow!) */}
             {activeEvent.type === "reward" ? (
               <motion.div
-                initial={{ y: 40, opacity: 0 }}
+                initial={{ y: 35, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
                 className="flex items-center justify-center shrink-0"
               >
-                <ArrowUp className="w-16 h-16 sm:w-20 sm:h-20 text-emerald-400 stroke-[3.5] drop-shadow-[0_0_25px_rgba(52,211,153,0.9)]" />
+                <ArrowUp className="w-16 h-16 sm:w-20 sm:h-20 text-emerald-400 stroke-[3.5]" />
               </motion.div>
             ) : (
               <motion.div
-                initial={{ y: -40, opacity: 0 }}
+                initial={{ y: -35, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.35, ease: "easeOut" }}
                 className="flex items-center justify-center shrink-0"
               >
-                <ArrowDown className="w-16 h-16 sm:w-20 sm:h-20 text-red-500 stroke-[3.5] drop-shadow-[0_0_25px_rgba(239,68,68,0.9)]" />
+                <ArrowDown className="w-16 h-16 sm:w-20 sm:h-20 text-red-500 stroke-[3.5]" />
               </motion.div>
             )}
 
-            {/* Right Side Quantities with MUCH LARGER Images */}
+            {/* Right Side Quantities with EVEN BIGGER Images on the RIGHT of numbers (NO "coins"/"xp" text, NO Glow!) */}
             <div className="flex items-center space-x-6">
               {activeEvent.type === "reward" ? (
                 <>
-                  {/* XP Item */}
+                  {/* XP Item: +100 [XP Image on Right] */}
                   {(activeEvent.xp || 0) > 0 && (
-                    <div className="flex items-center space-x-3.5">
+                    <div className="flex items-center space-x-3">
+                      <span
+                        className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-300 ${
+                          isFlashActive ? "text-emerald-400" : "text-purple-300"
+                        }`}
+                      >
+                        +{displayXp}
+                      </span>
                       <img
                         src="/images/xp-shield-zoomed.png"
                         alt="XP Shield"
-                        className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-[0_0_30px_rgba(168,85,247,0.9)]"
+                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
                       />
-                      <span className="font-manrope font-black text-4xl sm:text-6xl text-purple-300 tracking-tight drop-shadow-lg">
-                        +{displayXp} XP
-                      </span>
                     </div>
                   )}
 
-                  {/* Coins Earned Item */}
+                  {/* Coins Earned Item: +50 [Coin Image on Right] */}
                   {(activeEvent.coins || 0) > 0 && (
-                    <div className="flex items-center space-x-3.5">
+                    <div className="flex items-center space-x-3">
+                      <span
+                        className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-300 ${
+                          isFlashActive ? "text-emerald-400" : "text-amber-400"
+                        }`}
+                      >
+                        +{displayCoins}
+                      </span>
                       <img
                         src="/images/coin-zoomed.png"
                         alt="Coins"
-                        className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-[0_0_30px_rgba(251,191,36,0.9)]"
+                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
                       />
-                      <span className="font-manrope font-black text-4xl sm:text-6xl text-amber-400 tracking-tight drop-shadow-lg">
-                        +{displayCoins} Coins
-                      </span>
                     </div>
                   )}
                 </>
               ) : (
-                /* Coins Lost Deduction Item (Flashes Red on completion) */
-                <div className="flex items-center space-x-3.5">
+                /* Coins Lost Deduction Item: -250 [Coin Image on Right] (Flashes Red for a second on completion) */
+                <div className="flex items-center space-x-3">
+                  <span
+                    className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-300 ${
+                      isFlashActive ? "text-red-500" : "text-amber-400"
+                    }`}
+                  >
+                    -{displayCoins}
+                  </span>
                   <img
                     src="/images/coin-zoomed.png"
                     alt="Coins"
-                    className="w-24 h-24 sm:w-28 sm:h-28 object-contain drop-shadow-[0_0_30px_rgba(239,68,68,0.9)]"
+                    className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
                   />
-                  <span
-                    className={`font-manrope font-black text-4xl sm:text-6xl tracking-tight transition-all ${
-                      isComplete
-                        ? "text-red-500 animate-pulse drop-shadow-[0_0_35px_rgba(239,68,68,1)]"
-                        : "text-red-400 drop-shadow-lg"
-                    }`}
-                  >
-                    -{displayCoins} Coins
-                  </span>
                 </div>
               )}
             </div>
