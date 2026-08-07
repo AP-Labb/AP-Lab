@@ -593,11 +593,11 @@ export default function Dashboard() {
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-clip md:pl-16 relative">
         {/* Full-width Banner Image Background stretching to left side navbar */}
-        <div className="absolute top-0 left-0 right-0 h-[480px] pointer-events-none z-0 overflow-hidden opacity-90">
+        <div className="absolute top-0 left-0 right-0 h-[520px] pointer-events-none z-0 overflow-hidden opacity-90">
           <img 
             src="/images/BANNER2.png" 
             alt="AP Lab Dashboard Banner" 
-            className="w-full h-[680px] object-cover object-top -mt-32"
+            className="w-full h-[680px] object-cover object-top -mt-24"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-[#030408]/50 to-[#060712]" />
         </div>

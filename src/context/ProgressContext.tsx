@@ -1162,6 +1162,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     }
 
     const newCreds = currentCreds - cost;
+    triggerRewardAnimation({ type: "deduction", coins: cost, title: "Item Purchased from Shop" });
     const newInv = isBoost ? [...inv, itemId] : Array.from(new Set([...inv, itemId]));
     const isGradient = itemType === "gradient";
     const isColorPicker = itemType === "color-picker" || itemId === "custom-name-color";
