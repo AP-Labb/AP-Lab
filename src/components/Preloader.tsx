@@ -39,7 +39,7 @@ export function Preloader() {
   if (!shouldShow || isFinished) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999] pointer-events-none select-none overflow-hidden bg-transparent">
+    <div className="fixed inset-0 z-[9999999] pointer-events-none select-none overflow-hidden bg-transparent">
       
       {/* Top Cutout Panel with exact AP LAB Activity Logo Seam (Slides UP) */}
       <motion.div

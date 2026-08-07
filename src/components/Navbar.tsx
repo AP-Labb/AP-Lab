@@ -212,14 +212,14 @@ export function Navbar() {
           className={cn(
             "pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between text-white relative mt-3 sm:mt-4 w-[94%] sm:w-[96%] max-w-7xl rounded-full px-6 sm:px-8 py-2.5 overflow-visible",
             isScrolled
-              ? "bg-white/[0.10] backdrop-blur-[28px] border border-white/25 shadow-[0_10px_35px_rgba(0,0,0,0.35)]"
-              : "bg-transparent border border-transparent shadow-none"
+              ? "bg-[#060812]/80 backdrop-blur-[28px] border border-white/15 shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
+              : "bg-[#060812]/40 backdrop-blur-md border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.3)]"
           )}
         >
           {/* Subtle Transparent Glass Sheen */}
           <div 
             className={cn(
-              "absolute inset-0 rounded-full bg-white/[0.04] pointer-events-none transition-opacity duration-300",
+              "absolute inset-0 rounded-full bg-white/[0.03] pointer-events-none transition-opacity duration-300",
               isScrolled ? "opacity-100" : "opacity-0"
             )}
           />
