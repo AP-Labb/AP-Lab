@@ -694,6 +694,12 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
 
       if (xpEarned > 0 || creditsEarned > 0) {
         triggerXpToast(xpEarned, creditsEarned > 0 ? "Section Completed + 50 Credits!" : "Section Completed!", "section", creditsEarned);
+        triggerRewardAnimation({
+          type: "reward",
+          xp: xpEarned,
+          coins: creditsEarned,
+          title: "Topic Mastered!"
+        });
       }
 
       if (isLevelUp) {
@@ -804,6 +810,12 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           "question", 
           creditsEarned
         );
+        triggerRewardAnimation({
+          type: "reward",
+          xp: xpEarned,
+          coins: creditsEarned,
+          title: "Question Correct!"
+        });
       }
       if (isLevelUp) {
         setTimeout(() => {

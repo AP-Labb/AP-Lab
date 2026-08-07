@@ -4,40 +4,42 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { 
-  Search, X, BookOpen, MessageSquare, CheckSquare, Sparkles,
+  Search, X, BookOpen, MessageSquare, CheckSquare,
   Dna, FlaskConical, Zap, Landmark, Brain, Calculator, BarChart2, Code2,
-  Clock, ArrowRight, Award, ChevronRight
+  Award, ChevronRight, ArrowRight
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { HeaderUserCapsules } from "@/components/HeaderUserCapsules";
 import { AccountProfileModal } from "@/components/AccountProfileModal";
 import { cn } from "@/lib/utils";
 
-// 9 AP Courses with exact metadata, icons and colors
+interface ChatSessionItem {
+  id: string;
+  title: string;
+  timestamp: string;
+  messages?: any[];
+}
+
+// 9 AP Courses with clean white symbols (matching Knowt clean aesthetic)
 const ALL_COURSES = [
-  { slug: "ap-biology", name: "AP® Biology", category: "Science", icon: Dna, color: "text-emerald-400", bgGlow: "bg-emerald-500/10 border-emerald-500/30", url: "/dashboard/ap-biology" },
-  { slug: "ap-chemistry", name: "AP® Chemistry", category: "Science", icon: FlaskConical, color: "text-cyan-400", bgGlow: "bg-cyan-500/10 border-cyan-500/30", url: "/dashboard/ap-chemistry" },
-  { slug: "ap-physics-c", name: "AP® Physics C", category: "Science", icon: Zap, color: "text-indigo-400", bgGlow: "bg-indigo-500/10 border-indigo-500/30", url: "/dashboard/ap-physics-c" },
-  { slug: "ap-calc-bc", name: "AP® Calculus BC", category: "Math", icon: Calculator, color: "text-emerald-400", bgGlow: "bg-emerald-500/10 border-emerald-500/30", url: "/dashboard/ap-calc-bc" },
-  { slug: "ap-csa", name: "AP® Comp Sci A", category: "Math & CS", icon: Code2, color: "text-violet-400", bgGlow: "bg-violet-500/10 border-violet-500/30", url: "/dashboard/ap-csa" },
-  { slug: "ap-stats", name: "AP® Statistics", category: "Math", icon: BarChart2, color: "text-sky-400", bgGlow: "bg-sky-500/10 border-sky-500/30", url: "/dashboard/ap-stats" },
-  { slug: "ap-ush", name: "AP® US History", category: "Humanities", icon: Landmark, color: "text-amber-400", bgGlow: "bg-amber-500/10 border-amber-500/30", url: "/dashboard/apush" },
-  { slug: "ap-eng-lang", name: "AP® English Language", category: "Humanities", icon: BookOpen, color: "text-rose-400", bgGlow: "bg-rose-500/10 border-rose-500/30", url: "/dashboard/ap-english" },
-  { slug: "ap-psych", name: "AP® Psychology", category: "Humanities", icon: Brain, color: "text-purple-400", bgGlow: "bg-purple-500/10 border-purple-500/30", url: "/dashboard/ap-psychology" },
+  { slug: "ap-biology", name: "AP® Biology", category: "Science", icon: Dna, url: "/dashboard/ap-biology" },
+  { slug: "ap-chemistry", name: "AP® Chemistry", category: "Science", icon: FlaskConical, url: "/dashboard/ap-chemistry" },
+  { slug: "ap-physics-c", name: "AP® Physics C", category: "Science", icon: Zap, url: "/dashboard/ap-physics-c" },
+  { slug: "ap-calc-bc", name: "AP® Calculus BC", category: "Math", icon: Calculator, url: "/dashboard/ap-calc-bc" },
+  { slug: "ap-csa", name: "AP® Comp Sci A", category: "Math & CS", icon: Code2, url: "/dashboard/ap-csa" },
+  { slug: "ap-stats", name: "AP® Statistics", category: "Math", icon: BarChart2, url: "/dashboard/ap-stats" },
+  { slug: "ap-ush", name: "AP® US History", category: "Humanities", icon: Landmark, url: "/dashboard/apush" },
+  { slug: "ap-eng-lang", name: "AP® English Language", category: "Humanities", icon: BookOpen, url: "/dashboard/ap-english" },
+  { slug: "ap-psych", name: "AP® Psychology", category: "Humanities", icon: Brain, url: "/dashboard/ap-psychology" },
 ];
 
-// Sample AI Chats History
-const MY_CHATS = [
-  { id: "chat-1", title: "AP Bio Gene Expression & Transcription Session", time: "2 hours ago", snippet: "Analyzed RNA polymerase promoter binding and lac operon regulation.", url: "/dashboard/assistant" },
-  { id: "chat-2", title: "AP Calc BC Taylor Series & Radius of Convergence", time: "Yesterday", snippet: "Solved ratio test steps for power series expansion.", url: "/dashboard/assistant" },
-  { id: "chat-3", title: "AP Physics C Rotation & Angular Momentum Problem Solver", time: "3 days ago", snippet: "Calculated moment of inertia for composite disk system.", url: "/dashboard/assistant" },
-  { id: "chat-4", title: "APUSH DBQ Essay Outline & Document Analysis", time: "4 days ago", snippet: "Evaluated Antebellum reform movements and sourcing arguments.", url: "/dashboard/assistant" },
-  { id: "chat-5", title: "AP Chem Thermodynamics & Gibbs Free Energy Helper", time: "5 days ago", snippet: "Calculated delta G under non-standard temperature conditions.", url: "/dashboard/assistant" },
-  { id: "chat-6", title: "AP Psych Neural Transmission & Brain Anatomy", time: "1 week ago", snippet: "Reviewed action potential depolarization and neurotransmitter reuptake.", url: "/dashboard/assistant" },
+// Fallback AI Study Sessions if user doesn't have local chat history yet
+const DEFAULT_AI_CHATS: ChatSessionItem[] = [
+  { id: "ap-bio-ai-tutor", title: "AP Biology Gene Expression & Transcription Tutor", timestamp: "Today" },
+  { id: "ap-calc-bc-ai-coach", title: "AP Calculus BC Taylor Series & Power Series Coach", timestamp: "Yesterday" },
+  { id: "ap-physics-c-solver", title: "AP Physics C Torque & Rotational Dynamics Solver", timestamp: "3 days ago" },
+  { id: "apush-dbq-reviewer", title: "APUSH DBQ Essay Critique & Document Analysis", timestamp: "4 days ago" },
 ];
-
-// Sample Recent Search Chips
-const RECENT_SEARCHES = ["AP Biology", "AP Calculus BC", "AP US History", "AP Physics C"];
 
 export function UniversalTopHeader() {
   const router = useRouter();
@@ -45,6 +47,28 @@ export function UniversalTopHeader() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"courses" | "chats" | "exams">("courses");
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [userChats, setUserChats] = useState<ChatSessionItem[]>([]);
+
+  // Load real user chats from localStorage when modal opens
+  useEffect(() => {
+    if (isModalOpen && typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("ap-lab-ai-chats");
+        if (saved) {
+          const parsed: ChatSessionItem[] = JSON.parse(saved);
+          if (parsed && parsed.length > 0) {
+            setUserChats(parsed);
+          } else {
+            setUserChats(DEFAULT_AI_CHATS);
+          }
+        } else {
+          setUserChats(DEFAULT_AI_CHATS);
+        }
+      } catch (e) {
+        setUserChats(DEFAULT_AI_CHATS);
+      }
+    }
+  }, [isModalOpen]);
 
   // Close modal on escape key
   useEffect(() => {
@@ -55,16 +79,16 @@ export function UniversalTopHeader() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
-  // Real-time filtered items based on query
+  // Real-time filtered courses and chats
   const filteredCourses = ALL_COURSES.filter(
     (c) => c.name.toLowerCase().includes(query.toLowerCase()) || c.category.toLowerCase().includes(query.toLowerCase())
   );
 
-  const filteredChats = MY_CHATS.filter(
-    (c) => c.title.toLowerCase().includes(query.toLowerCase()) || c.snippet.toLowerCase().includes(query.toLowerCase())
+  const filteredChats = userChats.filter(
+    (c) => c.title.toLowerCase().includes(query.toLowerCase())
   );
 
-  const handleCourseClick = (url: string) => {
+  const handleNavigate = (url: string) => {
     setIsModalOpen(false);
     setQuery("");
     router.push(url);
@@ -73,7 +97,7 @@ export function UniversalTopHeader() {
   return (
     <>
       <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#080911]/95 px-4 sm:px-8 py-3 flex items-center justify-between font-manrope">
-        {/* Universal Search Input Bar Trigger */}
+        {/* Universal Search Bar Trigger */}
         <div className="relative flex-1 mr-4 sm:mr-6">
           <div 
             onClick={() => setIsModalOpen(true)}
@@ -89,7 +113,7 @@ export function UniversalTopHeader() {
           </div>
         </div>
 
-        {/* Top Right User Capsules (Streak, XP, Coins, Profile) */}
+        {/* Top Right User Capsules */}
         <HeaderUserCapsules onOpenProfile={() => setShowProfileModal(true)} />
       </header>
 
@@ -97,83 +121,83 @@ export function UniversalTopHeader() {
       <AccountProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
 
       {/* ========================================================= */}
-      {/* KNOWT-STYLE SEARCH & EXPLORE MODAL DIALOG */}
+      {/* CLEAN KNOWT-STYLE SEARCH MODAL DIALOG */}
       {/* ========================================================= */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-[999999] flex items-center justify-center p-3 sm:p-6 font-manrope">
-            {/* Backdrop Dim Blur */}
+            {/* Backdrop Overlay */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              className="absolute inset-0 bg-black/80 backdrop-blur-sm"
             />
 
-            {/* Modal Dialog Window */}
+            {/* Modal Dialog Window - Exact Knowt Dark Styling */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
-              transition={{ type: "spring", duration: 0.35 }}
-              className="relative w-full max-w-4xl bg-[#0f1019] border border-white/15 rounded-[32px] overflow-hidden shadow-[0_30px_90px_rgba(0,0,0,0.95)] flex flex-col md:flex-row h-[580px] z-10 text-left"
+              exit={{ opacity: 0, scale: 0.96, y: 10 }}
+              transition={{ type: "spring", duration: 0.3 }}
+              className="relative w-full max-w-4xl bg-[#1e1f25] border border-white/10 rounded-[28px] overflow-hidden shadow-2xl flex flex-col md:flex-row h-[560px] z-10 text-left"
             >
-              {/* LEFT SIDEBAR NAVIGATION INSIDE MODAL */}
-              <div className="w-full md:w-60 bg-[#080911] border-b md:border-b-0 md:border-r border-white/10 p-4 flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-1.5 shrink-0 overflow-x-auto">
+              {/* LEFT SIDEBAR NAVIGATION (Knowt style) */}
+              <div className="w-full md:w-56 bg-[#15161a] border-b md:border-b-0 md:border-r border-white/10 p-4 flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 shrink-0 overflow-x-auto">
                 <button
                   onClick={() => setActiveTab("courses")}
                   className={cn(
-                    "flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer shrink-0",
+                    "flex items-center space-x-2.5 px-4 py-2.5 rounded-full text-xs transition-all cursor-pointer shrink-0 font-manrope",
                     activeTab === "courses"
-                      ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 shadow-sm"
-                      : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
+                      ? "bg-[#c4f2e3] text-black font-extrabold shadow-sm"
+                      : "text-white/70 hover:text-white hover:bg-white/5 font-semibold"
                   )}
                 >
-                  <BookOpen className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>All AP Courses</span>
+                  <BookOpen className="w-4 h-4 shrink-0" />
+                  <span>All of AP Lab</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("chats")}
                   className={cn(
-                    "flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer shrink-0",
+                    "flex items-center space-x-2.5 px-4 py-2.5 rounded-full text-xs transition-all cursor-pointer shrink-0 font-manrope",
                     activeTab === "chats"
-                      ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 shadow-sm"
-                      : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
+                      ? "bg-[#c4f2e3] text-black font-extrabold shadow-sm"
+                      : "text-white/70 hover:text-white hover:bg-white/5 font-semibold"
                   )}
                 >
-                  <MessageSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <MessageSquare className="w-4 h-4 shrink-0" />
                   <span>My Chats</span>
                 </button>
 
                 <button
                   onClick={() => setActiveTab("exams")}
                   className={cn(
-                    "flex items-center space-x-3 px-3.5 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer shrink-0",
+                    "flex items-center space-x-2.5 px-4 py-2.5 rounded-full text-xs transition-all cursor-pointer shrink-0 font-manrope",
                     activeTab === "exams"
-                      ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 shadow-sm"
-                      : "text-white/60 hover:text-white hover:bg-white/5 border border-transparent"
+                      ? "bg-[#c4f2e3] text-black font-extrabold shadow-sm"
+                      : "text-white/70 hover:text-white hover:bg-white/5 font-semibold"
                   )}
                 >
-                  <CheckSquare className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <CheckSquare className="w-4 h-4 shrink-0" />
                   <span>Exams</span>
                 </button>
               </div>
 
-              {/* RIGHT MAIN PANEL INSIDE MODAL */}
-              <div className="flex-1 bg-[#0f1019] p-5 sm:p-6 flex flex-col overflow-hidden">
-                {/* Search Bar Input & Close Button */}
-                <div className="flex items-center space-x-3 mb-5 shrink-0">
-                  <div className="relative flex-1 flex items-center bg-[#171926] border border-white/10 focus-within:border-emerald-400/50 rounded-2xl px-4 py-3 text-white transition-all shadow-inner">
-                    <Search className="w-4 h-4 text-white/40 mr-2.5 shrink-0" />
+              {/* RIGHT MAIN PANEL */}
+              <div className="flex-1 bg-[#1e1f25] p-5 sm:p-6 flex flex-col overflow-hidden">
+                {/* Search Input Box & Close Button */}
+                <div className="flex items-center space-x-3 mb-6 shrink-0">
+                  <div className="relative flex-1 flex items-center bg-[#131418] border border-white/10 focus-within:border-white/30 rounded-full px-4 py-3 text-white transition-all shadow-inner">
+                    <Search className="w-4 h-4 text-white/50 mr-2.5 shrink-0" />
                     <input
                       type="text"
-                      placeholder="Search for anything..."
+                      placeholder="Search for anything"
                       value={query}
                       onChange={(e) => setQuery(e.target.value)}
                       autoFocus
-                      className="w-full bg-transparent text-white placeholder:text-white/30 focus:outline-none text-sm font-manrope font-medium"
+                      className="w-full bg-transparent text-white placeholder:text-white/40 focus:outline-none text-sm font-manrope font-medium"
                     />
                     {query && (
                       <button
@@ -187,9 +211,9 @@ export function UniversalTopHeader() {
 
                   <button
                     onClick={() => setIsModalOpen(false)}
-                    className="w-11 h-11 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/15 flex items-center justify-center text-white/70 hover:text-white transition-all shrink-0 cursor-pointer"
+                    className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white/80 hover:text-white transition-all shrink-0 cursor-pointer"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4.5 h-4.5" />
                   </button>
                 </div>
 
@@ -198,92 +222,70 @@ export function UniversalTopHeader() {
                   
                   {/* TAB 1: ALL AP COURSES */}
                   {activeTab === "courses" && (
-                    <div className="space-y-6">
-                      {/* Recently Searched Chips */}
-                      {!query && (
-                        <div className="space-y-2.5">
-                          <span className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-wider block">
-                            Recently Searched
-                          </span>
-                          <div className="flex flex-wrap gap-2">
-                            {RECENT_SEARCHES.map((chip) => (
-                              <button
-                                key={chip}
-                                onClick={() => setQuery(chip)}
-                                className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-[#171926] hover:bg-[#202232] border border-white/10 text-xs font-manrope text-white/80 hover:text-white transition-all cursor-pointer group"
-                              >
-                                <Search className="w-3 h-3 text-white/40 group-hover:text-emerald-400 transition-colors" />
-                                <span>{chip}</span>
-                              </button>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                    <div className="space-y-4">
+                      <span className="text-xs font-manrope font-bold text-white block">
+                        Browse by AP Course
+                      </span>
 
-                      {/* Courses Grid */}
-                      <div className="space-y-2.5">
-                        <span className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-wider block">
-                          {query ? "Search Results" : "Browse AP Courses"}
-                        </span>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                          {filteredCourses.map((c) => {
-                            const Icon = c.icon;
-                            return (
-                              <div
-                                key={c.slug}
-                                onClick={() => handleCourseClick(c.url)}
-                                className={cn(
-                                  "p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center space-x-3 hover:scale-[1.02] shadow-md group",
-                                  c.bgGlow
-                                )}
-                              >
-                                <div className="w-10 h-10 rounded-xl bg-black/40 border border-white/10 flex items-center justify-center shrink-0">
-                                  <Icon className={cn("w-5 h-5", c.color)} />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                  <h4 className="font-manrope font-extrabold text-xs text-white truncate group-hover:text-emerald-300 transition-colors">
-                                    {c.name}
-                                  </h4>
-                                  <span className="text-[10px] font-mono text-white/40 block mt-0.5">
-                                    {c.category}
-                                  </span>
-                                </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {filteredCourses.map((c) => {
+                          const Icon = c.icon;
+                          return (
+                            <div
+                              key={c.slug}
+                              onClick={() => handleNavigate(c.url)}
+                              className="bg-[#28292e] hover:bg-[#303137] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center text-center space-y-2.5 cursor-pointer transition-all hover:scale-[1.02] shadow-md group"
+                            >
+                              {/* Clean Solid White Icon */}
+                              <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
+                                <Icon className="w-6 h-6 text-white opacity-90 group-hover:opacity-100 transition-opacity stroke-[1.75]" />
                               </div>
-                            );
-                          })}
-                        </div>
+                              <span className="font-manrope font-bold text-xs text-white tracking-tight group-hover:text-[#c4f2e3] transition-colors">
+                                {c.name}
+                              </span>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
 
-                  {/* TAB 2: MY CHATS */}
+                  {/* TAB 2: MY CHATS (REAL SAVED CHATS / ASSISTANT DEEP-LINKS) */}
                   {activeTab === "chats" && (
                     <div className="space-y-3">
-                      <span className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-wider block mb-3">
-                        My Recent AI Conversations
-                      </span>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-manrope font-bold text-white block">
+                          My AI Conversations
+                        </span>
+                        <button
+                          onClick={() => handleNavigate("/dashboard/assistant")}
+                          className="text-xs font-manrope font-bold text-[#c4f2e3] hover:underline flex items-center gap-1 cursor-pointer"
+                        >
+                          <span>New Chat</span>
+                          <ArrowRight className="w-3 h-3" />
+                        </button>
+                      </div>
+
                       {filteredChats.map((chat) => (
                         <div
                           key={chat.id}
-                          onClick={() => handleCourseClick(chat.url)}
-                          className="bg-[#171926] hover:bg-[#202232] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-start space-x-3.5 group"
+                          onClick={() => handleNavigate(`/dashboard/assistant?chatId=${chat.id}`)}
+                          className="bg-[#28292e] hover:bg-[#303137] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-center justify-between group"
                         >
-                          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 shrink-0 mt-0.5">
-                            <MessageSquare className="w-4 h-4" />
-                          </div>
-                          <div className="flex-1 min-w-0 text-left">
-                            <div className="flex items-center justify-between">
-                              <h4 className="font-manrope font-bold text-xs text-white truncate group-hover:text-emerald-300 transition-colors">
+                          <div className="flex items-center space-x-3.5 min-w-0">
+                            <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white shrink-0">
+                              <MessageSquare className="w-4.5 h-4.5 text-white stroke-[1.75]" />
+                            </div>
+                            <div className="min-w-0 text-left">
+                              <h4 className="font-manrope font-bold text-xs text-white truncate group-hover:text-[#c4f2e3] transition-colors">
                                 {chat.title}
                               </h4>
-                              <span className="text-[10px] font-mono text-white/35 shrink-0 ml-2">
-                                {chat.time}
+                              <span className="text-[10px] font-mono text-white/40 block mt-0.5">
+                                {chat.timestamp}
                               </span>
                             </div>
-                            <p className="text-[11px] font-manrope text-white/50 truncate mt-1">
-                              {chat.snippet}
-                            </p>
                           </div>
+                          <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white transition-colors shrink-0 ml-2" />
                         </div>
                       ))}
                     </div>
@@ -292,32 +294,33 @@ export function UniversalTopHeader() {
                   {/* TAB 3: EXAMS */}
                   {activeTab === "exams" && (
                     <div className="space-y-3">
-                      <span className="text-[11px] font-mono font-bold text-white/40 uppercase tracking-wider block mb-3">
-                        AP Exam Diagnostics Simulators
+                      <span className="text-xs font-manrope font-bold text-white block mb-3">
+                        Browse by AP Diagnostic Exams
                       </span>
+
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {ALL_COURSES.map((c) => {
                           const Icon = c.icon;
                           return (
                             <div
                               key={c.slug}
-                              onClick={() => handleCourseClick(c.url)}
-                              className="bg-[#171926] hover:bg-[#202232] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-center justify-between group"
+                              onClick={() => handleNavigate(c.url)}
+                              className="bg-[#28292e] hover:bg-[#303137] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-center justify-between group"
                             >
-                              <div className="flex items-center space-x-3">
-                                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
-                                  <Icon className="w-5 h-5" />
+                              <div className="flex items-center space-x-3 min-w-0">
+                                <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white shrink-0">
+                                  <Icon className="w-5 h-5 text-white stroke-[1.75]" />
                                 </div>
-                                <div className="text-left">
-                                  <h4 className="font-manrope font-extrabold text-xs text-white group-hover:text-amber-300 transition-colors">
+                                <div className="text-left min-w-0">
+                                  <h4 className="font-manrope font-bold text-xs text-white truncate group-hover:text-[#c4f2e3] transition-colors">
                                     {c.name} Exam
                                   </h4>
-                                  <span className="text-[10px] font-mono text-white/40 block mt-0.5">
-                                    Timed FRQ & MCQ Diagnostic
+                                  <span className="text-[10px] font-mono text-white/40 block mt-0.5 truncate">
+                                    Diagnostic Exam Simulator
                                   </span>
                                 </div>
                               </div>
-                              <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white group-hover:translate-x-1 transition-all" />
+                              <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white transition-colors shrink-0 ml-2" />
                             </div>
                           );
                         })}
