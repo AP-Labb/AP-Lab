@@ -134,16 +134,22 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     <Link key={item.href} href={item.href}>
                       <motion.div
                         className={cn(
-                          "flex items-center gap-3 w-full h-10 rounded-2xl transition-all duration-150 border cursor-pointer select-none",
+                          "flex items-center gap-3 w-full h-10 rounded-2xl transition-all duration-150 border cursor-pointer group select-none",
                           sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
                           isActive
                             ? "bg-white/10 border-white/20 text-white shadow-md font-bold"
-                            : "border-transparent text-white/60 hover:bg-white/[0.06] hover:text-white"
+                            : "border-transparent text-white hover:bg-white/[0.06]"
                         )}
                         whileHover="hover"
                         initial="rest"
                       >
-                        <div className="w-8 h-8 shrink-0 flex items-center justify-center">
+                        <div 
+                          className={cn(
+                            "w-8 h-8 shrink-0 flex items-center justify-center transition-opacity duration-150 text-white",
+                            isActive ? "opacity-100" : "opacity-45 group-hover:opacity-100"
+                          )}
+                          style={{ isolation: "isolate" }}
+                        >
                           {item.icon === "progress" ? (
                             <motion.div 
                               className="w-5 h-5 flex-shrink-0 flex items-end gap-[2px]"
@@ -161,7 +167,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               ].map((bar, i) => (
                                 <motion.div 
                                   key={i} 
-                                  className="flex-1 rounded-sm bg-current" 
+                                  className="flex-1 rounded-sm bg-white" 
                                   variants={{
                                     rest: { height: bar.rest },
                                     hover: { height: bar.hover }
@@ -188,10 +194,10 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                                 hover: { scale: 1.22, rotate: 8 }
                               }}
                               transition={{ duration: 0.25, ease: "easeOut" }}
-                              className="flex-shrink-0"
+                              className="flex-shrink-0 text-white"
                             >
                               {/* @ts-ignore */}
-                              <item.icon className="w-5 h-5" />
+                              <item.icon className="w-5 h-5 text-white" />
                             </motion.div>
                           )}
                         </div>

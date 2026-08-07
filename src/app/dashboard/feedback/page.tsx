@@ -30,7 +30,7 @@ export default function DashboardFeedbackPage() {
     1: 5,
   });
 
-  // Top Feedbacks featuring 3 bot users with uploaded avatar images
+  // Top Feedbacks featuring bot users with uploaded avatar images
   const [feedbacks] = useState<FeedbackItem[]>([
     {
       id: "bot-1",
@@ -53,6 +53,13 @@ export default function DashboardFeedbackPage() {
       rating: 4,
       text: "Super clean UI and amazing study tools. Best free AP prep platform out there hands down.",
     },
+    {
+      id: "bot-4",
+      name: "iluv",
+      avatar: "/images/reviews/iluv_avatar.png",
+      rating: 5,
+      text: "Honestly AP Lab is the best platform I've ever used. The diagnostic tests, AI tutor, and practice modules literally saved my AP exam scores!",
+    },
   ]);
 
   // Form State
@@ -64,6 +71,8 @@ export default function DashboardFeedbackPage() {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+
+  const isFormValid = rating > 0 && name.trim().length > 0 && email.trim().length > 0 && reviewText.trim().length > 0;
 
   // Pre-fill user details if logged in
   useEffect(() => {
@@ -296,10 +305,10 @@ export default function DashboardFeedbackPage() {
                   ) : (
                     <form onSubmit={handleSubmit} className="space-y-5">
                       
-                      {/* Add Your Rating * */}
+                      {/* Add Your Rating */}
                       <div className="space-y-2">
                         <label className="text-xs font-manrope font-bold text-white/90 block">
-                          Add Your Rating <span className="text-amber-400">*</span>
+                          Add Your Rating
                         </label>
                         <div className="flex items-center space-x-1.5">
                           {[1, 2, 3, 4, 5].map((star) => (
@@ -324,10 +333,10 @@ export default function DashboardFeedbackPage() {
                         </div>
                       </div>
 
-                      {/* Name * Input */}
+                      {/* Name Input */}
                       <div className="space-y-2">
                         <label className="text-xs font-manrope font-bold text-white/90 block">
-                          Name <span className="text-amber-400">*</span>
+                          Name
                         </label>
                         <input
                           type="text"
@@ -339,10 +348,10 @@ export default function DashboardFeedbackPage() {
                         />
                       </div>
 
-                      {/* Email * Input */}
+                      {/* Email Input */}
                       <div className="space-y-2">
                         <label className="text-xs font-manrope font-bold text-white/90 block">
-                          Email <span className="text-amber-400">*</span>
+                          Email
                         </label>
                         <input
                           type="email"
@@ -354,10 +363,10 @@ export default function DashboardFeedbackPage() {
                         />
                       </div>
 
-                      {/* Write Your Review * Textarea */}
+                      {/* Write Your Review Textarea */}
                       <div className="space-y-2">
                         <label className="text-xs font-manrope font-bold text-white/90 block">
-                          Write Your Review <span className="text-amber-400">*</span>
+                          Write Your Review
                         </label>
                         <textarea
                           value={reviewText}
@@ -369,12 +378,17 @@ export default function DashboardFeedbackPage() {
                         />
                       </div>
 
-                      {/* Submit Button */}
+                      {/* Submit Button (Highlights ONLY when all fields are populated) */}
                       <div className="pt-2">
                         <button
                           type="submit"
-                          disabled={isLoading || rating === 0}
-                          className="w-full py-4 rounded-2xl bg-amber-400 hover:bg-amber-300 text-black font-manrope font-extrabold text-base transition-all disabled:opacity-40 flex items-center justify-center space-x-2 cursor-pointer shadow-lg active:scale-[0.99]"
+                          disabled={isLoading || !isFormValid}
+                          className={cn(
+                            "w-full py-4 rounded-2xl font-manrope font-extrabold text-base transition-all flex items-center justify-center space-x-2 border",
+                            isFormValid && !isLoading
+                              ? "bg-amber-400 hover:bg-amber-300 text-black border-amber-400 shadow-lg cursor-pointer active:scale-[0.99]"
+                              : "bg-white/[0.05] text-white/30 border-white/5 cursor-not-allowed shadow-none"
+                          )}
                         >
                           {isLoading ? (
                             <span>Submitting...</span>

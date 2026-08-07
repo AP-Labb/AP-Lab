@@ -112,9 +112,9 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 className="absolute right-0 top-full mt-3 w-[340px] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[32px] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[9999] text-center text-white"
               >
                 {/* Large Flame Icon + Streak Count */}
-                <div className="flex items-center justify-center space-x-2.5 my-1">
-                  <StreakFlameIcon streakCount={streak} sizeClassName="w-14 h-14" />
-                  <span className="font-manrope font-black text-5xl text-[#f97316]">{streak}</span>
+                <div className="flex items-center justify-center space-x-3 my-2">
+                  <StreakFlameIcon streakCount={streak} sizeClassName="w-28 h-28 shrink-0" />
+                  <span className="font-manrope font-black text-6xl text-[#f97316]">{streak}</span>
                 </div>
 
                 {/* Encouragement Subtitle */}
@@ -132,12 +132,12 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
 
                       return (
                         <div key={idx} className="flex flex-col items-center space-y-2.5">
-                          <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                          <div className="w-12 h-12 flex items-center justify-center shrink-0">
                             {isCompleted ? (
-                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-7 h-7" />
+                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-12 h-12" />
                             ) : (
                               <div className={cn(
-                                "w-7 h-7 rounded-full transition-all",
+                                "w-11 h-11 rounded-full transition-all",
                                 isToday ? "bg-white/10 border-2 border-dashed border-orange-400" : "bg-neutral-800/80 border border-white/5"
                               )} />
                             )}
