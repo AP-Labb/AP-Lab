@@ -10,6 +10,7 @@ import { playLevelUpSound, playSpinSound } from "@/lib/sounds";
 import { LevelBadge } from "@/components/LevelBadge";
 import confetti from "canvas-confetti";
 import { cn } from "@/lib/utils";
+import { RewardNotificationOverlay, triggerRewardAnimation } from "@/components/RewardNotificationOverlay";
 
 interface UserProgress {
   completedTopics: string[];
@@ -1088,6 +1089,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const newCreds = currentCreds - amount;
     const updated = { ...progress, credits: newCreds };
     setProgress(updated);
+    triggerRewardAnimation({ type: "deduction", coins: amount, title: "Item Purchased from Shop" });
     if (currentUser) {
       const localKey = `ap-lab-progress-${currentUser.uid}`;
       try { localStorage.setItem(localKey, JSON.stringify(updated)); } catch (e) {}
@@ -1107,6 +1109,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const newCreds = currentCreds + effectiveAmount;
     const updated = { ...progress, credits: newCreds, totalCreditsEarned: totalEarned };
     setProgress(updated);
+    triggerRewardAnimation({ type: "reward", coins: effectiveAmount, title: reason || "Coins Earned!" });
     if (reason) triggerXpToast(0, reason, "question", effectiveAmount);
 
     // Sync to user daily earnings record
@@ -1359,6 +1362,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
           })}
         </AnimatePresence>
       </div>
+      <RewardNotificationOverlay />
     </ProgressContext.Provider>
   );
 };
