@@ -597,7 +597,7 @@ export default function Dashboard() {
           <img 
             src="/images/BANNER2.png" 
             alt="AP Lab Dashboard Banner" 
-            className="w-full h-full object-cover object-[center_top]"
+            className="w-full h-[680px] object-cover object-top -mt-32"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-[#030408]/50 to-[#060712]" />
         </div>

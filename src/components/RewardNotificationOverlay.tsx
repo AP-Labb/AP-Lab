@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { TrendingUp, TrendingDown, ArrowUp, ArrowDown, Sparkles, Coins } from "lucide-react";
+import { ArrowUp, ArrowDown } from "lucide-react";
 
 export interface RewardEventData {
   id: string;
@@ -12,7 +12,7 @@ export interface RewardEventData {
   title?: string;
 }
 
-// Global Event Dispatchers
+// Global Event Dispatcher
 export function triggerRewardAnimation(data: Omit<RewardEventData, "id">) {
   if (typeof window !== "undefined") {
     const event = new CustomEvent("ap-lab-reward-event", {
@@ -24,30 +24,68 @@ export function triggerRewardAnimation(data: Omit<RewardEventData, "id">) {
 
 export function RewardNotificationOverlay() {
   const [activeEvent, setActiveEvent] = useState<RewardEventData | null>(null);
-  const [flyingParticles, setFlyingParticles] = useState<{ id: number; icon: string; delay: number }[]>([]);
+  const [displayXp, setDisplayXp] = useState(0);
+  const [displayCoins, setDisplayCoins] = useState(0);
+  const [isFlying, setIsFlying] = useState(false);
+  const [flyingItems, setFlyingItems] = useState<{ id: number; icon: string; delay: number }[]>([]);
 
   useEffect(() => {
     const handleRewardEvent = (e: CustomEvent<RewardEventData>) => {
       const data = e.detail;
       setActiveEvent(data);
+      setDisplayXp(0);
+      setDisplayCoins(0);
+      setIsFlying(false);
+      setFlyingItems([]);
 
-      if (data.type === "reward") {
-        // Generate 6 flying particles for XP / Coins
-        const particles = Array.from({ length: 6 }).map((_, i) => ({
-          id: i,
-          icon: i % 2 === 0 ? "/images/coin-gold.png" : "/images/star-icon.png",
-          delay: i * 0.08,
-        }));
-        setFlyingParticles(particles);
-      } else {
-        setFlyingParticles([]);
-      }
+      const targetXp = data.xp || 0;
+      const targetCoins = data.coins || 0;
 
-      // Auto dismiss after 2.6 seconds
-      setTimeout(() => {
+      // 1. Live Counting Up Animation over 600ms
+      const duration = 600;
+      const startTime = performance.now();
+
+      const updateCounter = (currentTime: number) => {
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(1, elapsed / duration);
+        
+        // Ease out quadratic
+        const eased = 1 - Math.pow(1 - progress, 2);
+        
+        setDisplayXp(Math.round(eased * targetXp));
+        setDisplayCoins(Math.round(eased * targetCoins));
+
+        if (progress < 1) {
+          requestAnimationFrame(updateCounter);
+        }
+      };
+
+      requestAnimationFrame(updateCounter);
+
+      // 2. After 1 second, trigger particles flow to top right header
+      const flyTimer = setTimeout(() => {
+        setIsFlying(true);
+        if (data.type === "reward") {
+          const items = Array.from({ length: 6 }).map((_, i) => ({
+            id: i,
+            icon: i % 2 === 0 ? "/images/coin-zoomed.png" : "/images/xp-shield-zoomed.png",
+            delay: i * 0.08,
+          }));
+          setFlyingItems(items);
+        }
+      }, 1000);
+
+      // 3. Clear center screen notification after 2 seconds
+      const closeTimer = setTimeout(() => {
         setActiveEvent(null);
-        setFlyingParticles([]);
-      }, 2600);
+        setIsFlying(false);
+        setFlyingItems([]);
+      }, 2100);
+
+      return () => {
+        clearTimeout(flyTimer);
+        clearTimeout(closeTimer);
+      };
     };
 
     window.addEventListener("ap-lab-reward-event" as any, handleRewardEvent as any);
@@ -58,89 +96,125 @@ export function RewardNotificationOverlay() {
 
   return (
     <>
-      {/* Center of Screen Animated Card */}
+      {/* Darkened Background (JUST DARKENED, NO BLUR, NO RECTANGLE CARD) */}
       <AnimatePresence>
         {activeEvent && (
           <div className="fixed inset-0 z-[9999999] pointer-events-none flex items-center justify-center p-4">
+            {/* Slightly Darkened Screen Overlay (No blur) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.7, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.8, y: -20 }}
-              transition={{ type: "spring", stiffness: 350, damping: 25 }}
-              className={`relative bg-[#090a14]/95 backdrop-blur-2xl border-2 rounded-[32px] p-6 sm:p-8 text-center flex flex-col items-center justify-center space-y-3 shadow-2xl min-w-[280px] sm:min-w-[320px] ${
-                activeEvent.type === "reward"
-                  ? "border-emerald-500/60 shadow-[0_0_70px_rgba(16,185,129,0.35)]"
-                  : "border-red-500/60 shadow-[0_0_70px_rgba(239,68,68,0.35)]"
-              }`}
-            >
-              {/* Icon Circle */}
-              <div
-                className={`w-16 h-16 rounded-full flex items-center justify-center shadow-lg ${
-                  activeEvent.type === "reward"
-                    ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/40"
-                    : "bg-red-500/20 text-red-400 border border-red-500/40"
-                }`}
-              >
-                {activeEvent.type === "reward" ? (
-                  <ArrowUp className="w-9 h-9 stroke-[3]" />
-                ) : (
-                  <ArrowDown className="w-9 h-9 stroke-[3]" />
-                )}
-              </div>
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="absolute inset-0 bg-black/40"
+            />
 
-              {/* Title & Numbers */}
-              <div className="space-y-1">
-                <h3 className="font-manrope font-black text-2xl sm:text-3xl text-white tracking-tight">
-                  {activeEvent.type === "reward" ? (
-                    <span className="text-emerald-400">
-                      {activeEvent.xp ? `+${activeEvent.xp} XP` : ""}{" "}
-                      {activeEvent.coins ? `+${activeEvent.coins} Coins` : ""}
+            {/* Clean Center Element (No Rectangle Box!) */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.8, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -20 }}
+              transition={{ type: "spring", stiffness: 400, damping: 28 }}
+              className="relative z-10 flex items-center space-x-5 font-manrope select-none"
+            >
+              {/* Left Side Animated Arrow */}
+              {activeEvent.type === "reward" ? (
+                <motion.div
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: [10, -8, 0], opacity: 1 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="w-16 h-16 rounded-full bg-emerald-500/20 border border-emerald-400/50 flex items-center justify-center text-emerald-400 shadow-[0_0_35px_rgba(16,185,129,0.4)]"
+                >
+                  <ArrowUp className="w-10 h-10 stroke-[3.5] animate-bounce" />
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ y: -20, opacity: 0 }}
+                  animate={{ y: [-10, 8, 0], opacity: 1 }}
+                  transition={{ duration: 0.5, ease: "easeOut" }}
+                  className="w-16 h-16 rounded-full bg-red-500/20 border border-red-400/50 flex items-center justify-center text-red-500 shadow-[0_0_35px_rgba(239,68,68,0.4)]"
+                >
+                  <ArrowDown className="w-10 h-10 stroke-[3.5] animate-bounce" />
+                </motion.div>
+              )}
+
+              {/* Right Side Earned/Lost Quantities with Actual Images */}
+              <div className="flex items-center space-x-6">
+                {activeEvent.type === "reward" ? (
+                  <>
+                    {/* XP Item */}
+                    {(activeEvent.xp || 0) > 0 && (
+                      <div className="flex items-center space-x-3">
+                        <img
+                          src="/images/xp-shield-zoomed.png"
+                          alt="XP"
+                          className="w-12 h-12 object-contain drop-shadow-[0_0_20px_rgba(168,85,247,0.8)]"
+                        />
+                        <span className="font-manrope font-black text-4xl sm:text-5xl text-purple-300 tracking-tight drop-shadow-md">
+                          +{displayXp} XP
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Coins Item */}
+                    {(activeEvent.coins || 0) > 0 && (
+                      <div className="flex items-center space-x-3">
+                        <img
+                          src="/images/coin-zoomed.png"
+                          alt="Coins"
+                          className="w-12 h-12 object-contain drop-shadow-[0_0_20px_rgba(251,191,36,0.8)]"
+                        />
+                        <span className="font-manrope font-black text-4xl sm:text-5xl text-amber-400 tracking-tight drop-shadow-md">
+                          +{displayCoins} Coins
+                        </span>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  /* Coins Lost Item */
+                  <div className="flex items-center space-x-3">
+                    <img
+                      src="/images/coin-zoomed.png"
+                      alt="Coins"
+                      className="w-12 h-12 object-contain drop-shadow-[0_0_20px_rgba(239,68,68,0.8)]"
+                    />
+                    <span className="font-manrope font-black text-4xl sm:text-5xl text-red-400 tracking-tight drop-shadow-md">
+                      -{displayCoins} Coins
                     </span>
-                  ) : (
-                    <span className="text-red-400">
-                      -{activeEvent.coins || 0} Coins
-                    </span>
-                  )}
-                </h3>
-                <p className="text-xs font-manrope font-bold text-white/60">
-                  {activeEvent.title ||
-                    (activeEvent.type === "reward"
-                      ? "Reward Claimed!"
-                      : "Deduction from Shop Purchase")}
-                </p>
+                  </div>
+                )}
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* Smooth Flying Particles towards top right corner */}
+      {/* Smooth Flying Particles Flowing into Top Right Header */}
       <AnimatePresence>
-        {activeEvent && activeEvent.type === "reward" && flyingParticles.length > 0 && (
+        {isFlying && flyingItems.length > 0 && (
           <div className="fixed inset-0 z-[9999998] pointer-events-none overflow-hidden">
-            {flyingParticles.map((p) => (
+            {flyingItems.map((p) => (
               <motion.div
                 key={p.id}
                 initial={{
                   x: typeof window !== "undefined" ? window.innerWidth / 2 - 20 : 0,
                   y: typeof window !== "undefined" ? window.innerHeight / 2 - 20 : 0,
-                  scale: 1,
+                  scale: 1.2,
                   opacity: 1,
                 }}
                 animate={{
                   x: typeof window !== "undefined" ? window.innerWidth - 120 : 800,
                   y: 28,
-                  scale: 0.4,
+                  scale: 0.35,
                   opacity: 0,
                 }}
                 transition={{
-                  duration: 0.85,
+                  duration: 0.75,
                   delay: p.delay,
                   ease: [0.16, 1, 0.3, 1],
                 }}
-                className="fixed top-0 left-0 w-10 h-10 z-[9999998] pointer-events-none flex items-center justify-center"
+                className="fixed top-0 left-0 w-12 h-12 z-[9999998] pointer-events-none flex items-center justify-center"
               >
-                <img src={p.icon} alt="Particle" className="w-8 h-8 object-contain drop-shadow-[0_0_12px_rgba(251,191,36,0.8)]" />
+                <img src={p.icon} alt="Particle" className="w-10 h-10 object-contain drop-shadow-[0_0_15px_rgba(251,191,36,0.9)]" />
               </motion.div>
             ))}
           </div>

@@ -19,6 +19,51 @@ interface HeaderUserCapsulesProps {
   onOpenProfile?: () => void;
 }
 
+function AnimatedCounter({ value, className }: { value: number; className?: string }) {
+  const [displayValue, setDisplayValue] = useState(value);
+  const [isPulsing, setIsPulsing] = useState(false);
+  const prevValueRef = React.useRef(value);
+
+  useEffect(() => {
+    if (prevValueRef.current === value) return;
+
+    const startVal = prevValueRef.current;
+    const endVal = value;
+    prevValueRef.current = value;
+
+    setIsPulsing(true);
+    const duration = 800;
+    const startTime = performance.now();
+
+    const animateNumber = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(1, elapsed / duration);
+      const eased = 1 - Math.pow(1 - progress, 2);
+
+      const current = Math.round(startVal + (endVal - startVal) * eased);
+      setDisplayValue(current);
+
+      if (progress < 1) {
+        requestAnimationFrame(animateNumber);
+      } else {
+        setIsPulsing(false);
+      }
+    };
+
+    requestAnimationFrame(animateNumber);
+  }, [value]);
+
+  return (
+    <motion.span
+      animate={isPulsing ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+      transition={{ duration: 0.3 }}
+      className={className}
+    >
+      {displayValue.toLocaleString()}
+    </motion.span>
+  );
+}
+
 export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
   const router = useRouter();
   const { progress } = useProgress();
@@ -179,7 +224,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 className="w-full h-full object-contain transform scale-125" 
               />
             </div>
-            <span className="font-manrope font-extrabold text-lg text-purple-300 leading-none">{level}</span>
+            <AnimatedCounter value={level} className="font-manrope font-extrabold text-lg text-purple-300 leading-none" />
           </div>
 
           {/* XP Hover Popup matching uploaded screenshot */}
@@ -253,7 +298,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 className="w-full h-full object-contain transform scale-125" 
               />
             </div>
-            <span className="font-manrope font-extrabold text-lg text-amber-400 tracking-tight leading-none">{credits.toLocaleString()}</span>
+            <AnimatedCounter value={credits} className="font-manrope font-extrabold text-lg text-amber-400 tracking-tight leading-none" />
           </div>
 
           {/* Coins Hover Popup matching exact uploaded screenshot */}
