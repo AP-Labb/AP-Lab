@@ -22,6 +22,26 @@ export function triggerRewardAnimation(data: Omit<RewardEventData, "id">) {
   }
 }
 
+// Rolling Digit Push-Up Component for Ultra-Smooth Number Increments
+function RollingNumber({ value, className }: { value: number; className?: string }) {
+  return (
+    <div className="relative inline-flex overflow-hidden">
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={value}
+          initial={{ y: 16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -16, opacity: 0 }}
+          transition={{ duration: 0.12, ease: "easeOut" }}
+          className={className}
+        >
+          {value}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  );
+}
+
 export function RewardNotificationOverlay() {
   const [activeEvent, setActiveEvent] = useState<RewardEventData | null>(null);
   const [displayXp, setDisplayXp] = useState(0);
@@ -39,8 +59,8 @@ export function RewardNotificationOverlay() {
       const targetXp = data.xp || 0;
       const targetCoins = data.coins || 0;
 
-      // Ultra-smooth Live Counting Animation over 650ms
-      const duration = 650;
+      // Ultra-smooth Live Counting Animation over 450ms
+      const duration = 450;
       const startTime = performance.now();
 
       const updateCounter = (currentTime: number) => {
@@ -56,18 +76,21 @@ export function RewardNotificationOverlay() {
         if (progress < 1) {
           requestAnimationFrame(updateCounter);
         } else {
-          // Trigger brief 0.4s flash upon completion
+          // Brief 300ms flash on completion, then revert to original color
           setIsFlashActive(true);
+          setTimeout(() => {
+            setIsFlashActive(false);
+          }, 300);
         }
       };
 
       requestAnimationFrame(updateCounter);
 
-      // Auto dismiss after 2.4 seconds
+      // Auto dismiss after 1.8 seconds total
       const closeTimer = setTimeout(() => {
         setActiveEvent(null);
         setIsFlashActive(false);
-      }, 2400);
+      }, 1800);
 
       return () => {
         clearTimeout(closeTimer);
@@ -92,15 +115,15 @@ export function RewardNotificationOverlay() {
             className="absolute inset-0 bg-black/40"
           />
 
-          {/* Clean Center Content Container (No Glow, No Rectangle Box!) */}
+          {/* Clean Center Content Container */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9, y: -15 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="relative z-10 flex items-center space-x-6 font-manrope select-none"
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="relative z-10 flex items-center space-x-5 font-manrope select-none"
           >
-            {/* Left Side Clean Arrow (NO Circle Background, NO Glow!) */}
+            {/* Left Side Clean Arrow */}
             {activeEvent.type === "reward" ? (
               <motion.div
                 initial={{ y: 35, opacity: 0 }}
@@ -121,60 +144,60 @@ export function RewardNotificationOverlay() {
               </motion.div>
             )}
 
-            {/* Right Side Quantities with EVEN BIGGER Images on the RIGHT of numbers (NO "coins"/"xp" text, NO Glow!) */}
-            <div className="flex items-center space-x-6">
+            {/* Right Side Quantities with EVEN BIGGER Images closer to numbers */}
+            <div className="flex items-center space-x-5">
               {activeEvent.type === "reward" ? (
                 <>
-                  {/* XP Item: +100 [XP Image on Right] */}
+                  {/* XP Item: +100 [XP Image on Right, moved closer] */}
                   {(activeEvent.xp || 0) > 0 && (
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-1.5">
                       <span
-                        className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-300 ${
+                        className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-200 ${
                           isFlashActive ? "text-emerald-400" : "text-purple-300"
                         }`}
                       >
-                        +{displayXp}
+                        +<RollingNumber value={displayXp} />
                       </span>
                       <img
                         src="/images/xp-shield-zoomed.png"
                         alt="XP Shield"
-                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
+                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain -ml-1"
                       />
                     </div>
                   )}
 
-                  {/* Coins Earned Item: +50 [Coin Image on Right] */}
+                  {/* Coins Earned Item: +50 [Coin Image on Right, moved closer] */}
                   {(activeEvent.coins || 0) > 0 && (
-                    <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-1.5">
                       <span
-                        className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-300 ${
+                        className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-200 ${
                           isFlashActive ? "text-emerald-400" : "text-amber-400"
                         }`}
                       >
-                        +{displayCoins}
+                        +<RollingNumber value={displayCoins} />
                       </span>
                       <img
                         src="/images/coin-zoomed.png"
                         alt="Coins"
-                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
+                        className="w-28 h-28 sm:w-36 sm:h-36 object-contain -ml-1"
                       />
                     </div>
                   )}
                 </>
               ) : (
-                /* Coins Lost Deduction Item: -250 [Coin Image on Right] (Flashes Red for a second on completion) */
-                <div className="flex items-center space-x-3">
+                /* Coins Lost Deduction Item: -250 [Coin Image on Right] (Flashes Red for 300ms on completion, then reverts) */
+                <div className="flex items-center space-x-1.5">
                   <span
-                    className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-300 ${
+                    className={`font-manrope font-black text-5xl sm:text-7xl tracking-tight transition-colors duration-200 ${
                       isFlashActive ? "text-red-500" : "text-amber-400"
                     }`}
                   >
-                    -{displayCoins}
+                    -<RollingNumber value={displayCoins} />
                   </span>
                   <img
                     src="/images/coin-zoomed.png"
                     alt="Coins"
-                    className="w-28 h-28 sm:w-36 sm:h-36 object-contain"
+                    className="w-28 h-28 sm:w-36 sm:h-36 object-contain -ml-1"
                   />
                 </div>
               )}

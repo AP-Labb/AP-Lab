@@ -54,7 +54,7 @@ export default function AssistantPage() {
   const { currentUser } = useAuth();
   const { progress } = useProgress();
 
-  const [showChatHistory, setShowChatHistory] = useState(true);
+  const [showChatHistory, setShowChatHistory] = useState(false);
   const [chatSearchQuery, setChatSearchQuery] = useState("");
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([]);
   const [activeChatId, setActiveChatId] = useState<string | null>(chatIdParam);
@@ -268,14 +268,6 @@ export default function AssistantPage() {
             <div className="p-4 space-y-3 border-b border-white/[0.08]">
               <div className="flex items-center justify-between">
                 <h2 className="font-manrope font-black text-base text-white tracking-tight">Chat History</h2>
-                <button
-                  type="button"
-                  onClick={startNewChat}
-                  className="p-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
-                  title="New Chat"
-                >
-                  <SquarePen className="w-4 h-4" />
-                </button>
               </div>
 
               {/* Search Bar */}
@@ -312,9 +304,9 @@ export default function AssistantPage() {
                       )}
                     >
                       <div className="flex items-center space-x-2.5 min-w-0">
-                        {/* SCREENSHOT 3 BLUE CHAT BUBBLE ICON */}
-                        <div className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center bg-blue-500/20 p-1">
-                          <img src="/images/chat-bubble-icon.png" alt="Chat" className="w-full h-full object-contain" />
+                        {/* CHAT BUBBLE ICON */}
+                        <div className="w-7 h-7 rounded-lg shrink-0 flex items-center justify-center bg-white/5 p-1">
+                          <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-full h-full object-contain" />
                         </div>
                         <span className="font-manrope font-bold text-xs truncate max-w-[150px]">
                           {session.title}
@@ -337,19 +329,19 @@ export default function AssistantPage() {
         )}
       </AnimatePresence>
 
-      {/* ===== MAIN CHAT WORKSPACE (FULL HEIGHT - NO TOP HEADER) ===== */}
+      {/* ===== MAIN CHAT WORKSPACE (FULL HEIGHT - NO TOP HEADER LINE) ===== */}
       <div
         ref={scrollContainerRef}
         onScroll={handleScroll}
         className="flex-1 flex flex-col h-screen overflow-y-auto relative bg-[#0b0c10] md:pl-0"
       >
-        {/* TOP ACTION BAR: Collapsable Toggle Button (Left) & New Chat Button (Right) */}
-        <div className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#0b0c10]/80 backdrop-blur-xl border-b border-white/[0.06]">
+        {/* TOP ACTION BAR: Collapsable Toggle Button & New Chat Button (No line across top!) */}
+        <div className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-[#0b0c10]/80 backdrop-blur-xl border-none">
           {/* Top Left Toggle Drawer Button (<< / >>) */}
           <button
             type="button"
             onClick={() => setShowChatHistory(!showChatHistory)}
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer shadow-md"
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white flex items-center justify-center transition-all cursor-pointer shadow-md z-50"
             title={showChatHistory ? "Collapse History" : "Expand History"}
           >
             {showChatHistory ? (
@@ -400,8 +392,32 @@ export default function AssistantPage() {
                 />
               </div>
 
-              {/* Card */}
+              {/* Card with Panda Hands on Both Sides */}
               <div className="relative z-10 w-full bg-[#14161f] border border-white/10 rounded-2xl p-4 flex flex-col justify-between min-h-[120px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
+                {/* Left Panda Hand Paw */}
+                <div className="absolute -left-3 -top-3.5 w-8 h-8 pointer-events-none select-none z-20">
+                  <div className="w-full h-full rounded-full bg-neutral-900 border-2 border-white/20 flex flex-col items-center justify-center p-0.5 shadow-md transform -rotate-12">
+                    <div className="w-2.5 h-2 bg-neutral-950 rounded-full mb-0.5" />
+                    <div className="flex space-x-0.5">
+                      <div className="w-1 h-1 bg-neutral-950 rounded-full" />
+                      <div className="w-1 h-1 bg-neutral-950 rounded-full" />
+                      <div className="w-1 h-1 bg-neutral-950 rounded-full" />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Right Panda Hand Paw */}
+                <div className="absolute -right-3 -top-3.5 w-8 h-8 pointer-events-none select-none z-20">
+                  <div className="w-full h-full rounded-full bg-neutral-900 border-2 border-white/20 flex flex-col items-center justify-center p-0.5 shadow-md transform rotate-12">
+                    <div className="w-2.5 h-2 bg-neutral-950 rounded-full mb-0.5" />
+                    <div className="flex space-x-0.5">
+                      <div className="w-1 h-1 bg-neutral-950 rounded-full" />
+                      <div className="w-1 h-1 bg-neutral-950 rounded-full" />
+                      <div className="w-1 h-1 bg-neutral-950 rounded-full" />
+                    </div>
+                  </div>
+                </div>
+
                 <textarea
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
