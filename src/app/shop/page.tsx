@@ -25,6 +25,7 @@ import { AppSidebar } from "@/components/AppSidebar";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { UserAvatar } from "@/components/UserAvatar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
+import { SlotMachine } from "@/components/SlotMachine";
 
 function hslToHex(h: number, s: number, l: number) {
   l /= 100;
@@ -536,6 +537,9 @@ export default function ShopPage() {
               })}
             </div>
           </section>
+
+          {/* Interactive AP Lab Circular Slot Machine */}
+          <SlotMachine />
         </main>
       </div>
 
