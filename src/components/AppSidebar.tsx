@@ -117,7 +117,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     initial={{ opacity: 0, width: 0 }}
                     animate={{ opacity: 1, width: "auto" }}
                     exit={{ opacity: 0, width: 0 }}
-                    className="font-manrope font-black text-lg text-white tracking-tight whitespace-nowrap truncate"
+                    className="font-manrope font-bold text-white tracking-tight text-base sm:text-lg whitespace-nowrap truncate"
                   >
                     AP Lab
                   </motion.span>

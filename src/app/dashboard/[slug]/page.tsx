@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ChevronRight, 
@@ -1593,7 +1593,15 @@ export default function APDynamicCoursePage() {
   const [expandedUnits, setExpandedUnits] = useState<number[]>([1]);
   const [expandedImage, setExpandedImage] = useState<{ src: string; isSvg?: boolean } | null>(null);
   const [isMobileSyllabusOpen, setIsMobileSyllabusOpen] = useState(false);
+  const searchParams = useSearchParams();
   const [showExam, setShowExam] = useState(false);
+
+  useEffect(() => {
+    if (searchParams?.get("openExam") === "true") {
+      setShowExam(true);
+      setActiveTab("practice");
+    }
+  }, [searchParams]);
   const [showAccountPopup, setShowAccountPopup] = useState(false);
   const [isAssistantOpen, setIsAssistantOpen] = useState(false);
   const [assistantQuery, setAssistantQuery] = useState("");

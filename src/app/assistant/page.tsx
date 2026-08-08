@@ -262,7 +262,7 @@ export default function AssistantPage() {
             animate={{ width: 280, opacity: 1 }}
             exit={{ width: 0, opacity: 0 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden md:flex flex-col h-screen bg-[#090b14] border-r border-white/10 z-20 shrink-0 ml-16 overflow-hidden"
+            className="hidden md:flex flex-col h-screen bg-[#060712] border-r border-white/10 z-20 shrink-0 ml-16 overflow-hidden"
           >
             {/* History Drawer Header */}
             <div className="p-4 space-y-3 border-b border-white/[0.08]">
@@ -304,16 +304,21 @@ export default function AssistantPage() {
                       )}
                     >
                       <div className="flex items-center space-x-3 min-w-0">
-                        {/* CHAT BUBBLE ICON - Direct Large Image without Square Container */}
-                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-10 h-10 object-contain shrink-0" />
-                        <span className="font-manrope font-bold text-xs truncate max-w-[150px]">
-                          {session.title}
-                        </span>
+                        {/* MUCH LARGER CHAT BUBBLE ICON */}
+                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0" />
+                        <div className="min-w-0 text-left">
+                          <h4 className="font-manrope font-bold text-xs text-white truncate max-w-[130px]">
+                            {session.title}
+                          </h4>
+                          <span className="text-[10px] font-mono text-white/40 block mt-0.5">
+                            {session.timestamp || "Today at 3:12 PM"}
+                          </span>
+                        </div>
                       </div>
                       <button
                         type="button"
                         onClick={(e) => deleteChat(session.id, e)}
-                        className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 transition-opacity"
+                        className="opacity-0 group-hover:opacity-100 p-1 hover:text-red-400 transition-opacity ml-1"
                         title="Delete Chat"
                       >
                         <Trash2 className="w-3.5 h-3.5" />

@@ -21,14 +21,28 @@ export default function DashboardFeedbackPage() {
   const { currentUser } = useAuth();
   const { progress } = useProgress();
 
-  // Ratings distribution summing to 1,240 with average 4.8
-  const [ratingCounts, setRatingCounts] = useState({
+  // Default ratings distribution summing to 1,240
+  const DEFAULT_RATING_COUNTS = {
     5: 1040,
     4: 160,
     3: 25,
     2: 10,
     1: 5,
-  });
+  };
+
+  const [ratingCounts, setRatingCounts] = useState<{ [key: number]: number }>(DEFAULT_RATING_COUNTS);
+
+  // Load rating counts from localStorage on mount so submissions persist through reloads
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("ap-lab-feedback-rating-counts");
+        if (saved) {
+          setRatingCounts(JSON.parse(saved));
+        }
+      } catch (e) {}
+    }
+  }, []);
 
   // Top Feedbacks featuring bot users with uploaded avatar images
   const [feedbacks] = useState<FeedbackItem[]>([
@@ -82,7 +96,7 @@ export default function DashboardFeedbackPage() {
     }
   }, [currentUser, progress]);
 
-  // Total Ratings = 1,240 and average score = 4.8
+  // Total Ratings count dynamically calculated
   const totalRatingsCount = Object.values(ratingCounts).reduce((a, b) => a + b, 0);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -124,11 +138,19 @@ export default function DashboardFeedbackPage() {
       console.error("Error submitting review form:", err);
     }
 
-    // Live update rating breakdown counts
-    setRatingCounts((prev) => ({
-      ...prev,
-      [rating]: (prev[rating as keyof typeof prev] || 0) + 1,
-    }));
+    // Live update & persist rating breakdown counts to localStorage
+    setRatingCounts((prev) => {
+      const updated = {
+        ...prev,
+        [rating]: (prev[rating] || 0) + 1,
+      };
+      if (typeof window !== "undefined") {
+        try {
+          localStorage.setItem("ap-lab-feedback-rating-counts", JSON.stringify(updated));
+        } catch (e) {}
+      }
+      return updated;
+    });
 
     setIsLoading(false);
     setIsSubmitted(true);
