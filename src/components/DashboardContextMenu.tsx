@@ -85,7 +85,9 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
 
         if (key === "s" || key === "k") {
           e.preventDefault();
-          setSearchOpen(true);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("ap-lab-open-search-modal"));
+          }
           setVisible(false);
         } else if (key === "p") {
           e.preventDefault();
@@ -105,7 +107,9 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
       else if (visible) {
         if (key === "s") {
           e.preventDefault();
-          setSearchOpen(true);
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new CustomEvent("ap-lab-open-search-modal"));
+          }
           setVisible(false);
         } else if (key === "p") {
           e.preventDefault();

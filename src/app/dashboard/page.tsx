@@ -39,46 +39,81 @@ import { UniversalTopHeader } from "@/components/UniversalTopHeader";
 import PixelBlast from "@/components/PixelBlast";
 
 
+const COURSE_DESCRIPTIONS: Record<string, string> = {
+  "ap-biology": "AP® Biology is an introductory college-level biology course exploring evolution, cellular processes, energetics, information transfer, and ecology...",
+  "ap-chemistry": "AP® Chemistry provides a college-level foundation exploring atomic structure, chemical bonding, kinetics, thermodynamics, and equilibrium...",
+  "ap-physics-c": "AP® Physics C: Mechanics is a calculus-based physics course covering kinematics, Newton's laws, rotational dynamics, work, and energy...",
+  "ap-calc-bc": "AP® Calculus BC encompasses single-variable calculus topics including limits, derivatives, integration techniques, Taylor power series, and polar calculus...",
+  "ap-stats": "AP® Statistics introduces tools for collecting, analyzing, and drawing conclusions from data using probability, sampling, and hypothesis testing...",
+  "ap-csa": "AP® Computer Science A emphasizes object-oriented programming in Java, algorithm design, data structures, and problem-solving...",
+  "ap-ush": "AP® United States History investigates cultural, economic, political, and social developments of the United States from 1491 to the present...",
+  "ap-psych": "AP® Psychology introduces the systematic and scientific study of human behavior, cognition, learning, biological bases, and mental processes...",
+  "ap-eng-lang": "AP® English Language and Composition cultivates reading and writing skills needed for rhetorical analysis and academic argumentation...",
+  "ap-environmental-science": "AP® Environmental Science examines ecological processes, human impacts, renewable resources, biodiversity, and global climate systems...",
+  "ap-world-history": "AP® World History investigates global historical patterns, cultural exchanges, trade networks, and empire expansions from 1200 CE to present...",
+  "ap-physics-1": "AP® Physics 1 is an algebra-based physics course introducing Newtonian mechanics, work, energy, rotational motion, and simple harmonic oscillations...",
+  "ap-macroeconomics": "AP® Macroeconomics explores principles of economics applying to an economic system as a whole, national income, price determination, and monetary policy...",
+  "ap-human-geography": "AP® Human Geography explores patterns and processes shaping human understanding, use, and alteration of Earth's surface...",
+  "ap-microeconomics": "AP® Microeconomics introduces economic principles applying to functions of individual decision-makers, product markets, and factor markets...",
+};
+
 const folders = [
   {
     title: "STEM & Sciences",
     icon: Microscope,
-    color: "text-medical-teal",
-    bgGlow: "bg-medical-teal",
-    accent: "#0088ff",
-    bgGradient: "from-[#0088ff] to-[#0044cc]",
+    color: "text-emerald-400",
+    bgGlow: "bg-emerald-400",
+    accent: "#10b981",
+    bgGradient: "from-[#10b981] to-[#047857]",
     classes: [
-      { name: "AP® Biology", slug: "ap-biology", icon: Dna, accent: "#0088ff" },
-      { name: "AP® Chemistry", slug: "ap-chemistry", icon: Beaker, accent: "#0088ff" },
-      { name: "AP® Physics C", slug: "ap-physics-c", icon: Atom, accent: "#0088ff" }
+      { name: "AP® Biology", slug: "ap-biology", icon: Dna, accent: "#10b981" },
+      { name: "AP® Chemistry", slug: "ap-chemistry", icon: Beaker, accent: "#06b6d4" },
+      { name: "AP® Physics C", slug: "ap-physics-c", icon: Atom, accent: "#3b82f6" }
     ]
   },
   {
     title: "Humanities & Arts",
     icon: Library,
-    color: "text-primary-purple",
-    bgGlow: "bg-primary-purple",
-    accent: "#a484d7",
-    bgGradient: "from-[#8b5cf6] to-[#5b21b6]",
+    color: "text-amber-400",
+    bgGlow: "bg-amber-400",
+    accent: "#f59e0b",
+    bgGradient: "from-[#f59e0b] to-[#b45309]",
     classes: [
-      { name: "AP® US History", slug: "ap-ush", icon: History, accent: "#a484d7" },
-      { name: "AP® Psychology", slug: "ap-psych", icon: Brain, accent: "#a484d7" },
-      { name: "AP® English Language", slug: "ap-eng-lang", icon: BookOpen, accent: "#a484d7" }
+      { name: "AP® US History", slug: "ap-ush", icon: History, accent: "#ef4444" },
+      { name: "AP® Psychology", slug: "ap-psych", icon: Brain, accent: "#a855f7" },
+      { name: "AP® English Language", slug: "ap-eng-lang", icon: BookOpen, accent: "#14b8a6" }
     ]
   },
   {
     title: "Mathematical Logic",
     icon: Calculator,
-    color: "text-emerald-400",
-    bgGlow: "bg-emerald-400",
-    accent: "#34d399",
-    bgGradient: "from-[#10b981] to-[#047857]",
+    color: "text-purple-400",
+    bgGlow: "bg-purple-400",
+    accent: "#8b5cf6",
+    bgGradient: "from-[#8b5cf6] to-[#5b21b6]",
     classes: [
-      { name: "AP® Calculus BC", slug: "ap-calc-bc", icon: Sigma, accent: "#34d399" },
-      { name: "AP® Statistics", slug: "ap-stats", icon: BarChart3, accent: "#34d399" },
-      { name: "AP® Comp Sci A", slug: "ap-csa", icon: Binary, accent: "#34d399" }
+      { name: "AP® Calculus BC", slug: "ap-calc-bc", icon: Sigma, accent: "#8b5cf6" },
+      { name: "AP® Statistics", slug: "ap-stats", icon: BarChart3, accent: "#ec4899" },
+      { name: "AP® Comp Sci A", slug: "ap-csa", icon: Binary, accent: "#f59e0b" }
     ]
   },
+  {
+    title: "Upcoming AP® Courses",
+    icon: Clock,
+    color: "text-amber-300",
+    bgGlow: "bg-amber-300",
+    accent: "#f59e0b",
+    bgGradient: "from-[#f59e0b] to-[#78350f]",
+    isUpcoming: true,
+    classes: [
+      { name: "AP® Environmental Science", slug: "ap-environmental-science", icon: Leaf, accent: "#10b981", isUpcoming: true },
+      { name: "AP® World History", slug: "ap-world-history", icon: History, accent: "#f59e0b", isUpcoming: true },
+      { name: "AP® Physics 1", slug: "ap-physics-1", icon: Atom, accent: "#3b82f6", isUpcoming: true },
+      { name: "AP® Macroeconomics", slug: "ap-macroeconomics", icon: BarChart2, accent: "#8b5cf6", isUpcoming: true },
+      { name: "AP® Human Geography", slug: "ap-human-geography", icon: History, accent: "#ec4899", isUpcoming: true },
+      { name: "AP® Microeconomics", slug: "ap-microeconomics", icon: BarChart3, accent: "#06b6d4", isUpcoming: true }
+    ]
+  }
 ];
 
 function SearchBar({ onSelect }: { onSelect: (slug: string) => void }) {
@@ -684,6 +719,53 @@ export default function Dashboard() {
                     };
 
                     const courseImgSrc = COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";
+                    const courseDesc = COURSE_DESCRIPTIONS[cls.slug] || "Master core AP concepts, practice exam-style questions, and build topic fluency...";
+
+                    if ((cls as any).isUpcoming || (folder as any).isUpcoming) {
+                      return (
+                        <div 
+                          key={cIdx} 
+                          className="relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16]/70 border border-white/10 opacity-65 cursor-not-allowed select-none pointer-events-none"
+                        >
+                          {/* Course Header Banner Image */}
+                          <div className="relative h-44 w-full overflow-hidden bg-slate-900">
+                            <img 
+                              src={courseImgSrc} 
+                              alt={cls.name}
+                              className="w-full h-full object-cover grayscale-[20%]"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/40 to-transparent" />
+                            
+                            {/* Coming Soon Badge */}
+                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 backdrop-blur-md shadow-lg">
+                              <span className="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">Coming Soon</span>
+                            </div>
+                          </div>
+
+                          {/* Card Body */}
+                          <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                            <div>
+                              <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
+                                <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
+                                <span>{folder.title}</span>
+                              </div>
+                              <h4 className="font-instrument text-2xl font-bold text-white">
+                                {cls.name}
+                              </h4>
+                              <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
+                                {courseDesc}
+                              </p>
+                            </div>
+
+                            <div className="pt-2">
+                              <span className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider">
+                                In Development
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    }
 
                     return (
                       <Link 
@@ -691,6 +773,9 @@ export default function Dashboard() {
                         href={`/dashboard/${cls.slug}/preview`} 
                         className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer border border-white/10 hover:border-white/30"
                       >
+                        {/* Shimmer Sweep Animation on Hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-10" />
+
                         {/* Course Header Banner Image */}
                         <div className="relative h-44 w-full overflow-hidden bg-slate-900">
                           <img 
@@ -702,24 +787,32 @@ export default function Dashboard() {
                           
                           {/* Enrolled Highlight Badge */}
                           {isEnrolled && (
-                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-lg">
+                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-lg z-20">
                               <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Enrolled</span>
                             </div>
                           )}
                         </div>
 
                         {/* Card Body */}
-                        <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                        <div className="p-6 flex-1 flex flex-col justify-between space-y-4 relative z-20">
                           <div>
                             <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
                               <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
                               <span>{folder.title}</span>
                             </div>
-                            <h4 className="font-instrument text-2xl font-bold text-white group-hover:text-amber-400 transition-colors">
+                            <h4 
+                              className="font-instrument text-2xl font-bold text-white transition-colors duration-300"
+                              style={{
+                                // @ts-ignore
+                                "--course-hover-color": cls.accent
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.color = cls.accent)}
+                              onMouseLeave={(e) => (e.currentTarget.style.color = 'white')}
+                            >
                               {cls.name}
                             </h4>
                             <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
-                              Master core AP concepts, practice exam-style questions, and build topic fluency.
+                              {courseDesc}
                             </p>
 
                             {/* Unit & Subunit / Topic Count Badges */}
