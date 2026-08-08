@@ -15,17 +15,14 @@ export function SlotMachine() {
         <h2 className="font-instrument text-3xl md:text-4xl font-extrabold text-white tracking-tight">
           AP Lab Slot Machine
         </h2>
-        <p className="text-xs sm:text-sm text-white/50 max-w-md mx-auto leading-relaxed">
-          Official SlotJS circular slot machine with full sound & vibration!
-        </p>
       </div>
 
-      {/* Vibrant High-Contrast SlotJS Machine Container */}
-      <div className="relative w-full max-w-xl h-[600px] sm:h-[650px] flex items-center justify-center overflow-hidden rounded-3xl bg-[#090b16] border border-purple-500/20 shadow-[0_0_60px_rgba(168,85,247,0.2)] p-2">
+      {/* Cropped Container: Shows ONLY the circular SlotJS wheel, cropping out top header & bottom buttons, inverted onto dark shop background */}
+      <div className="relative w-[360px] h-[360px] sm:w-[440px] sm:h-[440px] overflow-hidden rounded-full border-2 border-purple-500/30 bg-[#070812] shadow-[0_0_50px_rgba(168,85,247,0.25)] flex items-center justify-center">
         <iframe
           src="https://danziger.github.io/slotjs/"
-          title="SlotJS Circular Slot Machine"
-          className="w-full h-full border-none rounded-2xl bg-white"
+          title="SlotJS Circular Slot Machine Wheel"
+          className="w-[520px] h-[660px] max-w-none border-none -mt-[112px] sm:-mt-[118px] bg-transparent filter invert-[0.92] hue-rotate-180 contrast-125"
           allow="autoplay; vibration"
         />
       </div>
