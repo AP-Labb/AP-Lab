@@ -33,6 +33,19 @@ const ALL_COURSES = [
   { slug: "ap-psych", name: "AP® Psychology", category: "Humanities", icon: Brain, accent: "#a855f7", url: "/dashboard/ap-psychology" },
 ];
 
+// Custom Trophy Image Mapping for AP Courses
+const COURSE_TROPHY_IMAGES: Record<string, string> = {
+  "ap-biology": "/images/trophies/ap-biology.png",
+  "ap-psych": "/images/trophies/ap-psych.png",
+  "ap-psychology": "/images/trophies/ap-psych.png",
+  "ap-ush": "/images/trophies/ap-ush.png",
+  "ap-us-history": "/images/trophies/ap-ush.png",
+  "ap-stats": "/images/trophies/ap-stats.png",
+  "ap-statistics": "/images/trophies/ap-stats.png",
+  "ap-eng-lang": "/images/trophies/ap-eng-lang.png",
+  "ap-english": "/images/trophies/ap-eng-lang.png",
+};
+
 // Fallback AI Study Sessions with dates & times if user doesn't have local chat history yet
 const DEFAULT_AI_CHATS: ChatSessionItem[] = [
   { id: "ap-bio-ai-tutor", title: "AP Biology Gene Expression & Transcription Tutor", timestamp: "Today at 3:12 PM" },
@@ -300,7 +313,7 @@ export function UniversalTopHeader() {
                     </div>
                   )}
 
-                  {/* TAB 3: EXAMS (Directly Opens Diagnostic Exam Modal on Course Page!) */}
+                  {/* TAB 3: EXAMS (Custom Trophy Images inside Super Light Colored Plain Circle Container) */}
                   {activeTab === "exams" && (
                     <div className="space-y-3">
                       <span className="text-xs font-manrope font-bold text-white block mb-3">
@@ -310,6 +323,7 @@ export function UniversalTopHeader() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {ALL_COURSES.map((c) => {
                           const Icon = c.icon;
+                          const trophyImg = COURSE_TROPHY_IMAGES[c.slug];
                           return (
                             <div
                               key={c.slug}
@@ -317,9 +331,15 @@ export function UniversalTopHeader() {
                               className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-center justify-between group"
                             >
                               <div className="flex items-center space-x-3.5 min-w-0">
-                                <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
-                                  <Icon className="w-6 h-6 stroke-[1.75]" style={{ color: c.accent }} />
-                                </div>
+                                {trophyImg ? (
+                                  <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shrink-0 shadow-md">
+                                    <img src={trophyImg} alt={c.name} className="w-full h-full object-contain" />
+                                  </div>
+                                ) : (
+                                  <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-2.5 shrink-0 shadow-md">
+                                    <Icon className="w-6 h-6 stroke-[1.75]" style={{ color: c.accent }} />
+                                  </div>
+                                )}
                                 <div className="text-left min-w-0">
                                   <h4 className="font-manrope font-bold text-xs text-white truncate group-hover:text-[#c4f2e3] transition-colors">
                                     {c.name} Diagnostic Exam

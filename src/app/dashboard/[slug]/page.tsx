@@ -78,6 +78,18 @@ import remarkGfm from "remark-gfm";
 import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import { CourseThemeBackground } from "@/components/CourseThemeBackground";
+
+const COURSE_TROPHY_IMAGES: Record<string, string> = {
+  "ap-biology": "/images/trophies/ap-biology.png",
+  "ap-psych": "/images/trophies/ap-psych.png",
+  "ap-psychology": "/images/trophies/ap-psych.png",
+  "ap-ush": "/images/trophies/ap-ush.png",
+  "ap-us-history": "/images/trophies/ap-ush.png",
+  "ap-stats": "/images/trophies/ap-stats.png",
+  "ap-statistics": "/images/trophies/ap-stats.png",
+  "ap-eng-lang": "/images/trophies/ap-eng-lang.png",
+  "ap-english": "/images/trophies/ap-eng-lang.png",
+};
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { MockExam } from "@/components/MockExam";
 import { AIAssistantDrawer } from "@/components/AIAssistantDrawer";
@@ -2316,7 +2328,7 @@ export default function APDynamicCoursePage() {
             )})}
           </div>
                  <div className={cn("p-4 border-t transition-colors", isLightMode ? "border-slate-200 bg-white" : "border-white/5 bg-transparent")}>
-            <button 
+                <button
               onClick={() => setShowExam(true)}
               className={cn(
                 "w-full flex items-center justify-between p-3.5 rounded-xl border transition-all cursor-pointer group shadow-sm",
@@ -2326,7 +2338,15 @@ export default function APDynamicCoursePage() {
               )}
             >
               <div className="flex items-center space-x-3">
-                <Trophy className="w-5 h-5 subject-accent-text" />
+                {COURSE_TROPHY_IMAGES[course.slug] ? (
+                  <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shrink-0 shadow-md">
+                    <img src={COURSE_TROPHY_IMAGES[course.slug]} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-2 shrink-0 shadow-md">
+                    <Trophy className="w-5 h-5 subject-accent-text" />
+                  </div>
+                )}
                 <span className={cn("text-sm font-bold uppercase tracking-widest", isLightMode ? "text-slate-900 font-extrabold" : "text-white")}>Mock Exam</span>
               </div>
               <ChevronRight className={cn("w-4 h-4 transition-colors", isLightMode ? "text-slate-700 group-hover:text-slate-900" : "text-white/40 group-hover:text-white")} />
@@ -2770,7 +2790,15 @@ export default function APDynamicCoursePage() {
                   className="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white"
                 >
                   <span className="text-xs font-bold uppercase tracking-widest">Mock Exam</span>
-                  <Trophy className="w-4 h-4 subject-accent-text" />
+                  {COURSE_TROPHY_IMAGES[course.slug] ? (
+                    <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1 shrink-0 shadow-md">
+                      <img src={COURSE_TROPHY_IMAGES[course.slug]} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
+                    </div>
+                  ) : (
+                    <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shrink-0 shadow-md">
+                      <Trophy className="w-4 h-4 subject-accent-text" />
+                    </div>
+                  )}
                 </button>
               </div>
             </motion.div>
