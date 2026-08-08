@@ -258,8 +258,8 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                     <motion.div 
                       initial={{ width: 0 }}
                       animate={{ width: `${progressPercent}%` }}
-                      transition={{ duration: 1.2, ease: "easeOut" }}
-                      className="h-full bg-gradient-to-r from-purple-600 via-indigo-500 to-purple-400 bg-[length:200%_200%] animate-gradient-x rounded-full shadow-[0_0_10px_rgba(168,85,247,0.5)]" 
+                      transition={{ duration: 0.5, ease: "easeOut" }}
+                      className="h-full bg-purple-500 rounded-full shadow-[0_0_8px_rgba(168,85,247,0.4)]" 
                     />
                   </div>
                   {/* Next Level Badge Circle on Right */}

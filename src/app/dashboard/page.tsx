@@ -754,7 +754,7 @@ export default function Dashboard() {
                             <div>
                               <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
                                 <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                                <span>AP Course</span>
+                                <span>{folder.title}</span>
                               </div>
                               <h4 className="font-instrument text-2xl font-bold text-white">
                                 {cls.name}
@@ -784,8 +784,8 @@ export default function Dashboard() {
                           "--course-accent": cls.accent
                         }}
                       >
-                        {/* Faster, Smoother Angled Shimmer Sweep Animation on Hover */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.16] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600 ease-out pointer-events-none z-10 -skew-x-12" />
+                        {/* Smoother, Slower Angled Shimmer Sweep Animation on Hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.16] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none z-10 -skew-x-12" />
 
                         {/* Course Header Banner Image */}
                         <div className="relative h-44 w-full overflow-hidden bg-slate-900">
@@ -809,7 +809,7 @@ export default function Dashboard() {
                           <div>
                             <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
                               <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                              <span>AP Course</span>
+                              <span>{folder.title}</span>
                             </div>
                             <h4 
                               className="font-instrument text-2xl font-bold text-white group-hover:text-[var(--course-accent)] transition-colors duration-300"

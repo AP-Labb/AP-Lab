@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, ArrowDown } from "lucide-react";
 
+import { playXpGainTick, playXpGainEnd, playCoinSpendTick, playCoinSpendEnd } from "@/lib/soundEffects";
+
 export interface RewardEventData {
   id: string;
   type: "reward" | "deduction";
@@ -47,6 +49,7 @@ export function RewardNotificationOverlay() {
   const [displayXp, setDisplayXp] = useState(0);
   const [displayCoins, setDisplayCoins] = useState(0);
   const [isFlashActive, setIsFlashActive] = useState(false);
+  const lastSoundTickRef = React.useRef(0);
 
   useEffect(() => {
     const handleRewardEvent = (e: CustomEvent<RewardEventData>) => {
@@ -58,6 +61,10 @@ export function RewardNotificationOverlay() {
 
       const targetXp = data.xp || 0;
       const targetCoins = data.coins || 0;
+
+      // Sound trigger
+      if (data.type === "reward") playXpGainTick(0.2);
+      else playCoinSpendTick(0.2);
 
       // Ultra-smooth Live Counting Animation over 450ms
       const duration = 450;
@@ -73,11 +80,20 @@ export function RewardNotificationOverlay() {
         setDisplayXp(Math.round(eased * targetXp));
         setDisplayCoins(Math.round(eased * targetCoins));
 
+        if (currentTime - lastSoundTickRef.current > 75) {
+          lastSoundTickRef.current = currentTime;
+          if (data.type === "reward") playXpGainTick(progress);
+          else playCoinSpendTick(progress);
+        }
+
         if (progress < 1) {
           requestAnimationFrame(updateCounter);
         } else {
           // Brief 300ms flash on completion, then revert to original color
           setIsFlashActive(true);
+          if (data.type === "reward") playXpGainEnd();
+          else playCoinSpendEnd();
+
           setTimeout(() => {
             setIsFlashActive(false);
           }, 300);
@@ -106,7 +122,7 @@ export function RewardNotificationOverlay() {
   return (
     <AnimatePresence>
       {activeEvent && (
-        <div className="fixed inset-0 z-[999999999] pointer-events-none flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[5000] pointer-events-none flex items-center justify-center p-4">
           {/* Darkened Screen Overlay (JUST DARKENED, NO BLUR, NO CARD RECTANGLE) */}
           <motion.div
             initial={{ opacity: 0 }}

@@ -71,10 +71,10 @@ export const COURSE_TROPHY_CONFIG: Record<string, { image: string; circleBg: str
 
 // Fallback AI Study Sessions with dates & times if user doesn't have local chat history yet
 const DEFAULT_AI_CHATS: ChatSessionItem[] = [
-  { id: "ap-bio-ai-tutor", title: "AP Biology Gene Expression & Transcription Tutor", timestamp: "Today at 3:12 PM" },
-  { id: "ap-calc-bc-ai-coach", title: "AP Calculus BC Taylor Series & Power Series Coach", timestamp: "Yesterday at 4:45 PM" },
-  { id: "ap-physics-c-solver", title: "AP Physics C Torque & Rotational Dynamics Solver", timestamp: "Aug 6, 2:15 PM" },
-  { id: "apush-dbq-reviewer", title: "APUSH DBQ Essay Critique & Document Analysis", timestamp: "Aug 5, 11:30 AM" },
+  { id: "ap-bio-ai-tutor", title: "AP Biology Gene Expression & Transcription Tutor", timestamp: "Aug 8, 2026 at 3:12 PM" },
+  { id: "ap-calc-bc-ai-coach", title: "AP Calculus BC Taylor Series & Power Series Coach", timestamp: "Aug 7, 2026 at 4:45 PM" },
+  { id: "ap-physics-c-solver", title: "AP Physics C Torque & Rotational Dynamics Solver", timestamp: "Aug 6, 2026 at 2:15 PM" },
+  { id: "apush-dbq-reviewer", title: "APUSH DBQ Essay Critique & Document Analysis", timestamp: "Aug 5, 2026 at 11:30 AM" },
 ];
 
 export function UniversalTopHeader() {
@@ -349,13 +349,13 @@ export function UniversalTopHeader() {
                           className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-3.5 transition-all cursor-pointer flex items-center justify-between group"
                         >
                           <div className="flex items-center space-x-4 min-w-0">
-                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0" />
+                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-18 h-18 sm:w-20 sm:h-20 object-contain shrink-0" />
                             <div className="min-w-0 text-left">
                               <h4 className="font-manrope font-bold text-sm text-white truncate group-hover:text-white transition-colors">
                                 {chat.title}
                               </h4>
                               <span className="text-xs font-mono text-white/50 block mt-1">
-                                {chat.timestamp || "Today at 3:12 PM"}
+                                {chat.timestamp || "Aug 8, 2026 at 3:12 PM"}
                               </span>
                             </div>
                           </div>

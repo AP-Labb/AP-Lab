@@ -303,15 +303,15 @@ export default function AssistantPage() {
                           : "bg-white/[0.03] border-white/5 hover:bg-white/[0.08] text-white/70 hover:text-white"
                       )}
                     >
-                      <div className="flex items-center space-x-3 min-w-0">
-                        {/* MUCH LARGER CHAT BUBBLE ICON */}
-                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0" />
+                      <div className="flex items-center space-x-3.5 min-w-0">
+                        {/* ENLARGED BLUE CHAT BUBBLE ICON */}
+                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-16 h-16 sm:w-18 sm:h-18 object-contain shrink-0" />
                         <div className="min-w-0 text-left">
                           <h4 className="font-manrope font-bold text-xs text-white truncate max-w-[130px]">
                             {session.title}
                           </h4>
                           <span className="text-[10px] font-mono text-white/40 block mt-0.5">
-                            {session.timestamp || "Today at 3:12 PM"}
+                            {session.timestamp || "Aug 8, 2026 at 3:12 PM"}
                           </span>
                         </div>
                       </div>

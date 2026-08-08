@@ -1,5 +1,5 @@
 // Web Audio API Sound Synthesizers for AP Lab
-// Crisp, instant, zero-external-asset audio feedback
+// Crisp, instant, zero-external-asset audio feedback with boosted volume
 
 function getAudioContext(): AudioContext | null {
   if (typeof window === "undefined") return null;
@@ -16,7 +16,7 @@ function getAudioContext(): AudioContext | null {
   return ctx;
 }
 
-// 1. Topic Mastery Sound (Triumphant Ascending Chime)
+// 1. Topic Mastery Sound (Triumphant Ascending Chime - Louder)
 export function playMasterySound() {
   try {
     const ctx = getAudioContext();
@@ -31,7 +31,7 @@ export function playMasterySound() {
       osc.frequency.setValueAtTime(freq, now + idx * 0.08);
 
       gain.gain.setValueAtTime(0.01, now + idx * 0.08);
-      gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.08 + 0.02);
+      gain.gain.linearRampToValueAtTime(0.35, now + idx * 0.08 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.08 + 0.4);
 
       osc.connect(gain);
@@ -43,7 +43,7 @@ export function playMasterySound() {
   } catch (e) {}
 }
 
-// 2. Topic Failure Sound (Low Descending Tone)
+// 2. Topic Failure Sound (Low Descending Tone - Louder)
 export function playFailureSound() {
   try {
     const ctx = getAudioContext();
@@ -54,10 +54,10 @@ export function playFailureSound() {
     const gain = ctx.createGain();
     
     osc.type = "sawtooth";
-    osc.frequency.setValueAtTime(220, now); // A3
-    osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.35); // C3
+    osc.frequency.setValueAtTime(230, now);
+    osc.frequency.exponentialRampToValueAtTime(130.81, now + 0.35);
 
-    gain.gain.setValueAtTime(0.15, now);
+    gain.gain.setValueAtTime(0.30, now);
     gain.gain.exponentialRampToValueAtTime(0.001, now + 0.38);
 
     osc.connect(gain);
@@ -68,14 +68,14 @@ export function playFailureSound() {
   } catch (e) {}
 }
 
-// 3. Mock Exam Submission Sound (Grand Victory Fanfare)
+// 3. Mock Exam Submission Sound (Grand Victory Fanfare - Louder)
 export function playMockSubmitSound() {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const notes = [440, 554.37, 659.25, 880]; // A4, C#5, E5, A5
+    const notes = [440, 554.37, 659.25, 880];
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -83,7 +83,7 @@ export function playMockSubmitSound() {
       osc.frequency.setValueAtTime(freq, now + idx * 0.09);
 
       gain.gain.setValueAtTime(0.01, now + idx * 0.09);
-      gain.gain.linearRampToValueAtTime(0.22, now + idx * 0.09 + 0.03);
+      gain.gain.linearRampToValueAtTime(0.40, now + idx * 0.09 + 0.03);
       gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.09 + 0.6);
 
       osc.connect(gain);
@@ -95,14 +95,14 @@ export function playMockSubmitSound() {
   } catch (e) {}
 }
 
-// 4. Quest Claim Sound (Sparkle Victory Chime)
+// 4. Quest Claim Sound (Sparkle Victory Chime - Louder)
 export function playQuestClaimSound() {
   try {
     const ctx = getAudioContext();
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const notes = [587.33, 739.99, 880, 1174.66]; // D5, F#5, A5, D6
+    const notes = [587.33, 739.99, 880, 1174.66];
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -110,7 +110,7 @@ export function playQuestClaimSound() {
       osc.frequency.setValueAtTime(freq, now + idx * 0.07);
 
       gain.gain.setValueAtTime(0.01, now + idx * 0.07);
-      gain.gain.linearRampToValueAtTime(0.2, now + idx * 0.07 + 0.02);
+      gain.gain.linearRampToValueAtTime(0.38, now + idx * 0.07 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.35);
 
       osc.connect(gain);
@@ -122,7 +122,7 @@ export function playQuestClaimSound() {
   } catch (e) {}
 }
 
-// 5. XP Gain Tick & End Sound
+// 5. XP Gain Tick & End Sound (Louder)
 export function playXpGainTick(progressFactor = 0.5) {
   try {
     const ctx = getAudioContext();
@@ -132,18 +132,18 @@ export function playXpGainTick(progressFactor = 0.5) {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    const freq = 400 + progressFactor * 400; // 400Hz to 800Hz
+    const freq = 420 + progressFactor * 420;
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, now);
 
-    gain.gain.setValueAtTime(0.06, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    gain.gain.setValueAtTime(0.16, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.05);
+    osc.stop(now + 0.06);
   } catch (e) {}
 }
 
@@ -153,7 +153,7 @@ export function playXpGainEnd() {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const notes = [880, 1046.50, 1318.51]; // A5, C6, E6
+    const notes = [880, 1046.50, 1318.51];
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -161,7 +161,7 @@ export function playXpGainEnd() {
       osc.frequency.setValueAtTime(freq, now + idx * 0.06);
 
       gain.gain.setValueAtTime(0.01, now + idx * 0.06);
-      gain.gain.linearRampToValueAtTime(0.18, now + idx * 0.06 + 0.02);
+      gain.gain.linearRampToValueAtTime(0.35, now + idx * 0.06 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.3);
 
       osc.connect(gain);
@@ -173,7 +173,7 @@ export function playXpGainEnd() {
   } catch (e) {}
 }
 
-// 6. Shop Coin Spend Tick & End Sound
+// 6. Shop Coin Spend Tick & End Sound (Louder)
 export function playCoinSpendTick(progressFactor = 0.5) {
   try {
     const ctx = getAudioContext();
@@ -183,18 +183,18 @@ export function playCoinSpendTick(progressFactor = 0.5) {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
 
-    const freq = 700 - progressFactor * 300; // 700Hz down to 400Hz
+    const freq = 720 - progressFactor * 320;
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, now);
 
-    gain.gain.setValueAtTime(0.07, now);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.04);
+    gain.gain.setValueAtTime(0.16, now);
+    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
 
     osc.connect(gain);
     gain.connect(ctx.destination);
 
     osc.start(now);
-    osc.stop(now + 0.05);
+    osc.stop(now + 0.06);
   } catch (e) {}
 }
 
@@ -204,7 +204,7 @@ export function playCoinSpendEnd() {
     if (!ctx) return;
 
     const now = ctx.currentTime;
-    const notes = [659.25, 523.25, 392]; // E5, C5, G4
+    const notes = [659.25, 523.25, 392];
     notes.forEach((freq, idx) => {
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
@@ -212,7 +212,7 @@ export function playCoinSpendEnd() {
       osc.frequency.setValueAtTime(freq, now + idx * 0.06);
 
       gain.gain.setValueAtTime(0.01, now + idx * 0.06);
-      gain.gain.linearRampToValueAtTime(0.15, now + idx * 0.06 + 0.02);
+      gain.gain.linearRampToValueAtTime(0.32, now + idx * 0.06 + 0.02);
       gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.06 + 0.25);
 
       osc.connect(gain);
