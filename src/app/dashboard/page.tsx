@@ -688,13 +688,6 @@ export default function Dashboard() {
           <div className="w-full max-w-6xl space-y-12">
             {folders.map((folder, idx) => (
               <div key={idx} className="space-y-6">
-                <div className="flex items-center space-x-3 border-b border-white/10 pb-3">
-                  <folder.icon className={cn("w-5 h-5", folder.color)} />
-                  <h3 className="font-instrument text-2xl font-bold text-white tracking-tight">
-                    {folder.title}
-                  </h3>
-                </div>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {folder.classes.map((cls, cIdx) => {
                     const isEnrolled = (progress?.selectedClasses || [])?.some((c: string) => 
@@ -822,12 +815,26 @@ export default function Dashboard() {
 
                             {/* Unit & Subunit / Topic Count Badges */}
                             <div className="flex flex-wrap items-center gap-2 mt-3.5">
-                              <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/80 uppercase tracking-wider flex items-center space-x-1.5">
-                                <BookOpen className="w-3 h-3 text-white/70" />
+                              <span 
+                                className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
+                                style={{
+                                  backgroundColor: `${cls.accent}15`,
+                                  borderColor: `${cls.accent}30`,
+                                  color: cls.accent
+                                }}
+                              >
+                                <BookOpen className="w-3 h-3" style={{ color: cls.accent }} />
                                 <span>{unitsCount} UNITS</span>
                               </span>
-                              <span className="px-2.5 py-1 rounded-full bg-purple-500/10 border border-purple-500/20 text-[10px] font-mono font-bold text-purple-300 uppercase tracking-wider flex items-center space-x-1.5">
-                                <Layers className="w-3 h-3 text-purple-300" />
+                              <span 
+                                className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
+                                style={{
+                                  backgroundColor: `${cls.accent}15`,
+                                  borderColor: `${cls.accent}30`,
+                                  color: cls.accent
+                                }}
+                              >
+                                <Layers className="w-3 h-3" style={{ color: cls.accent }} />
                                 <span>{topicsCount} SUBUNITS</span>
                               </span>
                             </div>

@@ -180,14 +180,14 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 </p>
 
                 {/* Weekday Flame/Circle Row Box with Dotted Circle for Today */}
-                <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-3 sm:p-4 mb-4 w-full">
-                  <div className="flex items-center justify-between gap-1">
+                <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-3 sm:p-3.5 mb-4 w-full">
+                  <div className="grid grid-cols-7 gap-1 items-center justify-items-center w-full">
                     {daysOfWeek.map((day, idx) => {
                       const isToday = idx === currentDayIndex;
                       const isCompleted = streak >= 1 && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
 
                       return (
-                        <div key={idx} className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
+                        <div key={idx} className="flex flex-col items-center justify-center space-y-1.5 w-full min-w-0">
                           <div className={cn(
                             "w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0 rounded-full transition-all mx-auto",
                             isToday ? "border-2 border-dashed border-orange-400 bg-orange-500/10" : ""
@@ -198,7 +198,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                               <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-neutral-800/80 border border-white/5" />
                             )}
                           </div>
-                          <span className="text-[11px] font-manrope font-extrabold text-white text-center block">
+                          <span className="text-[11px] font-manrope font-extrabold text-white text-center block w-full">
                             {day}
                           </span>
                         </div>
