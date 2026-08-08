@@ -2343,12 +2343,11 @@ export default function APDynamicCoursePage() {
             >
               <div className="flex items-center space-x-3">
                 {COURSE_TROPHY_CONFIG[course.slug] ? (
-                  <div 
-                    className="w-10 h-10 rounded-full flex items-center justify-center p-1.5 shrink-0 shadow-md border-0"
-                    style={{ backgroundColor: COURSE_TROPHY_CONFIG[course.slug].circleBg }}
-                  >
-                    <img src={COURSE_TROPHY_CONFIG[course.slug].image} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
-                  </div>
+                  <img 
+                    src={COURSE_TROPHY_CONFIG[course.slug].image} 
+                    alt="Mock Exam Trophy" 
+                    className="w-12 h-12 sm:w-14 sm:h-14 object-contain shrink-0 filter drop-shadow-[0_4px_10px_rgba(0,0,0,0.5)]" 
+                  />
                 ) : (
                   <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center p-2 shrink-0 shadow-md border-0">
                     <Trophy className="w-5 h-5 subject-accent-text" />
@@ -2798,12 +2797,11 @@ export default function APDynamicCoursePage() {
                 >
                   <span className="text-xs font-bold uppercase tracking-widest">Mock Exam</span>
                   {COURSE_TROPHY_CONFIG[course.slug] ? (
-                    <div 
-                      className="w-9 h-9 rounded-full flex items-center justify-center p-1 shrink-0 shadow-md border-0"
-                      style={{ backgroundColor: COURSE_TROPHY_CONFIG[course.slug].circleBg }}
-                    >
-                      <img src={COURSE_TROPHY_CONFIG[course.slug].image} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
-                    </div>
+                    <img 
+                      src={COURSE_TROPHY_CONFIG[course.slug].image} 
+                      alt="Mock Exam Trophy" 
+                      className="w-10 h-10 sm:w-12 sm:h-12 object-contain shrink-0 filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" 
+                    />
                   ) : (
                     <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center p-1.5 shrink-0 shadow-md border-0">
                       <Trophy className="w-4 h-4 subject-accent-text" />
