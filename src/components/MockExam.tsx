@@ -128,9 +128,38 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
             exit={{ opacity: 0, scale: 0.9 }}
             className={cn("max-w-2xl w-full p-12 text-center space-y-8 rounded-[32px] border transition-colors shadow-2xl", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}
           >
-            <div className="w-20 h-20 exam-accent-bg-glow rounded-full flex items-center justify-center mx-auto border exam-accent-border">
-              <Trophy className="w-10 h-10 exam-accent-text" />
-            </div>
+            {(() => {
+              const trophyPath = Object.entries({
+                "biology": "/images/trophies/ap-biology.png",
+                "chemistry": "/images/trophies/ap-chemistry.png",
+                "physics": "/images/trophies/ap-physics-c.png",
+                "calculus": "/images/trophies/ap-calc-bc.png",
+                "computer": "/images/trophies/ap-csa.png",
+                "statistics": "/images/trophies/ap-stats.png",
+                "history": "/images/trophies/ap-ush.png",
+                "english": "/images/trophies/ap-eng-lang.png",
+                "psychology": "/images/trophies/ap-psych.png",
+              }).find(([key]) => subjectName.toLowerCase().includes(key))?.[1];
+
+              if (trophyPath) {
+                return (
+                  <div 
+                    className="w-24 h-24 rounded-full flex items-center justify-center mx-auto p-3 shadow-xl border backdrop-blur-md shrink-0"
+                    style={{
+                      backgroundColor: `${accentColor}25`,
+                      borderColor: `${accentColor}50`,
+                    }}
+                  >
+                    <img src={trophyPath} alt={subjectName} className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]" />
+                  </div>
+                );
+              }
+              return (
+                <div className="w-20 h-20 exam-accent-bg-glow rounded-full flex items-center justify-center mx-auto border exam-accent-border">
+                  <Trophy className="w-10 h-10 exam-accent-text" />
+                </div>
+              );
+            })()}
             <div className="space-y-4">
               <h2 className={cn("font-instrument text-5xl", isLightMode ? "text-slate-900 font-bold" : "text-white")}>{subjectName} Mock Exam</h2>
               <p className={isLightMode ? "text-slate-600 font-medium" : "text-white/60"}>Simulate a full Section I experience. {questions.length || 60} questions, 90 minutes. Test your mastery across all units.</p>

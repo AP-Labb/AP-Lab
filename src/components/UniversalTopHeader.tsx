@@ -36,14 +36,18 @@ const ALL_COURSES = [
 // Custom Trophy Image Mapping for AP Courses
 const COURSE_TROPHY_IMAGES: Record<string, string> = {
   "ap-biology": "/images/trophies/ap-biology.png",
-  "ap-psych": "/images/trophies/ap-psych.png",
-  "ap-psychology": "/images/trophies/ap-psych.png",
-  "ap-ush": "/images/trophies/ap-ush.png",
-  "ap-us-history": "/images/trophies/ap-ush.png",
+  "ap-chemistry": "/images/trophies/ap-chemistry.png",
+  "ap-physics-c": "/images/trophies/ap-physics-c.png",
+  "ap-calc-bc": "/images/trophies/ap-calc-bc.png",
+  "ap-csa": "/images/trophies/ap-csa.png",
   "ap-stats": "/images/trophies/ap-stats.png",
   "ap-statistics": "/images/trophies/ap-stats.png",
+  "ap-ush": "/images/trophies/ap-ush.png",
+  "ap-us-history": "/images/trophies/ap-ush.png",
   "ap-eng-lang": "/images/trophies/ap-eng-lang.png",
   "ap-english": "/images/trophies/ap-eng-lang.png",
+  "ap-psych": "/images/trophies/ap-psych.png",
+  "ap-psychology": "/images/trophies/ap-psych.png",
 };
 
 // Fallback AI Study Sessions with dates & times if user doesn't have local chat history yet
@@ -332,12 +336,24 @@ export function UniversalTopHeader() {
                             >
                               <div className="flex items-center space-x-3.5 min-w-0">
                                 {trophyImg ? (
-                                  <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shrink-0 shadow-md">
-                                    <img src={trophyImg} alt={c.name} className="w-full h-full object-contain" />
+                                  <div 
+                                    className="w-14 h-14 rounded-full flex items-center justify-center p-2 shrink-0 shadow-lg border backdrop-blur-md"
+                                    style={{
+                                      backgroundColor: `${c.accent}25`,
+                                      borderColor: `${c.accent}45`,
+                                    }}
+                                  >
+                                    <img src={trophyImg} alt={c.name} className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
                                   </div>
                                 ) : (
-                                  <div className="w-12 h-12 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-2.5 shrink-0 shadow-md">
-                                    <Icon className="w-6 h-6 stroke-[1.75]" style={{ color: c.accent }} />
+                                  <div 
+                                    className="w-14 h-14 rounded-full flex items-center justify-center p-3 shrink-0 shadow-lg border backdrop-blur-md"
+                                    style={{
+                                      backgroundColor: `${c.accent}25`,
+                                      borderColor: `${c.accent}45`,
+                                    }}
+                                  >
+                                    <Icon className="w-7 h-7 stroke-[1.75]" style={{ color: c.accent }} />
                                   </div>
                                 )}
                                 <div className="text-left min-w-0">
