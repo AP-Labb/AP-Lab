@@ -213,9 +213,7 @@ export function Navbar() {
             "pointer-events-auto transition-all duration-300 ease-out flex items-center justify-between text-white relative mt-3 sm:mt-4 w-[94%] sm:w-[96%] max-w-7xl rounded-full px-6 sm:px-8 py-2.5 overflow-visible",
             isScrolled
               ? "bg-[#060812]/85 backdrop-blur-[28px] border border-white/15 shadow-[0_10px_35px_rgba(0,0,0,0.6)]"
-              : (pathname === "/" 
-                  ? "bg-transparent border-transparent shadow-none backdrop-blur-none"
-                  : "bg-[#060812]/40 backdrop-blur-md border border-white/10 shadow-[0_4px_20px_rgba(0,0,0,0.3)]")
+              : "bg-transparent border-transparent shadow-none backdrop-blur-none"
           )}
         >
           {/* Subtle Transparent Glass Sheen */}
