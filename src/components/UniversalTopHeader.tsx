@@ -306,14 +306,19 @@ export function UniversalTopHeader() {
                         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                           {filteredPlatformPages.map((p, idx) => {
                             const Icon = p.icon;
+                            const isAiAssistant = p.name === "AI Assistant";
                             return (
                               <div
                                 key={idx}
                                 onClick={() => handleNavigate(p.url)}
                                 className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-3.5 flex items-center space-x-3 cursor-pointer transition-all hover:scale-[1.02] shadow-md group"
                               >
-                                <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0 text-white/80 group-hover:text-white">
-                                  <Icon className="w-5 h-5 stroke-[1.75]" />
+                                <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0 text-white/80 group-hover:text-white overflow-hidden p-1">
+                                  {isAiAssistant ? (
+                                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
+                                  ) : (
+                                    <Icon className="w-5 h-5 stroke-[1.75]" />
+                                  )}
                                 </div>
                                 <span className="font-manrope font-bold text-xs text-white tracking-tight truncate">
                                   {p.name}
@@ -349,7 +354,7 @@ export function UniversalTopHeader() {
                           className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-3.5 transition-all cursor-pointer flex items-center justify-between group"
                         >
                           <div className="flex items-center space-x-4 min-w-0">
-                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-18 h-18 sm:w-20 sm:h-20 object-contain shrink-0" />
+                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-20 h-20 sm:w-24 sm:h-24 object-contain shrink-0" />
                             <div className="min-w-0 text-left">
                               <h4 className="font-manrope font-bold text-sm text-white truncate group-hover:text-white transition-colors">
                                 {chat.title}

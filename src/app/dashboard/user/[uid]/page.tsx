@@ -103,6 +103,37 @@ export default function UserProfilePage() {
   useEffect(() => {
     if (!uid) return;
     setLoading(true);
+
+    if (isOwnProfile || uid === "me") {
+      setProfile({
+        uid: currentUser?.uid || progress?.uid || "me",
+        displayName: progress?.displayName || currentUser?.displayName || "Scholar",
+        photoURL: progress?.photoURL || currentUser?.photoURL || "",
+        email: currentUser?.email || progress?.email || "student@aplab.com",
+        xp: progress?.xp || 0,
+        level: progress?.level || 1,
+        credits: progress?.credits || 0,
+        graduationYear: progress?.graduationYear || "Class of 2026",
+        totalQuestionsAnswered: progress?.totalQuestionsAnswered || 0,
+        totalQuestionsCorrect: progress?.totalQuestionsCorrect || 0,
+        activeAvatarFrame: progress?.activeAvatarFrame || "",
+        activeNameColor: progress?.activeNameColor || null,
+        activeNameGradient: progress?.activeNameGradient || "from-amber-400 via-orange-400 to-amber-500",
+        bio: progress?.bio || "Passionate AP student mastering core concepts on AP Lab.",
+        location: progress?.location || "United States",
+        profileBannerColor: progress?.profileBannerColor || "#7b39fc",
+        enrolledCourses: progress?.selectedClasses || [],
+        totalStudyMinutes: Math.round(((progress?.totalQuestionsAnswered || 0) * 1.5) + ((progress?.xp || 0) / 10)),
+        streakDays: (progress as any)?.streak || 1,
+        followers: progress?.followers || ["bot-1", "bot-2"],
+        following: progress?.following || ["bot-1", "bot-2"],
+        createdAt: "Aug 2026"
+      });
+      if (progress?.profileBannerColor) setBannerColorState(progress.profileBannerColor);
+      setLoading(false);
+      return;
+    }
+
     fetch(`/api/user/${uid}`)
       .then((res) => {
         if (res.status === 404) { setNotFound(true); setLoading(false); return null; }
@@ -134,7 +165,7 @@ export default function UserProfilePage() {
         setLoading(false);
       })
       .catch(() => { setNotFound(true); setLoading(false); });
-  }, [uid]);
+  }, [uid, isOwnProfile, progress, currentUser]);
 
   // Sync banner color from localStorage & progress context
   useEffect(() => {

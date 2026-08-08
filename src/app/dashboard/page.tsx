@@ -10,7 +10,7 @@ import {
   Search, Dna, Beaker, Atom, History, Brain, BookOpen, Sigma, BarChart3, Binary,
   ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap,
   Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings, Award, BookMarked, ShoppingBag,
-  TreePine, Globe, Compass, TrendingUp, Map, Coins
+  TreePine, Globe, Compass, TrendingUp, Map, Coins, Zap
 } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
 import { LevelLeaderboard } from "@/components/LevelLeaderboard";
@@ -108,9 +108,9 @@ const folders = [
     bgGradient: "from-[#f59e0b] to-[#78350f]",
     isUpcoming: true,
     classes: [
-      { name: "AP® Environmental Science", slug: "ap-environmental-science", icon: TreePine, accent: "#10b981", isUpcoming: true },
+      { name: "AP® Environmental Science", slug: "ap-environmental-science", icon: Leaf, accent: "#10b981", isUpcoming: true },
       { name: "AP® World History", slug: "ap-world-history", icon: Globe, accent: "#f59e0b", isUpcoming: true },
-      { name: "AP® Physics 1", slug: "ap-physics-1", icon: Compass, accent: "#3b82f6", isUpcoming: true },
+      { name: "AP® Physics 1", slug: "ap-physics-1", icon: Zap, accent: "#3b82f6", isUpcoming: true },
       { name: "AP® Macroeconomics", slug: "ap-macroeconomics", icon: TrendingUp, accent: "#8b5cf6", isUpcoming: true },
       { name: "AP® Human Geography", slug: "ap-human-geography", icon: Map, accent: "#ec4899", isUpcoming: true },
       { name: "AP® Microeconomics", slug: "ap-microeconomics", icon: Coins, accent: "#06b6d4", isUpcoming: true }
@@ -634,7 +634,7 @@ export default function Dashboard() {
           <img 
             src="/images/BANNER2.png" 
             alt="AP Lab Dashboard Banner" 
-            className="w-full h-[820px] object-cover object-top -mt-16"
+            className="w-full h-[820px] object-cover object-top -mt-44"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#030408]/40 to-[#060712]" />
         </div>
@@ -716,7 +716,7 @@ export default function Dashboard() {
                       "ap-physics-1": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&q=80",
                       "ap-macroeconomics": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
                       "ap-human-geography": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800&q=80",
-                      "ap-microeconomics": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
+                      "ap-microeconomics": "https://images.unsplash.com/photo-1618042164219-62c820f10723?w=800&q=80",
                     };
 
                     const courseImgSrc = (cls as any).image || COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";

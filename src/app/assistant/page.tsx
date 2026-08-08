@@ -305,7 +305,7 @@ export default function AssistantPage() {
                     >
                       <div className="flex items-center space-x-3.5 min-w-0">
                         {/* ENLARGED BLUE CHAT BUBBLE ICON */}
-                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-16 h-16 sm:w-18 sm:h-18 object-contain shrink-0" />
+                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-20 h-20 sm:w-24 sm:h-24 object-contain shrink-0" />
                         <div className="min-w-0 text-left">
                           <h4 className="font-manrope font-bold text-xs text-white truncate max-w-[130px]">
                             {session.title}

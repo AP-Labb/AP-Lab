@@ -225,11 +225,13 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
               <div className="h-px bg-white/[0.08] mx-1 mb-1" />
 
               {/* Notifications Trigger Item */}
-              <button
+              <motion.button
                 type="button"
                 onClick={handleOpenNotifications}
+                whileHover="hover"
+                initial="rest"
                 className={cn(
-                  "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0",
+                  "flex items-center gap-3 w-full h-10 rounded-2xl transition-colors duration-150 border cursor-pointer relative shrink-0 group",
                   sidebarOpen ? "px-2.5 text-left justify-start" : "px-0 justify-center text-center mx-auto",
                   showNotificationsMenu
                     ? "bg-white/10 border-white/20 text-white shadow-lg"
@@ -237,7 +239,18 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                 )}
               >
                 <div className="w-8 h-8 shrink-0 flex items-center justify-center relative">
-                  <Bell className="w-5 h-5 text-white/80" />
+                  <motion.div
+                    variants={{
+                      rest: { rotate: 0, scale: 1 },
+                      hover: {
+                        rotate: [0, -20, 20, -15, 15, -8, 8, 0],
+                        scale: 1.18,
+                        transition: { duration: 0.55, ease: "easeInOut" }
+                      }
+                    }}
+                  >
+                    <Bell className="w-5 h-5 text-white/80 group-hover:text-white transition-colors" />
+                  </motion.div>
                   {hasUnreadNotifications && !notificationsCleared && (
                     <span className="w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-[#090a12] absolute top-0.5 right-0.5 shadow-sm" />
                   )}
@@ -256,7 +269,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                     </motion.span>
                   )}
                 </AnimatePresence>
-              </button>
+              </motion.button>
 
               {/* Profile Menu Trigger Capsule */}
               <button
