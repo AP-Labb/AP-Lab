@@ -15,7 +15,7 @@ export function SlotMachine() {
   const [isSpinning, setIsSpinning] = useState(false);
   const [stoppedRings, setStoppedRings] = useState<number[]>([]);
   const [ringAngles, setRingAngles] = useState([0, 0, 0, 0, 0]); // 5 Concentric Rings
-  const [isZoomed, setIsZoomed] = useState(false); // Zoom-in animation state
+  const [isZoomed, setIsZoomed] = useState(false); // Danziger payline zoom state
   const [winMessage, setWinMessage] = useState<string | null>(null);
   const [displayStatus, setDisplayStatus] = useState<"idle" | "win" | "fail">("idle");
 
@@ -56,7 +56,7 @@ export function SlotMachine() {
   useEffect(() => {
     if (!isSpinning) return;
 
-    const speeds = [-0.45, 0.60, -0.75, 0.90, -1.05]; // Differential ring rotation speeds
+    const speeds = [-0.45, 0.60, -0.75, 0.90, -1.05];
 
     const tick = (now: number) => {
       if (!lastTimeRef.current) lastTimeRef.current = now;
@@ -126,7 +126,7 @@ export function SlotMachine() {
         if (currentStopped.length === 5) {
           // All 5 rings stopped - Trigger Payline Zoom In Animation & Calculate Prize
           setTimeout(() => {
-            setIsZoomed(true); // ZOOM IN ON SELECTED EMOJIS!
+            setIsZoomed(true); // Danziger Payline Zoom In!
             calculatePrize();
             setIsSpinning(false);
           }, 300);
@@ -138,7 +138,6 @@ export function SlotMachine() {
   const calculatePrize = () => {
     const finalAngles = ringAnglesRef.current;
 
-    // Get exact symbol aligned at straight left payline
     const getSymbolForAngle = (angle: number) => {
       const normalized = (360 + (angle % 360)) % 360;
       const index = Math.floor((normalized / 360) * CLASSIC_EMOJIS.length) % CLASSIC_EMOJIS.length;
@@ -153,35 +152,30 @@ export function SlotMachine() {
       getSymbolForAngle(finalAngles[4])
     ];
 
-    // Count matching frequencies
     const counts: Record<string, number> = {};
     symbols.forEach((s) => { counts[s] = (counts[s] || 0) + 1; });
     const maxMatch = Math.max(...Object.values(counts));
     const matchedSymbol = Object.keys(counts).find((k) => counts[k] === maxMatch) || symbols[0];
 
     if (maxMatch >= 5) {
-      // 5-RING MEGA JACKPOT!
       playSound(winAudioRef.current);
       if (addCredits) addCredits(1000, "5-Ring Mega Jackpot");
       triggerRewardAnimation({ type: "reward", xp: 500, coins: 1000 });
       setWinMessage(`🎉 5-RING MEGA JACKPOT 5x ${matchedSymbol}! You won +1000 Coins & +500 XP!`);
       setDisplayStatus("win");
     } else if (maxMatch === 4) {
-      // 4-RING MATCH
       playSound(winAudioRef.current);
       if (addCredits) addCredits(400, "4-Ring Match");
       triggerRewardAnimation({ type: "reward", xp: 200, coins: 400 });
       setWinMessage(`🔥 4-RING MATCH 4x ${matchedSymbol}! You won +400 Coins & +200 XP!`);
       setDisplayStatus("win");
     } else if (maxMatch === 3) {
-      // 3-RING MATCH
       playSound(winAudioRef.current);
       if (addCredits) addCredits(150, "3-Ring Match");
       triggerRewardAnimation({ type: "reward", xp: 75, coins: 150 });
       setWinMessage(`⭐ TRIPLE MATCH 3x ${matchedSymbol}! You won +150 Coins & +75 XP!`);
       setDisplayStatus("win");
     } else if (maxMatch === 2) {
-      // DOUBLE MATCH
       playSound(winAudioRef.current);
       if (addCredits) addCredits(60, "Double Match");
       triggerRewardAnimation({ type: "reward", coins: 60 });
@@ -196,7 +190,7 @@ export function SlotMachine() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center pt-8 pb-14 px-4 border-t border-white/10 mt-16 font-manrope bg-transparent">
-      {/* Title Header (Badge Removed!) */}
+      {/* Title Header */}
       <div className="text-center mb-8 space-y-1.5">
         <h2 className="font-instrument text-3xl md:text-4xl font-extrabold text-white tracking-tight">
           Circular AP Slot Machine
@@ -206,54 +200,64 @@ export function SlotMachine() {
         </p>
       </div>
 
-      {/* Danziger SlotJS 5-Ring Wheel (Transparent Container, White Background on Wheel Rings ONLY) */}
+      {/* Danziger SlotJS 5-Ring Wheel Container (Clipping Overflow to Contain Zoom) */}
       <div className="slotjs-wheel-container">
         <div className={`sm__reelsContainer ${isZoomed ? "has-zoom" : ""}`}>
           {/* 5 Concentric Rings */}
-          {[0, 1, 2, 3, 4].map((ringIndex) => (
-            <div
-              key={ringIndex}
-              className="sm__reel"
-              style={{
-                // @ts-ignore
-                "--index": ringIndex,
-                transform: `rotate(${ringAngles[ringIndex]}deg)`
-              }}
-            >
-              {CLASSIC_EMOJIS.map((sym, idx) => {
-                const cellAngle = ALPHA * idx;
-                return (
-                  <div
-                    key={idx}
-                    className="sm__cell"
-                    style={{ transform: `rotate(${cellAngle}deg)` }}
-                  >
-                    <span className="sm__figure">{sym}</span>
-                  </div>
-                );
-              })}
-            </div>
-          ))}
+          {[0, 1, 2, 3, 4].map((ringIndex) => {
+            const isRingSpinning = isSpinning && !stoppedRings.includes(ringIndex);
+
+            return (
+              <div
+                key={ringIndex}
+                className="sm__reel"
+                style={{
+                  // @ts-ignore
+                  "--index": ringIndex,
+                  transform: `rotate(${ringAngles[ringIndex]}deg)`
+                }}
+              >
+                {CLASSIC_EMOJIS.map((sym, idx) => {
+                  const cellAngle = ALPHA * idx;
+                  return (
+                    <div
+                      key={idx}
+                      className="sm__cell"
+                      style={{ transform: `rotate(${cellAngle}deg)` }}
+                    >
+                      <span className={`sm__figure ${isRingSpinning ? "sm__figure--blur" : ""}`}>
+                        {sym}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            );
+          })}
 
           {/* Left Payline Highlight Display */}
           <div className={`sm__display ${displayStatus === "win" ? "is-win" : displayStatus === "fail" ? "is-fail" : ""}`} />
 
-          {/* Center Interactive Spin Button - Sleek Black Button with Real Coin Image (NO Glow) */}
+          {/* Compact Black Spin Button (NO Drop Shadow, MUCH Larger Coin Image) */}
           <button
             onClick={handleButtonClick}
             className="slotjs-center-btn"
           >
             {!isSpinning ? (
               <div className="flex flex-col items-center">
-                <span className="text-xs uppercase tracking-wider font-black text-white">SPIN</span>
-                <div className="flex items-center space-x-1 mt-0.5">
-                  <span className="text-[11px] font-mono font-bold text-white">50</span>
-                  <img src="/images/coin-zoomed.png" alt="Coin" className="w-3.5 h-3.5 sm:w-4 sm:h-4 object-contain inline-block transform scale-110" />
+                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-white">SPIN</span>
+                <div className="flex items-center space-x-1.5 mt-0.5">
+                  <span className="text-xs font-mono font-black text-white">50</span>
+                  <img 
+                    src="/images/coin-zoomed.png" 
+                    alt="Coin" 
+                    className="w-5 h-5 sm:w-6 sm:h-6 object-contain inline-block transform scale-150" 
+                  />
                 </div>
               </div>
             ) : (
               <div className="flex flex-col items-center">
-                <span className="text-xs uppercase tracking-wider font-black text-white">STOP</span>
+                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-white">STOP</span>
                 <span className="text-[10px] font-mono font-bold text-white/90 mt-0.5">{5 - stoppedRings.length} LEFT</span>
               </div>
             )}
