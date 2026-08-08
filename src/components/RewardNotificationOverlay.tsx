@@ -92,7 +92,6 @@ export function RewardNotificationOverlay() {
           // Brief 300ms flash on completion, then revert to original color
           setIsFlashActive(true);
           if (data.type === "reward") playXpGainEnd();
-          else playCoinSpendEnd();
 
           setTimeout(() => {
             setIsFlashActive(false);

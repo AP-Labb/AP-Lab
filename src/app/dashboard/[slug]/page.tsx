@@ -42,7 +42,9 @@ function getCourseIcon(slug: string) {
     case "ap-chemistry": return Beaker;
     case "ap-environmental-science":
     case "ap-environmental": return Leaf;
-    case "ap-physics-1": return Atom;
+    case "ap-physics-c":
+    case "ap-physics-1":
+    case "ap-physics": return Atom;
     case "ap-calculus-bc":
     case "ap-calc-bc": return Calculator;
     case "ap-statistics":

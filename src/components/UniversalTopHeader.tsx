@@ -351,20 +351,20 @@ export function UniversalTopHeader() {
                         <div
                           key={chat.id}
                           onClick={() => handleNavigate(`/dashboard/assistant?chatId=${chat.id}`)}
-                          className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-3.5 transition-all cursor-pointer flex items-center justify-between group"
+                          className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-2.5 sm:p-3 transition-all cursor-pointer flex items-center justify-between group"
                         >
-                          <div className="flex items-center space-x-4 min-w-0">
-                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-20 h-20 sm:w-24 sm:h-24 object-contain shrink-0" />
+                          <div className="flex items-center space-x-3 min-w-0">
+                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0" />
                             <div className="min-w-0 text-left">
-                              <h4 className="font-manrope font-bold text-sm text-white truncate group-hover:text-white transition-colors">
+                              <h4 className="font-manrope font-bold text-xs sm:text-sm text-white truncate group-hover:text-white transition-colors">
                                 {chat.title}
                               </h4>
-                              <span className="text-xs font-mono text-white/50 block mt-1">
+                              <span className="text-[11px] font-mono text-white/50 block mt-0.5">
                                 {chat.timestamp || "Aug 8, 2026 at 3:12 PM"}
                               </span>
                             </div>
                           </div>
-                          <ChevronRight className="w-5 h-5 text-white/30 group-hover:text-white transition-colors shrink-0 ml-2" />
+                          <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white transition-colors shrink-0 ml-2" />
                         </div>
                       ))}
                     </div>
