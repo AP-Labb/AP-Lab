@@ -33,6 +33,7 @@ import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { FloatingXPOperations } from "@/components/FloatingXPOperations";
 import { InstagramLikeStar } from "@/components/InstagramLikeStar";
 import FolderComponent from "@/components/Folder";
+import GlareHover from "@/components/GlareHover";
 import { AppSidebar } from "@/components/AppSidebar";
 import Grainient from "@/components/Grainient";
 import { UserDisplayName } from "@/components/UserDisplayName";
@@ -629,13 +630,13 @@ export default function Dashboard() {
       {/* ===== MAIN CONTENT ===== */}
       <div className="flex-1 flex flex-col min-h-screen overflow-x-clip md:pl-16 relative">
         {/* Full-width Banner Image Background stretching to left side navbar */}
-        <div className="absolute top-0 left-0 right-0 h-[520px] pointer-events-none z-0 overflow-hidden opacity-90">
+        <div className="absolute top-0 left-0 right-0 h-[640px] pointer-events-none z-0 overflow-hidden opacity-95">
           <img 
             src="/images/BANNER2.png" 
             alt="AP Lab Dashboard Banner" 
-            className="w-full h-[680px] object-cover object-top -mt-24"
+            className="w-full h-[820px] object-cover object-top -mt-16"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-[#030408]/50 to-[#060712]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-[#030408]/40 to-[#060712]" />
         </div>
 
         <UniversalTopHeader />
@@ -643,7 +644,7 @@ export default function Dashboard() {
         <main className="flex-1 w-full flex flex-col items-center z-10 relative">
         
         {/* UPPER REGION: Header */}
-        <div className="relative w-full flex flex-col items-center pt-12 pb-10 px-6 z-40 overflow-hidden">
+        <div className="relative w-full flex flex-col items-center pt-20 pb-16 px-6 z-40 overflow-hidden">
 
           {/* Header Section */}
           <div className="text-center mb-6 flex flex-col items-center justify-center relative z-10">
@@ -768,92 +769,104 @@ export default function Dashboard() {
                     }
 
                     return (
-                      <Link 
-                        key={cIdx} 
-                        href={`/dashboard/${cls.slug}/preview`} 
-                        className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer border border-white/10 hover:border-white/30"
-                        style={{
-                          // @ts-ignore
-                          "--course-accent": cls.accent
-                        }}
+                      <GlareHover
+                        key={cIdx}
+                        width="100%"
+                        height="100%"
+                        background="#0a0c16"
+                        borderRadius="24px"
+                        borderColor="rgba(255, 255, 255, 0.1)"
+                        glareColor="#ffffff"
+                        glareOpacity={0.3}
+                        glareAngle={-30}
+                        glareSize={300}
+                        transitionDuration={800}
+                        playOnce={false}
+                        className="group transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
                       >
-                        {/* Smoother, Slower Angled Shimmer Sweep Animation on Hover */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.16] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out pointer-events-none z-10 -skew-x-12" />
-
-                        {/* Course Header Banner Image */}
-                        <div className="relative h-44 w-full overflow-hidden bg-slate-900">
-                          <img 
-                            src={courseImgSrc} 
-                            alt={cls.name}
-                            className="w-full h-full object-cover"
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/30 to-transparent" />
-                          
-                          {/* Enrolled Highlight Badge */}
-                          {isEnrolled && (
-                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-lg z-20">
-                              <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Enrolled</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Card Body */}
-                        <div className="p-6 flex-1 flex flex-col justify-between space-y-4 relative z-20">
-                          <div>
-                            <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
-                              <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                              <span>{folder.title}</span>
-                            </div>
-                            <h4 
-                              className="font-instrument text-2xl font-bold text-white group-hover:text-[var(--course-accent)] transition-colors duration-300"
-                            >
-                              {cls.name}
-                            </h4>
-                            <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
-                              {courseDesc}
-                            </p>
-
-                            {/* Unit & Subunit / Topic Count Badges */}
-                            <div className="flex flex-wrap items-center gap-2 mt-3.5">
-                              <span 
-                                className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
-                                style={{
-                                  backgroundColor: `${cls.accent}15`,
-                                  borderColor: `${cls.accent}30`,
-                                  color: cls.accent
-                                }}
-                              >
-                                <BookOpen className="w-3 h-3" style={{ color: cls.accent }} />
-                                <span>{unitsCount} UNITS</span>
-                              </span>
-                              <span 
-                                className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
-                                style={{
-                                  backgroundColor: `${cls.accent}15`,
-                                  borderColor: `${cls.accent}30`,
-                                  color: cls.accent
-                                }}
-                              >
-                                <Layers className="w-3 h-3" style={{ color: cls.accent }} />
-                                <span>{topicsCount} SUBUNITS</span>
-                              </span>
-                            </div>
+                        <Link 
+                          href={`/dashboard/${cls.slug}/preview`} 
+                          className="flex flex-col h-full w-full overflow-hidden cursor-pointer"
+                          style={{
+                            // @ts-ignore
+                            "--course-accent": cls.accent
+                          }}
+                        >
+                          {/* Course Header Banner Image */}
+                          <div className="relative h-44 w-full overflow-hidden bg-slate-900">
+                            <img 
+                              src={courseImgSrc} 
+                              alt={cls.name}
+                              className="w-full h-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/30 to-transparent" />
+                            
+                            {/* Enrolled Highlight Badge */}
+                            {isEnrolled && (
+                              <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-lg z-20">
+                                <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Enrolled</span>
+                              </div>
+                            )}
                           </div>
 
-                          <div className="space-y-3 pt-2">
-                            <div className="flex justify-between items-center text-xs font-mono">
-                              <span className="text-white/40">Course Completion</span>
-                              <span className="font-bold text-white/80">{Math.round(progressPercent)}%</span>
+                          {/* Card Body */}
+                          <div className="p-6 flex-1 flex flex-col justify-between space-y-4 relative z-20">
+                            <div>
+                              <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
+                                <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
+                                <span>{folder.title}</span>
+                              </div>
+                              <h4 
+                                className="font-instrument text-2xl font-bold text-white group-hover:text-[var(--course-accent)] transition-colors duration-300"
+                              >
+                                {cls.name}
+                              </h4>
+                              <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
+                                {courseDesc}
+                              </p>
+
+                              {/* Unit & Subunit / Topic Count Badges */}
+                              <div className="flex flex-wrap items-center gap-2 mt-3.5">
+                                <span 
+                                  className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
+                                  style={{
+                                    backgroundColor: `${cls.accent}15`,
+                                    borderColor: `${cls.accent}30`,
+                                    color: cls.accent
+                                  }}
+                                >
+                                  <BookOpen className="w-3 h-3" style={{ color: cls.accent }} />
+                                  <span>{unitsCount} UNITS</span>
+                                </span>
+                                <span 
+                                  className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
+                                  style={{
+                                    backgroundColor: `${cls.accent}15`,
+                                    borderColor: `${cls.accent}30`,
+                                    color: cls.accent
+                                  }}
+                                >
+                                  <Layers className="w-3 h-3" style={{ color: cls.accent }} />
+                                  <span>{topicsCount} SUBUNITS</span>
+                                </span>
+                              </div>
                             </div>
-                            <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                              <div 
-                                className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-500 rounded-full" 
-                                style={{ width: `${progressPercent}%` }}
-                              />
+
+                            <div className="space-y-3 pt-2">
+                              <div className="flex justify-between items-center text-xs font-mono">
+                                <span className="text-white/40">Course Completion</span>
+                                <span className="font-bold text-white/80">{Math.round(progressPercent)}%</span>
+                              </div>
+                              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
+                                <div 
+                                  className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-500 rounded-full" 
+                                  style={{ width: `${progressPercent}%` }}
+                                />
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      </Link>
+                        </Link>
+                      </GlareHover>
                     );
                   })}
                 </div>

@@ -148,7 +148,7 @@ export function UniversalTopHeader() {
         <div className="relative flex-1 mr-4 sm:mr-6">
           <div 
             onClick={() => setIsModalOpen(true)}
-            className="relative flex items-center w-full h-12 pl-11 pr-4 rounded-full bg-[#181a26] hover:bg-[#202232] border border-white/10 text-sm font-medium text-white placeholder:text-white/40 transition-all cursor-pointer shadow-inner group"
+            className="relative flex items-center w-full h-12 pl-11 pr-4 rounded-full bg-[#0e0f18] hover:bg-[#141624] border border-white/10 text-sm font-medium text-white placeholder:text-white/40 transition-all cursor-pointer shadow-inner group"
           >
             <Search className="absolute left-4 w-5 h-5 text-white/50 group-hover:text-white transition-colors pointer-events-none" />
             <span className="text-white/40 group-hover:text-white/60 transition-colors select-none">
