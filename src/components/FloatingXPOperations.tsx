@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
+import { playQuestClaimSound } from "@/lib/soundEffects";
 
 // Local SVG Icon definitions for social brands
 const InstagramIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -193,6 +194,7 @@ export function FloatingXPOperations({
 
   // 4. Claim XP handler
   const handleClaimClick = async (task: Task) => {
+    playQuestClaimSound();
     if (claimSocialXp) {
       await claimSocialXp(task.name, task.xp);
     }
@@ -229,7 +231,7 @@ export function FloatingXPOperations({
       {/* Quest Pop-up Drawer/Modal */}
       <AnimatePresence>
         {isOpen && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+          <div className="fixed inset-0 z-[9999999] flex items-center justify-center p-4">
             {/* Backdrop blur */}
             <motion.div
               initial={{ opacity: 0 }}

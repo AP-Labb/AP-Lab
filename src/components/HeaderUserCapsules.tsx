@@ -19,10 +19,13 @@ interface HeaderUserCapsulesProps {
   onOpenProfile?: () => void;
 }
 
-function AnimatedCounter({ value, className }: { value: number; className?: string }) {
+import { playXpGainTick, playXpGainEnd, playCoinSpendTick, playCoinSpendEnd } from "@/lib/soundEffects";
+
+function AnimatedCounter({ value, type = "xp", className }: { value: number; type?: "xp" | "coin"; className?: string }) {
   const [displayValue, setDisplayValue] = useState(value);
   const [isPulsing, setIsPulsing] = useState(false);
   const prevValueRef = React.useRef(value);
+  const lastSoundTickRef = React.useRef(0);
 
   useEffect(() => {
     if (prevValueRef.current === value) return;
@@ -30,6 +33,7 @@ function AnimatedCounter({ value, className }: { value: number; className?: stri
     const startVal = prevValueRef.current;
     const endVal = value;
     prevValueRef.current = value;
+    const isGain = endVal > startVal;
 
     setIsPulsing(true);
     const duration = 800;
@@ -43,10 +47,18 @@ function AnimatedCounter({ value, className }: { value: number; className?: stri
       const current = Math.round(startVal + (endVal - startVal) * eased);
       setDisplayValue(current);
 
+      if (currentTime - lastSoundTickRef.current > 75) {
+        lastSoundTickRef.current = currentTime;
+        if (isGain) playXpGainTick(progress);
+        else playCoinSpendTick(progress);
+      }
+
       if (progress < 1) {
         requestAnimationFrame(animateNumber);
       } else {
         setIsPulsing(false);
+        if (isGain) playXpGainEnd();
+        else playCoinSpendEnd();
       }
     };
 
@@ -154,7 +166,7 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 top-full mt-2.5 w-[310px] max-w-[92vw] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[28px] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[9999] text-center text-white flex flex-col items-center justify-center"
+                className="absolute right-0 sm:right-auto sm:-left-20 top-full mt-2.5 w-[310px] max-w-[calc(100vw-2rem)] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[28px] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[99999] text-center text-white flex flex-col items-center justify-center"
               >
                 {/* Large Flame Icon + Streak Count Perfectly Centered */}
                 <div className="flex items-center justify-center space-x-3 my-1">
@@ -169,24 +181,24 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
 
                 {/* Weekday Flame/Circle Row Box with Dotted Circle for Today */}
                 <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-3 sm:p-4 mb-4 w-full">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-1">
                     {daysOfWeek.map((day, idx) => {
                       const isToday = idx === currentDayIndex;
                       const isCompleted = streak >= 1 && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
 
                       return (
-                        <div key={idx} className="flex flex-col items-center space-y-1.5">
+                        <div key={idx} className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
                           <div className={cn(
-                            "w-9 h-9 flex items-center justify-center shrink-0 rounded-full transition-all",
+                            "w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0 rounded-full transition-all mx-auto",
                             isToday ? "border-2 border-dashed border-orange-400 bg-orange-500/10" : ""
                           )}>
                             {isCompleted ? (
-                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-7 h-7" />
+                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-6 h-6 sm:w-7 sm:h-7" />
                             ) : (
-                              <div className="w-6 h-6 rounded-full bg-neutral-800/80 border border-white/5" />
+                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-neutral-800/80 border border-white/5" />
                             )}
                           </div>
-                          <span className="text-[11px] font-manrope font-extrabold text-white">
+                          <span className="text-[11px] font-manrope font-extrabold text-white text-center block">
                             {day}
                           </span>
                         </div>

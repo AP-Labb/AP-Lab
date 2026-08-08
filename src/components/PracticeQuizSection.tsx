@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, ChevronLeft, ChevronRight, HelpCircle, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { playMasterySound, playFailureSound } from "@/lib/soundEffects";
 
 interface Question {
   id: number;
@@ -65,6 +66,11 @@ export function PracticeQuizSection() {
       ...prev,
       [currentIdx]: optionIdx
     }));
+    if (optionIdx === currentQuestion.correctIndex) {
+      playMasterySound();
+    } else {
+      playFailureSound();
+    }
   };
 
   const handleNext = () => {
@@ -337,6 +343,7 @@ export function PracticeQuizSection() {
                   <motion.div
                     key={idx}
                     onClick={() => handleOptionSelect(idx)}
+                    whileHover={!isAnswered ? { scale: 1.01 } : {}}
                     whileTap={!isAnswered ? { scale: 0.99 } : {}}
                     className={cn(
                       "flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 cursor-pointer select-none group",

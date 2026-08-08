@@ -9,7 +9,8 @@ import {
   LogOut, Microscope, Library, Calculator, 
   Search, Dna, Beaker, Atom, History, Brain, BookOpen, Sigma, BarChart3, Binary,
   ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap,
-  Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings, Award, BookMarked, ShoppingBag
+  Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings, Award, BookMarked, ShoppingBag,
+  TreePine, Globe, Compass, TrendingUp, Map, Coins
 } from "lucide-react";
 import { LevelBadge } from "@/components/LevelBadge";
 import { LevelLeaderboard } from "@/components/LevelLeaderboard";
@@ -106,12 +107,12 @@ const folders = [
     bgGradient: "from-[#f59e0b] to-[#78350f]",
     isUpcoming: true,
     classes: [
-      { name: "AP® Environmental Science", slug: "ap-environmental-science", icon: Leaf, accent: "#10b981", isUpcoming: true },
-      { name: "AP® World History", slug: "ap-world-history", icon: History, accent: "#f59e0b", isUpcoming: true },
-      { name: "AP® Physics 1", slug: "ap-physics-1", icon: Atom, accent: "#3b82f6", isUpcoming: true },
-      { name: "AP® Macroeconomics", slug: "ap-macroeconomics", icon: BarChart2, accent: "#8b5cf6", isUpcoming: true },
-      { name: "AP® Human Geography", slug: "ap-human-geography", icon: History, accent: "#ec4899", isUpcoming: true },
-      { name: "AP® Microeconomics", slug: "ap-microeconomics", icon: BarChart3, accent: "#06b6d4", isUpcoming: true }
+      { name: "AP® Environmental Science", slug: "ap-environmental-science", icon: TreePine, accent: "#10b981", isUpcoming: true },
+      { name: "AP® World History", slug: "ap-world-history", icon: Globe, accent: "#f59e0b", isUpcoming: true },
+      { name: "AP® Physics 1", slug: "ap-physics-1", icon: Compass, accent: "#3b82f6", isUpcoming: true },
+      { name: "AP® Macroeconomics", slug: "ap-macroeconomics", icon: TrendingUp, accent: "#8b5cf6", isUpcoming: true },
+      { name: "AP® Human Geography", slug: "ap-human-geography", icon: Map, accent: "#ec4899", isUpcoming: true },
+      { name: "AP® Microeconomics", slug: "ap-microeconomics", icon: Coins, accent: "#06b6d4", isUpcoming: true }
     ]
   }
 ];
@@ -716,9 +717,15 @@ export default function Dashboard() {
                       "ap-ush": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
                       "ap-psych": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80",
                       "ap-eng-lang": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800&q=80",
+                      "ap-environmental-science": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80",
+                      "ap-world-history": "https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=800&q=80",
+                      "ap-physics-1": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&q=80",
+                      "ap-macroeconomics": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
+                      "ap-human-geography": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800&q=80",
+                      "ap-microeconomics": "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=800&q=80",
                     };
 
-                    const courseImgSrc = COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";
+                    const courseImgSrc = (cls as any).image || COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";
                     const courseDesc = COURSE_DESCRIPTIONS[cls.slug] || "Master core AP concepts, practice exam-style questions, and build topic fluency...";
 
                     if ((cls as any).isUpcoming || (folder as any).isUpcoming) {
@@ -747,7 +754,7 @@ export default function Dashboard() {
                             <div>
                               <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
                                 <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                                <span>{folder.title}</span>
+                                <span>AP Course</span>
                               </div>
                               <h4 className="font-instrument text-2xl font-bold text-white">
                                 {cls.name}
@@ -772,9 +779,13 @@ export default function Dashboard() {
                         key={cIdx} 
                         href={`/dashboard/${cls.slug}/preview`} 
                         className="group relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16] transition-all duration-300 shadow-2xl hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] hover:-translate-y-1 cursor-pointer border border-white/10 hover:border-white/30"
+                        style={{
+                          // @ts-ignore
+                          "--course-accent": cls.accent
+                        }}
                       >
-                        {/* Shimmer Sweep Animation on Hover */}
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.08] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none z-10" />
+                        {/* Faster, Smoother Angled Shimmer Sweep Animation on Hover */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.16] to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-600 ease-out pointer-events-none z-10 -skew-x-12" />
 
                         {/* Course Header Banner Image */}
                         <div className="relative h-44 w-full overflow-hidden bg-slate-900">
@@ -798,16 +809,10 @@ export default function Dashboard() {
                           <div>
                             <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
                               <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                              <span>{folder.title}</span>
+                              <span>AP Course</span>
                             </div>
                             <h4 
-                              className="font-instrument text-2xl font-bold text-white transition-colors duration-300"
-                              style={{
-                                // @ts-ignore
-                                "--course-hover-color": cls.accent
-                              }}
-                              onMouseEnter={(e) => (e.currentTarget.style.color = cls.accent)}
-                              onMouseLeave={(e) => (e.currentTarget.style.color = 'white')}
+                              className="font-instrument text-2xl font-bold text-white group-hover:text-[var(--course-accent)] transition-colors duration-300"
                             >
                               {cls.name}
                             </h4>

@@ -261,8 +261,13 @@ export function UniversalTopHeader() {
                   </button>
                 </div>
 
-                {/* TAB CONTENT SCROLL AREA - WORKING 100% */}
-                <div className="flex-1 overflow-y-auto max-h-[460px] custom-scrollbar pr-2 min-h-0 select-text">
+                {/* TAB CONTENT SCROLL AREA WITH STOPPED PROPAGATION FOR FLUID SCROLLING */}
+                <div 
+                  className="flex-1 overflow-y-scroll max-h-[460px] custom-scrollbar pr-3 min-h-0 select-text touch-pan-y"
+                  style={{ WebkitOverflowScrolling: "touch" }}
+                  onWheel={(e) => e.stopPropagation()}
+                  onTouchMove={(e) => e.stopPropagation()}
+                >
                   
                   {/* TAB 1: ALL OF AP LAB (AP Courses + All Platform Pages) */}
                   {activeTab === "courses" && (

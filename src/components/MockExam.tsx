@@ -7,7 +7,9 @@ import { CourseUnit, CourseQuestion } from "@/lib/courses/course-registry";
 import { cn } from "@/lib/utils";
 import confetti from "canvas-confetti";
 import { InlineMath } from "react-katex";
+import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
+import { playMockSubmitSound } from "@/lib/soundEffects";
 import { DesmosCalculatorModal } from "./DesmosCalculatorModal";
 
 interface Props {
@@ -69,6 +71,7 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
 
   const handleFinish = () => {
     setGameState("results");
+    playMockSubmitSound();
     confetti({
       particleCount: 150,
       spread: 70,
