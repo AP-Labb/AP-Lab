@@ -303,11 +303,9 @@ export default function AssistantPage() {
                           : "bg-white/[0.03] border-white/5 hover:bg-white/[0.08] text-white/70 hover:text-white"
                       )}
                     >
-                      <div className="flex items-center space-x-2.5 min-w-0">
-                        {/* CHAT BUBBLE ICON - MUCH LARGER */}
-                        <div className="w-11 h-11 rounded-xl shrink-0 flex items-center justify-center bg-white/5 p-1">
-                          <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-9 h-9 object-contain" />
-                        </div>
+                      <div className="flex items-center space-x-3 min-w-0">
+                        {/* CHAT BUBBLE ICON - Direct Large Image without Square Container */}
+                        <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-10 h-10 object-contain shrink-0" />
                         <span className="font-manrope font-bold text-xs truncate max-w-[150px]">
                           {session.title}
                         </span>
@@ -335,13 +333,16 @@ export default function AssistantPage() {
         onScroll={handleScroll}
         className="flex-1 flex flex-col h-screen overflow-y-auto relative bg-[#0b0c10] md:pl-0"
       >
-        {/* TOP ACTION BAR: Always-Visible Expand/Collapse Button & New Chat Button */}
-        <div className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-[#0b0c10]/80 backdrop-blur-xl border-none">
+        {/* TOP ACTION BAR: Always-Visible Expand/Collapse Button (Shifted right for 100% clickability) */}
+        <div className={cn(
+          "sticky top-0 z-50 flex items-center justify-between py-4 pr-6 bg-[#0b0c10]/80 backdrop-blur-xl border-none transition-[padding] duration-200",
+          showChatHistory ? "pl-6" : "pl-20 md:pl-24"
+        )}>
           {/* Top Left Toggle Drawer Button */}
           <button
             type="button"
             onClick={() => setShowChatHistory(!showChatHistory)}
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg z-50 shrink-0"
+            className="w-10 h-10 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-white flex items-center justify-center transition-all cursor-pointer shadow-lg z-50 shrink-0"
             title={showChatHistory ? "Collapse History" : "Expand History"}
           >
             {showChatHistory ? (
@@ -366,7 +367,7 @@ export default function AssistantPage() {
         {messages.length === 0 ? (
           /* ── INITIAL LANDING ── */
           <div className="flex flex-col items-center justify-center flex-1 w-full px-6 pb-12 my-auto">
-            {/* Welcome heading */}
+            {/* Welcome heading (NO Yellow Underline!) */}
             <motion.h1
               initial={{ opacity: 0, y: -12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -375,7 +376,6 @@ export default function AssistantPage() {
             >
               What do you need help with today,{" "}
               <span 
-                className="underline underline-offset-4 decoration-amber-400"
                 style={{ color: (progress?.activeNameColor && progress.activeNameColor !== "#ffffff") ? progress.activeNameColor : undefined }}
               >
                 {progress?.displayName || currentUser?.displayName?.split(" ")[0] || "Scholar"}
@@ -389,8 +389,8 @@ export default function AssistantPage() {
               transition={{ duration: 0.5, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
               className="w-full max-w-2xl flex flex-col items-center"
             >
-              {/* Peeking Panda */}
-              <div className="w-40 h-40 pointer-events-none select-none z-0 -mb-12">
+              {/* Peeking Panda (10% Larger Head) */}
+              <div className="w-44 h-44 pointer-events-none select-none z-0 -mb-14">
                 <img
                   src="/images/panda-ai.png"
                   alt="Peeking Panda"
@@ -398,29 +398,25 @@ export default function AssistantPage() {
                 />
               </div>
 
-              {/* Card with White Circle Panda Paws on Both Sides */}
+              {/* Card with Anatomical Reaching Panda Paws Holding onto Top Edge */}
               <div className="relative z-10 w-full bg-[#14161f] border border-white/10 rounded-2xl p-4 flex flex-col justify-between min-h-[120px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
-                {/* Left White Circle Panda Paw */}
-                <div className="absolute -left-4 -top-3.5 w-9 h-9 pointer-events-none select-none z-20">
-                  <div className="w-full h-full rounded-full bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg transform -rotate-12">
-                    <div className="w-3.5 h-2.5 bg-black rounded-full mb-0.5" />
-                    <div className="flex space-x-0.5">
-                      <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                      <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                      <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                    </div>
+                {/* Left Reaching Panda Paw */}
+                <div className="absolute -left-3.5 -top-3.5 w-10 h-8 rounded-[40%_60%_70%_30%] bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg transform -rotate-[35deg] pointer-events-none select-none z-20">
+                  <div className="w-3.5 h-2.5 bg-black rounded-full mb-0.5" />
+                  <div className="flex space-x-0.5">
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
                   </div>
                 </div>
 
-                {/* Right White Circle Panda Paw */}
-                <div className="absolute -right-4 -top-3.5 w-9 h-9 pointer-events-none select-none z-20">
-                  <div className="w-full h-full rounded-full bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg transform rotate-12">
-                    <div className="w-3.5 h-2.5 bg-black rounded-full mb-0.5" />
-                    <div className="flex space-x-0.5">
-                      <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                      <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                      <div className="w-1.5 h-1.5 bg-black rounded-full" />
-                    </div>
+                {/* Right Reaching Panda Paw */}
+                <div className="absolute -right-3.5 -top-3.5 w-10 h-8 rounded-[60%_40%_30%_70%] bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg transform rotate-[35deg] pointer-events-none select-none z-20">
+                  <div className="w-3.5 h-2.5 bg-black rounded-full mb-0.5" />
+                  <div className="flex space-x-0.5">
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
+                    <div className="w-1.5 h-1.5 bg-black rounded-full" />
                   </div>
                 </div>
 

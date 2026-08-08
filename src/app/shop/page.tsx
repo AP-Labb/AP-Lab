@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   ShoppingBag, Sparkles, Trophy, LogOut, Home, LayoutDashboard, BarChart2, Star, Award, 
@@ -364,12 +364,16 @@ const GEAR_ITEMS = [
 
 export default function ShopPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { currentUser } = useAuth();
   const { progress, spendCredits, addCredits, buyItem, equipItem, useBoostItem } = useProgress();
 
   useEffect(() => {
     document.title = "Shop | AP Lab";
-  }, []);
+    if (searchParams?.get("openInventory") === "true") {
+      setShowInventoryModal(true);
+    }
+  }, [searchParams]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [showHowToEarnModal, setShowHowToEarnModal] = useState(false);

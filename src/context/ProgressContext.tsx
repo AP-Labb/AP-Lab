@@ -1172,18 +1172,7 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     const activeNameColor = isColorPicker && customColorHex ? customColorHex : progress.activeNameColor;
 
     const activeBoosts = { ...(progress.activeBoosts || {}) };
-    if (isBoost) {
-      const expiryTime = Date.now() + 10 * 60 * 60 * 1000;
-      activeBoosts[itemId] = expiryTime;
-      if (itemId.includes("xp")) {
-        activeBoosts["boost-xp-2x"] = expiryTime;
-        activeBoosts["boost-2x-xp"] = expiryTime;
-      }
-      if (itemId.includes("coin")) {
-        activeBoosts["boost-coin-2x"] = expiryTime;
-        activeBoosts["boost-2x-coin"] = expiryTime;
-      }
-    }
+    // Boosts are added to inventory and MUST be explicitly activated by the user from inventory
 
     const updated: UserProgress = {
       ...progress,
