@@ -33,21 +33,21 @@ const ALL_COURSES = [
   { slug: "ap-psych", name: "AP® Psychology", category: "Humanities", icon: Brain, accent: "#a855f7", url: "/dashboard/ap-psychology" },
 ];
 
-// Custom Trophy Image Mapping for AP Courses
-const COURSE_TROPHY_IMAGES: Record<string, string> = {
-  "ap-biology": "/images/trophies/ap-biology.png",
-  "ap-chemistry": "/images/trophies/ap-chemistry.png",
-  "ap-physics-c": "/images/trophies/ap-physics-c.png",
-  "ap-calc-bc": "/images/trophies/ap-calc-bc.png",
-  "ap-csa": "/images/trophies/ap-csa.png",
-  "ap-stats": "/images/trophies/ap-stats.png",
-  "ap-statistics": "/images/trophies/ap-stats.png",
-  "ap-ush": "/images/trophies/ap-ush.png",
-  "ap-us-history": "/images/trophies/ap-ush.png",
-  "ap-eng-lang": "/images/trophies/ap-eng-lang.png",
-  "ap-english": "/images/trophies/ap-eng-lang.png",
-  "ap-psych": "/images/trophies/ap-psych.png",
-  "ap-psychology": "/images/trophies/ap-psych.png",
+// Custom Trophy Config for AP Courses (Solid light background matching trophy color, no border stroke!)
+export const COURSE_TROPHY_CONFIG: Record<string, { image: string; circleBg: string }> = {
+  "ap-biology": { image: "/images/trophies/ap-biology.png", circleBg: "#dcfce7" },
+  "ap-chemistry": { image: "/images/trophies/ap-chemistry.png", circleBg: "#cffafe" },
+  "ap-physics-c": { image: "/images/trophies/ap-physics-c.png", circleBg: "#dbeafe" },
+  "ap-calc-bc": { image: "/images/trophies/ap-calc-bc.png", circleBg: "#e0f2fe" },
+  "ap-csa": { image: "/images/trophies/ap-csa.png", circleBg: "#f3e8ff" },
+  "ap-stats": { image: "/images/trophies/ap-stats.png", circleBg: "#e0f2fe" },
+  "ap-statistics": { image: "/images/trophies/ap-stats.png", circleBg: "#e0f2fe" },
+  "ap-ush": { image: "/images/trophies/ap-ush.png", circleBg: "#fef3c7" },
+  "ap-us-history": { image: "/images/trophies/ap-ush.png", circleBg: "#fef3c7" },
+  "ap-eng-lang": { image: "/images/trophies/ap-eng-lang.png", circleBg: "#fce7f3" },
+  "ap-english": { image: "/images/trophies/ap-eng-lang.png", circleBg: "#fce7f3" },
+  "ap-psych": { image: "/images/trophies/ap-psych.png", circleBg: "#f3e8ff" },
+  "ap-psychology": { image: "/images/trophies/ap-psych.png", circleBg: "#f3e8ff" },
 };
 
 // Fallback AI Study Sessions with dates & times if user doesn't have local chat history yet
@@ -121,7 +121,7 @@ export function UniversalTopHeader() {
   return (
     <>
       <header className="sticky top-0 z-40 w-full backdrop-blur-2xl bg-[#080911]/95 px-4 sm:px-8 py-3 flex items-center justify-between font-manrope">
-        {/* Universal Search Bar Trigger (NO ⌘K badge) */}
+        {/* Universal Search Bar Trigger */}
         <div className="relative flex-1 mr-4 sm:mr-6">
           <div 
             onClick={() => setIsModalOpen(true)}
@@ -142,7 +142,7 @@ export function UniversalTopHeader() {
       <AccountProfileModal isOpen={showProfileModal} onClose={() => setShowProfileModal(false)} />
 
       {/* ========================================================= */}
-      {/* DARKER SEARCH MODAL DIALOG WITH COURSE ACCENT COLORS */}
+      {/* DARKER SEARCH MODAL DIALOG WITH SMOOTH WORKING SCROLLING */}
       {/* ========================================================= */}
       <AnimatePresence>
         {isModalOpen && (
@@ -156,13 +156,13 @@ export function UniversalTopHeader() {
               className="absolute inset-0 bg-black/85 backdrop-blur-sm"
             />
 
-            {/* Darker Modal Window */}
+            {/* Modal Window Container */}
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 10 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 10 }}
               transition={{ type: "spring", duration: 0.3 }}
-              className="relative w-full max-w-4xl bg-[#090b12] border border-white/10 rounded-[28px] overflow-hidden shadow-2xl flex flex-col md:flex-row h-[560px] z-10 text-left"
+              className="relative w-full max-w-4xl bg-[#090b12] border border-white/10 rounded-[28px] overflow-hidden shadow-2xl flex flex-col md:flex-row h-[560px] max-h-[85vh] z-10 text-left"
             >
               {/* LEFT SIDEBAR NAVIGATION */}
               <div className="w-full md:w-56 bg-[#05060b] border-b md:border-b-0 md:border-r border-white/10 p-4 flex flex-row md:flex-col space-x-2 md:space-x-0 md:space-y-2 shrink-0 overflow-x-auto">
@@ -206,10 +206,10 @@ export function UniversalTopHeader() {
                 </button>
               </div>
 
-              {/* RIGHT MAIN PANEL */}
-              <div className="flex-1 bg-[#090b12] p-5 sm:p-6 flex flex-col overflow-hidden">
+              {/* RIGHT MAIN PANEL WITH GUARANTEED WORKING FLEX SCROLLING */}
+              <div className="flex-1 bg-[#090b12] p-5 sm:p-6 flex flex-col min-h-0 overflow-hidden">
                 {/* Search Input Box & Close Button */}
-                <div className="flex items-center space-x-3 mb-6 shrink-0">
+                <div className="flex items-center space-x-3 mb-5 shrink-0">
                   <div className="relative flex-1 flex items-center bg-[#10121c] border border-white/10 focus-within:border-white/30 rounded-full px-4 py-3 text-white transition-all shadow-inner">
                     <Search className="w-4 h-4 text-white/50 mr-2.5 shrink-0" />
                     <input
@@ -238,12 +238,12 @@ export function UniversalTopHeader() {
                   </button>
                 </div>
 
-                {/* TAB CONTENT AREA */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar pr-1">
+                {/* TAB CONTENT SCROLL AREA */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 min-h-0">
                   
-                  {/* TAB 1: ALL AP COURSES (Actual course page icon colors & hover colors) */}
+                  {/* TAB 1: ALL AP COURSES */}
                   {activeTab === "courses" && (
-                    <div className="space-y-4">
+                    <div className="space-y-4 pb-4">
                       <span className="text-xs font-manrope font-bold text-white block">
                         Browse by AP Course
                       </span>
@@ -257,16 +257,11 @@ export function UniversalTopHeader() {
                               onClick={() => handleNavigate(c.url)}
                               className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center text-center space-y-2.5 cursor-pointer transition-all hover:scale-[1.02] shadow-md group"
                             >
-                              {/* Actual Course Page Icon Color */}
                               <div className="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center shrink-0">
                                 <Icon className="w-6 h-6 transition-all stroke-[1.75]" style={{ color: c.accent }} />
                               </div>
                               <span 
                                 className="font-manrope font-bold text-xs text-white tracking-tight transition-colors group-hover:opacity-100"
-                                style={{
-                                  // @ts-ignore
-                                  "--hover-color": c.accent
-                                }}
                               >
                                 {c.name}
                               </span>
@@ -277,9 +272,9 @@ export function UniversalTopHeader() {
                     </div>
                   )}
 
-                  {/* TAB 2: MY CHATS (MUCH LARGER CHAT BUBBLE ICON + DATE & TIME) */}
+                  {/* TAB 2: MY CHATS */}
                   {activeTab === "chats" && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 pb-4">
                       <div className="flex items-center justify-between mb-2">
                         <span className="text-xs font-manrope font-bold text-white block">
                           My AI Conversations
@@ -300,7 +295,6 @@ export function UniversalTopHeader() {
                           className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-3.5 transition-all cursor-pointer flex items-center justify-between group"
                         >
                           <div className="flex items-center space-x-4 min-w-0">
-                            {/* MUCH LARGER DUAL BLUE CHAT BUBBLE ICON */}
                             <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0" />
                             <div className="min-w-0 text-left">
                               <h4 className="font-manrope font-bold text-sm text-white truncate group-hover:text-[#c4f2e3] transition-colors">
@@ -317,9 +311,9 @@ export function UniversalTopHeader() {
                     </div>
                   )}
 
-                  {/* TAB 3: EXAMS (Custom Trophy Images inside Super Light Colored Plain Circle Container) */}
+                  {/* TAB 3: EXAMS (Solid light color matching trophy, no outline border, larger circle & trophy!) */}
                   {activeTab === "exams" && (
-                    <div className="space-y-3">
+                    <div className="space-y-3 pb-4">
                       <span className="text-xs font-manrope font-bold text-white block mb-3">
                         Browse by AP Diagnostic Exams
                       </span>
@@ -327,7 +321,7 @@ export function UniversalTopHeader() {
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {ALL_COURSES.map((c) => {
                           const Icon = c.icon;
-                          const trophyImg = COURSE_TROPHY_IMAGES[c.slug];
+                          const trophyConfig = COURSE_TROPHY_CONFIG[c.slug];
                           return (
                             <div
                               key={c.slug}
@@ -335,22 +329,20 @@ export function UniversalTopHeader() {
                               className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-4 transition-all cursor-pointer flex items-center justify-between group"
                             >
                               <div className="flex items-center space-x-3.5 min-w-0">
-                                {trophyImg ? (
+                                {trophyConfig ? (
                                   <div 
-                                    className="w-14 h-14 rounded-full flex items-center justify-center p-2 shrink-0 shadow-lg border backdrop-blur-md"
+                                    className="w-14 h-14 rounded-full flex items-center justify-center p-2.5 shrink-0 shadow-md border-0"
                                     style={{
-                                      backgroundColor: `${c.accent}25`,
-                                      borderColor: `${c.accent}45`,
+                                      backgroundColor: trophyConfig.circleBg,
                                     }}
                                   >
-                                    <img src={trophyImg} alt={c.name} className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]" />
+                                    <img src={trophyConfig.image} alt={c.name} className="w-full h-full object-contain" />
                                   </div>
                                 ) : (
                                   <div 
-                                    className="w-14 h-14 rounded-full flex items-center justify-center p-3 shrink-0 shadow-lg border backdrop-blur-md"
+                                    className="w-14 h-14 rounded-full flex items-center justify-center p-3 shrink-0 shadow-md border-0"
                                     style={{
                                       backgroundColor: `${c.accent}25`,
-                                      borderColor: `${c.accent}45`,
                                     }}
                                   >
                                     <Icon className="w-7 h-7 stroke-[1.75]" style={{ color: c.accent }} />

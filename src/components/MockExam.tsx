@@ -129,34 +129,33 @@ export function MockExam({ units, subjectName, accentColor, onClose }: Props) {
             className={cn("max-w-2xl w-full p-12 text-center space-y-8 rounded-[32px] border transition-colors shadow-2xl", isLightMode ? "bg-white border-slate-300 text-slate-900" : "liquid-glass-strong border-white/10 text-white")}
           >
             {(() => {
-              const trophyPath = Object.entries({
-                "biology": "/images/trophies/ap-biology.png",
-                "chemistry": "/images/trophies/ap-chemistry.png",
-                "physics": "/images/trophies/ap-physics-c.png",
-                "calculus": "/images/trophies/ap-calc-bc.png",
-                "computer": "/images/trophies/ap-csa.png",
-                "statistics": "/images/trophies/ap-stats.png",
-                "history": "/images/trophies/ap-ush.png",
-                "english": "/images/trophies/ap-eng-lang.png",
-                "psychology": "/images/trophies/ap-psych.png",
+              const trophyConfig = Object.entries({
+                "biology": { image: "/images/trophies/ap-biology.png", circleBg: "#dcfce7" },
+                "chemistry": { image: "/images/trophies/ap-chemistry.png", circleBg: "#cffafe" },
+                "physics": { image: "/images/trophies/ap-physics-c.png", circleBg: "#dbeafe" },
+                "calculus": { image: "/images/trophies/ap-calc-bc.png", circleBg: "#e0f2fe" },
+                "computer": { image: "/images/trophies/ap-csa.png", circleBg: "#f3e8ff" },
+                "statistics": { image: "/images/trophies/ap-stats.png", circleBg: "#e0f2fe" },
+                "history": { image: "/images/trophies/ap-ush.png", circleBg: "#fef3c7" },
+                "english": { image: "/images/trophies/ap-eng-lang.png", circleBg: "#fce7f3" },
+                "psychology": { image: "/images/trophies/ap-psych.png", circleBg: "#f3e8ff" },
               }).find(([key]) => subjectName.toLowerCase().includes(key))?.[1];
 
-              if (trophyPath) {
+              if (trophyConfig) {
                 return (
                   <div 
-                    className="w-24 h-24 rounded-full flex items-center justify-center mx-auto p-3 shadow-xl border backdrop-blur-md shrink-0"
+                    className="w-28 h-28 sm:w-32 sm:h-32 rounded-full flex items-center justify-center mx-auto p-4 sm:p-5 shadow-2xl border-0 shrink-0"
                     style={{
-                      backgroundColor: `${accentColor}25`,
-                      borderColor: `${accentColor}50`,
+                      backgroundColor: trophyConfig.circleBg,
                     }}
                   >
-                    <img src={trophyPath} alt={subjectName} className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]" />
+                    <img src={trophyConfig.image} alt={subjectName} className="w-full h-full object-contain" />
                   </div>
                 );
               }
               return (
-                <div className="w-20 h-20 exam-accent-bg-glow rounded-full flex items-center justify-center mx-auto border exam-accent-border">
-                  <Trophy className="w-10 h-10 exam-accent-text" />
+                <div className="w-24 h-24 exam-accent-bg-glow rounded-full flex items-center justify-center mx-auto border exam-accent-border">
+                  <Trophy className="w-12 h-12 exam-accent-text" />
                 </div>
               );
             })()}

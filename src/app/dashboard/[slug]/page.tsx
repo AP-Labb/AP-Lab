@@ -79,16 +79,20 @@ import rehypeKatex from "rehype-katex";
 import rehypeRaw from "rehype-raw";
 import { CourseThemeBackground } from "@/components/CourseThemeBackground";
 
-const COURSE_TROPHY_IMAGES: Record<string, string> = {
-  "ap-biology": "/images/trophies/ap-biology.png",
-  "ap-psych": "/images/trophies/ap-psych.png",
-  "ap-psychology": "/images/trophies/ap-psych.png",
-  "ap-ush": "/images/trophies/ap-ush.png",
-  "ap-us-history": "/images/trophies/ap-ush.png",
-  "ap-stats": "/images/trophies/ap-stats.png",
-  "ap-statistics": "/images/trophies/ap-stats.png",
-  "ap-eng-lang": "/images/trophies/ap-eng-lang.png",
-  "ap-english": "/images/trophies/ap-eng-lang.png",
+const COURSE_TROPHY_CONFIG: Record<string, { image: string; circleBg: string }> = {
+  "ap-biology": { image: "/images/trophies/ap-biology.png", circleBg: "#dcfce7" },
+  "ap-chemistry": { image: "/images/trophies/ap-chemistry.png", circleBg: "#cffafe" },
+  "ap-physics-c": { image: "/images/trophies/ap-physics-c.png", circleBg: "#dbeafe" },
+  "ap-calc-bc": { image: "/images/trophies/ap-calc-bc.png", circleBg: "#e0f2fe" },
+  "ap-csa": { image: "/images/trophies/ap-csa.png", circleBg: "#f3e8ff" },
+  "ap-stats": { image: "/images/trophies/ap-stats.png", circleBg: "#e0f2fe" },
+  "ap-statistics": { image: "/images/trophies/ap-stats.png", circleBg: "#e0f2fe" },
+  "ap-ush": { image: "/images/trophies/ap-ush.png", circleBg: "#fef3c7" },
+  "ap-us-history": { image: "/images/trophies/ap-ush.png", circleBg: "#fef3c7" },
+  "ap-eng-lang": { image: "/images/trophies/ap-eng-lang.png", circleBg: "#fce7f3" },
+  "ap-english": { image: "/images/trophies/ap-eng-lang.png", circleBg: "#fce7f3" },
+  "ap-psych": { image: "/images/trophies/ap-psych.png", circleBg: "#f3e8ff" },
+  "ap-psychology": { image: "/images/trophies/ap-psych.png", circleBg: "#f3e8ff" },
 };
 import { AccountNavbarWidget } from "@/components/AccountNavbarWidget";
 import { MockExam } from "@/components/MockExam";
@@ -2338,12 +2342,15 @@ export default function APDynamicCoursePage() {
               )}
             >
               <div className="flex items-center space-x-3">
-                {COURSE_TROPHY_IMAGES[course.slug] ? (
-                  <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shrink-0 shadow-md">
-                    <img src={COURSE_TROPHY_IMAGES[course.slug]} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
+                {COURSE_TROPHY_CONFIG[course.slug] ? (
+                  <div 
+                    className="w-10 h-10 rounded-full flex items-center justify-center p-1.5 shrink-0 shadow-md border-0"
+                    style={{ backgroundColor: COURSE_TROPHY_CONFIG[course.slug].circleBg }}
+                  >
+                    <img src={COURSE_TROPHY_CONFIG[course.slug].image} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
                   </div>
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-2 shrink-0 shadow-md">
+                  <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center p-2 shrink-0 shadow-md border-0">
                     <Trophy className="w-5 h-5 subject-accent-text" />
                   </div>
                 )}
@@ -2790,12 +2797,15 @@ export default function APDynamicCoursePage() {
                   className="w-full flex items-center justify-between p-3.5 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-white"
                 >
                   <span className="text-xs font-bold uppercase tracking-widest">Mock Exam</span>
-                  {COURSE_TROPHY_IMAGES[course.slug] ? (
-                    <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1 shrink-0 shadow-md">
-                      <img src={COURSE_TROPHY_IMAGES[course.slug]} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
+                  {COURSE_TROPHY_CONFIG[course.slug] ? (
+                    <div 
+                      className="w-9 h-9 rounded-full flex items-center justify-center p-1 shrink-0 shadow-md border-0"
+                      style={{ backgroundColor: COURSE_TROPHY_CONFIG[course.slug].circleBg }}
+                    >
+                      <img src={COURSE_TROPHY_CONFIG[course.slug].image} alt="Mock Exam Trophy" className="w-full h-full object-contain" />
                     </div>
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-white/10 border border-white/20 flex items-center justify-center p-1.5 shrink-0 shadow-md">
+                    <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center p-1.5 shrink-0 shadow-md border-0">
                       <Trophy className="w-4 h-4 subject-accent-text" />
                     </div>
                   )}
