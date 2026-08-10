@@ -695,7 +695,7 @@ export default function Dashboard() {
                       c.toLowerCase().includes(cls.name.toLowerCase()) || 
                       cls.name.toLowerCase().includes(c.toLowerCase()) || 
                       c.toLowerCase().includes(cls.slug.toLowerCase())
-                    ) || (typeof window !== "undefined" && (JSON.parse(localStorage.getItem("ap_accessed_courses") || "[]") as string[]).includes(cls.slug));
+                    );
                     const progressPercent = classProgressMap[cls.slug] || 0;
                     const courseData = courseRegistry[cls.slug];
                     const unitsCount = courseData?.units?.length || 8;
@@ -716,7 +716,7 @@ export default function Dashboard() {
                       "ap-physics-1": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&q=80",
                       "ap-macroeconomics": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
                       "ap-human-geography": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800&q=80",
-                      "ap-microeconomics": "https://images.unsplash.com/photo-1618042164219-62c820f10723?w=800&q=80",
+                      "ap-microeconomics": "https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&q=80",
                     };
 
                     const courseImgSrc = (cls as any).image || COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";

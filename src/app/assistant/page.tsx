@@ -398,7 +398,10 @@ export default function AssistantPage() {
                 <img
                   src="/images/panda-ai.png"
                   alt="Peeking Panda"
-                  className="w-full h-full object-contain drop-shadow-[0_8px_20px_rgba(0,0,0,0.7)]"
+                  className="w-full h-full object-contain"
+                  style={{
+                    filter: "drop-shadow(1px 0 0 rgba(255,255,255,0.75)) drop-shadow(-1px 0 0 rgba(255,255,255,0.75)) drop-shadow(0 1px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1px 0 rgba(255,255,255,0.75)) drop-shadow(0 8px 20px rgba(0,0,0,0.8))"
+                  }}
                 />
               </div>
 

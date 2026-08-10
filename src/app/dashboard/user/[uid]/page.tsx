@@ -436,16 +436,32 @@ export default function UserProfilePage() {
                   <span>{xp.toLocaleString()} XP</span>
                 </motion.div>
 
-                {/* 2. Streak Capsule (Middle Left - Tilted +6deg) */}
-                <motion.div
-                  initial={{ x: -10, opacity: 0, rotate: 6 }}
-                  animate={{ x: 0, opacity: 1, rotate: 6 }}
-                  transition={{ delay: 0.2 }}
-                  className="hidden md:flex absolute top-48 left-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full bg-[#fef3c7] border border-amber-300 text-[#78350f] font-manrope font-black text-base shadow-md cursor-default z-20"
-                >
-                  <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-11 h-11" />
-                  <span>{user.streakDays || 0} day Streak</span>
-                </motion.div>
+                {/* 2. Highest Streak Capsule (Middle Left - Tilted +6deg) */}
+                {(() => {
+                  const highestStreak = (progress as any)?.maxStreak || user.streakDays || 0;
+                  const pillStyle = highestStreak <= 0 
+                    ? { bg: "bg-[#181a26]", border: "border-white/20", text: "text-white/80" }
+                    : highestStreak < 7 
+                      ? { bg: "bg-[#fef3c7]", border: "border-amber-300", text: "text-[#78350f]" }
+                      : highestStreak < 30 
+                        ? { bg: "bg-[#fce7f3]", border: "border-pink-300", text: "text-[#831843]" }
+                        : { bg: "bg-[#e0f2fe]", border: "border-sky-300", text: "text-[#075985]" };
+
+                  return (
+                    <motion.div
+                      initial={{ x: -10, opacity: 0, rotate: 6 }}
+                      animate={{ x: 0, opacity: 1, rotate: 6 }}
+                      transition={{ delay: 0.2 }}
+                      className={cn(
+                        "hidden md:flex absolute top-48 left-20 items-center gap-3.5 h-14 px-7 py-3 rounded-full border font-manrope font-black text-base shadow-md cursor-default z-20 transition-colors",
+                        pillStyle.bg, pillStyle.border, pillStyle.text
+                      )}
+                    >
+                      <StreakFlameIcon streakCount={highestStreak} sizeClassName="w-11 h-11" />
+                      <span>{highestStreak} Highest Streak</span>
+                    </motion.div>
+                  );
+                })()}
 
                 {/* 3. Coins Capsule (Bottom Left - Tilted -5deg) */}
                 <motion.div
@@ -605,10 +621,23 @@ export default function UserProfilePage() {
                     <img src="/images/xp-shield-zoomed.png" alt="XP" className="w-6 h-6 object-contain" />
                     <span>{xp.toLocaleString()} XP</span>
                   </div>
-                  <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#fef3c7] border border-amber-300 text-xs font-extrabold text-[#78350f]">
-                    <StreakFlameIcon streakCount={user.streakDays || 0} sizeClassName="w-6 h-6" />
-                    <span>{user.streakDays || 0}d Streak</span>
-                  </div>
+                  {(() => {
+                    const highestStreak = (progress as any)?.maxStreak || user.streakDays || 0;
+                    const pillStyle = highestStreak <= 0 
+                      ? { bg: "bg-[#181a26]", border: "border-white/20", text: "text-white/80" }
+                      : highestStreak < 7 
+                        ? { bg: "bg-[#fef3c7]", border: "border-amber-300", text: "text-[#78350f]" }
+                        : highestStreak < 30 
+                          ? { bg: "bg-[#fce7f3]", border: "border-pink-300", text: "text-[#831843]" }
+                          : { bg: "bg-[#e0f2fe]", border: "border-sky-300", text: "text-[#075985]" };
+
+                    return (
+                      <div className={cn("flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-extrabold border transition-colors", pillStyle.bg, pillStyle.border, pillStyle.text)}>
+                        <StreakFlameIcon streakCount={highestStreak} sizeClassName="w-6 h-6" />
+                        <span>{highestStreak} Highest Streak</span>
+                      </div>
+                    );
+                  })()}
                   <div className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[#fef08a] border border-yellow-300 text-xs font-extrabold text-[#713f12]">
                     <img src="/images/coin-zoomed.png" alt="Coins" className="w-6 h-6 object-contain" />
                     <span>{(user.credits || 0).toLocaleString()} Coins</span>

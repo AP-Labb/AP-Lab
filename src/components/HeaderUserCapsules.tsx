@@ -148,12 +148,12 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
               "h-12 flex items-center space-x-2.5 px-4 rounded-full transition-all cursor-pointer border shadow-md",
               streak >= 1 
                 ? "bg-[#2b170e] hover:bg-[#381e11] border-orange-500/40 text-orange-400" 
-                : "bg-[#14151f] hover:bg-[#1a1c2a] border-white/10 text-white/60"
+                : "bg-[#14151f] hover:bg-[#1a1c2a] border-white/20 text-white/60"
             )}
             title={`${streak} Day Study Streak`}
           >
             <StreakFlameIcon streakCount={streak} sizeClassName="w-9 h-9" />
-            <span className="font-manrope font-extrabold text-lg leading-none text-orange-400">
+            <span className={cn("font-manrope font-extrabold text-lg leading-none", streak >= 1 ? "text-orange-400" : "text-white/60")}>
               {streak}
             </span>
           </div>
@@ -166,17 +166,24 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.96 }}
                 transition={{ duration: 0.18, ease: "easeOut" }}
-                className="absolute right-0 sm:right-auto sm:-left-20 top-full mt-2.5 w-[310px] max-w-[calc(100vw-2rem)] bg-[#1a1b22] border-2 border-[#f97316]/70 rounded-[28px] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[99999] text-center text-white flex flex-col items-center justify-center"
+                className={cn(
+                  "absolute right-0 sm:right-auto sm:-left-20 top-full mt-2.5 w-[310px] max-w-[calc(100vw-2rem)] bg-[#1a1b22] border-2 rounded-[28px] p-4 sm:p-5 shadow-[0_20px_50px_rgba(0,0,0,0.85)] z-[99999] text-center text-white flex flex-col items-center justify-center",
+                  streak >= 1 ? "border-[#f97316]/70" : "border-white/20"
+                )}
               >
                 {/* Large Flame Icon + Streak Count Perfectly Centered */}
                 <div className="flex items-center justify-center space-x-3 my-1">
                   <StreakFlameIcon streakCount={streak} sizeClassName="w-20 h-20 shrink-0" />
-                  <span className="font-manrope font-black text-5xl text-[#f97316]">{streak}</span>
+                  <span className={cn("font-manrope font-black text-5xl", streak >= 1 ? "text-[#f97316]" : "text-white/80")}>
+                    {streak}
+                  </span>
                 </div>
 
                 {/* Encouragement Subtitle */}
                 <p className="text-xs font-manrope font-semibold text-white/90 leading-relaxed my-3 px-1 text-center">
-                  Great job! Come back tomorrow to continue your streak!
+                  {streak >= 1 
+                    ? "Great job! Come back tomorrow to continue your streak!" 
+                    : "Complete a topic today to start your streak!"}
                 </p>
 
                 {/* Weekday Flame/Circle Row Box with Dotted Circle for Today */}
@@ -190,7 +197,9 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                         <div key={idx} className="flex flex-col items-center justify-center space-y-1.5 w-full min-w-0">
                           <div className={cn(
                             "w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0 rounded-full transition-all mx-auto",
-                            isToday ? "border-2 border-dashed border-orange-400 bg-orange-500/10" : ""
+                            isToday 
+                              ? (streak >= 1 ? "border-2 border-dashed border-orange-400 bg-orange-500/10" : "border-2 border-dashed border-white/40 bg-white/5") 
+                              : ""
                           )}>
                             {isCompleted ? (
                               <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-6 h-6 sm:w-7 sm:h-7" />
