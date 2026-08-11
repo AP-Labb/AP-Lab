@@ -193,14 +193,14 @@ export function SlotMachine() {
       {/* Title Header */}
       <div className="text-center mb-8 space-y-1.5">
         <h2 className="font-instrument text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-          Circular AP Slot Machine
+          Casino AP Roulette Wheel
         </h2>
         <p className="text-xs sm:text-sm text-white/50 max-w-md mx-auto leading-relaxed font-manrope">
-          Spin 5 concentric rings for 50 coins & win up to +1000 Coins & +500 XP!
+          Spin 5 European Roulette pocket rings for 50 coins & win up to +1000 Coins & +500 XP!
         </p>
       </div>
 
-      {/* Danziger SlotJS 5-Ring Wheel Container (Clipping Overflow to Contain Zoom) */}
+      {/* Casino Roulette Wheel Container */}
       <div className="slotjs-wheel-container">
         <div className={`sm__reelsContainer ${isZoomed ? "has-zoom" : ""}`}>
           {/* 5 Concentric Rings */}
@@ -219,10 +219,13 @@ export function SlotMachine() {
               >
                 {CLASSIC_EMOJIS.map((sym, idx) => {
                   const cellAngle = ALPHA * idx;
+                  const isGold = sym === "🎰" || sym === "🌟" || sym === "💎";
+                  const pocketClass = isGold ? "sm__cell--gold" : (idx % 2 === 0 ? "sm__cell--red" : "sm__cell--black");
+
                   return (
                     <div
                       key={idx}
-                      className="sm__cell"
+                      className={`sm__cell ${pocketClass}`}
                       style={{ transform: `rotate(${cellAngle}deg)` }}
                     >
                       <span className={`sm__figure ${isRingSpinning ? "sm__figure--blur" : ""}`}>
@@ -238,26 +241,26 @@ export function SlotMachine() {
           {/* Left Payline Highlight Display */}
           <div className={`sm__display ${displayStatus === "win" ? "is-win" : displayStatus === "fail" ? "is-fail" : ""}`} />
 
-          {/* Compact Black Spin Button (NO Drop Shadow, MUCH Larger Coin Image) */}
+          {/* Center Interactive Spin Button - Polished Roulette Brass Hub */}
           <button
             onClick={handleButtonClick}
             className="slotjs-center-btn"
           >
             {!isSpinning ? (
               <div className="flex flex-col items-center">
-                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-white">SPIN</span>
-                <div className="flex items-center space-x-1.5 mt-0.5">
+                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-amber-400">SPIN</span>
+                <div className="flex items-center space-x-1 mt-0.5">
                   <span className="text-xs font-mono font-black text-white">50</span>
                   <img 
                     src="/images/coin-zoomed.png" 
                     alt="Coin" 
-                    className="w-5 h-5 sm:w-6 sm:h-6 object-contain inline-block transform scale-150" 
+                    className="w-4 h-4 sm:w-5 sm:h-5 object-contain inline-block transform scale-125" 
                   />
                 </div>
               </div>
             ) : (
               <div className="flex flex-col items-center">
-                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-white">STOP</span>
+                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-amber-400">STOP</span>
                 <span className="text-[10px] font-mono font-bold text-white/90 mt-0.5">{5 - stoppedRings.length} LEFT</span>
               </div>
             )}

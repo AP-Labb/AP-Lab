@@ -315,7 +315,14 @@ export function UniversalTopHeader() {
                               >
                                 <div className="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center shrink-0 text-white/80 group-hover:text-white overflow-hidden p-1">
                                   {isAiAssistant ? (
-                                    <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
+                                    <img 
+                                      src="/images/panda-ai.png" 
+                                      alt="Panda AI" 
+                                      className="w-full h-full object-contain" 
+                                      style={{
+                                        filter: "drop-shadow(1px 0 0 rgba(255,255,255,0.75)) drop-shadow(-1px 0 0 rgba(255,255,255,0.75)) drop-shadow(0 1px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1px 0 rgba(255,255,255,0.75))"
+                                      }}
+                                    />
                                   ) : (
                                     <Icon className="w-5 h-5 stroke-[1.75]" />
                                   )}

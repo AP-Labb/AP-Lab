@@ -45,14 +45,15 @@ export function StreakFlameIcon({
   const imageSrc = getStreakFlameSrc(streakCount);
 
   return (
-    <img
-      src={imageSrc}
-      alt={`${streakCount} Day Streak`}
-      className={cn(
-        "object-contain inline-block shrink-0 transition-transform duration-300 hover:scale-110",
-        sizeClassName,
-        className
-      )}
-    />
+    <span className={cn("inline-flex items-center justify-center shrink-0 leading-none select-none", sizeClassName)}>
+      <img
+        src={imageSrc}
+        alt={`${streakCount} Day Streak`}
+        className={cn(
+          "w-full h-full object-contain shrink-0 transition-transform duration-300 hover:scale-110 block mx-auto my-auto",
+          className
+        )}
+      />
+    </span>
   );
 }

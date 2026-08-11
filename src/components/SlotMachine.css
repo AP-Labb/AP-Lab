@@ -1,8 +1,8 @@
-/* Danziger 5-Ring SlotJS Wheel Styles for AP Lab */
+/* European Casino Roulette Wheel Styles for AP Lab Shop */
 
 .slotjs-wheel-container {
-  --wrapperSize: 380px;
-  --reelSize: 30px;
+  --wrapperSize: 390px;
+  --reelSize: 31px;
 
   position: relative;
   width: var(--wrapperSize);
@@ -10,15 +10,17 @@
   margin: 0 auto;
   box-sizing: border-box;
   user-select: none;
-  background: transparent;
+  background: #0d0f19;
   overflow: hidden; /* CLIPS ZOOM INSIDE WHEEL CONTAINER WITHOUT OVERFLOWING PAGE */
   border-radius: 50%;
+  border: 7px solid #d97706; /* Polished Brass / Gold Roulette Outer Bezel */
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9), 0 12px 40px rgba(0, 0, 0, 0.8), 0 0 35px rgba(245, 158, 11, 0.25);
 }
 
 @media (min-width: 640px) {
   .slotjs-wheel-container {
-    --wrapperSize: 480px;
-    --reelSize: 38px;
+    --wrapperSize: 490px;
+    --reelSize: 39px;
   }
 }
 
@@ -38,18 +40,18 @@
   transform: scale(1.5);
 }
 
-/* 5 Concentric Wheel Rings with White Background ONLY */
+/* 5 Concentric Wheel Rings - Alternating Roulette Pockets */
 .sm__reel {
   position: absolute;
   top: calc(var(--index) * var(--reelSize));
   left: calc(var(--index) * var(--reelSize));
   width: calc(100% - var(--index) * 2 * var(--reelSize));
   height: calc(100% - var(--index) * 2 * var(--reelSize));
-  background: #ffffff; /* WHITE BACKGROUND ON WHEEL RINGS ONLY */
+  background: #0f111a;
   border-radius: 100%;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(245, 158, 11, 0.3); /* Brass Ring Separators */
   overflow: hidden;
-  box-shadow: 0 0 calc(var(--reelSize) * 0.35) rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.6);
   will-change: transform;
 }
 
@@ -66,7 +68,27 @@
   display: flex;
   align-items: center;
   justify-content: flex-start;
-  padding-left: 4px;
+  padding-left: 3px;
+  box-sizing: border-box;
+}
+
+/* Roulette Pocket Color Themes */
+.sm__cell--red {
+  background: linear-gradient(135deg, #b91c1c 0%, #991b1b 100%);
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sm__cell--black {
+  background: linear-gradient(135deg, #18181b 0%, #09090b 100%);
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.sm__cell--gold {
+  background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .sm__figure {
@@ -94,37 +116,37 @@
   height: var(--reelSize);
   transform: translate(0, -50%);
   border-radius: 999px 0 0 999px;
-  background: rgba(245, 158, 11, 0.2);
-  border: 2px solid rgba(245, 158, 11, 0.85);
-  box-shadow: 0 0 15px rgba(245, 158, 11, 0.4);
+  background: rgba(245, 158, 11, 0.25);
+  border: 2.5px solid #f59e0b;
+  box-shadow: 0 0 20px rgba(245, 158, 11, 0.5);
   pointer-events: none;
   z-index: 10;
   transition: all 0.25s ease;
 }
 
 .sm__display.is-win {
-  background: rgba(34, 197, 94, 0.3);
-  border-color: rgba(34, 197, 94, 0.9);
-  box-shadow: 0 0 25px rgba(34, 197, 94, 0.6);
+  background: rgba(34, 197, 94, 0.35);
+  border-color: #22c55e;
+  box-shadow: 0 0 30px rgba(34, 197, 94, 0.7);
 }
 
 .sm__display.is-fail {
-  background: rgba(239, 68, 68, 0.25);
-  border-color: rgba(239, 68, 68, 0.8);
+  background: rgba(239, 68, 68, 0.3);
+  border-color: #ef4444;
 }
 
-/* Center Interactive Spin Button - Compact Black Button WITHOUT Drop Shadow */
+/* Center Interactive Spin Button - Polished Roulette Spindle Hub */
 .slotjs-center-btn {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 72px;
-  height: 72px;
+  width: 74px;
+  height: 74px;
   border-radius: 50%;
-  background: #000000; /* SOLID BLACK */
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  box-shadow: none; /* DROP SHADOW REMOVED */
+  background: radial-gradient(circle at 35% 35%, #262626 0%, #000000 100%);
+  border: 3px solid #f59e0b; /* Polished Brass Inner Ring */
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.2), 0 6px 20px rgba(0, 0, 0, 0.8);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -133,20 +155,19 @@
   font-weight: 900;
   cursor: pointer;
   z-index: 30;
-  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.2s ease;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.2s ease;
 }
 
 @media (min-width: 640px) {
   .slotjs-center-btn {
-    width: 84px;
-    height: 84px;
+    width: 86px;
+    height: 86px;
   }
 }
 
 .slotjs-center-btn:hover {
   transform: translate(-50%, -50%) scale(1.06);
-  background: #0d0d0d;
-  border-color: rgba(255, 255, 255, 0.6);
+  border-color: #fbbf24;
 }
 
 .slotjs-center-btn:active {

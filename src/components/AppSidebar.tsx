@@ -89,8 +89,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
   const navItems = [
     { label: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { label: "Progress", href: "/dashboard/progress", icon: "progress" },
-    { label: "Quests", href: "/dashboard/quests", icon: Award },
-    { label: "Leaderboard", href: "/dashboard/leaderboard", icon: Trophy },
+    { label: "Quests", href: "/dashboard/quests", icon: "scroll" },
+    { label: "Leaderboard", href: "/dashboard/leaderboard", icon: "leaderboard" },
     { label: "AI Assistant", href: "/dashboard/assistant", icon: "panda" },
     { label: "Shop", href: "/dashboard/shop", icon: ShoppingBag },
   ];
@@ -176,6 +176,75 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                                 />
                               ))}
                             </motion.div>
+                          ) : item.icon === "scroll" ? (
+                            /* Quests Scroll Icon with Smooth Unraveling Hover Animation */
+                            <motion.div
+                              className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
+                              variants={{
+                                rest: { scale: 1 },
+                                hover: { scale: 1.1 }
+                              }}
+                            >
+                              <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                {/* Top Scroll Roll Handle */}
+                                <path d="M19 4H7a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h12" />
+                                
+                                {/* Unraveling Parchment Body */}
+                                <motion.path
+                                  d="M5 6v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"
+                                  variants={{
+                                    rest: { d: "M5 6v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" },
+                                    hover: { d: "M5 6v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" }
+                                  }}
+                                  transition={{ duration: 0.35, ease: "easeOut" }}
+                                />
+                                
+                                {/* Text Lines inside Scroll */}
+                                <motion.line
+                                  x1="9" y1="11" x2="15" y2="11"
+                                  variants={{
+                                    rest: { opacity: 0.4, scaleX: 0.6 },
+                                    hover: { opacity: 1, scaleX: 1 }
+                                  }}
+                                  transition={{ duration: 0.25 }}
+                                />
+                                <motion.line
+                                  x1="9" y1="15" x2="13" y2="15"
+                                  variants={{
+                                    rest: { opacity: 0, scaleX: 0 },
+                                    hover: { opacity: 0.9, scaleX: 1 }
+                                  }}
+                                  transition={{ duration: 0.3, delay: 0.1 }}
+                                />
+                              </svg>
+                            </motion.div>
+                          ) : item.icon === "leaderboard" ? (
+                            /* Leaderboard Trophy Icon Lifting Up Fast with Motion Speed Lines */
+                            <div className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white">
+                              {/* Vertical Speed Lines behind Lifting Trophy */}
+                              <motion.div
+                                className="absolute inset-0 flex justify-center space-x-1.5 pointer-events-none"
+                                variants={{
+                                  rest: { opacity: 0, y: 4 },
+                                  hover: { opacity: [0, 1, 0], y: [6, 16], transition: { repeat: Infinity, duration: 0.35, ease: "linear" } }
+                                }}
+                              >
+                                <div className="w-[1.5px] h-3 bg-amber-400/80 rounded-full" />
+                                <div className="w-[2px] h-4 bg-amber-300 rounded-full -mt-1" />
+                                <div className="w-[1.5px] h-3 bg-amber-400/80 rounded-full" />
+                              </motion.div>
+
+                              {/* Fast Lifting Trophy */}
+                              <motion.div
+                                variants={{
+                                  rest: { y: 0, scale: 1 },
+                                  hover: { y: -6, scale: 1.15 }
+                                }}
+                                transition={{ type: "spring", stiffness: 450, damping: 18 }}
+                              >
+                                <Trophy className="w-5 h-5 text-white stroke-[2]" />
+                              </motion.div>
+                            </div>
                           ) : item.icon === "panda" ? (
                             <motion.div 
                               className="w-6 h-6 shrink-0 flex items-center justify-center"
@@ -185,7 +254,14 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               }}
                               transition={{ duration: 0.4 }}
                             >
-                              <img src="/images/panda-ai.png" alt="Panda AI" className="w-full h-full object-contain" />
+                              <img 
+                                src="/images/panda-ai.png" 
+                                alt="Panda AI" 
+                                className="w-full h-full object-contain" 
+                                style={{
+                                  filter: "drop-shadow(1px 0 0 rgba(255,255,255,0.75)) drop-shadow(-1px 0 0 rgba(255,255,255,0.75)) drop-shadow(0 1px 0 rgba(255,255,255,0.75)) drop-shadow(0 -1px 0 rgba(255,255,255,0.75))"
+                                }}
+                              />
                             </motion.div>
                           ) : (
                             <motion.div
