@@ -7,6 +7,7 @@ interface StreakFlameIconProps {
   streakCount?: number;
   className?: string;
   sizeClassName?: string;
+  disableHoverScale?: boolean;
 }
 
 export function getStreakFlameSrc(streakCount: number = 0): string {
@@ -41,6 +42,7 @@ export function StreakFlameIcon({
   streakCount = 0,
   className,
   sizeClassName = "w-7 h-7",
+  disableHoverScale = true,
 }: StreakFlameIconProps) {
   const imageSrc = getStreakFlameSrc(streakCount);
 
@@ -50,7 +52,8 @@ export function StreakFlameIcon({
         src={imageSrc}
         alt={`${streakCount} Day Streak`}
         className={cn(
-          "w-full h-full object-contain shrink-0 transition-transform duration-300 hover:scale-110 block mx-auto my-auto",
+          "w-full h-full object-contain shrink-0 block mx-auto my-auto",
+          !disableHoverScale && "transition-transform duration-300 hover:scale-110",
           className
         )}
       />

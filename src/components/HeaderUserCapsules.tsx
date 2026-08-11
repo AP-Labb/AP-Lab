@@ -172,17 +172,17 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 )}
               >
                 {/* Large Flame Icon + Streak Count Perfectly Centered */}
-                <div className="flex items-center justify-center space-x-3 my-2 w-full text-center mx-auto">
-                  <div className="flex items-center justify-center shrink-0">
-                    <StreakFlameIcon streakCount={streak} sizeClassName="w-16 h-16 sm:w-18 sm:h-18" />
+                <div className="w-full flex items-center justify-center text-center my-2.5">
+                  <div className="inline-flex items-center justify-center space-x-3 mx-auto">
+                    <StreakFlameIcon streakCount={streak} sizeClassName="w-14 h-14 sm:w-16 sm:h-16" disableHoverScale={true} />
+                    <span className={cn("font-manrope font-black text-5xl leading-none tracking-tight flex items-center justify-center select-none", streak >= 1 ? "text-[#f97316]" : "text-white/80")}>
+                      {streak}
+                    </span>
                   </div>
-                  <span className={cn("font-manrope font-black text-5xl tracking-tight leading-none flex items-center justify-center", streak >= 1 ? "text-[#f97316]" : "text-white/80")}>
-                    {streak}
-                  </span>
                 </div>
 
                 {/* Encouragement Subtitle */}
-                <p className="text-xs font-manrope font-semibold text-white/90 leading-relaxed my-3 px-1 text-center w-full">
+                <p className="text-xs font-manrope font-semibold text-white/90 leading-relaxed my-2 px-1 text-center w-full">
                   {streak >= 1 
                     ? "Great job! Come back tomorrow to continue your streak!" 
                     : "Complete a topic today to start your streak!"}
@@ -190,25 +190,23 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
 
                 {/* Weekday Flame/Circle Row Box with Dotted Circle for Today */}
                 <div className="bg-[#0e0f15] border border-white/10 rounded-2xl p-3 sm:p-3.5 mb-4 w-full">
-                  <div className="grid grid-cols-7 gap-1 items-center justify-items-center w-full">
+                  <div className="grid grid-cols-7 w-full items-center justify-items-center">
                     {daysOfWeek.map((day, idx) => {
                       const isToday = idx === currentDayIndex;
                       const isCompleted = streak >= 1 && idx <= currentDayIndex && (currentDayIndex - idx) < streak;
 
                       return (
-                        <div key={idx} className="flex flex-col items-center justify-center space-y-1.5 w-full min-w-0 mx-auto">
+                        <div key={idx} className="flex flex-col items-center justify-center space-y-1.5 w-full text-center">
                           <div className={cn(
-                            "w-8 h-8 sm:w-9 sm:h-9 flex items-center justify-center shrink-0 rounded-full transition-all mx-auto p-0 relative overflow-hidden",
+                            "w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shrink-0 mx-auto transition-all",
                             isToday 
                               ? (streak >= 1 ? "border-2 border-dashed border-orange-400 bg-orange-500/10" : "border-2 border-dashed border-white/40 bg-white/5") 
                               : "border border-transparent"
                           )}>
                             {isCompleted ? (
-                              <div className="w-full h-full flex items-center justify-center p-0.5">
-                                <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-5 h-5 sm:w-6 sm:h-6" />
-                              </div>
+                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-5 h-5 sm:w-6 sm:h-6" disableHoverScale={true} />
                             ) : (
-                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-neutral-800/80 border border-white/5 mx-auto my-auto" />
+                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-neutral-800/90 border border-white/10 shrink-0" />
                             )}
                           </div>
                           <span className="text-[11px] font-manrope font-extrabold text-white text-center block w-full leading-none">
