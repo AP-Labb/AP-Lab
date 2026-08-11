@@ -177,73 +177,116 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               ))}
                             </motion.div>
                           ) : item.icon === "scroll" ? (
-                            /* Quests Scroll Icon with Smooth Unraveling Hover Animation */
+                            /* Quests Blank Clipboard Icon with Bullet Points & Lines Hover Animation */
                             <motion.div
                               className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
                               variants={{
                                 rest: { scale: 1 },
-                                hover: { scale: 1.1 }
+                                hover: { scale: 1.12 }
                               }}
+                              transition={{ duration: 0.2 }}
                             >
                               <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                {/* Top Scroll Roll Handle */}
-                                <path d="M19 4H7a2 2 0 0 0-2 2v0a2 2 0 0 0 2 2h12" />
+                                {/* Clipboard Base Body */}
+                                <rect x="5" y="4" width="14" height="17" rx="2" className="stroke-white" />
                                 
-                                {/* Unraveling Parchment Body */}
-                                <motion.path
-                                  d="M5 6v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8"
+                                {/* Top Clamp Clip */}
+                                <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" className="stroke-white" fill="currentColor" fillOpacity="0.2" />
+
+                                {/* Line 1: Bullet 1 + Text Line */}
+                                <motion.circle
+                                  cx="8" cy="9" r="0.75" fill="currentColor"
                                   variants={{
-                                    rest: { d: "M5 6v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" },
-                                    hover: { d: "M5 6v13a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8" }
+                                    rest: { opacity: 0, scale: 0 },
+                                    hover: { opacity: 1, scale: 1 }
                                   }}
-                                  transition={{ duration: 0.35, ease: "easeOut" }}
-                                />
-                                
-                                {/* Text Lines inside Scroll */}
-                                <motion.line
-                                  x1="9" y1="11" x2="15" y2="11"
-                                  variants={{
-                                    rest: { opacity: 0.4, scaleX: 0.6 },
-                                    hover: { opacity: 1, scaleX: 1 }
-                                  }}
-                                  transition={{ duration: 0.25 }}
+                                  transition={{ duration: 0.2, delay: 0.05 }}
                                 />
                                 <motion.line
-                                  x1="9" y1="15" x2="13" y2="15"
+                                  x1="11" y1="9" x2="16" y2="9"
                                   variants={{
-                                    rest: { opacity: 0, scaleX: 0 },
-                                    hover: { opacity: 0.9, scaleX: 1 }
+                                    rest: { opacity: 0, x: -3 },
+                                    hover: { opacity: 1, x: 0 }
                                   }}
-                                  transition={{ duration: 0.3, delay: 0.1 }}
+                                  transition={{ duration: 0.22, delay: 0.08 }}
+                                />
+
+                                {/* Line 2: Bullet 2 + Text Line */}
+                                <motion.circle
+                                  cx="8" cy="13" r="0.75" fill="currentColor"
+                                  variants={{
+                                    rest: { opacity: 0, scale: 0 },
+                                    hover: { opacity: 1, scale: 1 }
+                                  }}
+                                  transition={{ duration: 0.2, delay: 0.12 }}
+                                />
+                                <motion.line
+                                  x1="11" y1="13" x2="15" y2="13"
+                                  variants={{
+                                    rest: { opacity: 0, x: -3 },
+                                    hover: { opacity: 1, x: 0 }
+                                  }}
+                                  transition={{ duration: 0.22, delay: 0.15 }}
+                                />
+
+                                {/* Line 3: Bullet 3 + Text Line */}
+                                <motion.circle
+                                  cx="8" cy="17" r="0.75" fill="currentColor"
+                                  variants={{
+                                    rest: { opacity: 0, scale: 0 },
+                                    hover: { opacity: 1, scale: 1 }
+                                  }}
+                                  transition={{ duration: 0.2, delay: 0.18 }}
+                                />
+                                <motion.line
+                                  x1="11" y1="17" x2="14" y2="17"
+                                  variants={{
+                                    rest: { opacity: 0, x: -3 },
+                                    hover: { opacity: 1, x: 0 }
+                                  }}
+                                  transition={{ duration: 0.22, delay: 0.21 }}
                                 />
                               </svg>
                             </motion.div>
                           ) : item.icon === "leaderboard" ? (
-                            /* Leaderboard Trophy Icon Lifting Up Fast with Motion Speed Lines */
+                            /* Leaderboard Medal Icon with Lifting Medal & Swaying Ribbon Hover Animation */
                             <div className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white">
-                              {/* Vertical Speed Lines behind Lifting Trophy */}
-                              <motion.div
-                                className="absolute inset-0 flex justify-center space-x-1.5 pointer-events-none"
+                              {/* Top Ribbon Straps */}
+                              <motion.svg
+                                className="w-5 h-5 absolute inset-0 overflow-visible"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                                 variants={{
-                                  rest: { opacity: 0, y: 4 },
-                                  hover: { opacity: [0, 1, 0], y: [6, 16], transition: { repeat: Infinity, duration: 0.35, ease: "linear" } }
+                                  rest: { scaleY: 1, rotate: 0 },
+                                  hover: { scaleY: 1.15, rotate: [0, -6, 6, -3, 0] }
                                 }}
+                                transition={{ duration: 0.35, ease: "easeOut" }}
                               >
-                                <div className="w-[1.5px] h-3 bg-amber-400/80 rounded-full" />
-                                <div className="w-[2px] h-4 bg-amber-300 rounded-full -mt-1" />
-                                <div className="w-[1.5px] h-3 bg-amber-400/80 rounded-full" />
-                              </motion.div>
+                                <path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15" />
+                              </motion.svg>
 
-                              {/* Fast Lifting Trophy */}
-                              <motion.div
+                              {/* Lifting Medal Circle / Star Hub */}
+                              <motion.svg
+                                className="w-5 h-5 absolute inset-0 overflow-visible"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
                                 variants={{
                                   rest: { y: 0, scale: 1 },
-                                  hover: { y: -6, scale: 1.15 }
+                                  hover: { y: -5, scale: 1.15 }
                                 }}
                                 transition={{ type: "spring", stiffness: 450, damping: 18 }}
                               >
-                                <Trophy className="w-5 h-5 text-white stroke-[2]" />
-                              </motion.div>
+                                <circle cx="12" cy="14" r="5" fill="currentColor" fillOpacity="0.15" />
+                                <path d="M12 11.5l.8 1.6 1.8.3-1.3 1.2.3 1.8-1.6-.8-1.6.8.3-1.8-1.3-1.2 1.8-.3z" fill="currentColor" />
+                              </motion.svg>
                             </div>
                           ) : item.icon === "panda" ? (
                             <motion.div 
