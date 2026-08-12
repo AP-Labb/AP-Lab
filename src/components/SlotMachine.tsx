@@ -6,39 +6,52 @@ import { useProgress } from "@/context/ProgressContext";
 import { triggerRewardAnimation } from "@/components/RewardNotificationOverlay";
 import "./SlotMachine.css";
 
-const CLASSIC_EMOJIS = ["🍋", "🍊", "🍉", "🍇", "🍓", "🍒", "🌟", "🍀", "💎", "🎰", "🔔", "🎁"];
+interface WheelSegment {
+  id: string;
+  label: string;
+  sublabel?: string;
+  color: string;
+  textColor: string;
+  angle: number; // Arc angle in degrees
+  rewardType: "coins" | "xp" | "boost" | "jackpot" | "none";
+  rewardValue: number;
+}
+
+// Wheel Segments (Matching uploaded reference image palette + 10,000 Coin Thin Sliver)
+const WHEEL_SEGMENTS: WheelSegment[] = [
+  { id: "s1", label: "100 COINS", color: "#f472b6", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 100 },
+  { id: "s2", label: "+100 XP", color: "#34d399", textColor: "#000000", angle: 37, rewardType: "xp", rewardValue: 100 },
+  { id: "s3", label: "50 COINS", color: "#fb923c", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 50 },
+  { id: "s4", label: "250 COINS", color: "#facc15", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 250 },
+  { id: "s5", label: "+250 XP", color: "#a78bfa", textColor: "#000000", angle: 37, rewardType: "xp", rewardValue: 250 },
+  { id: "s6", label: "500 COINS", color: "#10b981", textColor: "#ffffff", angle: 37, rewardType: "coins", rewardValue: 500 },
+  { id: "s7", label: "2X XP BOOST", color: "#fef3c7", textColor: "#000000", angle: 37, rewardType: "boost", rewardValue: 2 },
+  { id: "s8", label: "TRY AGAIN", color: "#18181b", textColor: "#ffffff", angle: 37, rewardType: "none", rewardValue: 0 },
+  { id: "s9", label: "200 COINS", color: "#2dd4bf", textColor: "#000000", angle: 34, rewardType: "coins", rewardValue: 200 },
+  { id: "jackpot", label: "10,000 COINS", sublabel: "JACKPOT", color: "#ffd700", textColor: "#000000", angle: 8, rewardType: "jackpot", rewardValue: 10000 }, // Ultra-thin 8° Golden Sliver!
+];
 
 export function SlotMachine() {
   const { progress, addCredits, spendCredits } = useProgress();
   const credits = progress?.credits || 0;
 
   const [isSpinning, setIsSpinning] = useState(false);
-  const [stoppedRings, setStoppedRings] = useState<number[]>([]);
-  const [ringAngles, setRingAngles] = useState([0, 0, 0, 0, 0]); // 5 Concentric Rings
-  const [isZoomed, setIsZoomed] = useState(false); // Danziger payline zoom state
+  const [rotationAngle, setRotationAngle] = useState(0);
+  const [stopperFlick, setStopperFlick] = useState(false);
   const [winMessage, setWinMessage] = useState<string | null>(null);
   const [displayStatus, setDisplayStatus] = useState<"idle" | "win" | "fail">("idle");
 
-  const animFrameRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number>(0);
-  const ringAnglesRef = useRef([0, 0, 0, 0, 0]);
-  const stoppedRingsRef = useRef<number[]>([]);
-
-  // Sound refs
   const blipAudioRef = useRef<HTMLAudioElement | null>(null);
   const coinAudioRef = useRef<HTMLAudioElement | null>(null);
-  const stopAudioRef = useRef<HTMLAudioElement | null>(null);
   const winAudioRef = useRef<HTMLAudioElement | null>(null);
   const unluckyAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const SPIN_COST = 50;
-  const ALPHA = 360 / CLASSIC_EMOJIS.length; // 30 degrees per symbol slot
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       blipAudioRef.current = new Audio("/sounds/slotjs/blip.mp3");
       coinAudioRef.current = new Audio("/sounds/slotjs/coin.mp3");
-      stopAudioRef.current = new Audio("/sounds/slotjs/stop.mp3");
       winAudioRef.current = new Audio("/sounds/slotjs/win.mp3");
       unluckyAudioRef.current = new Audio("/sounds/slotjs/unlucky.mp3");
     }
@@ -52,134 +65,85 @@ export function SlotMachine() {
     } catch (e) {}
   };
 
-  // 5 Concentric Rings rotation tick loop
-  useEffect(() => {
-    if (!isSpinning) return;
+  const handleSpin = () => {
+    if (isSpinning) return;
 
-    const speeds = [-0.45, 0.60, -0.75, 0.90, -1.05];
-
-    const tick = (now: number) => {
-      if (!lastTimeRef.current) lastTimeRef.current = now;
-      const dt = now - lastTimeRef.current;
-      lastTimeRef.current = now;
-
-      const newAngles = [...ringAnglesRef.current];
-      for (let i = 0; i < 5; i++) {
-        if (!stoppedRingsRef.current.includes(i)) {
-          newAngles[i] = (newAngles[i] + speeds[i] * dt) % 360;
-        }
-      }
-      ringAnglesRef.current = newAngles;
-      setRingAngles([...newAngles]);
-
-      if (stoppedRingsRef.current.length < 5) {
-        animFrameRef.current = requestAnimationFrame(tick);
-      }
-    };
-
-    animFrameRef.current = requestAnimationFrame(tick);
-    return () => {
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [isSpinning]);
-
-  const handleButtonClick = () => {
-    if (!isSpinning) {
-      if (credits < SPIN_COST) {
-        setWinMessage("Not enough coins! You need 50 coins to spin.");
-        setDisplayStatus("fail");
-        playSound(unluckyAudioRef.current);
-        setTimeout(() => {
-          setWinMessage(null);
-          setDisplayStatus("idle");
-        }, 3000);
-        return;
-      }
-
-      if (spendCredits) spendCredits(SPIN_COST);
-      playSound(coinAudioRef.current);
-
-      setIsSpinning(true);
-      setIsZoomed(false); // Zoom out when starting spin
-      setStoppedRings([]);
-      stoppedRingsRef.current = [];
-      setWinMessage(null);
-      setDisplayStatus("idle");
-      lastTimeRef.current = performance.now();
-    } else {
-      // Stop next ring sequentially and SNAP EXACTLY to straight payline
-      const currentStopped = [...stoppedRingsRef.current];
-      if (currentStopped.length < 5) {
-        const nextRingToStop = currentStopped.length;
-        
-        // Exact angle alignment math so emojis line up 100% straight on payline
-        const rawAngle = ringAnglesRef.current[nextRingToStop];
-        const snappedAngle = Math.round(rawAngle / ALPHA) * ALPHA;
-        ringAnglesRef.current[nextRingToStop] = snappedAngle;
-        setRingAngles([...ringAnglesRef.current]);
-
-        currentStopped.push(nextRingToStop);
-        stoppedRingsRef.current = currentStopped;
-        setStoppedRings([...currentStopped]);
-        playSound(stopAudioRef.current);
-
-        if (currentStopped.length === 5) {
-          // All 5 rings stopped - Trigger Payline Zoom In Animation & Calculate Prize
-          setTimeout(() => {
-            setIsZoomed(true); // Danziger Payline Zoom In!
-            calculatePrize();
-            setIsSpinning(false);
-          }, 300);
-        }
-      }
+    if (credits < SPIN_COST) {
+      setWinMessage("Not enough coins! You need 50 coins to spin.");
+      setDisplayStatus("fail");
+      playSound(unluckyAudioRef.current);
+      setTimeout(() => {
+        setWinMessage(null);
+        setDisplayStatus("idle");
+      }, 3000);
+      return;
     }
+
+    if (spendCredits) spendCredits(SPIN_COST);
+    playSound(coinAudioRef.current);
+
+    setIsSpinning(true);
+    setWinMessage(null);
+    setDisplayStatus("idle");
+
+    // Random spin math: 5 full turns (1800°) + random segment landing
+    const randomTurns = 5 * 360;
+    const randomOffset = Math.floor(Math.random() * 360);
+    const newTotalRotation = rotationAngle + randomTurns + randomOffset;
+
+    setRotationAngle(newTotalRotation);
+
+    // Stopper tick flick interval during spin
+    const tickInterval = setInterval(() => {
+      setStopperFlick(true);
+      playSound(blipAudioRef.current);
+      setTimeout(() => setStopperFlick(false), 80);
+    }, 220);
+
+    // Resolve landing slice after 4.5s transition
+    setTimeout(() => {
+      clearInterval(tickInterval);
+      setIsSpinning(false);
+      calculateReward(newTotalRotation);
+    }, 4500);
   };
 
-  const calculatePrize = () => {
-    const finalAngles = ringAnglesRef.current;
+  const calculateReward = (totalRotation: number) => {
+    // 12 o'clock pointer position (270° in SVG coords)
+    const normalizedAngle = (360 - (totalRotation % 360) + 270) % 360;
 
-    const getSymbolForAngle = (angle: number) => {
-      const normalized = (360 + (angle % 360)) % 360;
-      const index = Math.floor((normalized / 360) * CLASSIC_EMOJIS.length) % CLASSIC_EMOJIS.length;
-      return CLASSIC_EMOJIS[index];
-    };
+    let currentAngleSum = 0;
+    let landedSegment = WHEEL_SEGMENTS[0];
 
-    const symbols = [
-      getSymbolForAngle(finalAngles[0]),
-      getSymbolForAngle(finalAngles[1]),
-      getSymbolForAngle(finalAngles[2]),
-      getSymbolForAngle(finalAngles[3]),
-      getSymbolForAngle(finalAngles[4])
-    ];
+    for (const seg of WHEEL_SEGMENTS) {
+      if (normalizedAngle >= currentAngleSum && normalizedAngle < currentAngleSum + seg.angle) {
+        landedSegment = seg;
+        break;
+      }
+      currentAngleSum += seg.angle;
+    }
 
-    const counts: Record<string, number> = {};
-    symbols.forEach((s) => { counts[s] = (counts[s] || 0) + 1; });
-    const maxMatch = Math.max(...Object.values(counts));
-    const matchedSymbol = Object.keys(counts).find((k) => counts[k] === maxMatch) || symbols[0];
-
-    if (maxMatch >= 5) {
+    if (landedSegment.rewardType === "jackpot") {
       playSound(winAudioRef.current);
-      if (addCredits) addCredits(1000, "5-Ring Mega Jackpot");
-      triggerRewardAnimation({ type: "reward", xp: 500, coins: 1000 });
-      setWinMessage(`🎉 5-RING MEGA JACKPOT 5x ${matchedSymbol}! You won +1000 Coins & +500 XP!`);
+      if (addCredits) addCredits(10000, "10,000 Coin Wheel Jackpot");
+      triggerRewardAnimation({ type: "reward", xp: 2500, coins: 10000 });
+      setWinMessage(`🎉 ULTRA JACKPOT! YOU WON +10,000 COINS & +2,500 XP!`);
       setDisplayStatus("win");
-    } else if (maxMatch === 4) {
+    } else if (landedSegment.rewardType === "coins") {
       playSound(winAudioRef.current);
-      if (addCredits) addCredits(400, "4-Ring Match");
-      triggerRewardAnimation({ type: "reward", xp: 200, coins: 400 });
-      setWinMessage(`🔥 4-RING MATCH 4x ${matchedSymbol}! You won +400 Coins & +200 XP!`);
+      if (addCredits) addCredits(landedSegment.rewardValue, `Wheel Win: ${landedSegment.label}`);
+      triggerRewardAnimation({ type: "reward", coins: landedSegment.rewardValue });
+      setWinMessage(`✨ YOU WON +${landedSegment.rewardValue} COINS!`);
       setDisplayStatus("win");
-    } else if (maxMatch === 3) {
+    } else if (landedSegment.rewardType === "xp") {
       playSound(winAudioRef.current);
-      if (addCredits) addCredits(150, "3-Ring Match");
-      triggerRewardAnimation({ type: "reward", xp: 75, coins: 150 });
-      setWinMessage(`⭐ TRIPLE MATCH 3x ${matchedSymbol}! You won +150 Coins & +75 XP!`);
+      triggerRewardAnimation({ type: "reward", xp: landedSegment.rewardValue });
+      setWinMessage(`⭐ YOU WON +${landedSegment.rewardValue} XP!`);
       setDisplayStatus("win");
-    } else if (maxMatch === 2) {
+    } else if (landedSegment.rewardType === "boost") {
       playSound(winAudioRef.current);
-      if (addCredits) addCredits(60, "Double Match");
-      triggerRewardAnimation({ type: "reward", coins: 60 });
-      setWinMessage(`✨ DOUBLE MATCH 2x ${matchedSymbol}! You won +60 Coins!`);
+      triggerRewardAnimation({ type: "reward", xp: 300 });
+      setWinMessage(`🚀 2X XP BOOST ACTIVATED! (+300 XP Bonus)`);
       setDisplayStatus("win");
     } else {
       playSound(unluckyAudioRef.current);
@@ -188,84 +152,122 @@ export function SlotMachine() {
     }
   };
 
+  // SVG Arc Math Helper
+  const getCoordinatesForPercent = (percent: number) => {
+    const x = Math.cos(2 * Math.PI * percent);
+    const y = Math.sin(2 * Math.PI * percent);
+    return [x, y];
+  };
+
   return (
-    <div className="w-full flex flex-col items-center justify-center pt-8 pb-14 px-4 border-t border-white/10 mt-16 font-manrope bg-transparent">
-      {/* Title Header */}
-      <div className="text-center mb-8 space-y-1.5">
-        <h2 className="font-instrument text-3xl md:text-4xl font-extrabold text-white tracking-tight">
-          Casino AP Roulette Wheel
-        </h2>
-        <p className="text-xs sm:text-sm text-white/50 max-w-md mx-auto leading-relaxed font-manrope">
-          Spin 5 European Roulette pocket rings for 50 coins & win up to +1000 Coins & +500 XP!
-        </p>
+    <div className="w-full flex flex-col items-center justify-center pt-6 pb-14 px-4 border-t border-white/10 mt-16 font-manrope bg-transparent">
+      {/* Banner Above Spinner Wheel */}
+      <div className="w-full max-w-xl mx-auto mb-6 px-2">
+        <img
+          src="/images/SPINNERBANNER.png"
+          alt="AP Lab Wheel Spinner"
+          className="w-full h-auto object-contain rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.6)] border border-white/10"
+        />
       </div>
 
-      {/* Casino Roulette Wheel Container */}
-      <div className="slotjs-wheel-container">
-        <div className={`sm__reelsContainer ${isZoomed ? "has-zoom" : ""}`}>
-          {/* 5 Concentric Rings */}
-          {[0, 1, 2, 3, 4].map((ringIndex) => {
-            const isRingSpinning = isSpinning && !stoppedRings.includes(ringIndex);
+      {/* Wheel Spinner Container with Top Stopper Arrow */}
+      <div className="clean-wheel-container">
+        {/* Animated Stopper Arrow (12 o'clock) */}
+        <motion.div
+          animate={stopperFlick ? { rotate: -22 } : { rotate: 0 }}
+          transition={{ duration: 0.08 }}
+          className="clean-wheel-stopper"
+        >
+          <svg className="w-7 h-9 text-white fill-current" viewBox="0 0 24 32">
+            <path d="M12 32 L3 8 C3 3.5 7 0 12 0 C17 0 21 3.5 21 8 Z" fill="#ffffff" stroke="#000000" strokeWidth="2" />
+          </svg>
+        </motion.div>
 
-            return (
-              <div
-                key={ringIndex}
-                className="sm__reel"
-                style={{
-                  // @ts-ignore
-                  "--index": ringIndex,
-                  transform: `rotate(${ringAngles[ringIndex]}deg)`
-                }}
-              >
-                {CLASSIC_EMOJIS.map((sym, idx) => {
-                  const cellAngle = ALPHA * idx;
-                  const isGold = sym === "🎰" || sym === "🌟" || sym === "💎";
-                  const pocketClass = isGold ? "sm__cell--gold" : (idx % 2 === 0 ? "sm__cell--red" : "sm__cell--black");
+        {/* Rotating SVG Wheel Canvas */}
+        <div
+          className="clean-wheel-canvas"
+          style={{
+            transform: `rotate(${rotationAngle}deg)`,
+            transition: isSpinning ? "transform 4.5s cubic-bezier(0.15, 0.99, 0.25, 1)" : "none"
+          }}
+        >
+          <svg className="w-full h-full" viewBox="-1 -1 2 2" style={{ transform: "rotate(0deg)" }}>
+            {(() => {
+              let cumulativeAngle = 0;
+              return WHEEL_SEGMENTS.map((seg, idx) => {
+                const startPercent = cumulativeAngle / 360;
+                cumulativeAngle += seg.angle;
+                const endPercent = cumulativeAngle / 360;
 
-                  return (
-                    <div
-                      key={idx}
-                      className={`sm__cell ${pocketClass}`}
-                      style={{ transform: `rotate(${cellAngle}deg)` }}
+                const [startX, startY] = getCoordinatesForPercent(startPercent);
+                const [endX, endY] = getCoordinatesForPercent(endPercent);
+                const largeArcFlag = seg.angle > 180 ? 1 : 0;
+
+                const pathData = `M 0 0 L ${startX} ${startY} A 1 1 0 ${largeArcFlag} 1 ${endX} ${endY} Z`;
+
+                // Outer perimeter dot position
+                const midPercent = (startPercent + endPercent) / 2;
+                const dotRadius = 0.88;
+                const dotX = Math.cos(2 * Math.PI * midPercent) * dotRadius;
+                const dotY = Math.sin(2 * Math.PI * midPercent) * dotRadius;
+
+                // Text radial rotation math
+                const midAngleDeg = midPercent * 360;
+                const textRadius = 0.58;
+                const textX = Math.cos(2 * Math.PI * midPercent) * textRadius;
+                const textY = Math.sin(2 * Math.PI * midPercent) * textRadius;
+
+                return (
+                  <g key={idx}>
+                    {/* Slice Path */}
+                    <path d={pathData} fill={seg.color} stroke="#000000" strokeWidth="0.012" />
+
+                    {/* Outer Rim Perimeter Dot (Matching reference screenshot) */}
+                    <circle cx={dotX} cy={dotY} r="0.032" fill="#000000" />
+
+                    {/* Radial Label */}
+                    <text
+                      x={textX}
+                      y={textY}
+                      fill={seg.textColor}
+                      fontSize={seg.rewardType === "jackpot" ? "0.048" : "0.056"}
+                      fontWeight="900"
+                      fontFamily="sans-serif"
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                      transform={`rotate(${midAngleDeg + 90}, ${textX}, ${textY})`}
                     >
-                      <span className={`sm__figure ${isRingSpinning ? "sm__figure--blur" : ""}`}>
-                        {sym}
-                      </span>
-                    </div>
-                  );
-                })}
-              </div>
-            );
-          })}
-
-          {/* Left Payline Highlight Display */}
-          <div className={`sm__display ${displayStatus === "win" ? "is-win" : displayStatus === "fail" ? "is-fail" : ""}`} />
-
-          {/* Center Interactive Spin Button - Polished Roulette Brass Hub */}
-          <button
-            onClick={handleButtonClick}
-            className="slotjs-center-btn"
-          >
-            {!isSpinning ? (
-              <div className="flex flex-col items-center">
-                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-amber-400">SPIN</span>
-                <div className="flex items-center space-x-1 mt-0.5">
-                  <span className="text-xs font-mono font-black text-white">50</span>
-                  <img 
-                    src="/images/coin-zoomed.png" 
-                    alt="Coin" 
-                    className="w-4 h-4 sm:w-5 sm:h-5 object-contain inline-block transform scale-125" 
-                  />
-                </div>
-              </div>
-            ) : (
-              <div className="flex flex-col items-center">
-                <span className="text-[11px] sm:text-xs uppercase tracking-wider font-black text-amber-400">STOP</span>
-                <span className="text-[10px] font-mono font-bold text-white/90 mt-0.5">{5 - stoppedRings.length} LEFT</span>
-              </div>
-            )}
-          </button>
+                      {seg.label}
+                    </text>
+                  </g>
+                );
+              });
+            })()}
+          </svg>
         </div>
+
+        {/* Center Interactive Spin Button Hub */}
+        <button
+          onClick={handleSpin}
+          disabled={isSpinning}
+          className="clean-wheel-center-btn"
+        >
+          {!isSpinning ? (
+            <div className="flex flex-col items-center">
+              <span className="text-xs uppercase tracking-wider font-black text-white">SPIN</span>
+              <div className="flex items-center space-x-1 mt-0.5">
+                <span className="text-[11px] font-mono font-bold text-amber-400">50</span>
+                <img 
+                  src="/images/coin-zoomed.png" 
+                  alt="Coin" 
+                  className="w-3.5 h-3.5 sm:w-4 sm:h-4 object-contain inline-block" 
+                />
+              </div>
+            </div>
+          ) : (
+            <span className="text-xs uppercase tracking-wider font-black text-amber-400 animate-pulse">SPINNING</span>
+          )}
+        </button>
       </div>
 
       {/* Live Win Banner */}
@@ -275,7 +277,7 @@ export function SlotMachine() {
             initial={{ opacity: 0, y: 10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
-            className={`mt-6 px-6 py-3 rounded-2xl font-manrope font-bold text-sm text-center shadow-lg max-w-md border ${
+            className={`mt-6 px-6 py-3.5 rounded-2xl font-manrope font-extrabold text-sm text-center shadow-lg max-w-md border ${
               displayStatus === "win"
                 ? "bg-emerald-500/20 border-emerald-500/40 text-emerald-200"
                 : "bg-red-500/20 border-red-500/40 text-red-200"

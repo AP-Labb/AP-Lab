@@ -258,26 +258,26 @@ export default function ContactPage() {
         </motion.div>
       </div>
 
-      {/* JOIN THE DISCORD SERVER BANNER (Matching blazen.net screenshot layout: full bleed, thinner height, discordbanner.png) */}
-      <div className="w-full bg-[#e5e7eb] text-black border-t border-b border-neutral-300 relative z-20 mt-16 md:mt-24 mb-16 md:mb-24 overflow-hidden">
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 items-stretch">
+      {/* JOIN THE DISCORD SERVER BANNER (Matching blazen.net screenshot layout: full bleed, slim height, discordbanner.png) */}
+      <div className="w-full bg-[#e5e7eb] text-black border-t border-b border-neutral-300 relative z-20 mt-12 md:mt-16 mb-16 md:mb-24 overflow-hidden h-auto md:h-[235px]">
+        <div className="w-full h-full grid grid-cols-1 md:grid-cols-2 items-stretch">
           
           {/* Left Column: Text & Join Discord Button */}
-          <div className="px-6 sm:px-12 md:px-16 py-8 sm:py-10 flex flex-col justify-center text-left space-y-5 bg-[#e5e7eb]">
-            <h2 className="font-manrope font-black text-2xl sm:text-3xl md:text-4xl text-black tracking-tight uppercase leading-tight">
+          <div className="px-6 sm:px-10 md:px-14 py-5 sm:py-6 flex flex-col justify-center text-left space-y-3.5 bg-[#e5e7eb]">
+            <h2 className="font-manrope font-black text-2xl sm:text-3xl md:text-3xl lg:text-4xl text-black tracking-tight uppercase leading-tight">
               JOIN THE DISCORD SERVER!
             </h2>
-            <p className="font-inter text-xs sm:text-sm md:text-base text-neutral-700 leading-relaxed max-w-lg">
+            <p className="font-inter text-xs sm:text-sm text-neutral-700 leading-relaxed max-w-lg">
               Have any questions, feedback, or ideas? Join the Discord server to connect with the community, get updates, share your thoughts, and have a better chance at receiving a faster response.
             </p>
-            <div className="pt-1">
+            <div className="pt-0.5">
               <a
                 href="https://discord.com/invite/dUSaevPETd"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center space-x-3 bg-black hover:bg-neutral-800 text-white font-manrope font-bold text-xs sm:text-sm tracking-wider uppercase px-6 py-3 sm:px-7 sm:py-3.5 rounded-md transition-all shadow-md active:scale-95"
+                className="inline-flex items-center space-x-2.5 bg-black hover:bg-neutral-800 text-white font-manrope font-bold text-xs tracking-wider uppercase px-5 py-2.5 sm:px-6 sm:py-3 rounded-md transition-all shadow-md active:scale-95"
               >
-                <svg className="w-4 h-4 sm:w-5 sm:h-5 fill-current" viewBox="0 0 127.14 96.36">
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 127.14 96.36">
                   <path d="M107.7,8.07A105.15,105.15,0,0,0,81.47,0a72.06,72.06,0,0,0-3.36,6.83A97.68,97.68,0,0,0,49,6.83,72.37,72.37,0,0,0,45.64,0,105.89,105.89,0,0,0,19.39,8.09C2.79,32.65-1.71,56.6.54,80.21h0A105.73,105.73,0,0,0,32.71,96.36,77.7,77.7,0,0,0,39.6,85.25a68.42,68.42,0,0,1-10.85-5.18c.91-.66,1.8-1.34,2.66-2a75.57,75.57,0,0,0,64.32,0c.87.71,1.76,1.39,2.66,2a68.68,68.68,0,0,1-10.87,5.19,77,77,0,0,0,6.89,11.1A105.25,105.25,0,0,0,126.6,80.22h0C129.24,52.84,122.09,29.11,107.7,8.07ZM42.45,65.69C36.18,65.69,31,60,31,53s5-12.74,11.43-12.74S54,46,53.89,53,48.84,65.69,42.45,65.69Zm42.24,0C78.41,65.69,73.31,60,73.31,53s5-12.74,11.43-12.74S96.1,46,96,53,91.08,65.69,84.69,65.69Z"/>
                 </svg>
                 <span>JOIN DISCORD</span>
@@ -285,12 +285,12 @@ export default function ContactPage() {
             </div>
           </div>
 
-          {/* Right Column: High-Res Full-Bleed Edge-to-Edge Image */}
-          <div className="w-full h-full min-h-[220px] sm:min-h-[280px] md:min-h-[300px] relative overflow-hidden bg-black flex items-center justify-center">
+          {/* Right Column: Full-Bleed High-Res Image Stretched Top-to-Bottom */}
+          <div className="w-full h-full min-h-[200px] md:min-h-[235px] relative overflow-hidden bg-black flex items-center justify-center p-0 m-0">
             <img
               src="/images/discordbanner.png"
               alt="Join AP Lab Discord Community"
-              className="w-full h-full object-cover object-center block inset-0"
+              className="absolute inset-0 w-full h-full object-cover object-center block p-0 m-0 border-none"
             />
           </div>
 
