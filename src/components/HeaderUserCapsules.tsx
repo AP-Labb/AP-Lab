@@ -103,7 +103,10 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
   const progressPercent = Math.min(100, Math.max(0, (xpInCurrentLevel / xpNeededForNextLevel) * 100));
 
   const handleOpenProfile = () => {
-    if (onOpenProfile) {
+    setActiveMenu("none");
+    if (progress?.uid) {
+      router.push(`/dashboard/user/${progress.uid}`);
+    } else if (onOpenProfile) {
       onOpenProfile();
     } else {
       router.push("/dashboard/progress");
