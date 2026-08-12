@@ -9,7 +9,7 @@ import "./SlotMachine.css";
 interface WheelSegment {
   id: string;
   amountText: string;
-  iconType: "coin" | "xp" | "none";
+  iconSrc?: string;
   color: string;
   textColor: string;
   angle: number; // Arc angle in degrees
@@ -17,26 +17,26 @@ interface WheelSegment {
   rewardValue: number;
 }
 
-// Wheel Segments with SVG Image Icons (Coins & XP Shields) instead of plain text!
+// Wheel Segments with Large Image Icons (Coins, XP Shields, 2X Boost, & Frown Face)
 const WHEEL_SEGMENTS: WheelSegment[] = [
-  { id: "s1", amountText: "100", iconType: "coin", color: "#f472b6", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 100 },
-  { id: "s2", amountText: "100", iconType: "xp", color: "#34d399", textColor: "#000000", angle: 37, rewardType: "xp", rewardValue: 100 },
-  { id: "s3", amountText: "50", iconType: "coin", color: "#fb923c", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 50 },
-  { id: "s4", amountText: "250", iconType: "coin", color: "#facc15", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 250 },
-  { id: "s5", amountText: "250", iconType: "xp", color: "#a78bfa", textColor: "#000000", angle: 37, rewardType: "xp", rewardValue: 250 },
-  { id: "s6", amountText: "500", iconType: "coin", color: "#10b981", textColor: "#ffffff", angle: 37, rewardType: "coins", rewardValue: 500 },
-  { id: "s7", amountText: "2X", iconType: "xp", color: "#fef3c7", textColor: "#000000", angle: 37, rewardType: "boost", rewardValue: 2 },
-  { id: "s8", amountText: "TRY AGAIN", iconType: "none", color: "#18181b", textColor: "#ffffff", angle: 37, rewardType: "none", rewardValue: 0 },
-  { id: "s9", amountText: "200", iconType: "coin", color: "#2dd4bf", textColor: "#000000", angle: 34, rewardType: "coins", rewardValue: 200 },
-  { id: "jackpot", amountText: "10,000", iconType: "coin", color: "url(#jackpotGoldGradient)", textColor: "#000000", angle: 8, rewardType: "jackpot", rewardValue: 10000 }, // Animated Shimmer 8° Jackpot Sliver!
+  { id: "s1", amountText: "100", iconSrc: "/images/coin-zoomed.png", color: "#f472b6", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 100 },
+  { id: "s2", amountText: "100", iconSrc: "/images/xp-shield-zoomed.png", color: "#34d399", textColor: "#000000", angle: 37, rewardType: "xp", rewardValue: 100 },
+  { id: "s3", amountText: "50", iconSrc: "/images/coin-zoomed.png", color: "#fb923c", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 50 },
+  { id: "s4", amountText: "250", iconSrc: "/images/coin-zoomed.png", color: "#facc15", textColor: "#000000", angle: 37, rewardType: "coins", rewardValue: 250 },
+  { id: "s5", amountText: "250", iconSrc: "/images/xp-shield-zoomed.png", color: "#a78bfa", textColor: "#000000", angle: 37, rewardType: "xp", rewardValue: 250 },
+  { id: "s6", amountText: "500", iconSrc: "/images/coin-zoomed.png", color: "#10b981", textColor: "#ffffff", angle: 37, rewardType: "coins", rewardValue: 500 },
+  { id: "s7", amountText: "2X", iconSrc: "/images/2x-xp-boost.png", color: "#fef3c7", textColor: "#000000", angle: 37, rewardType: "boost", rewardValue: 2 },
+  { id: "s8", amountText: "TRY AGAIN 🙁", iconSrc: undefined, color: "#e11d48", textColor: "#ffffff", angle: 37, rewardType: "none", rewardValue: 0 },
+  { id: "s9", amountText: "200", iconSrc: "/images/coin-zoomed.png", color: "#2dd4bf", textColor: "#000000", angle: 34, rewardType: "coins", rewardValue: 200 },
+  { id: "jackpot", amountText: "10,000", iconSrc: "/images/coin-zoomed.png", color: "url(#jackpotGoldGradient)", textColor: "#000000", angle: 30, rewardType: "jackpot", rewardValue: 10000 }, // Animated Shimmer 10,000 Jackpot Sliver!
 ];
 
 export function SlotMachine() {
-  const { progress, addCredits, spendCredits } = useProgress();
+  const { progress, addCredits, spendCredits, useBoostItem } = useProgress();
   const credits = progress?.credits || 0;
 
   const [isSpinning, setIsSpinning] = useState(false);
-  const [hasSpun, setHasSpun] = useState(false); // Squiggle arrow disappears after first spin!
+  const [hasSpun, setHasSpun] = useState(false); // Squiggle arrow fades away on spin!
   const [rotationAngle, setRotationAngle] = useState(0);
   const [stopperFlick, setStopperFlick] = useState(false);
 
@@ -44,6 +44,9 @@ export function SlotMachine() {
   const coinAudioRef = useRef<HTMLAudioElement | null>(null);
   const winAudioRef = useRef<HTMLAudioElement | null>(null);
   const unluckyAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  const animFrameRef = useRef<number | null>(null);
+  const lastSegmentIndexRef = useRef<number>(-1);
 
   const SPIN_COST = 50;
 
@@ -56,62 +59,80 @@ export function SlotMachine() {
     }
   }, []);
 
-  const playSound = (audio: HTMLAudioElement | null) => {
+  const playSound = (audio: HTMLAudioElement | null, volume = 1.0) => {
     if (!audio) return;
     try {
       audio.currentTime = 0;
+      audio.volume = volume;
       audio.play().catch(() => {});
     } catch (e) {}
-  };
-
-  // Realistic dynamic decelerating tick physics audio loop
-  const playDeceleratingTicks = () => {
-    const tickDelays = [40, 50, 60, 75, 95, 120, 150, 185, 230, 280, 340, 410, 490, 580, 680, 800, 930, 1070, 1220];
-    let cumulativeTime = 0;
-
-    tickDelays.forEach((delay) => {
-      cumulativeTime += delay;
-      if (cumulativeTime < 4400) {
-        setTimeout(() => {
-          setStopperFlick(true);
-          playSound(blipAudioRef.current);
-          setTimeout(() => setStopperFlick(false), 60);
-        }, cumulativeTime);
-      }
-    });
   };
 
   const handleSpin = () => {
     if (isSpinning) return;
 
     if (credits < SPIN_COST) {
-      playSound(unluckyAudioRef.current);
+      playSound(unluckyAudioRef.current, 1.0);
       return;
     }
 
     if (spendCredits) spendCredits(SPIN_COST);
-    playSound(coinAudioRef.current);
+    playSound(coinAudioRef.current, 1.0);
 
     setIsSpinning(true);
-    setHasSpun(true); // Fade out white squiggle arrow!
+    setHasSpun(true); // Fade out squiggle arrow!
 
-    // Realistic decelerating wheel spin: 5 full turns (1800°) + random offset
-    const randomTurns = 5 * 360;
-    const randomOffset = Math.floor(Math.random() * 360);
-    const newTotalRotation = rotationAngle + randomTurns + randomOffset;
+    const startRotation = rotationAngle;
+    const extraTurns = 5 * 360;
+    const randomTarget = Math.floor(Math.random() * 360);
+    const targetRotation = startRotation + extraTurns + randomTarget;
 
-    setRotationAngle(newTotalRotation);
-    playDeceleratingTicks();
+    const startTime = performance.now();
+    const duration = 4500; // 4.5s spin
 
-    // Resolve landed segment when wheel stops (4.5s)
-    setTimeout(() => {
-      setIsSpinning(false);
-      calculateReward(newTotalRotation);
-    }, 4500);
+    const animateFrame = (now: number) => {
+      const elapsed = now - startTime;
+      const progressRatio = Math.min(1, elapsed / duration);
+      
+      // Smooth cubic ease-out deceleration physics
+      const easedProgress = 1 - Math.pow(1 - progressRatio, 3);
+      const currentAngle = startRotation + (targetRotation - startRotation) * easedProgress;
+
+      setRotationAngle(currentAngle);
+
+      // Frame-accurate slice crossing tick detection at 12 o'clock (270°)
+      const pointerAngle = (360 - (currentAngle % 360) + 270) % 360;
+      let angleAcc = 0;
+      let activeSegmentIndex = 0;
+
+      for (let i = 0; i < WHEEL_SEGMENTS.length; i++) {
+        if (pointerAngle >= angleAcc && pointerAngle < angleAcc + WHEEL_SEGMENTS[i].angle) {
+          activeSegmentIndex = i;
+          break;
+        }
+        angleAcc += WHEEL_SEGMENTS[i].angle;
+      }
+
+      // Synchronized tick sound & arrow flick when passing segment boundary!
+      if (activeSegmentIndex !== lastSegmentIndexRef.current) {
+        lastSegmentIndexRef.current = activeSegmentIndex;
+        playSound(blipAudioRef.current, 0.95);
+        setStopperFlick(true);
+        setTimeout(() => setStopperFlick(false), 50);
+      }
+
+      if (progressRatio < 1) {
+        animFrameRef.current = requestAnimationFrame(animateFrame);
+      } else {
+        setIsSpinning(false);
+        calculateReward(targetRotation);
+      }
+    };
+
+    animFrameRef.current = requestAnimationFrame(animateFrame);
   };
 
   const calculateReward = (totalRotation: number) => {
-    // 12 o'clock pointer position (270° in SVG coords)
     const normalizedAngle = (360 - (totalRotation % 360) + 270) % 360;
 
     let currentAngleSum = 0;
@@ -126,21 +147,23 @@ export function SlotMachine() {
     }
 
     if (landedSegment.rewardType === "jackpot") {
-      playSound(winAudioRef.current);
+      playSound(winAudioRef.current, 1.0);
       if (addCredits) addCredits(10000, "10,000 Coin Wheel Jackpot");
       triggerRewardAnimation({ type: "reward", xp: 2500, coins: 10000 });
     } else if (landedSegment.rewardType === "coins") {
-      playSound(winAudioRef.current);
+      playSound(winAudioRef.current, 1.0);
       if (addCredits) addCredits(landedSegment.rewardValue, `Wheel Win: ${landedSegment.amountText}`);
       triggerRewardAnimation({ type: "reward", coins: landedSegment.rewardValue });
     } else if (landedSegment.rewardType === "xp") {
-      playSound(winAudioRef.current);
+      playSound(winAudioRef.current, 1.0);
       triggerRewardAnimation({ type: "reward", xp: landedSegment.rewardValue });
     } else if (landedSegment.rewardType === "boost") {
-      playSound(winAudioRef.current);
+      playSound(winAudioRef.current, 1.0);
+      // Activate actual 2X XP boost on user account!
+      if (useBoostItem) useBoostItem("2x_xp_boost");
       triggerRewardAnimation({ type: "reward", xp: 300 });
     } else {
-      playSound(unluckyAudioRef.current);
+      playSound(unluckyAudioRef.current, 1.0);
     }
   };
 
@@ -153,12 +176,12 @@ export function SlotMachine() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center pt-4 pb-16 px-4 border-t border-white/10 mt-16 font-manrope bg-transparent">
-      {/* 1. Large Wide SPINNERBANNER.png Image spreading to both sides of the screen */}
-      <div className="w-full max-w-4xl lg:max-w-5xl mx-auto mb-8 px-2">
+      {/* 1. Large Wide SPINNERBANNER.png Image spreading to both sides of the screen (NO Outline) */}
+      <div className="w-full max-w-[1100px] mx-auto mb-8 px-2">
         <img
           src="/images/SPINNERBANNER.png"
           alt="AP Lab Wheel Spinner"
-          className="w-full h-44 sm:h-60 md:h-72 object-cover rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.8)] border border-white/15 block"
+          className="w-full h-48 sm:h-64 md:h-80 object-cover rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.85)] border-none block"
         />
       </div>
 
@@ -166,21 +189,21 @@ export function SlotMachine() {
       <div className="clean-wheel-wrapper">
         <div className="clean-wheel-container">
           
-          {/* 6. White Squiggle Arrow pointing to Jackpot Sliver (fades out when user spins!) */}
+          {/* White Squiggle Arrow pointing directly to 10,000 Jackpot Sliver at top-left (fades out on spin!) */}
           <img
             src="/images/jackpot-arrow.png"
             alt="Jackpot Arrow"
-            className="w-24 h-24 sm:w-32 sm:h-32 object-contain absolute -top-12 -right-8 sm:-top-16 sm:-right-12 pointer-events-none z-50 transition-opacity duration-500 transform rotate-12"
+            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute -top-14 -left-12 sm:-top-16 sm:-left-16 pointer-events-none z-50 transition-opacity duration-500 transform -rotate-12"
             style={{ opacity: hasSpun ? 0 : 1 }}
           />
 
-          {/* Animated Stopper Arrow (12 o'clock) */}
+          {/* Top Animated Stopper Arrow (12 o'clock) */}
           <motion.div
-            animate={stopperFlick ? { rotate: -22 } : { rotate: 0 }}
-            transition={{ duration: 0.06 }}
+            animate={stopperFlick ? { rotate: -24 } : { rotate: 0 }}
+            transition={{ duration: 0.05 }}
             className="clean-wheel-stopper"
           >
-            <svg className="w-7 h-9 text-white fill-current" viewBox="0 0 24 32">
+            <svg className="w-8 h-10 text-white fill-current" viewBox="0 0 24 32">
               <path d="M12 32 L3 8 C3 3.5 7 0 12 0 C17 0 21 3.5 21 8 Z" fill="#ffffff" stroke="#000000" strokeWidth="2" />
             </svg>
           </motion.div>
@@ -189,13 +212,12 @@ export function SlotMachine() {
           <div
             className="clean-wheel-canvas"
             style={{
-              transform: `rotate(${rotationAngle}deg)`,
-              transition: isSpinning ? "transform 4.5s cubic-bezier(0.15, 0.99, 0.25, 1)" : "none"
+              transform: `rotate(${rotationAngle}deg)`
             }}
           >
             <svg className="w-full h-full" viewBox="-1 -1 2 2">
               <defs>
-                {/* 5. Animated Shimmer Gradient for 10,000 Jackpot Sliver */}
+                {/* Animated Shimmer Gradient for 10,000 Jackpot Sliver */}
                 <linearGradient id="jackpotGoldGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                   <stop offset="0%" className="jackpot-gradient-stop1" />
                   <stop offset="50%" className="jackpot-gradient-stop2" />
@@ -224,11 +246,11 @@ export function SlotMachine() {
 
                   // Label and Icon positions
                   const midAngleDeg = midPercent * 360;
-                  const textRadius = 0.60;
+                  const textRadius = 0.62;
                   const textX = Math.cos(2 * Math.PI * midPercent) * textRadius;
                   const textY = Math.sin(2 * Math.PI * midPercent) * textRadius;
 
-                  const iconRadius = 0.40;
+                  const iconRadius = 0.38;
                   const iconX = Math.cos(2 * Math.PI * midPercent) * iconRadius;
                   const iconY = Math.sin(2 * Math.PI * midPercent) * iconRadius;
 
@@ -238,14 +260,14 @@ export function SlotMachine() {
                       <path d={pathData} fill={seg.color} stroke="#000000" strokeWidth="0.012" />
 
                       {/* Outer Rim Perimeter Dot */}
-                      <circle cx={dotX} cy={dotY} r="0.03" fill="#000000" />
+                      <circle cx={dotX} cy={dotY} r="0.028" fill="#000000" />
 
                       {/* Label Text */}
                       <text
                         x={textX}
                         y={textY}
                         fill={seg.textColor}
-                        fontSize={seg.rewardType === "jackpot" ? "0.044" : "0.054"}
+                        fontSize={seg.rewardType === "jackpot" ? "0.044" : "0.052"}
                         fontWeight="900"
                         fontFamily="sans-serif"
                         textAnchor="middle"
@@ -255,24 +277,14 @@ export function SlotMachine() {
                         {seg.amountText}
                       </text>
 
-                      {/* 7. Image Icons (Coins & XP Shields) instead of text! */}
-                      {seg.iconType === "coin" && (
+                      {/* Large Image Icons (Coins, XP Shields, 2X Boost) */}
+                      {seg.iconSrc && (
                         <image
-                          href="/images/coin-zoomed.png"
-                          x={iconX - 0.05}
-                          y={iconY - 0.05}
-                          width="0.10"
-                          height="0.10"
-                          transform={`rotate(${midAngleDeg + 90}, ${iconX}, ${iconY})`}
-                        />
-                      )}
-                      {seg.iconType === "xp" && (
-                        <image
-                          href="/images/xp-shield-zoomed.png"
-                          x={iconX - 0.05}
-                          y={iconY - 0.05}
-                          width="0.10"
-                          height="0.10"
+                          href={seg.iconSrc}
+                          x={iconX - 0.07}
+                          y={iconY - 0.07}
+                          width="0.14"
+                          height="0.14"
                           transform={`rotate(${midAngleDeg + 90}, ${iconX}, ${iconY})`}
                         />
                       )}
@@ -283,7 +295,7 @@ export function SlotMachine() {
             </svg>
           </div>
 
-          {/* 4. Center Interactive Spin Button Hub with MUCH LARGER Coin Image */}
+          {/* Center Interactive Spin Button Hub with MUCH LARGER Coin Image */}
           <button
             onClick={handleSpin}
             disabled={isSpinning}
@@ -297,7 +309,7 @@ export function SlotMachine() {
                   <img 
                     src="/images/coin-zoomed.png" 
                     alt="Coin" 
-                    className="w-6 h-6 sm:w-8 sm:h-8 object-contain inline-block transform scale-150 drop-shadow-md" 
+                    className="w-7 h-7 sm:w-10 sm:h-10 object-contain inline-block transform scale-150 drop-shadow-md" 
                   />
                 </div>
               </div>
