@@ -19,7 +19,7 @@ interface WheelSegment {
   rewardValue: number;
 }
 
-// Wheel Segments with Updated Probabilities (Jackpot 2%, Try Again 15%)
+// Wheel Segments with Probabilities (Jackpot 2%, Try Again 15%)
 const WHEEL_SEGMENTS: WheelSegment[] = [
   { id: "s1", amountText: "100", iconSrc: "/images/coin-zoomed.png", color: "#f472b6", textColor: "#000000", angle: 37, probability: 18.0, rewardType: "coins", rewardValue: 100 },
   { id: "s2", amountText: "100", iconSrc: "/images/xp-shield-zoomed.png", color: "#34d399", textColor: "#000000", angle: 37, probability: 15.0, rewardType: "xp", rewardValue: 100 },
@@ -241,11 +241,11 @@ export function SlotMachine() {
 
         <div className="clean-wheel-container">
           
-          {/* White Squiggle Arrow positioned TOP-RIGHT pointing directly at 10,000 Jackpot Slice at ~2 o'clock! */}
+          {/* White Squiggle Arrow positioned ON THE RIGHT pointing DOWN-LEFT DEAD-CENTER at the 10,000 Jackpot Slice (~2 o'clock)! */}
           <img
             src="/images/jackpot-arrow.png"
             alt="Jackpot Arrow"
-            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute -top-14 -right-10 sm:-top-16 sm:-right-12 pointer-events-none z-50 transition-opacity duration-500 transform rotate-[135deg] scale-y-[-1]"
+            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute top-[120px] -right-[75px] sm:top-[160px] sm:-right-[95px] pointer-events-none z-50 transition-opacity duration-500 transform -rotate-[15deg]"
             style={{ opacity: hasSpun ? 0 : 1 }}
           />
 
@@ -329,14 +329,14 @@ export function SlotMachine() {
                         {seg.amountText}
                       </text>
 
-                      {/* Slice Image Icons (Coins, XP Shields, 2X Boost) */}
+                      {/* Slice Image Icons (Coins, XP Shields, 2X Boost) - LARGER SIZE (0.26 x 0.26) matching 2x & frown face! */}
                       {seg.iconSrc && (
                         <image
                           href={seg.iconSrc}
-                          x={iconX - 0.09}
-                          y={iconY - 0.09}
-                          width="0.18"
-                          height="0.18"
+                          x={iconX - 0.13}
+                          y={iconY - 0.13}
+                          width="0.26"
+                          height="0.26"
                           transform={`rotate(${midAngleDeg + 90}, ${iconX}, ${iconY})`}
                         />
                       )}
@@ -388,19 +388,23 @@ export function SlotMachine() {
         </div>
       </div>
 
-      {/* Sleek Drop Odds Probability Modal - Sorted from Most Possible to Least Possible with Slice Background Colors & Images */}
+      {/* Sleek Dark Drop Odds Probability Modal - Blackish Background & Smooth Working Scrollbar */}
       <AnimatePresence>
         {showOddsModal && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div 
+            className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-lg"
+            onClick={() => setShowOddsModal(false)}
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 15 }}
-              className="w-full max-w-sm bg-[#121420] border border-white/20 rounded-3xl p-6 shadow-2xl text-white relative"
+              onClick={(e) => e.stopPropagation()}
+              className="w-full max-w-sm bg-[#08080c] border border-white/20 rounded-3xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.95)] text-white relative"
             >
               <button
                 onClick={() => setShowOddsModal(false)}
-                className="absolute top-4 right-4 text-white/60 hover:text-white font-bold text-lg p-1"
+                className="absolute top-4 right-4 text-white/60 hover:text-white font-bold text-lg p-1 cursor-pointer"
               >
                 ✕
               </button>
@@ -412,8 +416,8 @@ export function SlotMachine() {
                 List of rewards ordered from highest chance to lowest:
               </p>
 
-              {/* Scrollable Probabilities List */}
-              <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
+              {/* Scrollable Probabilities List with working custom scrollable container */}
+              <div className="odds-modal-scroll space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
                 {sortedSegments.map((seg) => (
                   <div
                     key={seg.id}
@@ -425,7 +429,7 @@ export function SlotMachine() {
                     }}
                   >
                     <div className="flex items-center space-x-3">
-                      {/* Reward Image or Sad Face SVG */}
+                      {/* Reward Image or Exact White SVG Sad Face */}
                       {seg.iconSrc ? (
                         <img
                           src={seg.iconSrc}
@@ -434,7 +438,12 @@ export function SlotMachine() {
                         />
                       ) : (
                         <div className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center shrink-0">
-                          <span className="text-white text-xs">🙁</span>
+                          <svg className="w-4 h-4 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <circle cx="12" cy="12" r="9" />
+                            <circle cx="9" cy="9" r="1" fill="currentColor" />
+                            <circle cx="15" cy="9" r="1" fill="currentColor" />
+                            <path d="M 8 16 Q 12 12 16 16" strokeLinecap="round" />
+                          </svg>
                         </div>
                       )}
                       <span
@@ -445,7 +454,7 @@ export function SlotMachine() {
                       </span>
                     </div>
                     <span
-                      className="font-mono font-black text-sm px-2.5 py-1 rounded-full bg-black/40 text-white"
+                      className="font-mono font-black text-sm px-2.5 py-1 rounded-full bg-black/50 text-white"
                     >
                       {seg.probability}%
                     </span>
@@ -456,7 +465,7 @@ export function SlotMachine() {
               <div className="mt-5 text-center">
                 <button
                   onClick={() => setShowOddsModal(false)}
-                  className="w-full py-3 rounded-xl bg-white text-black font-manrope font-black text-xs uppercase tracking-wider hover:bg-neutral-200 transition-colors shadow-lg"
+                  className="w-full py-3 rounded-xl bg-white text-black font-manrope font-black text-xs uppercase tracking-wider hover:bg-neutral-200 transition-colors shadow-lg cursor-pointer"
                 >
                   Got It
                 </button>
