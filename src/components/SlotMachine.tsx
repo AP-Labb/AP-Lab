@@ -19,18 +19,18 @@ interface WheelSegment {
   rewardValue: number;
 }
 
-// Wheel Segments with Weighted Probabilities, Larger Slice Images, & White Sad Face Icon!
+// Wheel Segments with Updated Probabilities (Jackpot 2%, Try Again 15%)
 const WHEEL_SEGMENTS: WheelSegment[] = [
-  { id: "s1", amountText: "100", iconSrc: "/images/coin-zoomed.png", color: "#f472b6", textColor: "#000000", angle: 37, probability: 14.0, rewardType: "coins", rewardValue: 100 },
-  { id: "s2", amountText: "100", iconSrc: "/images/xp-shield-zoomed.png", color: "#34d399", textColor: "#000000", angle: 37, probability: 10.0, rewardType: "xp", rewardValue: 100 },
-  { id: "s3", amountText: "50", iconSrc: "/images/coin-zoomed.png", color: "#fb923c", textColor: "#000000", angle: 37, probability: 22.0, rewardType: "coins", rewardValue: 50 },
-  { id: "s4", amountText: "250", iconSrc: "/images/coin-zoomed.png", color: "#facc15", textColor: "#000000", angle: 37, probability: 3.0, rewardType: "coins", rewardValue: 250 },
-  { id: "s5", amountText: "250", iconSrc: "/images/xp-shield-zoomed.png", color: "#a78bfa", textColor: "#000000", angle: 37, probability: 4.5, rewardType: "xp", rewardValue: 250 },
-  { id: "s6", amountText: "500", iconSrc: "/images/coin-zoomed.png", color: "#10b981", textColor: "#ffffff", angle: 37, probability: 1.0, rewardType: "coins", rewardValue: 500 },
-  { id: "s7", amountText: "2X", iconSrc: "/images/2x-xp-boost.png", color: "#fef3c7", textColor: "#000000", angle: 37, probability: 0.4, rewardType: "boost", rewardValue: 2 },
-  { id: "s8", amountText: "TRY AGAIN", iconSrc: undefined, color: "#121216", textColor: "#ffffff", angle: 37, probability: 38.0, rewardType: "none", rewardValue: 0 },
-  { id: "s9", amountText: "200", iconSrc: "/images/coin-zoomed.png", color: "#2dd4bf", textColor: "#000000", angle: 34, probability: 7.0, rewardType: "coins", rewardValue: 200 },
-  { id: "jackpot", amountText: "10,000", iconSrc: "/images/coin-zoomed.png", color: "url(#jackpotGoldGradient)", textColor: "#000000", angle: 30, probability: 0.1, rewardType: "jackpot", rewardValue: 10000 },
+  { id: "s1", amountText: "100", iconSrc: "/images/coin-zoomed.png", color: "#f472b6", textColor: "#000000", angle: 37, probability: 18.0, rewardType: "coins", rewardValue: 100 },
+  { id: "s2", amountText: "100", iconSrc: "/images/xp-shield-zoomed.png", color: "#34d399", textColor: "#000000", angle: 37, probability: 15.0, rewardType: "xp", rewardValue: 100 },
+  { id: "s3", amountText: "50", iconSrc: "/images/coin-zoomed.png", color: "#fb923c", textColor: "#000000", angle: 37, probability: 18.0, rewardType: "coins", rewardValue: 50 },
+  { id: "s4", amountText: "250", iconSrc: "/images/coin-zoomed.png", color: "#facc15", textColor: "#000000", angle: 37, probability: 6.0, rewardType: "coins", rewardValue: 250 },
+  { id: "s5", amountText: "250", iconSrc: "/images/xp-shield-zoomed.png", color: "#a78bfa", textColor: "#000000", angle: 37, probability: 8.0, rewardType: "xp", rewardValue: 250 },
+  { id: "s6", amountText: "500", iconSrc: "/images/coin-zoomed.png", color: "#10b981", textColor: "#ffffff", angle: 37, probability: 4.0, rewardType: "coins", rewardValue: 500 },
+  { id: "s7", amountText: "2X", iconSrc: "/images/2x-xp-boost.png", color: "#fef3c7", textColor: "#000000", angle: 37, probability: 3.0, rewardType: "boost", rewardValue: 2 },
+  { id: "s8", amountText: "TRY AGAIN", iconSrc: undefined, color: "#121216", textColor: "#ffffff", angle: 37, probability: 15.0, rewardType: "none", rewardValue: 0 },
+  { id: "s9", amountText: "200", iconSrc: "/images/coin-zoomed.png", color: "#2dd4bf", textColor: "#000000", angle: 34, probability: 11.0, rewardType: "coins", rewardValue: 200 },
+  { id: "jackpot", amountText: "10,000", iconSrc: "/images/coin-zoomed.png", color: "url(#jackpotGoldGradient)", textColor: "#000000", angle: 30, probability: 2.0, rewardType: "jackpot", rewardValue: 10000 },
 ];
 
 export function SlotMachine() {
@@ -81,7 +81,7 @@ export function SlotMachine() {
         return { segment: WHEEL_SEGMENTS[i], index: i };
       }
     }
-    return { segment: WHEEL_SEGMENTS[7], index: 7 }; // Fallback to TRY AGAIN
+    return { segment: WHEEL_SEGMENTS[0], index: 0 };
   };
 
   const handleSpin = () => {
@@ -98,7 +98,7 @@ export function SlotMachine() {
     setIsSpinning(true);
     setHasSpun(true);
 
-    // Pick outcome based on actual drop probabilities
+    // Pick outcome based on updated drop probabilities (Jackpot 2%, Try Again 15%)
     const { segment: targetSeg, index: targetIdx } = selectWeightedSegment();
 
     // Calculate angle range for chosen segment
@@ -168,14 +168,14 @@ export function SlotMachine() {
 
       // Screen-wide confetti burst cannons for 10,000 Coin Jackpot!
       confetti({
-        particleCount: 180,
-        spread: 120,
+        particleCount: 200,
+        spread: 130,
         origin: { y: 0.5 },
         zIndex: 99999,
       });
       setTimeout(() => {
-        confetti({ particleCount: 120, angle: 60, spread: 80, origin: { x: 0 }, zIndex: 99999 });
-        confetti({ particleCount: 120, angle: 120, spread: 80, origin: { x: 1 }, zIndex: 99999 });
+        confetti({ particleCount: 140, angle: 60, spread: 80, origin: { x: 0 }, zIndex: 99999 });
+        confetti({ particleCount: 140, angle: 120, spread: 80, origin: { x: 1 }, zIndex: 99999 });
       }, 350);
 
       if (addCredits) addCredits(10000, "10,000 Coin Wheel Jackpot");
@@ -189,16 +189,15 @@ export function SlotMachine() {
 
     } else if (landedSegment.rewardType === "xp") {
       playSound(winAudioRef.current, 1.0);
-      // Actually register & award XP into user profile & leveling system!
       if (claimSocialXp) claimSocialXp(`Wheel Win: ${landedSegment.amountText} XP`, landedSegment.rewardValue);
       triggerRewardAnimation({ type: "reward", xp: landedSegment.rewardValue });
 
     } else if (landedSegment.rewardType === "boost") {
       playSound(winAudioRef.current, 1.0);
-      // Activate actual 2X XP boost on user account!
+      // Activate OR REFRESH 2X XP boost timer!
       if (useBoostItem) useBoostItem("2x_xp_boost");
       if (claimSocialXp) claimSocialXp("Wheel Win: 2X XP Boost Bonus", 300);
-      triggerRewardAnimation({ type: "reward", xp: 300 });
+      triggerRewardAnimation({ type: "reward", xp: 300, title: "2X XP Boost Activated / Refreshed!" });
 
     } else {
       playSound(unluckyAudioRef.current, 1.0);
@@ -211,6 +210,9 @@ export function SlotMachine() {
     const y = Math.sin(2 * Math.PI * percent);
     return [x, y];
   };
+
+  // Sort odds list from most possible down to least possible
+  const sortedSegments = [...WHEEL_SEGMENTS].sort((a, b) => b.probability - a.probability);
 
   return (
     <div className="w-full flex flex-col items-center justify-center pt-4 pb-16 px-4 border-t border-white/10 mt-16 font-manrope bg-transparent">
@@ -239,11 +241,11 @@ export function SlotMachine() {
 
         <div className="clean-wheel-container">
           
-          {/* White Squiggle Arrow pointing directly to 10,000 Jackpot Sliver at top-left (fades out on spin!) */}
+          {/* White Squiggle Arrow positioned TOP-RIGHT pointing directly at 10,000 Jackpot Slice at ~2 o'clock! */}
           <img
             src="/images/jackpot-arrow.png"
             alt="Jackpot Arrow"
-            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute -top-14 -left-12 sm:-top-16 sm:-left-16 pointer-events-none z-50 transition-opacity duration-500 transform -rotate-12"
+            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute -top-14 -right-10 sm:-top-16 sm:-right-12 pointer-events-none z-50 transition-opacity duration-500 transform rotate-[135deg] scale-y-[-1]"
             style={{ opacity: hasSpun ? 0 : 1 }}
           />
 
@@ -294,13 +296,13 @@ export function SlotMachine() {
                   const dotX = Math.cos(2 * Math.PI * midPercent) * dotRadius;
                   const dotY = Math.sin(2 * Math.PI * midPercent) * dotRadius;
 
-                  // Label and Icon positions
+                  // Label and Icon positions - Shifted icons up a bit more (iconRadius = 0.42)!
                   const midAngleDeg = midPercent * 360;
-                  const textRadius = 0.63;
+                  const textRadius = 0.65;
                   const textX = Math.cos(2 * Math.PI * midPercent) * textRadius;
                   const textY = Math.sin(2 * Math.PI * midPercent) * textRadius;
 
-                  const iconRadius = 0.36;
+                  const iconRadius = 0.42; // Shifted UP further towards perimeter!
                   const iconX = Math.cos(2 * Math.PI * midPercent) * iconRadius;
                   const iconY = Math.sin(2 * Math.PI * midPercent) * iconRadius;
 
@@ -327,7 +329,7 @@ export function SlotMachine() {
                         {seg.amountText}
                       </text>
 
-                      {/* Slice Image Icons (Coins, XP Shields, 2X Boost) - LARGER SIZE (0.18 x 0.18)! */}
+                      {/* Slice Image Icons (Coins, XP Shields, 2X Boost) */}
                       {seg.iconSrc && (
                         <image
                           href={seg.iconSrc}
@@ -386,50 +388,65 @@ export function SlotMachine() {
         </div>
       </div>
 
-      {/* Sleek Minimalist Drop Odds Probability Modal */}
+      {/* Sleek Drop Odds Probability Modal - Sorted from Most Possible to Least Possible with Slice Background Colors & Images */}
       <AnimatePresence>
         {showOddsModal && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-md">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 15 }}
-              className="w-full max-w-sm bg-[#121420] border border-white/15 rounded-3xl p-6 shadow-2xl text-white relative"
+              className="w-full max-w-sm bg-[#121420] border border-white/20 rounded-3xl p-6 shadow-2xl text-white relative"
             >
               <button
                 onClick={() => setShowOddsModal(false)}
-                className="absolute top-4 right-4 text-white/50 hover:text-white font-bold text-lg p-1"
+                className="absolute top-4 right-4 text-white/60 hover:text-white font-bold text-lg p-1"
               >
                 ✕
               </button>
 
               <h3 className="font-manrope font-black text-xl text-white mb-1">
-                Wheel Probabilities
+                Drop Probabilities
               </h3>
-              <p className="text-xs text-white/60 mb-5">
-                Exact drop rates for each spinner reward:
+              <p className="text-xs text-white/70 mb-4">
+                List of rewards ordered from highest chance to lowest:
               </p>
 
-              <div className="space-y-2.5 max-h-[340px] overflow-y-auto pr-1">
-                {WHEEL_SEGMENTS.map((seg) => (
+              {/* Scrollable Probabilities List */}
+              <div className="space-y-2.5 max-h-[380px] overflow-y-auto pr-1 custom-scrollbar">
+                {sortedSegments.map((seg) => (
                   <div
                     key={seg.id}
-                    className="flex items-center justify-between p-3 rounded-2xl bg-white/5 border border-white/10"
+                    className="flex items-center justify-between p-3 rounded-2xl border border-black/20 shadow-sm"
+                    style={{
+                      background: seg.color.startsWith("url")
+                        ? "linear-gradient(135deg, #ffd700, #f59e0b)"
+                        : seg.color
+                    }}
                   >
                     <div className="flex items-center space-x-3">
-                      {seg.color.startsWith("url") ? (
-                        <div className="w-4 h-4 rounded-full bg-amber-400 shadow-[0_0_8px_#ffd700]" />
-                      ) : (
-                        <div
-                          className="w-4 h-4 rounded-full border border-white/20"
-                          style={{ backgroundColor: seg.color }}
+                      {/* Reward Image or Sad Face SVG */}
+                      {seg.iconSrc ? (
+                        <img
+                          src={seg.iconSrc}
+                          alt={seg.amountText}
+                          className="w-6 h-6 object-contain drop-shadow-md shrink-0"
                         />
+                      ) : (
+                        <div className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center shrink-0">
+                          <span className="text-white text-xs">🙁</span>
+                        </div>
                       )}
-                      <span className="font-manrope font-extrabold text-sm text-white">
+                      <span
+                        className="font-manrope font-black text-sm drop-shadow-sm"
+                        style={{ color: seg.textColor }}
+                      >
                         {seg.amountText} {seg.rewardType === "coins" || seg.rewardType === "jackpot" ? "Coins" : seg.rewardType === "xp" ? "XP" : seg.rewardType === "boost" ? "XP Boost" : ""}
                       </span>
                     </div>
-                    <span className="font-mono font-bold text-sm text-amber-400">
+                    <span
+                      className="font-mono font-black text-sm px-2.5 py-1 rounded-full bg-black/40 text-white"
+                    >
                       {seg.probability}%
                     </span>
                   </div>
@@ -439,7 +456,7 @@ export function SlotMachine() {
               <div className="mt-5 text-center">
                 <button
                   onClick={() => setShowOddsModal(false)}
-                  className="w-full py-3 rounded-xl bg-white text-black font-manrope font-black text-xs uppercase tracking-wider hover:bg-neutral-200 transition-colors"
+                  className="w-full py-3 rounded-xl bg-white text-black font-manrope font-black text-xs uppercase tracking-wider hover:bg-neutral-200 transition-colors shadow-lg"
                 >
                   Got It
                 </button>

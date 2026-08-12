@@ -1239,25 +1239,30 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
       }
       idx = inv.indexOf(matchedId);
     }
-
-    if (idx === -1) return false;
     
-    // Remove one instance of boost item from inventory
+    // Remove one instance of boost item from inventory if found
     const newInv = [...inv];
-    newInv.splice(idx, 1);
+    if (idx !== -1) {
+      newInv.splice(idx, 1);
+    }
     
-    // Set 10 hour expiry timestamp (10 * 60 * 60 * 1000 = 36000000ms)
+    // Set or EXTEND/REFRESH 10-hour boost expiry timestamp (10 * 60 * 60 * 1000 = 36000000ms)
     const activeBoosts = { ...(progress.activeBoosts || {}) };
-    const expiryTime = Date.now() + 10 * 60 * 60 * 1000;
+    const key = boostId.includes("xp") ? "boost-xp-2x" : "boost-coin-2x";
+    const currentExpiry = activeBoosts[key] || activeBoosts[boostId] || 0;
+    const baseTime = currentExpiry > Date.now() ? currentExpiry : Date.now();
+    const expiryTime = baseTime + 10 * 60 * 60 * 1000;
 
     activeBoosts[boostId] = expiryTime;
     activeBoosts[matchedId] = expiryTime;
     if (boostId.includes("xp")) {
       activeBoosts["boost-xp-2x"] = expiryTime;
       activeBoosts["boost-2x-xp"] = expiryTime;
+      activeBoosts["2x_xp_boost"] = expiryTime;
     } else if (boostId.includes("coin")) {
       activeBoosts["boost-coin-2x"] = expiryTime;
       activeBoosts["boost-2x-coin"] = expiryTime;
+      activeBoosts["2x_coin_boost"] = expiryTime;
     }
     
     const updated: UserProgress = {
