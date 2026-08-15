@@ -402,11 +402,11 @@ export function HeroSection() {
               setIsBadgeHovered(false);
               setBadgeHoverState('exiting');
             }}
-            className="relative px-3.5 py-2 sm:px-4.5 sm:py-2.5 rounded-md flex items-center justify-center text-center cursor-pointer group overflow-hidden bg-transparent border border-transparent transition-all duration-300"
+            className="relative px-2.5 py-1 sm:px-3 sm:py-1 rounded-none flex items-center justify-center text-center cursor-pointer group overflow-hidden bg-transparent border border-transparent transition-all duration-300"
           >
             {/* Sliding Green Background Rectangle */}
             <motion.div
-              className="absolute inset-0 bg-[#20c997] rounded-md z-0 pointer-events-none"
+              className="absolute inset-0 bg-[#20c997] rounded-none z-0 pointer-events-none"
               animate={
                 badgeHoverState === 'hovered'
                   ? { x: "0%" }
@@ -429,14 +429,14 @@ export function HeroSection() {
 
             {/* Inner Content (AP Logo + Text + Arrow) with smooth opacity transition */}
             <span 
-              className={`relative z-10 font-sans font-extrabold text-[10px] sm:text-xs text-white uppercase tracking-wider flex items-center justify-center gap-2 sm:gap-2.5 transition-opacity duration-300 ${
+              className={`relative z-10 font-sans font-extrabold text-[10px] sm:text-xs text-white uppercase tracking-wider flex items-center justify-center gap-1.5 sm:gap-2 transition-opacity duration-300 ${
                 isBadgeHovered ? "opacity-100" : "opacity-80"
               }`}
             >
               <img 
                 src="/images/ap-logo.png" 
                 alt="AP Logo" 
-                className="w-auto h-5 sm:h-6 object-contain shrink-0" 
+                className="w-auto h-4.5 sm:h-5 object-contain shrink-0" 
               />
               <span>SPECIALIZED FOR ADVANCED PLACEMENT CLASSES</span>
               <svg viewBox="0 0 24 24" className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-none stroke-white stroke-[2.5] group-hover:translate-x-0.5 transition-transform duration-300 shrink-0" xmlns="http://www.w3.org/2000/svg">

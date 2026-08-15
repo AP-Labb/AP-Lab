@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -39,6 +39,7 @@ export default function SettingsPage() {
   const router = useRouter();
   const { progress, updatePreferences } = useProgress();
   const { currentUser } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const tabParam = searchParams.get("tab");
   const [activeTab, setActiveTab] = useState<"account" | "customize">("account");
@@ -128,6 +129,34 @@ export default function SettingsPage() {
     }
   };
 
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image file size should be less than 5MB");
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = async () => {
+      const base64Data = reader.result as string;
+      try {
+        if (currentUser) {
+          await updateProfile(currentUser, { photoURL: base64Data });
+        }
+        if (updatePreferences) {
+          await updatePreferences({ photoURL: base64Data });
+        }
+        setSavedSuccess(true);
+        setTimeout(() => setSavedSuccess(false), 2500);
+      } catch (err) {
+        console.error("Error uploading profile picture:", err);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleSaveAccountInfo = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
@@ -155,6 +184,15 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-[#030408] text-white flex flex-row relative z-0 overflow-x-clip selection:bg-neutral-800 selection:text-white font-manrope">
       <title>Settings | AP Lab</title>
+
+      {/* Hidden File Input for OS File Explorer */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileSelect}
+        accept="image/*"
+        className="hidden"
+      />
 
       {/* Grid background */}
       <div className="fixed inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.04)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:3.5rem_3.5rem] pointer-events-none z-0" />
@@ -230,9 +268,13 @@ export default function SettingsPage() {
                   </button>
                 </div>
 
-                {/* Avatar Display with Circular Edit Pencil Icon Badge */}
+                {/* Avatar Display with Circular Edit Camera Icon Badge */}
                 <div className="flex items-center gap-5 pt-2 border-t border-white/[0.06]">
-                  <div className="relative group">
+                  <div 
+                    className="relative group cursor-pointer"
+                    onClick={() => fileInputRef.current?.click()}
+                    title="Click to change profile picture"
+                  >
                     <UserAvatar
                       photoURL={progress?.photoURL || currentUser?.photoURL}
                       name={nameInput}
@@ -241,21 +283,42 @@ export default function SettingsPage() {
                     />
                     <button
                       type="button"
-                      onClick={() => setShowPfpModal(true)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        fileInputRef.current?.click();
+                      }}
                       className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-[#1c1e2e] border-2 border-[#090a12] text-white flex items-center justify-center shadow-lg hover:bg-white hover:text-black transition-all cursor-pointer z-30"
-                      title="Change PFP / Avatar Frame"
+                      title="Upload profile picture"
                     >
-                      <Edit3 className="w-4 h-4 stroke-[2.5]" />
+                      <Camera className="w-4 h-4 stroke-[2.5]" />
                     </button>
                   </div>
 
-                  <div className="space-y-1">
+                  <div className="space-y-1.5">
                     <UserDisplayName
                       name={nameInput || "AP Scholar"}
                       activeNameColor={progress?.activeNameColor}
                       className="font-manrope font-extrabold text-lg text-white"
                     />
                     <p className="text-xs text-white/40 font-mono">{currentUser?.email || progress?.email || "scholar@aplab.org"}</p>
+                    
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        onClick={() => fileInputRef.current?.click()}
+                        className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold font-manrope transition-all cursor-pointer flex items-center gap-1.5 shadow-sm"
+                      >
+                        <Camera className="w-3.5 h-3.5 text-white" />
+                        <span>Upload Photo</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setShowPfpModal(true)}
+                        className="px-3.5 py-1.5 rounded-xl bg-white/[0.04] hover:bg-white/[0.08] text-white/60 hover:text-white text-xs font-bold font-manrope transition-all cursor-pointer border border-white/10"
+                      >
+                        Avatar Frames & Gear
+                      </button>
+                    </div>
                   </div>
                 </div>
 

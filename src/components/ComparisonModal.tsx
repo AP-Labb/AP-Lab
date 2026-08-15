@@ -128,8 +128,12 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <div 
-          className="fixed inset-0 z-[9999999] bg-[#030409] overflow-y-auto select-none flex items-center justify-center p-4 sm:p-6"
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+          className="fixed inset-0 z-[9999999] bg-[#030409]/95 backdrop-blur-md overflow-y-auto select-none flex items-center justify-center p-4 sm:p-6"
           data-lenis-prevent="true"
           onWheel={(e) => e.stopPropagation()}
           onTouchMove={(e) => e.stopPropagation()}
@@ -148,10 +152,10 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
 
           {/* Modal Content Box - Larger & More Spacious */}
           <motion.div
-            initial={{ y: "100vh", opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: "100vh", opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.94, y: 24 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.94, y: 24 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             className="relative w-full max-w-6xl w-[94%] sm:w-[96%] bg-[#080914] border border-white/15 rounded-3xl overflow-hidden shadow-[0_32px_120px_rgba(0,0,0,1)] z-10 flex flex-col max-h-[92vh] my-auto"
           >
             {/* Small Close Button (Top Right Inside Modal) */}
@@ -261,7 +265,7 @@ export function ComparisonModal({ isOpen, onClose }: ComparisonModalProps) {
               </table>
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>
   );
