@@ -310,6 +310,8 @@ export function HeroSection() {
   const [isHoveredDashboard, setIsHoveredDashboard] = useState(false);
   const [isHoveredSignIn, setIsHoveredSignIn] = useState(false);
   const [isComparisonOpen, setIsComparisonOpen] = useState(false);
+  const [badgeHoverState, setBadgeHoverState] = useState<'idle' | 'hovered' | 'exiting'>('idle');
+  const [isBadgeHovered, setIsBadgeHovered] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
 
   const rawX = useMotionValue(-999);
@@ -387,16 +389,57 @@ export function HeroSection() {
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="flex flex-col items-center justify-center w-full max-w-6xl mt-2 sm:mt-4 md:mt-6 relative z-10"
       >
-        {/* Glassmorphic Capsule Header */}
+        {/* Specialized for AP Classes Header Badge */}
         <div className="mb-6 sm:mb-8 block select-none">
           <button 
             type="button"
             onClick={() => setIsComparisonOpen(true)}
-            className="liquid-glass-badge px-4 py-2 sm:px-6 sm:py-2.5 rounded-full flex items-center justify-center text-center cursor-pointer group"
+            onMouseEnter={() => {
+              setIsBadgeHovered(true);
+              setBadgeHoverState('hovered');
+            }}
+            onMouseLeave={() => {
+              setIsBadgeHovered(false);
+              setBadgeHoverState('exiting');
+            }}
+            className="relative px-3.5 py-2 sm:px-4.5 sm:py-2.5 rounded-md flex items-center justify-center text-center cursor-pointer group overflow-hidden bg-transparent border border-transparent transition-all duration-300"
           >
-            <span className="relative z-10 font-sans font-extrabold text-[9px] sm:text-xs text-white/90 group-hover:text-white uppercase tracking-wider flex items-center justify-center gap-1.5 sm:gap-2 transition-colors duration-300">
-              SPECIALIZED FOR ADVANCED PLACEMENT CLASSES
-              <svg viewBox="0 0 24 24" className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-none stroke-white/80 group-hover:stroke-white stroke-[2.5] group-hover:translate-x-0.5 transition-transform duration-300" xmlns="http://www.w3.org/2000/svg">
+            {/* Sliding Green Background Rectangle */}
+            <motion.div
+              className="absolute inset-0 bg-[#20c997] rounded-md z-0 pointer-events-none"
+              animate={
+                badgeHoverState === 'hovered'
+                  ? { x: "0%" }
+                  : badgeHoverState === 'exiting'
+                  ? { x: "100%" }
+                  : { x: "-100%" }
+              }
+              initial={{ x: "-100%" }}
+              transition={
+                badgeHoverState === 'idle'
+                  ? { duration: 0 }
+                  : { duration: 0.35, ease: [0.16, 1, 0.3, 1] }
+              }
+              onAnimationComplete={() => {
+                if (badgeHoverState === 'exiting') {
+                  setBadgeHoverState('idle');
+                }
+              }}
+            />
+
+            {/* Inner Content (AP Logo + Text + Arrow) with smooth opacity transition */}
+            <span 
+              className={`relative z-10 font-sans font-extrabold text-[10px] sm:text-xs text-white uppercase tracking-wider flex items-center justify-center gap-2 sm:gap-2.5 transition-opacity duration-300 ${
+                isBadgeHovered ? "opacity-100" : "opacity-80"
+              }`}
+            >
+              <img 
+                src="/images/ap-logo.png" 
+                alt="AP Logo" 
+                className="w-auto h-5 sm:h-6 object-contain shrink-0" 
+              />
+              <span>SPECIALIZED FOR ADVANCED PLACEMENT CLASSES</span>
+              <svg viewBox="0 0 24 24" className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-none stroke-white stroke-[2.5] group-hover:translate-x-0.5 transition-transform duration-300 shrink-0" xmlns="http://www.w3.org/2000/svg">
                 <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
