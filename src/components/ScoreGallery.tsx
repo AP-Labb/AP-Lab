@@ -10,24 +10,21 @@ const scores = [
     image: "/images/media__1779045527637.png",
     student: "Alex R.",
     date: "May 2025",
-    panda: "/images/pandas/panda-paw-chin.png",
-    pandaHeight: "h-24 sm:h-28 md:h-32"
+    panda: "/images/pandas/panda-paw-chin.png"
   },
   {
     subject: "AP Biology",
     image: "/images/media__1779045527619.png",
     student: "Sarah M.",
     date: "May 2025",
-    panda: "/images/pandas/panda-neutral.png",
-    pandaHeight: "h-18 sm:h-20 md:h-24" // Smaller center panda so it doesn't cover text
+    panda: "/images/pandas/panda-neutral.png"
   },
   {
     subject: "AP Calculus AB",
     image: "/images/media__1779046231399.png",
     student: "David K.",
     date: "May 2025",
-    panda: "/images/pandas/panda-leaning.png",
-    pandaHeight: "h-24 sm:h-28 md:h-32"
+    panda: "/images/pandas/panda-leaning.png"
   }
 ];
 
@@ -48,13 +45,13 @@ export function ScoreGallery() {
             <div className="relative aspect-[4/5] rounded-[32px] border border-white/5 bg-white/[0.02] transition-all duration-500 group-hover:border-white/20 group-hover:bg-white/[0.04]">
               
               {/* Panda Mascot sitting perfectly on the top center border of the card */}
-              <div className="absolute -top-12 sm:-top-14 md:-top-16 left-1/2 -translate-x-1/2 z-40 pointer-events-none flex items-end justify-center transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-105 filter drop-shadow-[0_12px_20px_rgba(0,0,0,0.7)]">
+              <div className="absolute -top-10 sm:-top-12 md:-top-14 left-1/2 -translate-x-1/2 z-40 pointer-events-none flex items-end justify-center transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-105 filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.3)]">
                 <Image 
                   src={score.panda}
                   alt={`${score.subject} Panda Mascot`}
                   width={180}
                   height={180}
-                  className={cn("w-auto object-contain", score.pandaHeight)}
+                  className="w-auto h-20 sm:h-24 md:h-26 object-contain"
                   priority
                   unoptimized
                 />
@@ -104,5 +101,6 @@ export function ScoreGallery() {
     </div>
   );
 }
+
 
 
