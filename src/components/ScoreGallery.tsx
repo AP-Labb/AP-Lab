@@ -9,26 +9,29 @@ const scores = [
     subject: "AP Chemistry",
     image: "/images/media__1779045527637.png",
     student: "Alex R.",
-    date: "May 2025"
+    date: "May 2025",
+    panda: "/images/pandas/panda-paw-chin.png"
   },
   {
     subject: "AP Biology",
     image: "/images/media__1779045527619.png",
     student: "Sarah M.",
-    date: "May 2025"
+    date: "May 2025",
+    panda: "/images/pandas/panda-neutral.png"
   },
   {
     subject: "AP Calculus AB",
     image: "/images/media__1779046231399.png",
     student: "David K.",
-    date: "May 2025"
+    date: "May 2025",
+    panda: "/images/pandas/panda-leaning.png"
   }
 ];
 
 export function ScoreGallery() {
   return (
-    <div className="w-full mt-24">
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-7xl mx-auto px-6">
+    <div className="w-full mt-12">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8 max-w-7xl mx-auto px-6">
         {scores.map((score, idx) => (
           <motion.div
             key={idx}
@@ -36,8 +39,21 @@ export function ScoreGallery() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, delay: idx * 0.1 }}
-            className="group relative"
+            className="group relative pt-24 md:pt-28"
           >
+            {/* Panda Mascot sitting on the top center of the card rectangle */}
+            <div className="absolute top-2 left-1/2 -translate-x-1/2 z-40 pointer-events-none w-32 sm:w-36 md:w-40 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-105 filter drop-shadow-[0_12px_24px_rgba(0,0,0,0.7)]">
+              <Image 
+                src={score.panda}
+                alt={`${score.subject} Panda Mascot`}
+                width={180}
+                height={180}
+                className="w-full h-auto object-contain"
+                priority
+                unoptimized
+              />
+            </div>
+
             {/* Card Container */}
             <div className="relative aspect-[4/5] rounded-[32px] overflow-hidden border border-white/5 bg-white/[0.02] transition-all duration-500 group-hover:border-white/20 group-hover:bg-white/[0.04]">
               {/* Glass Overlay */}
@@ -82,3 +98,4 @@ export function ScoreGallery() {
     </div>
   );
 }
+
