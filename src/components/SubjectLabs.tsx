@@ -543,7 +543,7 @@ export function SubjectLabs() {
                 className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
               >
                 {/* Peeking Panda Mascot sitting above top-left edge */}
-                <div className="absolute top-0 -translate-y-[calc(100%-2px)] left-8 sm:left-10 md:left-12 z-50 pointer-events-none filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] transition-transform duration-300 group-hover:-translate-y-[calc(100%+2px)]">
+                <div className="absolute top-0 -translate-y-[calc(100%-2px)] left-8 sm:left-10 md:left-12 z-50 pointer-events-none filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
                   <img 
                     src="/images/pandas/panda-peeking.png"
                     alt="Peeking Panda Mascot"
