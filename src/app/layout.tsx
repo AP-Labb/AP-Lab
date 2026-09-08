@@ -87,6 +87,7 @@ export const metadata: Metadata = {
 };
 
 import { GradualBlurWrapper } from "@/components/GradualBlurWrapper";
+import { MobileOnlyNotice } from "@/components/MobileOnlyNotice";
 
 export default function RootLayout({
   children,
@@ -101,6 +102,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.variable} ${manrope.variable} ${cabin.variable} ${instrumentSerif.variable} font-inter antialiased`}>
         <LiquidFilter />
+        <MobileOnlyNotice />
         <AuthProvider>
           <ProgressProvider>
             <UIProvider>
