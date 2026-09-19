@@ -386,26 +386,32 @@ export default function AiPdfSummarizerPage() {
 
                   {/* MAIN CONTAINER CONTENT (NO FILE SELECTED STATE OR SELECTED FILE STATE) */}
                   {!selectedFile && !videoUrl.trim() && !pastedText.trim() ? (
-                    <div className="my-8 flex flex-col items-center justify-center text-center space-y-3">
+                    <div 
+                      onClick={() => fileInputRef.current?.click()}
+                      className="my-8 flex flex-col items-center justify-center text-center space-y-3 cursor-pointer group"
+                    >
                       <button
                         type="button"
-                        onClick={() => fileInputRef.current?.click()}
-                        className="w-14 h-14 rounded-full bg-[#222430] hover:bg-[#2c2e3e] border border-white/15 flex items-center justify-center text-white/70 hover:text-white transition-all cursor-pointer shadow-lg active:scale-95"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          fileInputRef.current?.click();
+                        }}
+                        className="w-14 h-14 rounded-full bg-[#222430] group-hover:bg-[#2c2e3e] border border-white/15 flex items-center justify-center text-white/70 group-hover:text-white transition-all cursor-pointer shadow-lg active:scale-95"
                       >
-                        <Plus className="w-7 h-7" />
+                        <Plus className="w-7 h-7 text-white" />
                       </button>
 
                       <div className="space-y-1">
-                        <h3 className="font-manrope font-bold text-xl text-white tracking-tight">
+                        <h3 className="font-manrope font-bold text-xl text-white tracking-tight group-hover:text-purple-300 transition-colors">
                           No file(s) selected yet
                         </h3>
                         <p className="font-manrope text-xs text-white/40">
-                          Selected files will appear here.
+                          Click here or choose an option above to upload files.
                         </p>
                       </div>
                     </div>
                   ) : (
-                    /* SELECTED FILE / CONTENT CARD (Appears cleanly at bottom!) */
+                    /* SELECTED FILE / CONTENT CARD */
                     <div className="my-6 w-full max-w-md bg-[#20222d] border border-purple-500/40 rounded-2xl p-5 flex items-center justify-between shadow-xl">
                       <div className="flex items-center space-x-3.5 overflow-hidden">
                         <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
@@ -424,12 +430,21 @@ export default function AiPdfSummarizerPage() {
                       <div className="flex items-center space-x-2">
                         <button
                           type="button"
+                          onClick={() => fileInputRef.current?.click()}
+                          title="Add / Change File"
+                          className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
+                        >
+                          <Plus className="w-4 h-4" />
+                        </button>
+                        <button
+                          type="button"
                           onClick={() => {
                             setSelectedFile(null);
                             setVideoUrl("");
                             setPastedText("");
                           }}
-                          className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors"
+                          title="Remove File"
+                          className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
                         >
                           <X className="w-4 h-4" />
                         </button>

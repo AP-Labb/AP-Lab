@@ -65,6 +65,7 @@ const partnerLogos = [
 ];
 
 import { GlobalStudentMap } from "@/components/GlobalStudentMap";
+import { MobileAppQRSection } from "@/components/MobileAppQRSection";
 
 export default function LandingPage() {
   return (
@@ -121,6 +122,7 @@ export default function LandingPage() {
           />
         </div>
         <GlobalStudentMap />
+        <MobileAppQRSection />
         <FAQSection />
         <SocialsSlider />
       </div>
