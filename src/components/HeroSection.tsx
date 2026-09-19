@@ -406,7 +406,7 @@ export function HeroSection() {
           >
             {/* Sliding Green Background Rectangle */}
             <motion.div
-              className="absolute inset-0 bg-[#20c997] rounded-none z-0 pointer-events-none"
+              className="absolute inset-0 bg-[#059669] rounded-none z-0 pointer-events-none"
               animate={
                 badgeHoverState === 'hovered'
                   ? { x: "0%" }

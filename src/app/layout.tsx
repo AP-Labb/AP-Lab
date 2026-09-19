@@ -99,6 +99,14 @@ export default function RootLayout({
       <head>
         <SeoSchema />
         <link rel="canonical" href="https://theaplab.org/" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{var isMobile=window.innerWidth<768;var hasOpened=sessionStorage.getItem("aplab_tab_opened");if(isMobile||hasOpened){document.documentElement.classList.add("no-preloader");}}catch(e){}})();`,
+          }}
+        />
+        <style dangerouslySetInnerHTML={{
+          __html: `html.no-preloader #aplab-preloader { display: none !important; }`
+        }} />
       </head>
       <body className={`${inter.variable} ${manrope.variable} ${cabin.variable} ${instrumentSerif.variable} font-inter antialiased`}>
         <LiquidFilter />

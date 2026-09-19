@@ -177,117 +177,65 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               ))}
                             </motion.div>
                           ) : item.icon === "scroll" ? (
-                            /* Quests Blank Clipboard Icon with Bullet Points & Lines Hover Animation */
+                            /* Quests Scroll Text Icon with Smooth Spring Hover Animation */
                             <motion.div
                               className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
                               variants={{
-                                rest: { scale: 1 },
-                                hover: { scale: 1.12 }
+                                rest: { scale: 1, rotate: 0 },
+                                hover: { scale: 1.15, rotate: -3 }
                               }}
-                              transition={{ duration: 0.2 }}
+                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
                             >
-                              <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                {/* Clipboard Base Body */}
-                                <rect x="5" y="4" width="14" height="17" rx="2" className="stroke-white" />
-                                
-                                {/* Top Clamp Clip */}
-                                <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1" className="stroke-white" fill="currentColor" fillOpacity="0.2" />
-
-                                {/* Line 1: Bullet 1 + Text Line */}
-                                <motion.circle
-                                  cx="8" cy="9" r="0.75" fill="currentColor"
-                                  variants={{
-                                    rest: { opacity: 0, scale: 0 },
-                                    hover: { opacity: 1, scale: 1 }
-                                  }}
+                              <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M19 17V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2Z" />
+                                <path d="M19 17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2" />
+                                <path d="M15 21a2 2 0 0 0 2-2V7" />
+                                <motion.line 
+                                  x1="7" y1="8" x2="11" y2="8" 
+                                  variants={{ rest: { opacity: 0.6, x: 0 }, hover: { opacity: 1, x: 1 } }}
+                                  transition={{ duration: 0.2 }}
+                                />
+                                <motion.line 
+                                  x1="7" y1="12" x2="13" y2="12" 
+                                  variants={{ rest: { opacity: 0.6, x: 0 }, hover: { opacity: 1, x: 1 } }}
                                   transition={{ duration: 0.2, delay: 0.05 }}
                                 />
-                                <motion.line
-                                  x1="11" y1="9" x2="16" y2="9"
-                                  variants={{
-                                    rest: { opacity: 0, x: -3 },
-                                    hover: { opacity: 1, x: 0 }
-                                  }}
-                                  transition={{ duration: 0.22, delay: 0.08 }}
-                                />
-
-                                {/* Line 2: Bullet 2 + Text Line */}
-                                <motion.circle
-                                  cx="8" cy="13" r="0.75" fill="currentColor"
-                                  variants={{
-                                    rest: { opacity: 0, scale: 0 },
-                                    hover: { opacity: 1, scale: 1 }
-                                  }}
-                                  transition={{ duration: 0.2, delay: 0.12 }}
-                                />
-                                <motion.line
-                                  x1="11" y1="13" x2="15" y2="13"
-                                  variants={{
-                                    rest: { opacity: 0, x: -3 },
-                                    hover: { opacity: 1, x: 0 }
-                                  }}
-                                  transition={{ duration: 0.22, delay: 0.15 }}
-                                />
-
-                                {/* Line 3: Bullet 3 + Text Line */}
-                                <motion.circle
-                                  cx="8" cy="17" r="0.75" fill="currentColor"
-                                  variants={{
-                                    rest: { opacity: 0, scale: 0 },
-                                    hover: { opacity: 1, scale: 1 }
-                                  }}
-                                  transition={{ duration: 0.2, delay: 0.18 }}
-                                />
-                                <motion.line
-                                  x1="11" y1="17" x2="14" y2="17"
-                                  variants={{
-                                    rest: { opacity: 0, x: -3 },
-                                    hover: { opacity: 1, x: 0 }
-                                  }}
-                                  transition={{ duration: 0.22, delay: 0.21 }}
+                                <motion.line 
+                                  x1="7" y1="16" x2="10" y2="16" 
+                                  variants={{ rest: { opacity: 0.6, x: 0 }, hover: { opacity: 1, x: 1 } }}
+                                  transition={{ duration: 0.2, delay: 0.1 }}
                                 />
                               </svg>
                             </motion.div>
                           ) : item.icon === "leaderboard" ? (
-                            /* Leaderboard Medal Icon with Lifting Medal & Swaying Ribbon Hover Animation */
-                            <div className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white">
-                              {/* Top Ribbon Straps */}
-                              <motion.svg
-                                className="w-5 h-5 absolute inset-0 overflow-visible"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                variants={{
-                                  rest: { scaleY: 1, rotate: 0 },
-                                  hover: { scaleY: 1.15, rotate: [0, -6, 6, -3, 0] }
-                                }}
-                                transition={{ duration: 0.35, ease: "easeOut" }}
-                              >
-                                <path d="M7.21 15 2.66 7.14a2 2 0 0 1 .13-2.2L4.4 2.8A2 2 0 0 1 6 2h12a2 2 0 0 1 1.6.8l1.6 2.14a2 2 0 0 1 .14 2.2L16.79 15" />
-                              </motion.svg>
-
-                              {/* Lifting Medal Circle / Star Hub */}
-                              <motion.svg
-                                className="w-5 h-5 absolute inset-0 overflow-visible"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                variants={{
-                                  rest: { y: 0, scale: 1 },
-                                  hover: { y: -5, scale: 1.15 }
-                                }}
-                                transition={{ type: "spring", stiffness: 450, damping: 18 }}
-                              >
-                                <circle cx="12" cy="14" r="5" fill="currentColor" fillOpacity="0.15" />
-                                <path d="M12 11.5l.8 1.6 1.8.3-1.3 1.2.3 1.8-1.6-.8-1.6.8.3-1.8-1.3-1.2 1.8-.3z" fill="currentColor" />
-                              </motion.svg>
-                            </div>
+                            /* Leaderboard Trophy Icon with Lifting & Spring Bounce Hover Animation */
+                            <motion.div
+                              className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
+                              variants={{
+                                rest: { scale: 1, y: 0, rotate: 0 },
+                                hover: { scale: 1.15, y: -2, rotate: [0, -4, 4, 0] }
+                              }}
+                              transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                            >
+                              <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
+                                <path d="M18 9h1.5a2.5 2.5 0 0 1 0-5H18" />
+                                <path d="M4 22h16" />
+                                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
+                                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
+                                <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
+                                <motion.path
+                                  d="M12 4.5l.5 1 1.1.2-.8.8.2 1.1-1-.5-1 .5.2-1.1-.8-.8 1.1-.2z"
+                                  fill="currentColor"
+                                  stroke="none"
+                                  variants={{
+                                    rest: { opacity: 0.5, scale: 0.8 },
+                                    hover: { opacity: 1, scale: 1.2 }
+                                  }}
+                                  transition={{ duration: 0.2 }}
+                                />
+                              </svg>
+                            </motion.div>
                           ) : item.icon === "panda" ? (
                             <motion.div 
                               className="w-6 h-6 shrink-0 flex items-center justify-center"

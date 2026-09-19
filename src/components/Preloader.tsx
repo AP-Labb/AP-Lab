@@ -10,7 +10,13 @@ export function Preloader() {
   const [isFinished, setIsFinished] = useState(false);
 
   useEffect(() => {
-    // Check if the tab has opened before
+    // Check if on mobile or if tab has opened before or no-preloader class is present
+    if (window.innerWidth < 768 || document.documentElement.classList.contains("no-preloader")) {
+      setShouldShow(false);
+      setIsFinished(true);
+      return;
+    }
+
     const hasSeenInTab = sessionStorage.getItem("aplab_tab_opened");
     if (hasSeenInTab) {
       setShouldShow(false);
@@ -39,7 +45,7 @@ export function Preloader() {
   if (!shouldShow || isFinished) return null;
 
   return (
-    <div className="fixed inset-0 z-[9999999] pointer-events-none select-none overflow-hidden bg-transparent">
+    <div id="aplab-preloader" className="hidden md:block fixed inset-0 z-[9999999] pointer-events-none select-none overflow-hidden bg-transparent">
       
       {/* Top Cutout Panel with exact AP LAB Activity Logo Seam (Slides UP) */}
       <motion.div
