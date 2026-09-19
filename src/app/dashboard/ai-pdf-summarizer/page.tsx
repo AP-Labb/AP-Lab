@@ -4,9 +4,9 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  FileText, Image as ImageIcon, Video, FileSpreadsheet, Mic, Upload,
+  FileText, Image as ImageIcon, Video, FileSpreadsheet, Mic, MicOff, Upload,
   Sparkles, Check, ArrowRight, RefreshCw, BookOpen, HelpCircle, Layers,
-  RotateCw, Square, Plus, Info, X, Paperclip, ExternalLink, Play
+  RotateCw, Square, Plus, Info, X, Paperclip, ExternalLink, Play, Trash2, Pause, Volume2
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -39,9 +39,12 @@ export default function AiPdfSummarizerPage() {
   const [showDriveModal, setShowDriveModal] = useState(false);
   const [showRecordingModal, setShowRecordingModal] = useState(false);
   const [showYouTubeModal, setShowYouTubeModal] = useState(false);
+  const [driveUrl, setDriveUrl] = useState("");
+  const [showDriveGuide, setShowDriveGuide] = useState(false);
 
-  // Live Audio Recording & Volume Meter State
+  // Live Audio Recording & Volume Meter State (Matching uploaded Knowt screenshots 1 & 2)
   const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [recordingSeconds, setRecordingSeconds] = useState(0);
   const [audioVolume, setAudioVolume] = useState(0);
   const [recordingError, setRecordingError] = useState("");
@@ -71,31 +74,41 @@ export default function AiPdfSummarizerPage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
-      setSelectedFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setSelectedFile(file);
+      setVideoUrl("");
+      setPastedText("");
     }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
+    e.stopPropagation();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      setSelectedFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const file = e.dataTransfer.files[0];
+      setSelectedFile(file);
+      setVideoUrl("");
+      setPastedText("");
     }
   };
 
-  // Live Audio Recording & Spectrum Meter
+  // Live Audio Recording & Spectrum Meter (Matching Knowt AI Lecture Note Taker)
   const startRecording = async () => {
     setRecordingError("");
+    setIsPaused(false);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
@@ -139,15 +152,32 @@ export default function AiPdfSummarizerPage() {
         setAudioVolume(0);
       };
 
-      mediaRecorder.start();
+      mediaRecorder.start(250);
       setIsRecording(true);
       setRecordingSeconds(0);
+      if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
       timerIntervalRef.current = setInterval(() => {
         setRecordingSeconds((prev) => prev + 1);
       }, 1000);
     } catch (err: any) {
       console.error("Microphone access error:", err);
-      setRecordingError("Microphone access denied or unverified. You can upload audio files directly.");
+      setRecordingError("Microphone access needed to record. Please allow microphone permissions in your browser.");
+    }
+  };
+
+  const pauseRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      if (isPaused) {
+        mediaRecorderRef.current.resume();
+        setIsPaused(false);
+        timerIntervalRef.current = setInterval(() => {
+          setRecordingSeconds((prev) => prev + 1);
+        }, 1000);
+      } else {
+        mediaRecorderRef.current.pause();
+        setIsPaused(true);
+        if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+      }
     }
   };
 
@@ -155,14 +185,34 @@ export default function AiPdfSummarizerPage() {
     if (mediaRecorderRef.current && isRecording) {
       mediaRecorderRef.current.stop();
       setIsRecording(false);
+      setIsPaused(false);
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     }
   };
 
+  const deleteRecording = () => {
+    if (mediaRecorderRef.current && isRecording) {
+      mediaRecorderRef.current.onstop = null;
+      mediaRecorderRef.current.stop();
+      if (mediaRecorderRef.current.stream) {
+        mediaRecorderRef.current.stream.getTracks().forEach((t) => t.stop());
+      }
+    }
+    audioChunksRef.current = [];
+    setIsRecording(false);
+    setIsPaused(false);
+    setRecordingSeconds(0);
+    setAudioVolume(0);
+    if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
+    if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
+  };
+
   const formatTimer = (secs: number) => {
-    const mins = Math.floor(secs / 60);
+    const hrs = Math.floor(secs / 3600);
+    const mins = Math.floor((secs % 3600) / 60);
     const remainderSecs = secs % 60;
-    return `${mins.toString().padStart(2, "0")}:${remainderSecs.toString().padStart(2, "0")}`;
+    const pad = (n: number) => n.toString().padStart(2, "0");
+    return `${pad(hrs)}:${pad(mins)}:${pad(remainderSecs)}`;
   };
 
   const handleSummarize = async () => {
@@ -199,23 +249,29 @@ export default function AiPdfSummarizerPage() {
     }
   };
 
-  // Determine volume bar colors based on level (Silent, Red, Yellow, Green)
-  const getMeterBars = () => {
-    const numBars = 7;
-    return Array.from({ length: numBars }).map((_, i) => {
-      if (audioVolume <= 2) {
-        return { height: "15%", color: "bg-neutral-600" };
-      } else if (audioVolume <= 25) {
-        const h = Math.min(100, Math.max(25, (audioVolume / 25) * 60 + i * 4));
-        return { height: `${h}%`, color: "bg-red-500" };
-      } else if (audioVolume <= 60) {
-        const h = Math.min(100, Math.max(40, (audioVolume / 60) * 80 + (i % 3) * 5));
-        return { height: `${h}%`, color: "bg-amber-400" };
-      } else {
-        const h = Math.min(100, Math.max(60, (audioVolume / 120) * 100 + (i % 2) * 8));
-        return { height: `${h}%`, color: "bg-emerald-400" };
-      }
-    });
+  // Real-time audio waveform amplitude bars (Matching Screenshot 2)
+  const renderWaveformBars = () => {
+    const totalBars = 45;
+    return (
+      <div className="h-16 w-full flex items-center justify-center gap-[3px] px-6">
+        {Array.from({ length: totalBars }).map((_, i) => {
+          let heightPercent = 4;
+          if (isRecording && !isPaused) {
+            const centerDist = 1 - Math.abs(i - totalBars / 2) / (totalBars / 2);
+            const freqFactor = Math.sin((i + Date.now() / 120) * 0.5) * 0.4 + 0.6;
+            const normVol = Math.min(100, Math.max(8, audioVolume * 1.8));
+            heightPercent = Math.min(100, Math.max(6, normVol * centerDist * freqFactor));
+          }
+          return (
+            <div
+              key={i}
+              className="w-[3px] bg-neutral-400/80 rounded-full transition-all duration-75"
+              style={{ height: `${heightPercent}%` }}
+            />
+          );
+        })}
+      </div>
+    );
   };
 
   return (
@@ -229,30 +285,32 @@ export default function AiPdfSummarizerPage() {
           
           {!result ? (
             <div className="space-y-6">
-              {/* MAIN TWO-COLUMN LAYOUT (MATCHING EXACT UPLOADED KNOWT SCREENSHOT) */}
+              {/* MAIN TWO-COLUMN LAYOUT */}
               <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
                 
                 {/* LEFT / MAIN DRAG & DROP CARD */}
-                <div className="lg:col-span-8 bg-[#16171d] border border-[#272832] rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-between shadow-2xl relative min-h-[460px]">
+                <div 
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  className="lg:col-span-8 bg-[#16171d] border border-[#272832] rounded-3xl p-6 sm:p-8 flex flex-col items-center justify-between shadow-2xl relative min-h-[460px]"
+                >
                   
-                  {/* DRAG & DROP BLUE HIGHLIGHT OVERLAY (MATCHING SCREENSHOT 2) */}
-                  {isDragging ? (
+                  {/* STATIC DRAG OVERLAY WHEN DRAGGING FILES */}
+                  {isDragging && (
                     <div 
                       onDragLeave={handleDragLeave}
                       onDrop={handleDrop}
-                      className="absolute inset-4 z-50 bg-[#131b2e]/95 border-2 border-dashed border-blue-500 rounded-3xl p-10 flex flex-col items-center justify-center text-center space-y-4 animate-pulse shadow-[0_0_40px_rgba(59,130,246,0.3)]"
+                      className="absolute inset-4 z-50 bg-[#131b2e]/95 border-2 border-dashed border-blue-500 rounded-3xl p-10 flex flex-col items-center justify-center text-center space-y-4 shadow-[0_0_30px_rgba(59,130,246,0.3)]"
                     >
-                      <Paperclip className="w-10 h-10 text-blue-400 animate-bounce" />
+                      <Paperclip className="w-10 h-10 text-blue-400" />
                       <h3 className="font-manrope font-extrabold text-2xl text-blue-300">Drop files here</h3>
                       <p className="text-xs text-blue-200/60 font-manrope">PDFs, images, videos, ppts, and audio supported</p>
                     </div>
-                  ) : null}
+                  )}
 
-                  {/* TOP DASHED INNER BOX WITH 4 ACTION PILLS */}
-                  <div 
-                    onDragOver={handleDragOver}
-                    className="w-full border border-dashed border-white/20 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-5 bg-[#191a21]/60"
-                  >
+                  {/* TOP STATIC DASHED INNER BOX WITH 4 ACTION PILLS */}
+                  <div className="w-full border border-dashed border-white/20 rounded-2xl p-6 sm:p-8 flex flex-col items-center justify-center text-center space-y-5 bg-[#191a21]/60">
                     <div className="space-y-1">
                       <h2 className="font-manrope font-bold text-lg sm:text-xl text-white tracking-tight">
                         Upload file(s) or drag & drop it here
@@ -347,7 +405,7 @@ export default function AiPdfSummarizerPage() {
                       </div>
                     </div>
                   ) : (
-                    /* SELECTED FILE / CONTENT CARD */
+                    /* SELECTED FILE / CONTENT CARD (Appears cleanly at bottom!) */
                     <div className="my-6 w-full max-w-md bg-[#20222d] border border-purple-500/40 rounded-2xl p-5 flex items-center justify-between shadow-xl">
                       <div className="flex items-center space-x-3.5 overflow-hidden">
                         <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
@@ -379,39 +437,33 @@ export default function AiPdfSummarizerPage() {
                     </div>
                   )}
 
-                  {/* BOTTOM ACTION BUTTON */}
-                  <div className="w-full flex justify-center pt-2">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        if (selectedFile || videoUrl.trim() || pastedText.trim()) {
-                          handleSummarize();
-                        } else {
-                          fileInputRef.current?.click();
-                        }
-                      }}
-                      disabled={isProcessing}
-                      className="px-8 py-3.5 rounded-full bg-white text-black font-manrope font-black text-sm hover:bg-neutral-200 transition-all cursor-pointer shadow-xl disabled:opacity-50 flex items-center gap-2 active:scale-95"
-                    >
-                      {isProcessing ? (
-                        <>
-                          <RefreshCw className="w-4 h-4 animate-spin text-black" />
-                          <span>Building Full Study Suite...</span>
-                        </>
-                      ) : (selectedFile || videoUrl.trim() || pastedText.trim()) ? (
-                        <>
-                          <Sparkles className="w-4 h-4 text-purple-600" />
-                          <span>Summarize Study Suite</span>
-                        </>
-                      ) : (
-                        <span>Select files</span>
-                      )}
-                    </button>
-                  </div>
+                  {/* BOTTOM ACTION BUTTON (Only renders when file/video/text IS selected!) */}
+                  {(selectedFile || videoUrl.trim() || pastedText.trim()) && (
+                    <div className="w-full flex justify-center pt-2">
+                      <button
+                        type="button"
+                        onClick={handleSummarize}
+                        disabled={isProcessing}
+                        className="px-8 py-3.5 rounded-full bg-white text-black font-manrope font-black text-sm hover:bg-neutral-200 transition-all cursor-pointer shadow-xl disabled:opacity-50 flex items-center gap-2 active:scale-95"
+                      >
+                        {isProcessing ? (
+                          <>
+                            <RefreshCw className="w-4 h-4 animate-spin text-black" />
+                            <span>Building Full Study Suite...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-4 h-4 text-purple-600" />
+                            <span>Summarize Study Suite</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
 
                 </div>
 
-                {/* RIGHT SIDE PANEL: "Turn your files into a full study suite" (MATCHING SCREENSHOT 1) */}
+                {/* RIGHT SIDE PANEL */}
                 <div className="lg:col-span-4 bg-[#16171d] border border-[#272832] rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
                   <div className="space-y-6">
                     <div className="space-y-2">
@@ -454,7 +506,6 @@ export default function AiPdfSummarizerPage() {
                     </div>
                   </div>
 
-                  {/* Small Bottom Info */}
                   <div className="pt-2 text-center">
                     <p className="text-[11px] text-white/35 font-manrope">
                       Powered by AP Lab AI Study Engine
@@ -464,7 +515,7 @@ export default function AiPdfSummarizerPage() {
 
               </div>
 
-              {/* FOOTER DISCLAIMER NOTE (MATCHING SCREENSHOT 1) */}
+              {/* FOOTER DISCLAIMER NOTE */}
               <div className="text-center pt-4">
                 <p className="text-xs text-white/40 font-manrope leading-relaxed max-w-2xl mx-auto">
                   By uploading your file to AP Lab, you acknowledge that you agree to AP Lab&apos;s{" "}
@@ -474,9 +525,8 @@ export default function AiPdfSummarizerPage() {
               </div>
             </div>
           ) : (
-            /* ── PROCESSED SUMMARY & FLASHCARDS RESULT VIEW ── */
+            /* PROCESSED SUMMARY RESULT VIEW */
             <div className="space-y-6">
-              {/* Header & Back Button */}
               <div className="flex items-center justify-between border-b border-white/10 pb-6">
                 <div>
                   <h2 className="font-manrope font-black text-2xl sm:text-3xl text-white">{result.title}</h2>
@@ -496,7 +546,6 @@ export default function AiPdfSummarizerPage() {
                 </button>
               </div>
 
-              {/* View Switcher Tabs */}
               <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
                 {[
                   { id: "summary", label: "Executive Summary", icon: FileText },
@@ -525,7 +574,6 @@ export default function AiPdfSummarizerPage() {
                 })}
               </div>
 
-              {/* VIEW 1: EXECUTIVE SUMMARY */}
               {activeResultView === "summary" && (
                 <div className="space-y-6 bg-[#16171d] border border-[#272832] rounded-3xl p-8 shadow-2xl">
                   <div className="space-y-3">
@@ -551,7 +599,6 @@ export default function AiPdfSummarizerPage() {
                 </div>
               )}
 
-              {/* VIEW 2: STUDY NOTES */}
               {activeResultView === "notes" && (
                 <div className="space-y-6 bg-[#16171d] border border-[#272832] rounded-3xl p-8 shadow-2xl">
                   {result.studyNotes.map((sec, idx) => (
@@ -565,7 +612,6 @@ export default function AiPdfSummarizerPage() {
                 </div>
               )}
 
-              {/* VIEW 3: INTERACTIVE FLIP FLASHCARDS */}
               {activeResultView === "flashcards" && result.flashcards.length > 0 && (
                 <div className="flex flex-col items-center justify-center space-y-6 py-6">
                   <div
@@ -588,7 +634,6 @@ export default function AiPdfSummarizerPage() {
                     </p>
                   </div>
 
-                  {/* Navigation Controls */}
                   <div className="flex items-center space-x-4">
                     <button
                       type="button"
@@ -617,7 +662,6 @@ export default function AiPdfSummarizerPage() {
                 </div>
               )}
 
-              {/* VIEW 4: PRACTICE QUIZ */}
               {activeResultView === "quiz" && result.quiz.length > 0 && (
                 <div className="space-y-6 bg-[#16171d] border border-[#272832] rounded-3xl p-8 shadow-2xl">
                   {result.quiz.map((q, qIdx) => (
@@ -689,7 +733,7 @@ export default function AiPdfSummarizerPage() {
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1e1f28] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 shadow-2xl relative"
+              className="bg-[#181920] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-lg w-full space-y-6 shadow-2xl relative"
             >
               <button
                 type="button"
@@ -700,7 +744,7 @@ export default function AiPdfSummarizerPage() {
               </button>
 
               <div className="flex items-center space-x-3">
-                <svg className="w-8 h-8" viewBox="0 0 87.3 78">
+                <svg className="w-8 h-8 shrink-0" viewBox="0 0 87.3 78">
                   <path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5l5.4 9.35z" fill="#0066da"/>
                   <path d="M43.65 25L29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3L1.2 51.7c-.8 1.4-1.2 2.95-1.2 4.5h27.5L43.65 25z" fill="#00ac47"/>
                   <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 3.8-6.6c.8-1.4 1.2-2.95 1.2-4.5H55.95l6.4 11.1 11.2 6.05z" fill="#ea4335"/>
@@ -711,17 +755,45 @@ export default function AiPdfSummarizerPage() {
                 <h3 className="font-manrope font-extrabold text-xl text-white">Google Drive Integration</h3>
               </div>
 
-              <p className="text-xs text-white/60 font-manrope leading-relaxed">
-                Connect your Google account to import Docs, Slides, and PDFs directly from your Google Drive storage.
-              </p>
+              {/* Direct Drive Link Import Input */}
+              <div className="space-y-3 bg-[#121319] p-4 rounded-2xl border border-white/10">
+                <label className="text-xs font-manrope font-bold text-white/80 block">Import via Google Drive URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="url"
+                    placeholder="Paste Google Drive / Docs / Slides link..."
+                    value={driveUrl}
+                    onChange={(e) => setDriveUrl(e.target.value)}
+                    className="flex-1 bg-[#1a1b24] border border-white/15 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-blue-500 font-manrope"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (driveUrl.trim()) {
+                        const filename = driveUrl.includes("document") ? "Google_Doc_Notes.gdoc" : driveUrl.includes("presentation") ? "Google_Slides_Lecture.gslides" : "Google_Drive_File.pdf";
+                        const driveFile = new File(["Imported Google Drive Document Content"], filename, { type: "application/pdf" });
+                        setSelectedFile(driveFile);
+                        setVideoUrl("");
+                        setPastedText("");
+                        setShowDriveModal(false);
+                        setDriveUrl("");
+                      }
+                    }}
+                    disabled={!driveUrl.trim()}
+                    className="px-4 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-manrope font-bold text-xs rounded-xl disabled:opacity-40 transition-all cursor-pointer shrink-0"
+                  >
+                    Import
+                  </button>
+                </div>
+              </div>
 
-              {/* Sample Google Drive Files List */}
-              <div className="space-y-2 pt-2">
-                <span className="text-[11px] font-manrope font-bold text-white/40 uppercase tracking-wider block">Available Drive Files</span>
+              {/* Quick Select Google Drive Demo Files */}
+              <div className="space-y-2 pt-1">
+                <span className="text-[11px] font-manrope font-bold text-white/40 uppercase tracking-wider block">Or Pick a Drive Document</span>
                 {[
-                  { name: "AP_Biology_Unit_3_Cellular_Energetics.gdoc", size: "1.4 MB" },
+                  { name: "AP_Biology_Cellular_Respiration.gdoc", size: "1.4 MB" },
                   { name: "AP_Physics_Kinematics_Lecture.gslides", size: "3.2 MB" },
-                  { name: "AP_US_History_DBQ_Rubric_Guide.pdf", size: "2.1 MB" },
+                  { name: "AP_Chemistry_Thermodynamics.pdf", size: "2.8 MB" },
                 ].map((df, i) => (
                   <button
                     key={i}
@@ -729,9 +801,11 @@ export default function AiPdfSummarizerPage() {
                     onClick={() => {
                       const sampleFile = new File(["Google Drive Document Content"], df.name, { type: "application/pdf" });
                       setSelectedFile(sampleFile);
+                      setVideoUrl("");
+                      setPastedText("");
                       setShowDriveModal(false);
                     }}
-                    className="w-full p-3 rounded-2xl bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-left flex items-center justify-between transition-all cursor-pointer"
+                    className="w-full p-3 rounded-2xl bg-[#121319] hover:bg-white/[0.08] border border-white/10 text-left flex items-center justify-between transition-all cursor-pointer"
                   >
                     <div className="flex items-center space-x-2.5 truncate">
                       <FileText className="w-4 h-4 text-blue-400 shrink-0" />
@@ -742,70 +816,97 @@ export default function AiPdfSummarizerPage() {
                 ))}
               </div>
 
-              <button
-                type="button"
-                onClick={() => setShowDriveModal(false)}
-                className="w-full py-3 rounded-full bg-white text-black font-manrope font-extrabold text-xs hover:bg-neutral-200 transition-all cursor-pointer shadow-lg"
-              >
-                Connect Google Account
-              </button>
+              {/* Setup Guide Accordion */}
+              <div className="pt-2 border-t border-white/10">
+                <button
+                  type="button"
+                  onClick={() => setShowDriveGuide(!showDriveGuide)}
+                  className="text-xs text-blue-400 hover:text-blue-300 font-manrope font-semibold flex items-center justify-between w-full"
+                >
+                  <span>How to enable 1-click Native Google Picker API?</span>
+                  <Info className="w-4 h-4" />
+                </button>
+
+                {showDriveGuide && (
+                  <div className="mt-3 p-3.5 rounded-xl bg-white/[0.03] border border-white/10 text-[11px] font-manrope text-white/70 space-y-1.5 leading-relaxed">
+                    <p className="font-bold text-white">To connect live Google Picker OAuth:</p>
+                    <p>1. Open Google Cloud Console &amp; create OAuth 2.0 Client ID + API Key.</p>
+                    <p>2. Add <code className="bg-black/50 px-1 py-0.5 rounded text-blue-300">NEXT_PUBLIC_GOOGLE_CLIENT_ID</code> and <code className="bg-black/50 px-1 py-0.5 rounded text-blue-300">NEXT_PUBLIC_GOOGLE_API_KEY</code> to your <code className="bg-black/50 px-1 py-0.5 rounded text-white">.env.local</code> file.</p>
+                  </div>
+                )}
+              </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
 
-      {/* ── MODAL 2: LIVE RECORD CLASS POPUP WITH AUDIO METER & PANDA TV IMAGE ── */}
+      {/* ── MODAL 2: LIVE RECORD CLASS POPUP (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) ── */}
       <AnimatePresence>
         {showRecordingModal && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1e1f28] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative overflow-hidden"
+              className="bg-[#1b1c24] border border-white/15 rounded-[32px] p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative overflow-hidden text-white"
             >
+              {/* Close Button */}
               <button
                 type="button"
                 onClick={() => {
                   if (isRecording) stopRecording();
                   setShowRecordingModal(false);
                 }}
-                className="absolute top-5 right-5 p-2 rounded-full hover:bg-white/10 text-white/60 hover:text-white z-10"
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-20 border border-white/10"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
                 
-                {/* LEFT COLUMN: CONTROLS & AUDIO METER */}
-                <div className="space-y-6">
+                {/* LEFT COLUMN: MODAL TITLE, BANNER, AUDIO WAVEFORM BOX & CONTROL BUTTONS */}
+                <div className="md:col-span-7 space-y-5 text-left">
+                  
+                  {/* MODAL HEADER TITLE & SUBTITLE */}
                   <div className="space-y-1">
-                    <h3 className="font-manrope font-black text-2xl text-white">Live Record Class</h3>
-                    <p className="text-xs text-white/50 font-manrope">
-                      Record live lecture audio directly from your device microphone.
+                    <h3 className="font-manrope font-black text-2xl sm:text-3xl text-white tracking-tight">
+                      AP Lab AI Lecture Note Taker
+                    </h3>
+                    <p className="text-sm font-manrope text-white/60">
+                      {isRecording && !isPaused ? "Shh! AP Lab is listening to your lecture..." : "We can't hear you yet"}
                     </p>
                   </div>
 
-                  {/* REAL-TIME AUDIO LEVEL SPECTRUM METER */}
-                  <div className="bg-[#14151e] border border-white/10 rounded-2xl p-5 space-y-3 text-center">
-                    <span className="text-[11px] font-manrope font-extrabold text-white/60 uppercase tracking-widest block">
-                      {isRecording ? `Recording • ${formatTimer(recordingSeconds)}` : "Microphone Input Level"}
-                    </span>
-
-                    {/* Audio Level Bars (Color coded: Grey=Silent, Red=Low, Yellow=Medium, Green=Loud & Clear) */}
-                    <div className="h-16 flex items-end justify-center gap-1.5 px-4 py-2 bg-black/40 rounded-xl border border-white/5">
-                      {getMeterBars().map((bar, i) => (
-                        <div
-                          key={i}
-                          className={cn("w-2.5 rounded-full transition-all duration-75", bar.color)}
-                          style={{ height: bar.height }}
-                        />
-                      ))}
+                  {/* PERMISSION / STATUS BANNER PILL (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) */}
+                  {!isRecording ? (
+                    /* Amber / Brownish Permission Warning Pill (Screenshot 1) */
+                    <div className="bg-[#3e3422] border border-[#59492b] text-[#fcd34d] px-4 py-3 rounded-2xl flex items-center space-x-3 text-xs font-manrope">
+                      <div className="w-7 h-7 rounded-lg bg-[#59492b] flex items-center justify-center shrink-0">
+                        <MicOff className="w-4 h-4 text-[#fcd34d]" />
+                      </div>
+                      <p className="leading-snug">We need microphone access to record. Press the mic and choose Allow.</p>
                     </div>
+                  ) : (
+                    /* Light Teal / Cyan Status Pill (Screenshot 2) */
+                    <div className="bg-[#dcfce7] border border-[#bbf7d0] text-[#0f5132] px-4 py-3 rounded-2xl flex items-center space-x-3 text-xs font-manrope font-bold">
+                      <div className="w-7 h-7 rounded-lg bg-[#bbf7d0] flex items-center justify-center shrink-0">
+                        <Volume2 className="w-4 h-4 text-[#0f5132]" />
+                      </div>
+                      <p className="leading-snug">Awesome, we can hear everything!</p>
+                    </div>
+                  )}
 
-                    <p className="text-[11px] font-manrope text-white/40">
-                      {audioVolume <= 2 ? "No audio detected" : audioVolume <= 25 ? "Low audio volume" : audioVolume <= 60 ? "Medium volume" : "Loud & clear audio!"}
-                    </p>
+                  {/* CENTER AUDIO WAVEFORM CONTAINER (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) */}
+                  <div className="bg-[#14151b] border border-white/10 rounded-2xl h-36 flex items-center justify-center relative overflow-hidden">
+                    {!isRecording || isPaused ? (
+                      /* Idle Dotted Line (Screenshot 1) */
+                      <div className="text-white/40 tracking-[6px] font-mono text-sm select-none">
+                        ....................................................
+                      </div>
+                    ) : (
+                      /* Real-time Dynamic Audio Vocal Waveform Bars (Screenshot 2) */
+                      renderWaveformBars()
+                    )}
                   </div>
 
                   {recordingError && (
@@ -814,45 +915,74 @@ export default function AiPdfSummarizerPage() {
                     </p>
                   )}
 
-                  {/* Record Buttons */}
-                  <div className="flex flex-col space-y-2">
-                    {isRecording ? (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          stopRecording();
-                          setShowRecordingModal(false);
-                        }}
-                        className="w-full py-3 rounded-full bg-red-600 hover:bg-red-500 text-white font-manrope font-bold text-xs flex items-center justify-center gap-2 shadow-lg cursor-pointer"
-                      >
-                        <Square className="w-4 h-4 fill-white" />
-                        <span>Stop & Summarize Class</span>
-                      </button>
-                    ) : (
+                  {/* TIMER DISPLAY */}
+                  <div className="text-center">
+                    <span className="font-mono text-xl font-bold tracking-widest text-white">
+                      {formatTimer(recordingSeconds)}
+                    </span>
+                  </div>
+
+                  {/* CONTROL BUTTONS AT BOTTOM (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) */}
+                  <div className="flex items-center justify-center space-x-6 pt-1">
+                    {!isRecording ? (
+                      /* Single Large Red Mic Button (Screenshot 1) */
                       <button
                         type="button"
                         onClick={startRecording}
-                        className="w-full py-3 rounded-full bg-emerald-500 hover:bg-emerald-400 text-black font-manrope font-black text-xs flex items-center justify-center gap-2 shadow-lg cursor-pointer"
+                        className="w-14 h-14 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center shadow-lg active:scale-95 transition-all cursor-pointer"
                       >
-                        <Mic className="w-4 h-4" />
-                        <span>Start Recording</span>
+                        <Mic className="w-6 h-6 text-white" />
                       </button>
+                    ) : (
+                      /* Three Buttons Row: Delete (Left), Stop (Center Red), Pause/Resume (Right) (Screenshot 2) */
+                      <>
+                        {/* 1. Delete Trash Button (Left) */}
+                        <button
+                          type="button"
+                          onClick={deleteRecording}
+                          title="Delete recording"
+                          className="w-11 h-11 rounded-full bg-[#292a34] hover:bg-[#383a48] border border-white/10 flex items-center justify-center text-red-400 hover:text-red-300 transition-all cursor-pointer active:scale-95 shadow-md"
+                        >
+                          <Trash2 className="w-5 h-5 text-red-400" />
+                        </button>
+
+                        {/* 2. Stop & Summarize Red Button (Center) */}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            stopRecording();
+                            setShowRecordingModal(false);
+                          }}
+                          title="Stop recording"
+                          className="w-14 h-14 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center shadow-xl active:scale-95 transition-all cursor-pointer ring-4 ring-red-500/20"
+                        >
+                          <Square className="w-5 h-5 fill-white text-white" />
+                        </button>
+
+                        {/* 3. Pause / Resume Button (Right) */}
+                        <button
+                          type="button"
+                          onClick={pauseRecording}
+                          title={isPaused ? "Resume recording" : "Pause recording"}
+                          className="w-11 h-11 rounded-full bg-[#292a34] hover:bg-[#383a48] border border-white/10 flex items-center justify-center text-white transition-all cursor-pointer active:scale-95 shadow-md"
+                        >
+                          {isPaused ? <Play className="w-5 h-5 fill-white text-white ml-0.5" /> : <Pause className="w-5 h-5 text-white" />}
+                        </button>
+                      </>
                     )}
                   </div>
+
                 </div>
 
-                {/* RIGHT COLUMN: PANDA SITTING ON BEAN BAG WATCHING TV (input_file_2.png) */}
-                <div className="flex flex-col items-center justify-center p-2 relative">
-                  <div className="relative w-full max-w-[240px] aspect-[4/3] rounded-2xl overflow-hidden shadow-2xl">
+                {/* RIGHT COLUMN: PANDA WATCHING TV (TRANSPARENT BACKGROUND, NO GREY BG, NO TEXT BELOW IT) */}
+                <div className="md:col-span-5 flex flex-col items-center justify-center p-2">
+                  <div className="relative w-full max-w-[260px] aspect-[4/3] flex items-center justify-center">
                     <img
                       src="/images/panda-tv.png"
                       alt="Panda Mascot Watching TV"
                       className="w-full h-full object-contain"
                     />
                   </div>
-                  <p className="text-[11px] text-white/40 font-manrope mt-3 text-center">
-                    Sit back while AP Lab records & summarizes your lecture!
-                  </p>
                 </div>
 
               </div>
@@ -861,15 +991,15 @@ export default function AiPdfSummarizerPage() {
         )}
       </AnimatePresence>
 
-      {/* ── MODAL 3: YOUTUBE URL POPUP (MATCHING SCREENSHOT 4) ── */}
+      {/* ── MODAL 3: CLEAN DARK-THEMED YOUTUBE URL POPUP ── */}
       <AnimatePresence>
         {showYouTubeModal && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1e1f26] border border-white/15 rounded-3xl p-6 sm:p-7 max-w-lg w-full space-y-6 shadow-2xl relative"
+              className="bg-[#14151a] border border-white/15 rounded-3xl p-6 sm:p-8 max-w-md w-full space-y-6 shadow-2xl relative text-white"
             >
               <button
                 type="button"
@@ -879,20 +1009,25 @@ export default function AiPdfSummarizerPage() {
                 <X className="w-5 h-5" />
               </button>
 
-              <div className="space-y-1">
-                <h3 className="font-manrope font-black text-2xl text-white">YouTube URLs</h3>
-                <p className="text-xs text-white/50 font-manrope">Paste an educational YouTube video link to summarize.</p>
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 shrink-0">
+                  <Play className="w-5 h-5 fill-red-500" />
+                </div>
+                <div>
+                  <h3 className="font-manrope font-extrabold text-xl text-white">Import YouTube Video</h3>
+                  <p className="text-xs text-white/50 font-manrope">Paste an educational video URL to generate notes.</p>
+                </div>
               </div>
 
-              {/* YouTube URL Text Input (Matching screenshot 4) */}
+              {/* YouTube URL Text Input */}
               <div className="space-y-3">
                 <div className="relative">
                   <input
-                    type="text"
-                    placeholder="Paste a YouTube link"
+                    type="url"
+                    placeholder="https://www.youtube.com/watch?v=..."
                     value={videoUrl}
                     onChange={(e) => setVideoUrl(e.target.value)}
-                    className="w-full bg-[#121319] border border-white/15 rounded-2xl px-4 py-3.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-red-500 font-manrope pr-10"
+                    className="w-full bg-[#1c1d24] border border-white/15 rounded-xl px-4 py-3.5 text-xs text-white placeholder-white/30 focus:outline-none focus:border-red-500 font-manrope pr-10"
                   />
                   {videoUrl && (
                     <button
@@ -904,17 +1039,13 @@ export default function AiPdfSummarizerPage() {
                     </button>
                   )}
                 </div>
-
-                <p className="text-[11px] text-white/40 font-manrope">
-                  Paste YouTube link (e.g. https://youtube.com/watch?v=...)
-                </p>
               </div>
 
               <div className="pt-2 flex justify-end space-x-3">
                 <button
                   type="button"
                   onClick={() => setShowYouTubeModal(false)}
-                  className="px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-manrope font-bold text-xs"
+                  className="px-5 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-manrope font-semibold text-xs transition-colors"
                 >
                   Cancel
                 </button>
@@ -922,12 +1053,14 @@ export default function AiPdfSummarizerPage() {
                   type="button"
                   onClick={() => {
                     if (videoUrl.trim()) {
+                      setSelectedFile(null);
+                      setPastedText("");
                       setShowYouTubeModal(false);
                       handleSummarize();
                     }
                   }}
                   disabled={!videoUrl.trim()}
-                  className="px-7 py-2.5 rounded-full bg-red-600 hover:bg-red-500 text-white font-manrope font-black text-xs disabled:opacity-40 transition-all cursor-pointer shadow-lg"
+                  className="px-6 py-2.5 rounded-xl bg-red-600 hover:bg-red-500 text-white font-manrope font-bold text-xs disabled:opacity-40 transition-all cursor-pointer shadow-lg"
                 >
                   Summarize Video
                 </button>

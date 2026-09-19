@@ -226,25 +226,9 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               </svg>
                             </div>
                           ) : item.icon === "pen" ? (
-                            /* AI Summarizer Pen Icon (Animates smoothly like writing on paper when hovered) */
+                            /* AI Summarizer Pen Icon */
                             <div className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white">
                               <svg className="w-5 h-5 overflow-visible text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                {/* Baseline Paper Line */}
-                                <line x1="3" y1="20" x2="21" y2="20" strokeWidth="1.5" strokeOpacity="0.4" />
-
-                                {/* Written Ink Stroke that draws out smoothly on hover */}
-                                <motion.path
-                                  d="M4 20C7 19 9 20.5 12 19.5C14.5 19 17 20 19 19.5"
-                                  stroke="currentColor"
-                                  strokeWidth="2"
-                                  strokeLinecap="round"
-                                  variants={{
-                                    rest: { pathLength: 0, opacity: 0 },
-                                    hover: { pathLength: 1, opacity: 1 }
-                                  }}
-                                  transition={{ duration: 0.45, ease: "easeInOut" }}
-                                />
-
                                 {/* Writing Pen / Nib */}
                                 <motion.g
                                   variants={{
