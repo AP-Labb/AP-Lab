@@ -493,32 +493,54 @@ export function HeroSection() {
 
         {/* Call to Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center w-full gap-4 sm:gap-6 mt-2 relative z-10">
-          {currentUser ? (
-            <Link href="/dashboard">
+          <div className="relative w-full sm:w-auto flex flex-col items-center">
+            {/* Hanging Panda Bear (Layered behind the button with paws gripping the bottom edge) */}
+            <motion.div 
+              className="absolute left-1/2 -translate-x-1/2 top-[80%] z-0 pointer-events-none w-14 sm:w-16 select-none"
+              initial={{ y: 0 }}
+              animate={{ 
+                y: [0, 2.5, 0],
+                rotate: (isHoveredDashboard || isHoveredSignIn) ? [-2, 2, -2, 2, 0] : 0
+              }}
+              transition={{ 
+                y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
+                rotate: { duration: 0.5, ease: "easeInOut" }
+              }}
+            >
+              <img 
+                src="/images/hanging-panda.png" 
+                alt="Hanging Panda Mascot" 
+                className="w-full h-auto object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]" 
+              />
+            </motion.div>
+
+            {currentUser ? (
+              <Link href="/dashboard" className="w-full sm:w-auto relative z-10">
+                <button 
+                  className="pb-ai-button w-full sm:w-auto relative z-10"
+                  onMouseEnter={() => setIsHoveredDashboard(true)}
+                  onMouseLeave={() => setIsHoveredDashboard(false)}
+                >
+                  <span className="pb-ai-sparkle flex items-center justify-center">
+                    <DoorIcon isHovered={isHoveredDashboard} />
+                  </span>
+                  <span className="select-none">Go to Dashboard</span>
+                </button>
+              </Link>
+            ) : (
               <button 
-                className="pb-ai-button w-full sm:w-auto"
-                onMouseEnter={() => setIsHoveredDashboard(true)}
-                onMouseLeave={() => setIsHoveredDashboard(false)}
+                onClick={() => openAuthModal("signin")}
+                className="pb-ai-button w-full sm:w-auto relative z-10"
+                onMouseEnter={() => setIsHoveredSignIn(true)}
+                onMouseLeave={() => setIsHoveredSignIn(false)}
               >
                 <span className="pb-ai-sparkle flex items-center justify-center">
-                  <DoorIcon isHovered={isHoveredDashboard} />
+                  <DoorIcon isHovered={isHoveredSignIn} />
                 </span>
-                <span className="select-none">Go to Dashboard</span>
+                <span className="select-none">Sign In</span>
               </button>
-            </Link>
-          ) : (
-            <button 
-              onClick={() => openAuthModal("signin")}
-              className="pb-ai-button w-full sm:w-auto"
-              onMouseEnter={() => setIsHoveredSignIn(true)}
-              onMouseLeave={() => setIsHoveredSignIn(false)}
-            >
-              <span className="pb-ai-sparkle flex items-center justify-center">
-                <DoorIcon isHovered={isHoveredSignIn} />
-              </span>
-              <span className="select-none">Sign In</span>
-            </button>
-          )}
+            )}
+          </div>
 
           <a 
             href="https://discord.com/invite/dUSaevPETd" 

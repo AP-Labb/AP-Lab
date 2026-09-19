@@ -177,63 +177,54 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               ))}
                             </motion.div>
                           ) : item.icon === "scroll" ? (
-                            /* Quests Scroll Text Icon with Smooth Spring Hover Animation */
+                            /* Quests Map Icon (Folded 3-panel map with shaking & fading ? mark on hover) */
                             <motion.div
                               className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
                               variants={{
                                 rest: { scale: 1, rotate: 0 },
-                                hover: { scale: 1.15, rotate: -3 }
+                                hover: { scale: 1.12, rotate: [0, -6, 6, -3, 3, 0] }
                               }}
-                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                              transition={{
+                                rotate: { duration: 0.4, ease: "easeInOut" },
+                                scale: { duration: 0.2 }
+                              }}
                             >
-                              <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M19 17V5a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h13a2 2 0 0 0 2-2Z" />
-                                <path d="M19 17a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2" />
-                                <path d="M15 21a2 2 0 0 0 2-2V7" />
-                                <motion.line 
-                                  x1="7" y1="8" x2="11" y2="8" 
-                                  variants={{ rest: { opacity: 0.6, x: 0 }, hover: { opacity: 1, x: 1 } }}
-                                  transition={{ duration: 0.2 }}
-                                />
-                                <motion.line 
-                                  x1="7" y1="12" x2="13" y2="12" 
-                                  variants={{ rest: { opacity: 0.6, x: 0 }, hover: { opacity: 1, x: 1 } }}
-                                  transition={{ duration: 0.2, delay: 0.05 }}
-                                />
-                                <motion.line 
-                                  x1="7" y1="16" x2="10" y2="16" 
-                                  variants={{ rest: { opacity: 0.6, x: 0 }, hover: { opacity: 1, x: 1 } }}
-                                  transition={{ duration: 0.2, delay: 0.1 }}
-                                />
+                              <svg className="w-5 h-5 overflow-visible text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                {/* Folded 3-panel map outline */}
+                                <path d="M3 6L9 3.5L15 6L21 3.5V18.5L15 21L9 18.5L3 21V6Z" strokeWidth="2" strokeLinejoin="round" />
+                                <path d="M9 3.5V18.5" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
+                                <path d="M15 6V21" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
+                                
+                                {/* Fading Question Mark ? inside map */}
+                                <motion.g
+                                  variants={{
+                                    rest: { opacity: 0, scale: 0.6 },
+                                    hover: { opacity: 1, scale: 1 }
+                                  }}
+                                  transition={{ duration: 0.3, ease: "easeOut" }}
+                                  style={{ transformOrigin: "14.5px 12px" }}
+                                >
+                                  <path d="M12.5 8.2C12.5 7 13.5 6 14.8 6C16.1 6 17.1 7 17.1 8.2C17.1 9.6 15.4 10.4 14.8 11.5C14.5 12.1 14.5 12.6 14.5 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                                  <circle cx="14.5" cy="15.8" r="1.1" fill="currentColor" stroke="none" />
+                                </motion.g>
                               </svg>
                             </motion.div>
                           ) : item.icon === "leaderboard" ? (
-                            /* Leaderboard Trophy Icon with Lifting & Spring Bounce Hover Animation */
+                            /* Leaderboard Simplistic Crown Icon (Lifts up smoothly when hovered) */
                             <motion.div
                               className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
                               variants={{
-                                rest: { scale: 1, y: 0, rotate: 0 },
-                                hover: { scale: 1.15, y: -2, rotate: [0, -4, 4, 0] }
+                                rest: { y: 0, scale: 1 },
+                                hover: { y: -5, scale: 1.08 }
                               }}
-                              transition={{ type: "spring", stiffness: 400, damping: 18 }}
+                              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
                             >
-                              <svg className="w-5 h-5 overflow-visible" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                                <path d="M18 9h1.5a2.5 2.5 0 0 1 0-5H18" />
-                                <path d="M4 22h16" />
-                                <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                                <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                                <path d="M18 2H6v7a6 6 0 0 0 12 0V2z" />
-                                <motion.path
-                                  d="M12 4.5l.5 1 1.1.2-.8.8.2 1.1-1-.5-1 .5.2-1.1-.8-.8 1.1-.2z"
-                                  fill="currentColor"
-                                  stroke="none"
-                                  variants={{
-                                    rest: { opacity: 0.5, scale: 0.8 },
-                                    hover: { opacity: 1, scale: 1.2 }
-                                  }}
-                                  transition={{ duration: 0.2 }}
-                                />
+                              <svg className="w-5 h-5 overflow-visible text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M4 18H20" strokeWidth="2" strokeLinecap="round" />
+                                <path d="M3.5 17L2 7.5L6.5 10.5L12 4.5L17.5 10.5L22 7.5L20.5 17H3.5Z" strokeWidth="1.8" strokeLinejoin="round" />
+                                <circle cx="12" cy="4.5" r="1" fill="currentColor" stroke="none" />
+                                <circle cx="2" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
+                                <circle cx="22" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
                               </svg>
                             </motion.div>
                           ) : item.icon === "panda" ? (
