@@ -55,9 +55,10 @@ export default function AiPdfSummarizerPage() {
   const audioCtxRef = useRef<AudioContext | null>(null);
   const animFrameRef = useRef<number | null>(null);
 
-  // Flashcard flip state
+  // Flashcard flip & slide state
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [isCardFlipped, setIsCardFlipped] = useState(false);
+  const [slideDirection, setSlideDirection] = useState<number>(1);
 
   // Quiz state
   const [selectedAnswers, setSelectedAnswers] = useState<{ [key: number]: number }>({});
@@ -361,9 +362,7 @@ export default function AiPdfSummarizerPage() {
                         onClick={() => setShowYouTubeModal(true)}
                         className="px-4 py-2 rounded-full bg-[#20212b] hover:bg-[#2a2c39] border border-white/15 text-white font-manrope font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95"
                       >
-                        <div className="w-4 h-4 rounded-full bg-red-600 flex items-center justify-center">
-                          <Play className="w-2.5 h-2.5 text-white fill-white ml-0.5" />
-                        </div>
+                        <img src="/images/youtube-logo.png" alt="YouTube" className="h-3.5 w-auto object-contain shrink-0" />
                         <span>YouTube</span>
                       </button>
                     </div>
@@ -464,7 +463,7 @@ export default function AiPdfSummarizerPage() {
 
                 {/* RIGHT SIDE PANEL */}
                 <div className="lg:col-span-4 bg-[#16171d] border border-[#272832] rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
-                  <div className="space-y-5">
+                  <div className="space-y-4">
                     <div className="space-y-1">
                       <h3 className="font-manrope font-bold text-lg text-white tracking-tight leading-snug">
                         Turn your files into a full study suite
@@ -474,12 +473,35 @@ export default function AiPdfSummarizerPage() {
                       </p>
                     </div>
 
-                    {/* RESOURCE ITEM 1: NOTEBOOK */}
-                    <div className="bg-[#20222c] border border-white/10 hover:border-blue-500/40 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                    {/* RESOURCE ITEM 1: SUMMARY */}
+                    <div className="bg-[#20222c] border border-white/10 hover:border-purple-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#20324e] text-[#60a5fa] flex items-center justify-center shrink-0">
-                          <BookOpen className="w-4 h-4" />
+                        <div className="w-8 h-8 rounded-xl bg-[#2c1d3f] text-[#c084fc] flex items-center justify-center shrink-0">
+                          <Sparkles className="w-4 h-4" />
                         </div>
+                        <span className="font-manrope font-bold text-sm text-white">
+                          Summary
+                        </span>
+                      </div>
+                      <div 
+                        onMouseEnter={() => setHoveredTooltip("summary")}
+                        onMouseLeave={() => setHoveredTooltip(null)}
+                        className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
+                      >
+                        <Info className="w-4 h-4" />
+                        {hoveredTooltip === "summary" && (
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                            Generate a high-yield executive summary and key takeaways
+                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* RESOURCE ITEM 2: NOTEBOOK */}
+                    <div className="bg-[#20222c] border border-white/10 hover:border-blue-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                      <div className="flex items-center space-x-3">
+                        <img src="/images/notebook-icon.png" alt="Notebook" className="w-8 h-8 object-contain shrink-0" />
                         <span className="font-manrope font-bold text-sm text-white">
                           Notebook
                         </span>
@@ -489,23 +511,20 @@ export default function AiPdfSummarizerPage() {
                         onMouseLeave={() => setHoveredTooltip(null)}
                         className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
                       >
-                        <Info className="w-4.5 h-4.5" />
+                        <Info className="w-4 h-4" />
                         {hoveredTooltip === "notebook" && (
                           <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate a note with a study suite of learning tools
-                            {/* Speech Bubble Arrow Pointing Down */}
                             <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
                           </div>
                         )}
                       </div>
                     </div>
 
-                    {/* RESOURCE ITEM 2: FLASHCARDS */}
-                    <div className="bg-[#20222c] border border-white/10 hover:border-amber-500/40 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                    {/* RESOURCE ITEM 3: FLASHCARDS */}
+                    <div className="bg-[#20222c] border border-white/10 hover:border-amber-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#3d3121] text-[#fbbf24] flex items-center justify-center shrink-0">
-                          <Layers className="w-4 h-4" />
-                        </div>
+                        <img src="/images/flashcards-icon.png" alt="Flashcards" className="w-8 h-6 object-contain shrink-0" />
                         <span className="font-manrope font-bold text-sm text-white">
                           Flashcards
                         </span>
@@ -515,21 +534,20 @@ export default function AiPdfSummarizerPage() {
                         onMouseLeave={() => setHoveredTooltip(null)}
                         className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
                       >
-                        <Info className="w-4.5 h-4.5" />
+                        <Info className="w-4 h-4" />
                         {hoveredTooltip === "flashcards" && (
                           <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate flashcards to memorize key concepts
-                            {/* Speech Bubble Arrow Pointing Down */}
                             <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
                           </div>
                         )}
                       </div>
                     </div>
 
-                    {/* RESOURCE ITEM 3: PRACTICE QUESTIONS */}
-                    <div className="bg-[#20222c] border border-white/10 hover:border-emerald-500/40 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                    {/* RESOURCE ITEM 4: PRACTICE QUESTIONS */}
+                    <div className="bg-[#20222c] border border-white/10 hover:border-emerald-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-[#1e3a2b] text-[#34d399] flex items-center justify-center shrink-0">
+                        <div className="w-8 h-8 rounded-xl bg-[#1e3a2b] text-[#34d399] flex items-center justify-center shrink-0">
                           <HelpCircle className="w-4 h-4" />
                         </div>
                         <span className="font-manrope font-bold text-sm text-white">
@@ -541,11 +559,10 @@ export default function AiPdfSummarizerPage() {
                         onMouseLeave={() => setHoveredTooltip(null)}
                         className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
                       >
-                        <Info className="w-4.5 h-4.5" />
+                        <Info className="w-4 h-4" />
                         {hoveredTooltip === "practice" && (
                           <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate practice questions to test your knowledge
-                            {/* Speech Bubble Arrow Pointing Down */}
                             <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
                           </div>
                         )}
@@ -553,7 +570,7 @@ export default function AiPdfSummarizerPage() {
                     </div>
                   </div>
 
-                  <div className="pt-2 text-center">
+                  <div className="pt-1 text-center">
                     <p className="text-[11px] text-white/35 font-manrope">
                       Powered by AP Lab AI Study Engine
                     </p>
@@ -660,51 +677,110 @@ export default function AiPdfSummarizerPage() {
               )}
 
               {activeResultView === "flashcards" && result.flashcards.length > 0 && (
-                <div className="flex flex-col items-center justify-center space-y-6 py-6">
-                  <div
-                    onClick={() => setIsCardFlipped(!isCardFlipped)}
-                    className="w-full max-w-xl h-80 bg-[#1e202c] border border-purple-500/40 rounded-3xl p-8 flex flex-col items-center justify-center text-center shadow-2xl cursor-pointer relative transition-all duration-300 hover:border-purple-500 select-none"
-                  >
-                    <div className="absolute top-4 right-4 flex items-center space-x-2 text-xs text-white/40 font-mono">
-                      <RotateCw className="w-3.5 h-3.5" />
-                      <span>Click to flip</span>
-                    </div>
+                <div className="flex flex-col items-center justify-center py-6 w-full overflow-hidden">
+                  <div className="w-full max-w-xl relative">
+                    <AnimatePresence mode="wait" custom={slideDirection}>
+                      <motion.div
+                        key={currentCardIndex}
+                        custom={slideDirection}
+                        variants={{
+                          initial: (dir: number) => ({ x: dir > 0 ? 280 : -280, opacity: 0 }),
+                          animate: { x: 0, opacity: 1, transition: { type: "spring", stiffness: 320, damping: 30 } },
+                          exit: (dir: number) => ({ x: dir < 0 ? 280 : -280, opacity: 0, transition: { duration: 0.15 } }),
+                        }}
+                        initial="initial"
+                        animate="animate"
+                        exit="exit"
+                        className="w-full"
+                      >
+                        <div
+                          onClick={() => setIsCardFlipped(!isCardFlipped)}
+                          className="w-full bg-[#161720] border border-white/15 rounded-[32px] p-7 sm:p-9 flex flex-col justify-between shadow-2xl relative select-none cursor-pointer transition-colors hover:border-white/25 min-h-[380px]"
+                        >
+                          {/* Top Right Counter (Matching Screenshot 4) */}
+                          <div className="flex items-center justify-between w-full">
+                            <span className="text-xs font-manrope font-extrabold text-purple-400 uppercase tracking-wider">
+                              Flashcards
+                            </span>
+                            <span className="font-mono text-xs font-bold text-white/60 bg-white/5 px-3 py-1 rounded-full border border-white/10">
+                              {currentCardIndex + 1}/{result.flashcards.length}
+                            </span>
+                          </div>
 
-                    <span className="text-xs font-manrope font-extrabold text-purple-400 uppercase tracking-widest mb-4">
-                      {isCardFlipped ? "Answer" : "Question"} ({currentCardIndex + 1} / {result.flashcards.length})
-                    </span>
+                          {/* Center Card Inner Box (Matching Screenshot 4) */}
+                          <div className="my-6 border border-white/10 rounded-2xl p-7 sm:p-9 text-center bg-[#1e1f2b]/70 flex flex-col items-center justify-center min-h-[200px] shadow-inner relative">
+                            <motion.div
+                              animate={{ rotateY: isCardFlipped ? 180 : 0 }}
+                              transition={{ duration: 0.35, ease: "easeInOut" }}
+                              style={{ transformStyle: "preserve-3d" }}
+                              className="w-full"
+                            >
+                              {!isCardFlipped ? (
+                                <div className="space-y-2">
+                                  <h4 className="font-manrope font-bold text-base text-white/70">Question:</h4>
+                                  <p className="font-manrope font-bold text-lg sm:text-xl text-white leading-relaxed px-2">
+                                    {result.flashcards[currentCardIndex].question}
+                                  </p>
+                                </div>
+                              ) : (
+                                <div className="space-y-2" style={{ transform: "rotateY(180deg)" }}>
+                                  <h4 className="font-manrope font-bold text-base text-purple-400">Answer:</h4>
+                                  <p className="font-manrope font-bold text-lg sm:text-xl text-white leading-relaxed px-2">
+                                    {result.flashcards[currentCardIndex].answer}
+                                  </p>
+                                </div>
+                              )}
+                            </motion.div>
+                          </div>
 
-                    <p className="font-manrope font-extrabold text-xl text-white leading-relaxed px-4">
-                      {isCardFlipped
-                        ? result.flashcards[currentCardIndex].answer
-                        : result.flashcards[currentCardIndex].question}
-                    </p>
-                  </div>
+                          {/* Action Buttons Row at Bottom of Card (Matching Screenshot 4) */}
+                          <div className="flex items-center justify-center space-x-3 pt-1">
+                            {currentCardIndex > 0 && (
+                              <button
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  setSlideDirection(-1);
+                                  setIsCardFlipped(false);
+                                  setCurrentCardIndex((prev) => Math.max(0, prev - 1));
+                                }}
+                                className="px-5 py-2.5 rounded-full bg-[#232532] hover:bg-[#2e3142] border border-white/15 text-white font-manrope font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-lg active:scale-95"
+                              >
+                                <RotateCw className="w-4 h-4 rotate-180 text-white/80" />
+                                <span>Prev</span>
+                              </button>
+                            )}
 
-                  <div className="flex items-center space-x-4">
-                    <button
-                      type="button"
-                      disabled={currentCardIndex === 0}
-                      onClick={() => {
-                        setCurrentCardIndex((prev) => Math.max(0, prev - 1));
-                        setIsCardFlipped(false);
-                      }}
-                      className="px-6 py-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white font-bold text-xs disabled:opacity-30 transition-all cursor-pointer"
-                    >
-                      Previous
-                    </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setIsCardFlipped(!isCardFlipped);
+                              }}
+                              className="px-6 py-2.5 rounded-full bg-[#232532] hover:bg-[#2e3142] border border-white/15 text-white font-manrope font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-lg active:scale-95"
+                            >
+                              <RotateCw className="w-4 h-4 text-white/90" />
+                              <span>Flip</span>
+                            </button>
 
-                    <button
-                      type="button"
-                      disabled={currentCardIndex === result.flashcards.length - 1}
-                      onClick={() => {
-                        setCurrentCardIndex((prev) => Math.min(result.flashcards.length - 1, prev + 1));
-                        setIsCardFlipped(false);
-                      }}
-                      className="px-6 py-2.5 rounded-full bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs disabled:opacity-30 transition-all cursor-pointer shadow-lg"
-                    >
-                      Next Card
-                    </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSlideDirection(1);
+                                setIsCardFlipped(false);
+                                setCurrentCardIndex((prev) => (prev + 1) % result.flashcards.length);
+                              }}
+                              className="px-6 py-2.5 rounded-full bg-[#232532] hover:bg-[#2e3142] border border-white/15 text-white font-manrope font-bold text-xs sm:text-sm flex items-center gap-2 transition-all cursor-pointer shadow-lg active:scale-95"
+                            >
+                              <ArrowRight className="w-4 h-4 text-white/90" />
+                              <span>Next</span>
+                            </button>
+                          </div>
+
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
                   </div>
                 </div>
               )}
@@ -1050,9 +1126,7 @@ export default function AiPdfSummarizerPage() {
               </button>
 
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-2xl bg-red-600/20 border border-red-500/30 flex items-center justify-center text-red-500 shrink-0">
-                  <Play className="w-5 h-5 fill-red-500" />
-                </div>
+                <img src="/images/youtube-logo.png" alt="YouTube" className="h-6 w-auto object-contain shrink-0" />
                 <div>
                   <h3 className="font-manrope font-extrabold text-xl text-white">Import YouTube Video</h3>
                   <p className="text-xs text-white/50 font-manrope">Paste an educational video URL to generate notes.</p>
