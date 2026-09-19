@@ -44,7 +44,24 @@ export async function POST(req: NextRequest) {
     }
 
     if (videoUrl.trim()) {
-      textContentToSummarize = `Video URL: ${videoUrl.trim()}\nAnalyze this video lecture and generate high yield AP exam study notes, key takeaways, flashcards, and a practice quiz.`;
+      let youtubeTitle = "";
+      try {
+        const oembedRes = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(videoUrl.trim())}&format=json`);
+        if (oembedRes.ok) {
+          const oembedData = await oembedRes.json();
+          if (oembedData && oembedData.title) {
+            youtubeTitle = oembedData.title;
+            fileName = `YouTube: ${oembedData.title}`;
+          }
+        }
+      } catch (e) {
+        console.warn("YouTube oEmbed fetch failed, continuing with direct prompt:", e);
+      }
+
+      textContentToSummarize = `YouTube Video Study Request:
+Video URL: ${videoUrl.trim()}
+${youtubeTitle ? `Video Title: "${youtubeTitle}"` : ""}
+Please analyze this educational YouTube video topic thoroughly. Generate a comprehensive AP exam study suite including a high-yield executive summary, key takeaways, structured study notes, flashcards, and practice quiz questions.`;
     } else if (pastedText.trim()) {
       textContentToSummarize = pastedText.trim();
     }

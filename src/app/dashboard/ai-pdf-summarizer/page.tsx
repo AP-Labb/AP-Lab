@@ -41,6 +41,7 @@ export default function AiPdfSummarizerPage() {
   const [showYouTubeModal, setShowYouTubeModal] = useState(false);
   const [driveUrl, setDriveUrl] = useState("");
   const [showDriveGuide, setShowDriveGuide] = useState(false);
+  const [hoveredTooltip, setHoveredTooltip] = useState<string | null>(null);
 
   // Live Audio Recording & Volume Meter State (Matching uploaded Knowt screenshots 1 & 2)
   const [isRecording, setIsRecording] = useState(false);
@@ -338,14 +339,7 @@ export default function AiPdfSummarizerPage() {
                         onClick={() => setShowDriveModal(true)}
                         className="px-4 py-2 rounded-full bg-[#20212b] hover:bg-[#2a2c39] border border-white/15 text-white font-manrope font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95"
                       >
-                        <svg className="w-4 h-4" viewBox="0 0 87.3 78">
-                          <path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5l5.4 9.35z" fill="#0066da"/>
-                          <path d="M43.65 25L29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3L1.2 51.7c-.8 1.4-1.2 2.95-1.2 4.5h27.5L43.65 25z" fill="#00ac47"/>
-                          <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 3.8-6.6c.8-1.4 1.2-2.95 1.2-4.5H55.95l6.4 11.1 11.2 6.05z" fill="#ea4335"/>
-                          <path d="M43.65 25L57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2H34.4c-1.6 0-3.15.4-4.5 1.2L43.65 25z" fill="#00832d"/>
-                          <path d="M55.95 56.2H27.5L13.75 80c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.4 4.5-1.2L55.95 56.2z" fill="#2684fc"/>
-                          <path d="M73.55 25H43.65l13.75 23.8h29.9c0-1.55-.4-3.1-1.2-4.5L76.85 28.3c-.8-1.4-1.95-2.5-3.3-3.3z" fill="#ffba00"/>
-                        </svg>
+                        <img src="/images/google-drive-logo.png" alt="Google Drive" className="w-4 h-4 object-contain shrink-0" />
                         <span>Drive</span>
                       </button>
 
@@ -386,27 +380,17 @@ export default function AiPdfSummarizerPage() {
 
                   {/* MAIN CONTAINER CONTENT (NO FILE SELECTED STATE OR SELECTED FILE STATE) */}
                   {!selectedFile && !videoUrl.trim() && !pastedText.trim() ? (
-                    <div 
-                      onClick={() => fileInputRef.current?.click()}
-                      className="my-8 flex flex-col items-center justify-center text-center space-y-3 cursor-pointer group"
-                    >
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          fileInputRef.current?.click();
-                        }}
-                        className="w-14 h-14 rounded-full bg-[#222430] group-hover:bg-[#2c2e3e] border border-white/15 flex items-center justify-center text-white/70 group-hover:text-white transition-all cursor-pointer shadow-lg active:scale-95"
-                      >
+                    <div className="my-8 flex flex-col items-center justify-center text-center space-y-3 cursor-default select-none">
+                      <div className="w-14 h-14 rounded-full bg-[#222430] border border-white/15 flex items-center justify-center text-white/70 shadow-lg pointer-events-none">
                         <Plus className="w-7 h-7 text-white" />
-                      </button>
+                      </div>
 
                       <div className="space-y-1">
-                        <h3 className="font-manrope font-bold text-xl text-white tracking-tight group-hover:text-purple-300 transition-colors">
+                        <h3 className="font-manrope font-bold text-xl text-white tracking-tight">
                           No file(s) selected yet
                         </h3>
                         <p className="font-manrope text-xs text-white/40">
-                          Click here or choose an option above to upload files.
+                          Selected files will appear here. You can upload up to 5 files
                         </p>
                       </div>
                     </div>
@@ -480,8 +464,8 @@ export default function AiPdfSummarizerPage() {
 
                 {/* RIGHT SIDE PANEL */}
                 <div className="lg:col-span-4 bg-[#16171d] border border-[#272832] rounded-3xl p-6 sm:p-7 flex flex-col justify-between space-y-6 shadow-2xl">
-                  <div className="space-y-6">
-                    <div className="space-y-2">
+                  <div className="space-y-5">
+                    <div className="space-y-1">
                       <h3 className="font-manrope font-bold text-lg text-white tracking-tight leading-snug">
                         Turn your files into a full study suite
                       </h3>
@@ -491,32 +475,80 @@ export default function AiPdfSummarizerPage() {
                     </div>
 
                     {/* RESOURCE ITEM 1: NOTEBOOK */}
-                    <div className="group relative bg-[#20222c] border border-white/10 hover:border-blue-500/50 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                    <div className="bg-[#20222c] border border-white/10 hover:border-blue-500/40 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-blue-500/20 text-blue-400 flex items-center justify-center shrink-0">
+                        <div className="w-9 h-9 rounded-xl bg-[#20324e] text-[#60a5fa] flex items-center justify-center shrink-0">
                           <BookOpen className="w-4 h-4" />
                         </div>
-                        <span className="font-manrope font-extrabold text-sm text-white">
+                        <span className="font-manrope font-bold text-sm text-white">
                           Notebook
                         </span>
                       </div>
-                      <div className="text-white/40 group-hover:text-white transition-colors">
-                        <Info className="w-4 h-4" />
+                      <div 
+                        onMouseEnter={() => setHoveredTooltip("notebook")}
+                        onMouseLeave={() => setHoveredTooltip(null)}
+                        className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
+                      >
+                        <Info className="w-4.5 h-4.5" />
+                        {hoveredTooltip === "notebook" && (
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                            Generate a note with a study suite of learning tools
+                            {/* Speech Bubble Arrow Pointing Down */}
+                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                          </div>
+                        )}
                       </div>
                     </div>
 
                     {/* RESOURCE ITEM 2: FLASHCARDS */}
-                    <div className="group relative bg-[#20222c] border border-white/10 hover:border-amber-500/50 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                    <div className="bg-[#20222c] border border-white/10 hover:border-amber-500/40 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center shrink-0">
+                        <div className="w-9 h-9 rounded-xl bg-[#3d3121] text-[#fbbf24] flex items-center justify-center shrink-0">
                           <Layers className="w-4 h-4" />
                         </div>
-                        <span className="font-manrope font-extrabold text-sm text-white">
+                        <span className="font-manrope font-bold text-sm text-white">
                           Flashcards
                         </span>
                       </div>
-                      <div className="text-white/40 group-hover:text-white transition-colors">
-                        <Info className="w-4 h-4" />
+                      <div 
+                        onMouseEnter={() => setHoveredTooltip("flashcards")}
+                        onMouseLeave={() => setHoveredTooltip(null)}
+                        className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
+                      >
+                        <Info className="w-4.5 h-4.5" />
+                        {hoveredTooltip === "flashcards" && (
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                            Generate flashcards to memorize key concepts
+                            {/* Speech Bubble Arrow Pointing Down */}
+                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* RESOURCE ITEM 3: PRACTICE QUESTIONS */}
+                    <div className="bg-[#20222c] border border-white/10 hover:border-emerald-500/40 rounded-2xl p-4 flex items-center justify-between transition-all cursor-pointer shadow-md">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-9 h-9 rounded-xl bg-[#1e3a2b] text-[#34d399] flex items-center justify-center shrink-0">
+                          <HelpCircle className="w-4 h-4" />
+                        </div>
+                        <span className="font-manrope font-bold text-sm text-white">
+                          Practice Questions
+                        </span>
+                      </div>
+                      <div 
+                        onMouseEnter={() => setHoveredTooltip("practice")}
+                        onMouseLeave={() => setHoveredTooltip(null)}
+                        className="text-white/40 hover:text-white transition-colors relative cursor-pointer p-1"
+                      >
+                        <Info className="w-4.5 h-4.5" />
+                        {hoveredTooltip === "practice" && (
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                            Generate practice questions to test your knowledge
+                            {/* Speech Bubble Arrow Pointing Down */}
+                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -759,14 +791,7 @@ export default function AiPdfSummarizerPage() {
               </button>
 
               <div className="flex items-center space-x-3">
-                <svg className="w-8 h-8 shrink-0" viewBox="0 0 87.3 78">
-                  <path d="M6.6 66.85l3.85 6.65c.8 1.4 1.95 2.5 3.3 3.3l13.75-23.8H0c0 1.55.4 3.1 1.2 4.5l5.4 9.35z" fill="#0066da"/>
-                  <path d="M43.65 25L29.9 1.2c-1.35.8-2.5 1.9-3.3 3.3L1.2 51.7c-.8 1.4-1.2 2.95-1.2 4.5h27.5L43.65 25z" fill="#00ac47"/>
-                  <path d="M73.55 76.8c1.35-.8 2.5-1.9 3.3-3.3l1.6-2.75 3.8-6.6c.8-1.4 1.2-2.95 1.2-4.5H55.95l6.4 11.1 11.2 6.05z" fill="#ea4335"/>
-                  <path d="M43.65 25L57.4 1.2c-1.35-.8-2.9-1.2-4.5-1.2H34.4c-1.6 0-3.15.4-4.5 1.2L43.65 25z" fill="#00832d"/>
-                  <path d="M55.95 56.2H27.5L13.75 80c1.35.8 2.9 1.2 4.5 1.2h50.8c1.6 0 3.15-.4 4.5-1.2L55.95 56.2z" fill="#2684fc"/>
-                  <path d="M73.55 25H43.65l13.75 23.8h29.9c0-1.55-.4-3.1-1.2-4.5L76.85 28.3c-.8-1.4-1.95-2.5-3.3-3.3z" fill="#ffba00"/>
-                </svg>
+                <img src="/images/google-drive-logo.png" alt="Google Drive" className="w-7 h-7 object-contain shrink-0" />
                 <h3 className="font-manrope font-extrabold text-xl text-white">Google Drive Integration</h3>
               </div>
 
@@ -858,12 +883,12 @@ export default function AiPdfSummarizerPage() {
       {/* ── MODAL 2: LIVE RECORD CLASS POPUP (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) ── */}
       <AnimatePresence>
         {showRecordingModal && (
-          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-black/85 backdrop-blur-md">
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 sm:p-6 bg-black/85 backdrop-blur-md">
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
-              className="bg-[#1b1c24] border border-white/15 rounded-[32px] p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative overflow-hidden text-white"
+              className="bg-[#1c1d25] border border-white/15 rounded-[32px] p-8 sm:p-10 max-w-4xl w-full shadow-2xl relative overflow-hidden text-white"
             >
               {/* Close Button */}
               <button
@@ -872,7 +897,7 @@ export default function AiPdfSummarizerPage() {
                   if (isRecording) stopRecording();
                   setShowRecordingModal(false);
                 }}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-20 border border-white/10"
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-20 border border-white/10 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -880,29 +905,29 @@ export default function AiPdfSummarizerPage() {
               <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
                 
                 {/* LEFT COLUMN: MODAL TITLE, BANNER, AUDIO WAVEFORM BOX & CONTROL BUTTONS */}
-                <div className="md:col-span-7 space-y-5 text-left">
+                <div className="md:col-span-7 space-y-6 text-left">
                   
-                  {/* MODAL HEADER TITLE & SUBTITLE */}
+                  {/* MODAL HEADER TITLE & SUBTITLE (MATCHING SCREENSHOT 1) */}
                   <div className="space-y-1">
                     <h3 className="font-manrope font-black text-2xl sm:text-3xl text-white tracking-tight">
-                      AP Lab AI Lecture Note Taker
+                      Knowt AI Lecture Note Taker
                     </h3>
-                    <p className="text-sm font-manrope text-white/60">
+                    <p className="text-base font-manrope text-white/70">
                       {isRecording && !isPaused ? "Shh! AP Lab is listening to your lecture..." : "We can't hear you yet"}
                     </p>
                   </div>
 
-                  {/* PERMISSION / STATUS BANNER PILL (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) */}
+                  {/* PERMISSION / STATUS BANNER PILL (EXACT MATCH TO KNOWT SCREENSHOT 1 & 2) */}
                   {!isRecording ? (
-                    /* Amber / Brownish Permission Warning Pill (Screenshot 1) */
-                    <div className="bg-[#3e3422] border border-[#59492b] text-[#fcd34d] px-4 py-3 rounded-2xl flex items-center space-x-3 text-xs font-manrope">
-                      <div className="w-7 h-7 rounded-lg bg-[#59492b] flex items-center justify-center shrink-0">
-                        <MicOff className="w-4 h-4 text-[#fcd34d]" />
+                    /* Reddish Permission Warning Banner (Screenshot 1) */
+                    <div className="bg-[#48282c] border border-[#6b353a] text-[#fca5a5] px-4 py-3.5 rounded-2xl flex items-center space-x-3 text-xs font-manrope">
+                      <div className="w-8 h-8 rounded-xl bg-[#e53935] flex items-center justify-center shrink-0 shadow-md">
+                        <MicOff className="w-4 h-4 text-white" />
                       </div>
-                      <p className="leading-snug">We need microphone access to record. Press the mic and choose Allow.</p>
+                      <p className="leading-snug font-medium">Microphone access is turned off. To start recording, allow it in your browser's site settings and reload this page.</p>
                     </div>
                   ) : (
-                    /* Light Teal / Cyan Status Pill (Screenshot 2) */
+                    /* Light Teal / Green Status Pill (Screenshot 2) */
                     <div className="bg-[#dcfce7] border border-[#bbf7d0] text-[#0f5132] px-4 py-3 rounded-2xl flex items-center space-x-3 text-xs font-manrope font-bold">
                       <div className="w-7 h-7 rounded-lg bg-[#bbf7d0] flex items-center justify-center shrink-0">
                         <Volume2 className="w-4 h-4 text-[#0f5132]" />
@@ -911,8 +936,8 @@ export default function AiPdfSummarizerPage() {
                     </div>
                   )}
 
-                  {/* CENTER AUDIO WAVEFORM CONTAINER (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) */}
-                  <div className="bg-[#14151b] border border-white/10 rounded-2xl h-36 flex items-center justify-center relative overflow-hidden">
+                  {/* CENTER AUDIO WAVEFORM BOX (EXACT MATCH TO KNOWT SCREENSHOT 1) */}
+                  <div className="bg-[#121318] border border-white/10 rounded-2xl h-44 sm:h-48 flex flex-col items-center justify-center relative overflow-hidden px-6">
                     {!isRecording || isPaused ? (
                       /* Idle Dotted Line (Screenshot 1) */
                       <div className="text-white/40 tracking-[6px] font-mono text-sm select-none">
@@ -932,26 +957,28 @@ export default function AiPdfSummarizerPage() {
 
                   {/* TIMER DISPLAY */}
                   <div className="text-center">
-                    <span className="font-mono text-xl font-bold tracking-widest text-white">
+                    <span className="font-mono text-2xl font-bold tracking-widest text-white">
                       {formatTimer(recordingSeconds)}
                     </span>
                   </div>
 
-                  {/* CONTROL BUTTONS AT BOTTOM (EXACT MATCH TO KNOWT SCREENSHOTS 1 & 2) */}
+                  {/* CONTROL BUTTONS AT BOTTOM (SOLID FILLED WHITE MIC ICON - SCREENSHOT 1) */}
                   <div className="flex items-center justify-center space-x-6 pt-1">
                     {!isRecording ? (
-                      /* Single Large Red Mic Button (Screenshot 1) */
+                      /* Single Red Circle Button with Solid White Filled Mic Icon */
                       <button
                         type="button"
                         onClick={startRecording}
-                        className="w-14 h-14 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center shadow-lg active:scale-95 transition-all cursor-pointer"
+                        className="w-14 h-14 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform cursor-pointer"
                       >
-                        <Mic className="w-6 h-6 text-white" />
+                        <svg className="w-6 h-6 fill-white text-white" viewBox="0 0 24 24">
+                          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                        </svg>
                       </button>
                     ) : (
                       /* Three Buttons Row: Delete (Left), Stop (Center Red), Pause/Resume (Right) (Screenshot 2) */
                       <>
-                        {/* 1. Delete Trash Button (Left) */}
                         <button
                           type="button"
                           onClick={deleteRecording}
@@ -961,7 +988,6 @@ export default function AiPdfSummarizerPage() {
                           <Trash2 className="w-5 h-5 text-red-400" />
                         </button>
 
-                        {/* 2. Stop & Summarize Red Button (Center) */}
                         <button
                           type="button"
                           onClick={() => {
@@ -969,12 +995,11 @@ export default function AiPdfSummarizerPage() {
                             setShowRecordingModal(false);
                           }}
                           title="Stop recording"
-                          className="w-14 h-14 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center shadow-xl active:scale-95 transition-all cursor-pointer ring-4 ring-red-500/20"
+                          className="w-14 h-14 rounded-full bg-[#ea4335] hover:bg-[#d93025] text-white flex items-center justify-center shadow-xl active:scale-95 transition-transform cursor-pointer ring-4 ring-red-500/20"
                         >
                           <Square className="w-5 h-5 fill-white text-white" />
                         </button>
 
-                        {/* 3. Pause / Resume Button (Right) */}
                         <button
                           type="button"
                           onClick={pauseRecording}
@@ -989,9 +1014,9 @@ export default function AiPdfSummarizerPage() {
 
                 </div>
 
-                {/* RIGHT COLUMN: PANDA WATCHING TV (TRANSPARENT BACKGROUND, NO GREY BG, NO TEXT BELOW IT) */}
+                {/* RIGHT COLUMN: PANDA WATCHING TV (SCREENSHOT 1) */}
                 <div className="md:col-span-5 flex flex-col items-center justify-center p-2">
-                  <div className="relative w-full max-w-[260px] aspect-[4/3] flex items-center justify-center">
+                  <div className="relative w-full max-w-[280px] aspect-[4/3] flex items-center justify-center">
                     <img
                       src="/images/panda-tv.png"
                       alt="Panda Mascot Watching TV"
