@@ -91,6 +91,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
     { label: "Progress", href: "/dashboard/progress", icon: "progress" },
     { label: "Quests", href: "/dashboard/quests", icon: "scroll" },
     { label: "Leaderboard", href: "/dashboard/leaderboard", icon: "leaderboard" },
+    { label: "AI Summarizer", href: "/dashboard/ai-summarizer", icon: "pen" },
     { label: "AI Assistant", href: "/dashboard/assistant", icon: "panda" },
     { label: "Shop", href: "/dashboard/shop", icon: ShoppingBag },
   ];
@@ -221,6 +222,44 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                                   <circle cx="12" cy="4.5" r="1" fill="currentColor" stroke="none" />
                                   <circle cx="2" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
                                   <circle cx="22" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
+                                </motion.g>
+                              </svg>
+                            </div>
+                          ) : item.icon === "pen" ? (
+                            /* AI Summarizer Pen Icon (Animates smoothly like writing on paper when hovered) */
+                            <div className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white">
+                              <svg className="w-5 h-5 overflow-visible text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                                {/* Baseline Paper Line */}
+                                <line x1="3" y1="20" x2="21" y2="20" strokeWidth="1.5" strokeOpacity="0.4" />
+
+                                {/* Written Ink Stroke that draws out smoothly on hover */}
+                                <motion.path
+                                  d="M4 20C7 19 9 20.5 12 19.5C14.5 19 17 20 19 19.5"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  variants={{
+                                    rest: { pathLength: 0, opacity: 0 },
+                                    hover: { pathLength: 1, opacity: 1 }
+                                  }}
+                                  transition={{ duration: 0.45, ease: "easeInOut" }}
+                                />
+
+                                {/* Writing Pen / Nib */}
+                                <motion.g
+                                  variants={{
+                                    rest: { rotate: 0, x: 0, y: 0 },
+                                    hover: { 
+                                      rotate: [-5, -22, -12, -22, -15],
+                                      x: [0, 2.5, 5, 2.5, 0],
+                                      y: [0, -1, 0, -1, 0]
+                                    }
+                                  }}
+                                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                                  style={{ transformOrigin: "6px 18px" }}
+                                >
+                                  <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z" strokeWidth="1.8" strokeLinejoin="round" />
+                                  <path d="M15 5l4 4" strokeWidth="1.5" />
                                 </motion.g>
                               </svg>
                             </div>
