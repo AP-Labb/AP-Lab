@@ -177,56 +177,53 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                               ))}
                             </motion.div>
                           ) : item.icon === "scroll" ? (
-                            /* Quests Map Icon (Folded 3-panel map with shaking & fading ? mark on hover) */
+                            /* Quests Map Icon (Folded 3-panel map exactly like requested image) */
                             <motion.div
                               className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
                               variants={{
                                 rest: { scale: 1, rotate: 0 },
-                                hover: { scale: 1.12, rotate: [0, -6, 6, -3, 3, 0] }
+                                hover: { scale: 1.15, rotate: -3 }
                               }}
-                              transition={{
-                                rotate: { duration: 0.4, ease: "easeInOut" },
-                                scale: { duration: 0.2 }
-                              }}
+                              transition={{ type: "spring", stiffness: 400, damping: 20 }}
                             >
                               <svg className="w-5 h-5 overflow-visible text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                {/* Folded 3-panel map outline */}
                                 <path d="M3 6L9 3.5L15 6L21 3.5V18.5L15 21L9 18.5L3 21V6Z" strokeWidth="2" strokeLinejoin="round" />
                                 <path d="M9 3.5V18.5" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
                                 <path d="M15 6V21" strokeWidth="1.5" strokeDasharray="1.5 1.5" />
-                                
-                                {/* Fading Question Mark ? inside map */}
-                                <motion.g
-                                  variants={{
-                                    rest: { opacity: 0, scale: 0.6 },
-                                    hover: { opacity: 1, scale: 1 }
-                                  }}
-                                  transition={{ duration: 0.3, ease: "easeOut" }}
-                                  style={{ transformOrigin: "14.5px 12px" }}
-                                >
-                                  <path d="M12.5 8.2C12.5 7 13.5 6 14.8 6C16.1 6 17.1 7 17.1 8.2C17.1 9.6 15.4 10.4 14.8 11.5C14.5 12.1 14.5 12.6 14.5 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                                  <circle cx="14.5" cy="15.8" r="1.1" fill="currentColor" stroke="none" />
-                                </motion.g>
                               </svg>
                             </motion.div>
                           ) : item.icon === "leaderboard" ? (
-                            /* Leaderboard Simplistic Crown Icon (Lifts up smoothly when hovered) */
-                            <motion.div
-                              className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white"
-                              variants={{
-                                rest: { y: 0, scale: 1 },
-                                hover: { y: -5, scale: 1.08 }
-                              }}
-                              transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-                            >
+                            /* Leaderboard Simplistic Crown Icon (Lifts smoothly while 1-line head & shoulders outline fades in under it) */
+                            <div className="w-5 h-5 shrink-0 relative flex items-center justify-center text-white">
                               <svg className="w-5 h-5 overflow-visible text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                                <path d="M4 18H20" strokeWidth="2" strokeLinecap="round" />
-                                <path d="M3.5 17L2 7.5L6.5 10.5L12 4.5L17.5 10.5L22 7.5L20.5 17H3.5Z" strokeWidth="1.8" strokeLinejoin="round" />
-                                <circle cx="12" cy="4.5" r="1" fill="currentColor" stroke="none" />
-                                <circle cx="2" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
-                                <circle cx="22" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
+                                {/* Super Simplistic 1-Line Head & Shoulders Outline */}
+                                <motion.g
+                                  variants={{
+                                    rest: { opacity: 0, y: 3, scale: 0.85 },
+                                    hover: { opacity: 1, y: 0, scale: 1 }
+                                  }}
+                                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                >
+                                  <circle cx="12" cy="13.5" r="3" stroke="currentColor" strokeWidth="1.6" />
+                                  <path d="M6 21c0-2.8 2.7-4.5 6-4.5s6 2.8 6 4.5" stroke="currentColor" strokeWidth="1.6" />
+                                </motion.g>
+
+                                {/* Simplistic Crown (Lifts up smoothly onto the head) */}
+                                <motion.g
+                                  variants={{
+                                    rest: { y: 0 },
+                                    hover: { y: -6 }
+                                  }}
+                                  transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                                >
+                                  <path d="M4 18H20" strokeWidth="1.8" strokeLinecap="round" />
+                                  <path d="M3.5 17L2 7.5L6.5 10.5L12 4.5L17.5 10.5L22 7.5L20.5 17H3.5Z" strokeWidth="1.8" strokeLinejoin="round" />
+                                  <circle cx="12" cy="4.5" r="1" fill="currentColor" stroke="none" />
+                                  <circle cx="2" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
+                                  <circle cx="22" cy="7.5" r="0.8" fill="currentColor" stroke="none" />
+                                </motion.g>
                               </svg>
-                            </motion.div>
+                            </div>
                           ) : item.icon === "panda" ? (
                             <motion.div 
                               className="w-6 h-6 shrink-0 flex items-center justify-center"

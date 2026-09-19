@@ -175,10 +175,10 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                 )}
               >
                 {/* Large Flame Icon + Streak Count Perfectly Centered */}
-                <div className="w-full flex items-center justify-center text-center my-2.5">
-                  <div className="inline-flex items-center justify-center space-x-3 mx-auto">
-                    <StreakFlameIcon streakCount={streak} sizeClassName="w-14 h-14 sm:w-16 sm:h-16" disableHoverScale={true} />
-                    <span className={cn("font-manrope font-black text-5xl leading-none tracking-tight flex items-center justify-center select-none", streak >= 1 ? "text-[#f97316]" : "text-white/80")}>
+                <div className="w-full flex items-center justify-center text-center my-2">
+                  <div className="inline-flex items-center justify-center gap-2.5 mx-auto">
+                    <StreakFlameIcon streakCount={streak} sizeClassName="w-12 h-12 sm:w-14 sm:h-14" disableHoverScale={true} />
+                    <span className={cn("font-manrope font-black text-4xl sm:text-5xl leading-none tracking-tight inline-flex items-center justify-center select-none pt-0.5", streak >= 1 ? "text-[#f97316]" : "text-white/80")}>
                       {streak}
                     </span>
                   </div>
@@ -207,7 +207,10 @@ export function HeaderUserCapsules({ onOpenProfile }: HeaderUserCapsulesProps) {
                               : "border border-transparent"
                           )}>
                             {isCompleted ? (
-                              <StreakFlameIcon streakCount={Math.max(1, streak)} sizeClassName="w-5 h-5 sm:w-6 sm:h-6" disableHoverScale={true} />
+                              <svg className="w-4 h-4 sm:w-4.5 sm:h-4.5 stroke-orange-400 stroke-[3.5] drop-shadow-[0_0_6px_rgba(249,115,22,0.4)]" viewBox="0 0 24 24" fill="none" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                              </svg>
                             ) : (
                               <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full bg-neutral-800/90 border border-white/10 shrink-0" />
                             )}

@@ -494,25 +494,21 @@ export function HeroSection() {
         {/* Call to Action Buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center w-full gap-4 sm:gap-6 mt-2 relative z-10">
           <div className="relative w-full sm:w-auto flex flex-col items-center">
-            {/* Hanging Panda Bear (Layered behind the button with paws gripping the bottom edge) */}
-            <motion.div 
-              className="absolute left-1/2 -translate-x-1/2 top-[80%] z-0 pointer-events-none w-14 sm:w-16 select-none"
-              initial={{ y: 0 }}
-              animate={{ 
-                y: [0, 2.5, 0],
-                rotate: (isHoveredDashboard || isHoveredSignIn) ? [-2, 2, -2, 2, 0] : 0
-              }}
-              transition={{ 
-                y: { duration: 3.5, repeat: Infinity, ease: "easeInOut" },
-                rotate: { duration: 0.5, ease: "easeInOut" }
+            {/* Hanging Panda Bear (Layered behind the button, perfectly attached & moving smoothly in sync with button hover) */}
+            <div 
+              className="absolute left-1/2 top-[78%] z-0 pointer-events-none w-18 sm:w-20 md:w-22 select-none transition-all duration-300 ease-out"
+              style={{
+                transform: (isHoveredDashboard || isHoveredSignIn) 
+                  ? "translateX(-50%) translateY(-3px) scale(1.02)" 
+                  : "translateX(-50%) translateY(0px) scale(1)"
               }}
             >
               <img 
                 src="/images/hanging-panda.png" 
                 alt="Hanging Panda Mascot" 
-                className="w-full h-auto object-contain drop-shadow-[0_4px_10px_rgba(0,0,0,0.6)]" 
+                className="w-full h-auto object-contain drop-shadow-[0_4px_12px_rgba(0,0,0,0.6)]" 
               />
-            </motion.div>
+            </div>
 
             {currentUser ? (
               <Link href="/dashboard" className="w-full sm:w-auto relative z-10">
