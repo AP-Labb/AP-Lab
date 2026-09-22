@@ -283,7 +283,7 @@ export default function AiPdfSummarizerPage() {
       <div className="flex-1 flex flex-col min-h-screen md:pl-16 relative z-10">
         <UniversalTopHeader />
 
-        <main className="max-w-6xl mx-auto w-full px-4 sm:px-8 py-10 space-y-8">
+        <main className={cn("max-w-6xl mx-auto w-full px-4 sm:px-8 py-10 space-y-8 transition-all duration-300", isProcessing && "opacity-25 pointer-events-none blur-[1px]")}>
           
           {!result ? (
             <div className="space-y-6">
@@ -476,9 +476,7 @@ export default function AiPdfSummarizerPage() {
                     {/* RESOURCE ITEM 1: SUMMARY */}
                     <div className="bg-[#20222c] border border-white/10 hover:border-purple-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-[#2c1d3f] text-[#c084fc] flex items-center justify-center shrink-0">
-                          <Sparkles className="w-4 h-4" />
-                        </div>
+                        <img src="/images/summary-icon.png" alt="Summary" className="w-8 h-8 object-contain shrink-0 rounded-lg" />
                         <span className="font-manrope font-bold text-sm text-white">
                           Summary
                         </span>
@@ -501,7 +499,7 @@ export default function AiPdfSummarizerPage() {
                     {/* RESOURCE ITEM 2: NOTEBOOK */}
                     <div className="bg-[#20222c] border border-white/10 hover:border-blue-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <img src="/images/notebook-icon.png" alt="Notebook" className="w-8 h-8 object-contain shrink-0" />
+                        <img src="/images/notebook-icon.png" alt="Notebook" className="w-8 h-8 object-contain shrink-0 rounded-lg" />
                         <span className="font-manrope font-bold text-sm text-white">
                           Notebook
                         </span>
@@ -524,7 +522,7 @@ export default function AiPdfSummarizerPage() {
                     {/* RESOURCE ITEM 3: FLASHCARDS */}
                     <div className="bg-[#20222c] border border-white/10 hover:border-amber-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <img src="/images/flashcards-icon.png" alt="Flashcards" className="w-8 h-6 object-contain shrink-0" />
+                        <img src="/images/flashcards-icon.png" alt="Flashcards" className="w-8 h-6 object-contain shrink-0 rounded-lg" />
                         <span className="font-manrope font-bold text-sm text-white">
                           Flashcards
                         </span>
@@ -547,9 +545,7 @@ export default function AiPdfSummarizerPage() {
                     {/* RESOURCE ITEM 4: PRACTICE QUESTIONS */}
                     <div className="bg-[#20222c] border border-white/10 hover:border-emerald-500/40 rounded-2xl p-3.5 flex items-center justify-between transition-all cursor-pointer shadow-md">
                       <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 rounded-xl bg-[#1e3a2b] text-[#34d399] flex items-center justify-center shrink-0">
-                          <HelpCircle className="w-4 h-4" />
-                        </div>
+                        <img src="/images/practice-icon.png" alt="Practice Questions" className="w-8 h-8 object-contain shrink-0 rounded-lg" />
                         <span className="font-manrope font-bold text-sm text-white">
                           Practice Questions
                         </span>
@@ -847,6 +843,59 @@ export default function AiPdfSummarizerPage() {
 
         </main>
       </div>
+
+      {/* ── GENERATING / PROCESSING OVERLAY (UIVERSE ANALYZE MAGIC WAND ANIMATION) ── */}
+      <AnimatePresence>
+        {isProcessing && (
+          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="board flex flex-col items-center justify-center p-8 sm:p-10 bg-[#161722]/95 border border-white/20 rounded-3xl shadow-[0_0_50px_rgba(168,85,247,0.3)] backdrop-blur-md max-w-sm w-full space-y-6 text-center select-none"
+            >
+              <div className="analyze flex items-center justify-center w-24 h-24">
+                <svg viewBox="0 0 64 64" className="w-20 h-20 overflow-visible" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  {/* Sparkle Star 1 */}
+                  <path
+                    className="star-1"
+                    d="M48 12C48 15.3137 45.3137 18 42 18C45.3137 18 48 20.6863 48 24C48 20.6863 50.6863 18 54 18C50.6863 18 48 15.3137 48 12Z"
+                  />
+                  {/* Sparkle Star 2 */}
+                  <path
+                    className="star-2"
+                    d="M20 6C20 8.20914 18.2091 10 16 10C18.2091 10 20 11.7909 20 14C20 11.7909 21.7909 10 24 10C21.7909 10 20 8.20914 20 6Z"
+                  />
+                  {/* Magic Wand Stick */}
+                  <path
+                    className="stick"
+                    d="M14 50L44 20"
+                    stroke="#ffffff"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                  />
+                  <path
+                    className="stick"
+                    d="M40 16L48 24"
+                    stroke="#a855f7"
+                    strokeWidth="6"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+
+              <div className="space-y-2">
+                <h3 className="font-manrope font-extrabold text-xl text-white tracking-tight">
+                  Building Study Suite...
+                </h3>
+                <p className="text-xs font-manrope text-white/60 leading-relaxed">
+                  AP Lab AI is analyzing your material & generating executive summaries, study notes, flashcards, and quizzes.
+                </p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* ── MODAL 1: GOOGLE DRIVE IMPORT POPUP ── */}
       <AnimatePresence>
