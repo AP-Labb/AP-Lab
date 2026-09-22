@@ -9,39 +9,50 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File | null;
     const pastedText = (formData.get("text") as string) || "";
 
-    let textContentToSummarize = "";
-    let inlineData: { mimeType: string; data: string } | null = null;
-    let fileName = file ? file.name : "AP Study Material";
+    const files = formData.getAll("files") as File[];
+    const singleFile = formData.get("file") as File | null;
+    const allFiles = files.length > 0 ? files : singleFile ? [singleFile] : [];
 
-    if (file) {
+    let textContentToSummarize = "";
+    const inlineParts: { inlineData: { mimeType: string; data: string } }[] = [];
+    let fileNamesList: string[] = [];
+
+    for (const file of allFiles) {
+      fileNamesList.push(file.name);
       const buffer = Buffer.from(await file.arrayBuffer());
       const mime = file.type.toLowerCase();
       const lowerName = file.name.toLowerCase();
 
       if (mime.startsWith("image/") || lowerName.endsWith(".png") || lowerName.endsWith(".jpg") || lowerName.endsWith(".jpeg") || lowerName.endsWith(".webp")) {
-        inlineData = {
-          mimeType: mime.startsWith("image/") ? mime : "image/png",
-          data: buffer.toString("base64")
-        };
+        inlineParts.push({
+          inlineData: {
+            mimeType: mime.startsWith("image/") ? mime : "image/png",
+            data: buffer.toString("base64")
+          }
+        });
       } else if (mime === "application/pdf" || lowerName.endsWith(".pdf")) {
-        inlineData = {
-          mimeType: "application/pdf",
-          data: buffer.toString("base64")
-        };
+        inlineParts.push({
+          inlineData: {
+            mimeType: "application/pdf",
+            data: buffer.toString("base64")
+          }
+        });
       } else if (mime.startsWith("audio/") || lowerName.endsWith(".mp3") || lowerName.endsWith(".wav") || lowerName.endsWith(".webm") || lowerName.endsWith(".m4a") || lowerName.endsWith(".ogg")) {
-        inlineData = {
-          mimeType: mime || "audio/webm",
-          data: buffer.toString("base64")
-        };
+        inlineParts.push({
+          inlineData: {
+            mimeType: mime || "audio/webm",
+            data: buffer.toString("base64")
+          }
+        });
       } else if (lowerName.endsWith(".ppt") || lowerName.endsWith(".pptx")) {
-        // Extract visible printable strings from PPT/PPTX binary stream
         const textStrings = buffer.toString("binary").replace(/[^\x20-\x7E\n\r\t]/g, " ").replace(/\s+/g, " ").trim();
-        textContentToSummarize = `PowerPoint File (${fileName}):\n${textStrings.slice(0, 15000)}`;
+        textContentToSummarize += `\n\nPowerPoint File (${file.name}):\n${textStrings.slice(0, 10000)}`;
       } else {
-        // Plain text / Markdown / HTML fallback
-        textContentToSummarize = buffer.toString("utf-8").slice(0, 15000);
+        textContentToSummarize += `\n\nText File (${file.name}):\n${buffer.toString("utf-8").slice(0, 10000)}`;
       }
     }
+
+    let fileName = fileNamesList.length > 0 ? fileNamesList.join(", ") : "AP Study Material";
 
     if (videoUrl.trim()) {
       let youtubeTitle = "";
@@ -66,7 +77,7 @@ Please analyze this educational YouTube video topic thoroughly. Generate a compr
       textContentToSummarize = pastedText.trim();
     }
 
-    if (!textContentToSummarize && !inlineData) {
+    if (!textContentToSummarize && inlineParts.length === 0) {
       return NextResponse.json(
         { error: "Please upload a file (PDF, Image, Video, PowerPoint, Audio) or enter a video URL / text to summarize." },
         { status: 400 }
@@ -137,34 +148,22 @@ Ensure the response is strictly raw valid JSON with no markdown backticks or com
       try {
         const ai = new GoogleGenAI({ apiKey });
 
-        if (inlineData) {
-          const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: [
-              {
-                role: "user",
-                parts: [
-                  { inlineData: { mimeType: inlineData.mimeType, data: inlineData.data } },
-                  { text: prompt }
-                ]
-              }
-            ]
-          });
-          resultText = response.text || "";
-        } else {
-          const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: [
-              {
-                role: "user",
-                parts: [
-                  { text: `Material Content:\n${textContentToSummarize.slice(0, 20000)}\n\n${prompt}` }
-                ]
-              }
-            ]
-          });
-          resultText = response.text || "";
+        const partsList: any[] = [...inlineParts];
+        if (textContentToSummarize) {
+          partsList.push({ text: `Material Content:\n${textContentToSummarize.slice(0, 20000)}` });
         }
+        partsList.push({ text: prompt });
+
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [
+            {
+              role: "user",
+              parts: partsList
+            }
+          ]
+        });
+        resultText = response.text || "";
       } catch (geminiErr) {
         console.error("Gemini API call failed, using high-yield fallback generator:", geminiErr);
       }

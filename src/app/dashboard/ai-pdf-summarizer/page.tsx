@@ -27,7 +27,7 @@ interface SummarizeResult {
 }
 
 export default function AiPdfSummarizerPage() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [videoUrl, setVideoUrl] = useState("");
   const [pastedText, setPastedText] = useState("");
   const [isDragging, setIsDragging] = useState(false);
@@ -74,12 +74,20 @@ export default function AiPdfSummarizerPage() {
     };
   }, []);
 
+  const addFiles = (newFiles: FileList | File[]) => {
+    const fileArray = Array.from(newFiles);
+    setSelectedFiles((prev) => [...prev, ...fileArray].slice(0, 5));
+    setVideoUrl("");
+    setPastedText("");
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      setSelectedFile(file);
-      setVideoUrl("");
-      setPastedText("");
+    if (e.target.files && e.target.files.length > 0) {
+      addFiles(e.target.files);
     }
   };
 
@@ -100,10 +108,7 @@ export default function AiPdfSummarizerPage() {
     e.stopPropagation();
     setIsDragging(false);
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const file = e.dataTransfer.files[0];
-      setSelectedFile(file);
-      setVideoUrl("");
-      setPastedText("");
+      addFiles(e.dataTransfer.files);
     }
   };
 
@@ -147,7 +152,7 @@ export default function AiPdfSummarizerPage() {
       mediaRecorder.onstop = () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: "audio/webm" });
         const recordedFile = new File([audioBlob], `live_lecture_${Date.now()}.webm`, { type: "audio/webm" });
-        setSelectedFile(recordedFile);
+        addFiles([recordedFile]);
         stream.getTracks().forEach((track) => track.stop());
         if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
         if (audioCtxRef.current) audioCtxRef.current.close();
@@ -218,15 +223,21 @@ export default function AiPdfSummarizerPage() {
   };
 
   const handleSummarize = async () => {
-    if (!selectedFile && !videoUrl.trim() && !pastedText.trim()) return;
+    if (selectedFiles.length === 0 && !videoUrl.trim() && !pastedText.trim()) return;
 
     setIsProcessing(true);
     setResult(null);
 
     try {
       const formData = new FormData();
-      formData.append("type", selectedFile ? "file" : videoUrl.trim() ? "video" : "text");
-      if (selectedFile) formData.append("file", selectedFile);
+      formData.append("type", selectedFiles.length > 0 ? "file" : videoUrl.trim() ? "video" : "text");
+      
+      selectedFiles.forEach((file) => {
+        formData.append("files", file);
+      });
+      if (selectedFiles.length > 0) {
+        formData.append("file", selectedFiles[0]);
+      }
       if (videoUrl.trim()) formData.append("videoUrl", videoUrl.trim());
       if (pastedText.trim()) formData.append("text", pastedText.trim());
 
@@ -368,17 +379,18 @@ export default function AiPdfSummarizerPage() {
                     </div>
                   </div>
 
-                  {/* Hidden Native File Input */}
+                  {/* Hidden Native File Input (Supports Multiple Files up to 5) */}
                   <input
                     ref={fileInputRef}
                     type="file"
+                    multiple
                     accept=".pdf,image/*,video/*,.ppt,.pptx,audio/*"
                     onChange={handleFileChange}
                     className="hidden"
                   />
 
-                  {/* MAIN CONTAINER CONTENT (NO FILE SELECTED STATE OR SELECTED FILE STATE) */}
-                  {!selectedFile && !videoUrl.trim() && !pastedText.trim() ? (
+                  {/* MAIN CONTAINER CONTENT (NO FILE SELECTED STATE OR SELECTED FILES LIST STATE) */}
+                  {selectedFiles.length === 0 && !videoUrl.trim() && !pastedText.trim() ? (
                     <div className="my-8 flex flex-col items-center justify-center text-center space-y-3 cursor-default select-none">
                       <div className="w-14 h-14 rounded-full bg-[#222430] border border-white/15 flex items-center justify-center text-white/70 shadow-lg pointer-events-none">
                         <Plus className="w-7 h-7 text-white" />
@@ -394,55 +406,81 @@ export default function AiPdfSummarizerPage() {
                       </div>
                     </div>
                   ) : (
-                    /* SELECTED FILE / CONTENT CARD */
-                    <div className="my-6 w-full max-w-md bg-[#20222d] border border-purple-500/40 rounded-2xl p-5 flex items-center justify-between shadow-xl">
-                      <div className="flex items-center space-x-3.5 overflow-hidden">
-                        <div className="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
-                          {selectedFile ? <FileText className="w-5 h-5" /> : videoUrl ? <Video className="w-5 h-5 text-red-400" /> : <FileText className="w-5 h-5" />}
-                        </div>
-                        <div className="truncate text-left">
-                          <h4 className="font-manrope font-bold text-sm text-white truncate">
-                            {selectedFile ? selectedFile.name : videoUrl ? "YouTube Video Link" : "Pasted Study Notes"}
-                          </h4>
-                          <p className="text-[11px] text-white/50 font-manrope">
-                            {selectedFile ? `${(selectedFile.size / 1024 / 1024).toFixed(2)} MB • Ready` : "Ready for AI summarization"}
-                          </p>
-                        </div>
-                      </div>
+                    /* SELECTED FILES / CONTENT CARDS LIST (UP TO 5 FILES) */
+                    <div className="my-6 w-full max-w-md space-y-3">
+                      {selectedFiles.map((file, idx) => (
+                        <div key={idx} className="bg-[#20222d] border border-purple-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
+                          <div className="flex items-center space-x-3.5 overflow-hidden">
+                            <div className="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center shrink-0">
+                              {file.type.startsWith("image/") ? (
+                                <ImageIcon className="w-4 h-4 text-emerald-400" />
+                              ) : file.type.startsWith("audio/") ? (
+                                <Mic className="w-4 h-4 text-amber-400" />
+                              ) : file.type.startsWith("video/") ? (
+                                <Video className="w-4 h-4 text-red-400" />
+                              ) : (
+                                <FileText className="w-4 h-4 text-purple-400" />
+                              )}
+                            </div>
+                            <div className="truncate text-left">
+                              <h4 className="font-manrope font-bold text-xs sm:text-sm text-white truncate">
+                                {file.name}
+                              </h4>
+                              <p className="text-[11px] text-white/50 font-manrope">
+                                {(file.size / 1024 / 1024).toFixed(2)} MB • Ready
+                              </p>
+                            </div>
+                          </div>
 
-                      <div className="flex items-center space-x-2">
-                        <button
-                          type="button"
-                          onClick={() => fileInputRef.current?.click()}
-                          title="Add / Change File"
-                          className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors cursor-pointer"
-                        >
-                          <Plus className="w-4 h-4" />
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedFile(null);
-                            setVideoUrl("");
-                            setPastedText("");
-                          }}
-                          title="Remove File"
-                          className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
+                          {/* ONLY REMOVE BUTTON (NO PLUS BUTTON ON ATTACHED FILES) */}
+                          <button
+                            type="button"
+                            onClick={() => removeFile(idx)}
+                            title="Remove File"
+                            className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer shrink-0"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      ))}
+
+                      {/* YOUTUBE LINK ITEM IF PRESENT */}
+                      {videoUrl && (
+                        <div className="bg-[#20222d] border border-red-500/40 rounded-2xl p-4 flex items-center justify-between shadow-xl">
+                          <div className="flex items-center space-x-3.5 overflow-hidden">
+                            <div className="w-9 h-9 rounded-xl bg-red-600/20 text-red-400 flex items-center justify-center shrink-0">
+                              <Video className="w-4 h-4 text-red-400" />
+                            </div>
+                            <div className="truncate text-left">
+                              <h4 className="font-manrope font-bold text-xs sm:text-sm text-white truncate">
+                                YouTube Video Link
+                              </h4>
+                              <p className="text-[11px] text-white/50 font-manrope truncate">
+                                {videoUrl}
+                              </p>
+                            </div>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => setVideoUrl("")}
+                            title="Remove Video"
+                            className="p-1.5 rounded-full hover:bg-white/10 text-white/60 hover:text-white transition-colors cursor-pointer shrink-0"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )}
                     </div>
                   )}
 
-                  {/* BOTTOM ACTION BUTTON (Only renders when file/video/text IS selected!) */}
-                  {(selectedFile || videoUrl.trim() || pastedText.trim()) && (
+                  {/* BOTTOM ACTION BUTTON (Only renders when files/video/text ARE selected!) */}
+                  {(selectedFiles.length > 0 || videoUrl.trim() || pastedText.trim()) && (
                     <div className="w-full flex justify-center pt-2">
                       <button
                         type="button"
                         onClick={handleSummarize}
                         disabled={isProcessing}
-                        className="px-8 py-3.5 rounded-full bg-white text-black font-manrope font-black text-sm hover:bg-neutral-200 transition-all cursor-pointer shadow-xl disabled:opacity-50 flex items-center gap-2 active:scale-95"
+                        className="px-8 py-3.5 rounded-full bg-white text-black font-manrope font-black text-sm hover:bg-neutral-200 transition-all cursor-pointer shadow-xl disabled:opacity-50 flex items-center justify-center gap-2 active:scale-95"
                       >
                         {isProcessing ? (
                           <>
@@ -450,10 +488,7 @@ export default function AiPdfSummarizerPage() {
                             <span>Building Full Study Suite...</span>
                           </>
                         ) : (
-                          <>
-                            <Sparkles className="w-4 h-4 text-purple-600" />
-                            <span>Summarize Study Suite</span>
-                          </>
+                          <span>Summarize Study Suite</span>
                         )}
                       </button>
                     </div>
@@ -488,9 +523,12 @@ export default function AiPdfSummarizerPage() {
                       >
                         <Info className="w-4 h-4" />
                         {hoveredTooltip === "summary" && (
-                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3.5 rounded-2xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate a high-yield executive summary and key takeaways
-                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                            {/* Smooth SVG Speech Bubble Tail */}
+                            <svg className="absolute -bottom-2 right-6 w-4 h-2.5 text-white fill-current" viewBox="0 0 16 10">
+                              <path d="M0 0L8 10L16 0Z" />
+                            </svg>
                           </div>
                         )}
                       </div>
@@ -511,9 +549,12 @@ export default function AiPdfSummarizerPage() {
                       >
                         <Info className="w-4 h-4" />
                         {hoveredTooltip === "notebook" && (
-                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3.5 rounded-2xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate a note with a study suite of learning tools
-                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                            {/* Smooth SVG Speech Bubble Tail */}
+                            <svg className="absolute -bottom-2 right-6 w-4 h-2.5 text-white fill-current" viewBox="0 0 16 10">
+                              <path d="M0 0L8 10L16 0Z" />
+                            </svg>
                           </div>
                         )}
                       </div>
@@ -534,9 +575,12 @@ export default function AiPdfSummarizerPage() {
                       >
                         <Info className="w-4 h-4" />
                         {hoveredTooltip === "flashcards" && (
-                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3.5 rounded-2xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate flashcards to memorize key concepts
-                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                            {/* Smooth SVG Speech Bubble Tail */}
+                            <svg className="absolute -bottom-2 right-6 w-4 h-2.5 text-white fill-current" viewBox="0 0 16 10">
+                              <path d="M0 0L8 10L16 0Z" />
+                            </svg>
                           </div>
                         )}
                       </div>
@@ -557,9 +601,12 @@ export default function AiPdfSummarizerPage() {
                       >
                         <Info className="w-4 h-4" />
                         {hoveredTooltip === "practice" && (
-                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3 rounded-xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
+                          <div className="absolute right-0 bottom-full mb-3 w-60 bg-white text-neutral-900 p-3.5 rounded-2xl shadow-2xl z-50 text-xs font-manrope font-semibold leading-snug pointer-events-none animate-in fade-in duration-150">
                             Generate practice questions to test your knowledge
-                            <div className="absolute -bottom-1.5 right-2.5 w-3 h-3 bg-white rotate-45" />
+                            {/* Smooth SVG Speech Bubble Tail */}
+                            <svg className="absolute -bottom-2 right-6 w-4 h-2.5 text-white fill-current" viewBox="0 0 16 10">
+                              <path d="M0 0L8 10L16 0Z" />
+                            </svg>
                           </div>
                         )}
                       </div>
@@ -596,7 +643,7 @@ export default function AiPdfSummarizerPage() {
                   type="button"
                   onClick={() => {
                     setResult(null);
-                    setSelectedFile(null);
+                    setSelectedFiles([]);
                     setVideoUrl("");
                     setPastedText("");
                   }}
@@ -608,12 +655,11 @@ export default function AiPdfSummarizerPage() {
 
               <div className="flex flex-wrap items-center gap-2 border-b border-white/10 pb-3">
                 {[
-                  { id: "summary", label: "Executive Summary", icon: FileText },
-                  { id: "notes", label: "Study Notes", icon: BookOpen },
-                  { id: "flashcards", label: "Interactive Flashcards", icon: Layers },
-                  { id: "quiz", label: "Practice Quiz", icon: HelpCircle },
+                  { id: "summary", label: "Executive Summary", iconImg: "/images/summary-icon.png" },
+                  { id: "notes", label: "Study Notes", iconImg: "/images/notebook-icon.png" },
+                  { id: "flashcards", label: "Interactive Flashcards", iconImg: "/images/flashcards-icon.png" },
+                  { id: "quiz", label: "Practice Quiz", iconImg: "/images/practice-icon.png" },
                 ].map((v) => {
-                  const Icon = v.icon;
                   const isActive = activeResultView === v.id;
                   return (
                     <button
@@ -621,13 +667,13 @@ export default function AiPdfSummarizerPage() {
                       type="button"
                       onClick={() => setActiveResultView(v.id as any)}
                       className={cn(
-                        "flex items-center gap-2 px-5 py-2.5 rounded-full font-manrope font-bold text-xs transition-all cursor-pointer",
+                        "flex items-center gap-2.5 px-5 py-2.5 rounded-full font-manrope font-bold text-xs transition-all cursor-pointer",
                         isActive
                           ? "bg-purple-600 text-white shadow-lg"
                           : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
                       )}
                     >
-                      <Icon className="w-4 h-4" />
+                      <img src={v.iconImg} alt={v.label} className="w-4 h-4 object-contain shrink-0 rounded-sm" />
                       <span>{v.label}</span>
                     </button>
                   );
@@ -847,7 +893,7 @@ export default function AiPdfSummarizerPage() {
       {/* ── GENERATING / PROCESSING OVERLAY (GEARS LOADING ANIMATION ONLY) ── */}
       <AnimatePresence>
         {isProcessing && (
-          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
+          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 bg-black/88 backdrop-blur-[2px]">
             <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -900,7 +946,7 @@ export default function AiPdfSummarizerPage() {
                       if (driveUrl.trim()) {
                         const filename = driveUrl.includes("document") ? "Google_Doc_Notes.gdoc" : driveUrl.includes("presentation") ? "Google_Slides_Lecture.gslides" : "Google_Drive_File.pdf";
                         const driveFile = new File(["Imported Google Drive Document Content"], filename, { type: "application/pdf" });
-                        setSelectedFile(driveFile);
+                        addFiles([driveFile]);
                         setVideoUrl("");
                         setPastedText("");
                         setShowDriveModal(false);
@@ -928,7 +974,7 @@ export default function AiPdfSummarizerPage() {
                     type="button"
                     onClick={() => {
                       const sampleFile = new File(["Google Drive Document Content"], df.name, { type: "application/pdf" });
-                      setSelectedFile(sampleFile);
+                      addFiles([sampleFile]);
                       setVideoUrl("");
                       setPastedText("");
                       setShowDriveModal(false);
@@ -1179,7 +1225,7 @@ export default function AiPdfSummarizerPage() {
                   type="button"
                   onClick={() => {
                     if (videoUrl.trim()) {
-                      setSelectedFile(null);
+                      setSelectedFiles([]);
                       setPastedText("");
                       setShowYouTubeModal(false);
                       handleSummarize();
