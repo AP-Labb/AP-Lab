@@ -59,6 +59,259 @@ const COURSE_DESCRIPTIONS: Record<string, string> = {
   "ap-microeconomics": "AP® Microeconomics introduces economic principles applying to functions of individual decision-makers, product markets, and factor markets...",
 };
 
+const DASHBOARD_CATEGORIES = [
+  {
+    id: "biology",
+    name: "Biology",
+    subCategory: "Natural Science",
+    icon: Dna,
+    courses: [
+      {
+        id: "honors-biology",
+        name: "Honors Biology",
+        slug: "honors-biology",
+        status: "PREVIEW" as const,
+        description: "Honors Biology is a rigorous course that examines the principles of life sciences through an in-depth study of cell biology, genetics, evolution, and ecology.",
+        bannerImage: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 1,
+        modulesCount: 6,
+        accentHex: "#3b82f6"
+      },
+      {
+        id: "ap-biology",
+        name: "AP® Biology",
+        slug: "ap-biology",
+        status: "STABLE" as const,
+        logoImage: "/images/course-logos/ap-biology-logo.png",
+        description: "AP Biology is an introductory college-level biology course. Students cultivate their understanding of biology through inquiry-based investigations into cells, genetics, and evolution.",
+        bannerImage: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 8,
+        modulesCount: 63,
+        accentHex: "#10b981"
+      },
+      {
+        id: "ap-env-science",
+        name: "AP® Environmental Science",
+        slug: "ap-environmental-science",
+        status: "STABLE" as const,
+        description: "The AP Environmental Science course is designed to engage students with scientific principles, concepts, and methodologies required to understand environmental systems.",
+        bannerImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 99,
+        accentHex: "#22c55e"
+      },
+      {
+        id: "ap-psychology",
+        name: "AP® Psychology",
+        slug: "ap-psych",
+        status: "STABLE" as const,
+        description: "The AP Psychology course introduces students to the systematic and scientific study of human behavior and mental processes while exploring cognitive models.",
+        bannerImage: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 5,
+        modulesCount: 35,
+        accentHex: "#a855f7"
+      },
+      {
+        id: "ib-biology",
+        name: "IB® Biology",
+        slug: "ib-biology",
+        status: "BUILDING" as const,
+        description: "IB Biology covers key biological concepts with emphasis on international perspectives, experimental design, and molecular biochemistry.",
+        bannerImage: "https://images.unsplash.com/photo-1511497584788-876761c144ee?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 1,
+        modulesCount: 6,
+        accentHex: "#06b6d4"
+      },
+      {
+        id: "ib-ess",
+        name: "IB® Environmental Systems and Societies",
+        slug: "ib-ess",
+        status: "BUILDING" as const,
+        isPracticeOnly: true,
+        description: "Interdisciplinary course combining science and society to evaluate environmental systems, sustainability, and global human impacts.",
+        bannerImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80",
+        accentHex: "#14b8a6"
+      },
+      {
+        id: "ib-psychology",
+        name: "IB® Psychology",
+        slug: "ib-psychology",
+        status: "BUILDING" as const,
+        isPracticeOnly: true,
+        description: "Examines biological, cognitive, and sociocultural approaches to understanding human behavior in global contexts.",
+        bannerImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
+        accentHex: "#c084fc"
+      },
+      {
+        id: "ib-sports",
+        name: "IB® Sports, Exercise and Health Science",
+        slug: "ib-sports",
+        status: "BUILDING" as const,
+        isPracticeOnly: true,
+        description: "Explores human anatomy, exercise physiology, biomechanics, movement analysis, and sports performance psychology.",
+        bannerImage: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80",
+        accentHex: "#f97316"
+      }
+    ]
+  },
+  {
+    id: "economics",
+    name: "Economics",
+    subCategory: "Social Science",
+    icon: Coins,
+    courses: [
+      {
+        id: "ap-macro",
+        name: "AP® Macroeconomics",
+        slug: "ap-macroeconomics",
+        status: "STABLE" as const,
+        description: "AP Macroeconomics is a college-level course that introduces students to principles that apply to an economic system as a whole.",
+        bannerImage: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 6,
+        modulesCount: 47,
+        accentHex: "#3b82f6"
+      },
+      {
+        id: "ap-micro",
+        name: "AP® Microeconomics",
+        slug: "ap-microeconomics",
+        status: "STABLE" as const,
+        description: "AP Microeconomics is a college-level course that introduces students to principles of economics that apply to individual decision makers.",
+        bannerImage: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 6,
+        modulesCount: 36,
+        accentHex: "#60a5fa"
+      },
+      {
+        id: "ib-economics",
+        name: "IB® Economics",
+        slug: "ib-economics",
+        status: "BUILDING" as const,
+        description: "Covers microeconomics, macroeconomics, international trade theories, and global development economic frameworks.",
+        bannerImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 3,
+        modulesCount: 18,
+        accentHex: "#818cf8"
+      }
+    ]
+  },
+  {
+    id: "history",
+    name: "History",
+    subCategory: "Social Science",
+    icon: History,
+    courses: [
+      {
+        id: "ap-afam",
+        name: "AP® African American Studies",
+        slug: "ap-african-american",
+        status: "PREVIEW" as const,
+        description: "AP African American Studies examines the diversity of African American experiences through authentic resources, literature, and historical art.",
+        bannerImage: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 4,
+        modulesCount: 24,
+        accentHex: "#eab308"
+      },
+      {
+        id: "ap-euro",
+        name: "AP® European History",
+        slug: "ap-european-history",
+        status: "PREVIEW" as const,
+        description: "In AP European History, students investigate significant events, individuals, developments, and processes from 1450 to the present.",
+        bannerImage: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 90,
+        accentHex: "#f59e0b"
+      },
+      {
+        id: "ap-humangeo",
+        name: "AP® Human Geography",
+        slug: "ap-human-geography",
+        status: "PREVIEW" as const,
+        description: "AP Human Geography introduces students to the systematic study of patterns and processes shaping human understanding and alteration of Earth.",
+        bannerImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 63,
+        accentHex: "#10b981"
+      },
+      {
+        id: "ap-us-history",
+        name: "AP® US History",
+        slug: "ap-ush",
+        status: "PREVIEW" as const,
+        logoImage: "/images/course-logos/ap-ushistory-logo.png",
+        description: "In AP U.S. History, students investigate significant events, individuals, developments, and processes across nine historical periods from 1491 to present.",
+        bannerImage: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 86,
+        accentHex: "#ef4444"
+      },
+      {
+        id: "ap-world-history",
+        name: "AP® World History: Modern",
+        slug: "ap-world-history",
+        status: "STABLE" as const,
+        description: "In AP World History: Modern, students explore significant events, individuals, developments, and processes from 1200 to present across global civilizations.",
+        bannerImage: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 63,
+        accentHex: "#84cc16"
+      }
+    ]
+  },
+  {
+    id: "physics",
+    name: "Physics",
+    subCategory: "Natural Science",
+    icon: Atom,
+    courses: [
+      {
+        id: "ap-physics-c",
+        name: "AP® Physics C: Mechanics",
+        slug: "ap-physics-c",
+        status: "STABLE" as const,
+        logoImage: "/images/course-logos/ap-physics-c-logo.png",
+        description: "AP Physics C: Mechanics is a calculus-based course covering kinematics, Newton's laws, work, energy, momentum, rotation, and harmonic oscillations.",
+        bannerImage: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 50,
+        accentHex: "#6366f1"
+      },
+      {
+        id: "ap-physics-1",
+        name: "AP® Physics 1",
+        slug: "ap-physics-1",
+        status: "STABLE" as const,
+        description: "AP Physics 1 is an algebra-based introductory physics course exploring Newtonian mechanics, energy conservation, and mechanical waves.",
+        bannerImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 45,
+        accentHex: "#38bdf8"
+      }
+    ]
+  },
+  {
+    id: "chemistry",
+    name: "Chemistry",
+    subCategory: "Natural Science",
+    icon: Beaker,
+    courses: [
+      {
+        id: "ap-chemistry",
+        name: "AP® Chemistry",
+        slug: "ap-chemistry",
+        status: "STABLE" as const,
+        logoImage: "/images/course-logos/ap-chemistry-logo.png",
+        description: "AP Chemistry provides a college-level foundation to support advanced science study. Analyze atomic structures, kinetics, equilibrium, and thermodynamics.",
+        bannerImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 72,
+        accentHex: "#60a5fa"
+      }
+    ]
+  }
+];
+
 const folders = [
   {
     title: "STEM & Sciences",
@@ -685,193 +938,145 @@ export default function Dashboard() {
             backgroundSize: "36px 36px"
           }}
         >
-          {/* Course Image Cards Grid */}
-          <div className="w-full max-w-6xl space-y-12">
-            {folders.map((folder, idx) => (
-              <div key={idx} className="space-y-6">
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {folder.classes.map((cls, cIdx) => {
-                    const isEnrolled = (progress?.selectedClasses || [])?.some((c: string) => 
-                      c.toLowerCase().includes(cls.name.toLowerCase()) || 
-                      cls.name.toLowerCase().includes(c.toLowerCase()) || 
-                      c.toLowerCase().includes(cls.slug.toLowerCase())
-                    );
-                    const progressPercent = classProgressMap[cls.slug] || 0;
-                    const courseData = courseRegistry[cls.slug];
-                    const unitsCount = courseData?.units?.length || 8;
-                    const topicsCount = courseData?.units?.reduce((acc, u) => acc + u.topics.length, 0) || 45;
+          {/* Course Image Cards Grid matching SubjectLabs reference design */}
+          <div className="w-full max-w-6xl space-y-14">
+            {DASHBOARD_CATEGORIES.map((category) => {
+              const CategoryIcon = category.icon;
 
-                    const COURSE_IMAGES: Record<string, string> = {
-                      "ap-biology": "https://images.unsplash.com/photo-1576086213369-97a306d36557?w=800&q=80",
-                      "ap-chemistry": "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=800&q=80",
-                      "ap-physics-c": "https://images.unsplash.com/photo-1636466497217-26a8cbeaf0aa?w=800&q=80",
-                      "ap-calc-bc": "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=800&q=80",
-                      "ap-stats": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80",
-                      "ap-csa": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=800&q=80",
-                      "ap-ush": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=800&q=80",
-                      "ap-psych": "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=800&q=80",
-                      "ap-eng-lang": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=800&q=80",
-                      "ap-environmental-science": "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80",
-                      "ap-world-history": "https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=800&q=80",
-                      "ap-physics-1": "https://images.unsplash.com/photo-1507668077129-56e32842fceb?w=800&q=80",
-                      "ap-macroeconomics": "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=800&q=80",
-                      "ap-human-geography": "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?w=800&q=80",
-                      "ap-microeconomics": "https://images.unsplash.com/photo-1610375461246-83df859d849d?w=800&q=80",
-                    };
+              return (
+                <div key={category.id} className="space-y-6">
+                  
+                  {/* CATEGORY HEADER ROW */}
+                  <div className="flex items-center space-x-3 border-b border-white/10 pb-3">
+                    <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-purple-400 shrink-0 shadow-md">
+                      <CategoryIcon className="w-4 h-4 text-purple-400" />
+                    </div>
+                    <div className="flex items-baseline space-x-2">
+                      <h3 className="font-manrope font-extrabold text-xl sm:text-2xl text-white tracking-tight">
+                        {category.name}
+                      </h3>
+                      <span className="text-xs font-manrope font-semibold text-white/40">
+                        &bull; {category.subCategory}
+                      </span>
+                    </div>
+                  </div>
 
-                    const courseImgSrc = (cls as any).image || COURSE_IMAGES[cls.slug] || "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";
-                    const courseDesc = COURSE_DESCRIPTIONS[cls.slug] || "Master core AP concepts, practice exam-style questions, and build topic fluency...";
+                  {/* COURSES CARDS GRID (NO LIFT ON HOVER, SHINE HOVER EFFECT KEPT) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    {category.courses.map((course) => {
+                      const progressPercent = Math.round(classProgressMap[course.slug] || 0);
 
-                    if ((cls as any).isUpcoming || (folder as any).isUpcoming) {
                       return (
-                        <div 
-                          key={cIdx} 
-                          className="relative flex flex-col rounded-3xl overflow-hidden bg-[#0a0c16]/70 border border-white/10 opacity-65 cursor-not-allowed select-none pointer-events-none"
+                        <div
+                          key={course.id}
+                          onClick={() => router.push(`/dashboard/${course.slug}`)}
+                          className="group relative bg-[#13141c] border border-[#242636] hover:border-white/25 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-colors duration-300 flex flex-col justify-between"
                         >
-                          {/* Course Header Banner Image */}
-                          <div className="relative h-44 w-full overflow-hidden bg-slate-900">
-                            <img 
-                              src={courseImgSrc} 
-                              alt={cls.name}
-                              className="w-full h-full object-cover grayscale-[20%]"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/40 to-transparent" />
-                            
-                            {/* Coming Soon Badge */}
-                            <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 backdrop-blur-md shadow-lg">
-                              <span className="text-[10px] font-mono font-bold text-amber-300 uppercase tracking-wider">Coming Soon</span>
-                            </div>
+                          {/* SHINE SWEEP HOVER EFFECT (NO LIFT ON HOVER) */}
+                          <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                            <div className="absolute -top-1/2 -left-full w-full h-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent transform -rotate-45 group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out" />
                           </div>
 
-                          {/* Card Body */}
-                          <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
-                            <div>
-                              <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
-                                <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                                <span>{folder.title}</span>
-                              </div>
-                              <h4 className="font-instrument text-2xl font-bold text-white">
-                                {cls.name}
-                              </h4>
-                              <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
-                                {courseDesc}
-                              </p>
-                            </div>
-
-                            <div className="pt-2">
-                              <span className="inline-block px-3 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-mono font-bold text-white/40 uppercase tracking-wider">
-                                In Development
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <GlareHover
-                        key={cIdx}
-                        width="100%"
-                        height="100%"
-                        background="#0a0c16"
-                        borderRadius="24px"
-                        borderColor="rgba(255, 255, 255, 0.1)"
-                        glareColor="#ffffff"
-                        glareOpacity={0.3}
-                        glareAngle={-30}
-                        glareSize={300}
-                        transitionDuration={800}
-                        playOnce={false}
-                        className="group transition-all duration-300 hover:-translate-y-1 hover:border-white/30 hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)]"
-                      >
-                        <Link 
-                          href={`/dashboard/${cls.slug}/preview`} 
-                          className="flex flex-col h-full w-full overflow-hidden cursor-pointer"
-                          style={{
-                            // @ts-ignore
-                            "--course-accent": cls.accent
-                          }}
-                        >
-                          {/* Course Header Banner Image */}
-                          <div className="relative h-44 w-full overflow-hidden bg-slate-900">
-                            <img 
-                              src={courseImgSrc} 
-                              alt={cls.name}
-                              className="w-full h-full object-cover"
+                          {/* TOP BANNER IMAGE CONTAINER */}
+                          <div className="h-28 w-full relative overflow-hidden bg-neutral-900 shrink-0">
+                            <img
+                              src={course.bannerImage}
+                              alt={course.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0c16] via-[#0a0c16]/30 to-transparent" />
-                            
-                            {/* Enrolled Highlight Badge */}
-                            {isEnrolled && (
-                              <div className="absolute top-3 right-3 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 backdrop-blur-md shadow-lg z-20">
-                                <span className="text-[10px] font-mono font-bold text-emerald-300 uppercase tracking-wider">Enrolled</span>
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#13141c] via-transparent to-black/40" />
+
+                            {/* TOP RIGHT STATUS BADGE */}
+                            <div className="absolute top-3 right-3 z-10">
+                              {course.status === "STABLE" && (
+                                <span className="px-2.5 py-0.5 rounded-full bg-[#162942]/90 border border-blue-400/40 text-blue-300 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                                  STABLE
+                                </span>
+                              )}
+                              {course.status === "PREVIEW" && (
+                                <span className="px-2.5 py-0.5 rounded-full bg-[#3d2c18]/90 border border-amber-400/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                                  PREVIEW
+                                </span>
+                              )}
+                              {course.status === "BUILDING" && (
+                                <span className="px-2.5 py-0.5 rounded-full bg-[#3b2118]/90 border border-amber-500/50 text-amber-400 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                  BUILDING
+                                </span>
+                              )}
+                            </div>
+
+                            {/* OVERLAID OFFICIAL COURSE LOGO */}
+                            {course.logoImage && (
+                              <div className="absolute top-2.5 left-3 z-10 w-10 h-10 rounded-full bg-black/65 border border-white/20 backdrop-blur-md flex items-center justify-center p-1.5 shadow-xl group-hover:border-white/40 transition-colors">
+                                <img src={course.logoImage} alt={`${course.name} logo`} className="w-full h-full object-contain filter drop-shadow-md" />
                               </div>
                             )}
                           </div>
 
-                          {/* Card Body */}
-                          <div className="p-6 flex-1 flex flex-col justify-between space-y-4 relative z-20">
-                            <div>
-                              <div className="flex items-center space-x-2 text-white/50 text-xs font-mono mb-2">
-                                <cls.icon className="w-4 h-4" style={{ color: cls.accent }} />
-                                <span>{folder.title}</span>
+                          {/* CARD CONTENT BODY */}
+                          <div className="p-4 flex flex-col justify-between space-y-3 flex-1 min-h-[160px]">
+                            <div className="space-y-1.5">
+                              {/* TITLE WITH MORTARBOARD ICON */}
+                              <div className="flex items-center space-x-2">
+                                <GraduationCap className="w-4 h-4 text-white/80 shrink-0" />
+                                <h4 className="font-manrope font-extrabold text-sm sm:text-base text-white tracking-tight group-hover:text-purple-300 transition-colors">
+                                  {course.name}
+                                </h4>
                               </div>
-                              <h4 
-                                className="font-instrument text-2xl font-bold text-white group-hover:text-[var(--course-accent)] transition-colors duration-300"
-                              >
-                                {cls.name}
-                              </h4>
-                              <p className="text-xs text-white/50 font-manrope line-clamp-2 mt-1.5 leading-relaxed">
-                                {courseDesc}
-                              </p>
 
-                              {/* Unit & Subunit / Topic Count Badges */}
-                              <div className="flex flex-wrap items-center gap-2 mt-3.5">
-                                <span 
-                                  className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
-                                  style={{
-                                    backgroundColor: `${cls.accent}15`,
-                                    borderColor: `${cls.accent}30`,
-                                    color: cls.accent
-                                  }}
-                                >
-                                  <BookOpen className="w-3 h-3" style={{ color: cls.accent }} />
-                                  <span>{unitsCount} UNITS</span>
-                                </span>
-                                <span 
-                                  className="px-2.5 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider flex items-center space-x-1.5 border"
-                                  style={{
-                                    backgroundColor: `${cls.accent}15`,
-                                    borderColor: `${cls.accent}30`,
-                                    color: cls.accent
-                                  }}
-                                >
-                                  <Layers className="w-3 h-3" style={{ color: cls.accent }} />
-                                  <span>{topicsCount} SUBUNITS</span>
-                                </span>
-                              </div>
+                              {/* DESCRIPTION */}
+                              <p className="text-xs text-white/50 font-manrope line-clamp-2 leading-relaxed">
+                                {course.description}
+                              </p>
                             </div>
 
-                            <div className="space-y-3 pt-2">
-                              <div className="flex justify-between items-center text-xs font-mono">
-                                <span className="text-white/40">Course Completion</span>
-                                <span className="font-bold text-white/80">{Math.round(progressPercent)}%</span>
-                              </div>
-                              <div className="h-1.5 w-full bg-white/5 rounded-full overflow-hidden border border-white/5">
-                                <div 
-                                  className="h-full bg-gradient-to-r from-amber-400 to-yellow-500 transition-all duration-500 rounded-full" 
-                                  style={{ width: `${progressPercent}%` }}
-                                />
+                            {/* METRICS & PILLS */}
+                            <div className="space-y-3 pt-1">
+                              {course.isPracticeOnly ? (
+                                <div className="flex items-center">
+                                  <span className="px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[10px] font-manrope font-extrabold tracking-wider uppercase">
+                                    &bull; PRACTICE-ONLY COURSE
+                                  </span>
+                                </div>
+                              ) : (
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <span className="px-2.5 py-1 rounded-full bg-[#1b233a] border border-blue-500/30 text-[#818cf8] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
+                                    <BookOpen className="w-3 h-3 text-[#818cf8]" />
+                                    {course.unitsCount} UNITS
+                                  </span>
+                                  <span className="px-2.5 py-1 rounded-full bg-[#2a1b38] border border-purple-500/30 text-[#c084fc] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
+                                    <Pencil className="w-3 h-3 text-[#c084fc]" />
+                                    {course.modulesCount} MODULES
+                                  </span>
+                                </div>
+                              )}
+
+                              {/* PROGRESS BAR ROW */}
+                              <div className="flex items-center gap-2.5 pt-1 border-t border-white/5">
+                                <span className="text-[11px] font-manrope font-semibold text-white/50 shrink-0">
+                                  ✧ {progressPercent}% Progress
+                                </span>
+                                <div className="h-1.5 bg-neutral-800 rounded-full flex-1 overflow-hidden relative">
+                                  <div 
+                                    className="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full transition-all duration-500"
+                                    style={{ width: `${progressPercent}%` }}
+                                  />
+                                </div>
                               </div>
                             </div>
                           </div>
-                        </Link>
-                      </GlareHover>
-                    );
-                  })}
+
+                        </div>
+                      );
+                    })}
+                  </div>
+
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
