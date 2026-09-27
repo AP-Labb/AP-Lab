@@ -61,252 +61,172 @@ const COURSE_DESCRIPTIONS: Record<string, string> = {
 
 const DASHBOARD_CATEGORIES = [
   {
-    id: "biology",
-    name: "Biology",
-    subCategory: "Natural Science",
+    id: "stem",
+    name: "STEM & Sciences",
+    subCategory: "Science & Engineering",
     icon: Dna,
     courses: [
-      {
-        id: "honors-biology",
-        name: "Honors Biology",
-        slug: "honors-biology",
-        status: "PREVIEW" as const,
-        description: "Honors Biology is a rigorous course that examines the principles of life sciences through an in-depth study of cell biology, genetics, evolution, and ecology.",
-        bannerImage: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 1,
-        modulesCount: 6,
-        accentHex: "#3b82f6"
-      },
       {
         id: "ap-biology",
         name: "AP® Biology",
         slug: "ap-biology",
-        status: "STABLE" as const,
         logoImage: "/images/course-logos/ap-biology-logo.png",
-        description: "AP Biology is an introductory college-level biology course. Students cultivate their understanding of biology through inquiry-based investigations into cells, genetics, and evolution.",
+        description: "AP Biology is an introductory college-level biology course. Students cultivate their understanding of biology through inquiry-based investigations into cells, genetics, evolution, and ecology.",
         bannerImage: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
         unitsCount: 8,
         modulesCount: 63,
         accentHex: "#10b981"
       },
       {
-        id: "ap-env-science",
-        name: "AP® Environmental Science",
-        slug: "ap-environmental-science",
-        status: "STABLE" as const,
-        description: "The AP Environmental Science course is designed to engage students with scientific principles, concepts, and methodologies required to understand environmental systems.",
-        bannerImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+        id: "ap-chemistry",
+        name: "AP® Chemistry",
+        slug: "ap-chemistry",
+        logoImage: "/images/course-logos/ap-chemistry-logo.png",
+        description: "AP Chemistry provides a college-level foundation to support advanced science study. Analyze atomic structures, chemical bonding, kinetics, equilibrium, and thermodynamics.",
+        bannerImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80",
         unitsCount: 9,
-        modulesCount: 99,
-        accentHex: "#22c55e"
-      },
-      {
-        id: "ap-psychology",
-        name: "AP® Psychology",
-        slug: "ap-psych",
-        status: "STABLE" as const,
-        description: "The AP Psychology course introduces students to the systematic and scientific study of human behavior and mental processes while exploring cognitive models.",
-        bannerImage: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 5,
-        modulesCount: 35,
-        accentHex: "#a855f7"
-      },
-      {
-        id: "ib-biology",
-        name: "IB® Biology",
-        slug: "ib-biology",
-        status: "BUILDING" as const,
-        description: "IB Biology covers key biological concepts with emphasis on international perspectives, experimental design, and molecular biochemistry.",
-        bannerImage: "https://images.unsplash.com/photo-1511497584788-876761c144ee?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 1,
-        modulesCount: 6,
+        modulesCount: 72,
         accentHex: "#06b6d4"
       },
       {
-        id: "ib-ess",
-        name: "IB® Environmental Systems and Societies",
-        slug: "ib-ess",
-        status: "BUILDING" as const,
-        isPracticeOnly: true,
-        description: "Interdisciplinary course combining science and society to evaluate environmental systems, sustainability, and global human impacts.",
-        bannerImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80",
-        accentHex: "#14b8a6"
-      },
-      {
-        id: "ib-psychology",
-        name: "IB® Psychology",
-        slug: "ib-psychology",
-        status: "BUILDING" as const,
-        isPracticeOnly: true,
-        description: "Examines biological, cognitive, and sociocultural approaches to understanding human behavior in global contexts.",
-        bannerImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
-        accentHex: "#c084fc"
-      },
-      {
-        id: "ib-sports",
-        name: "IB® Sports, Exercise and Health Science",
-        slug: "ib-sports",
-        status: "BUILDING" as const,
-        isPracticeOnly: true,
-        description: "Explores human anatomy, exercise physiology, biomechanics, movement analysis, and sports performance psychology.",
-        bannerImage: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80",
-        accentHex: "#f97316"
-      }
-    ]
-  },
-  {
-    id: "economics",
-    name: "Economics",
-    subCategory: "Social Science",
-    icon: Coins,
-    courses: [
-      {
-        id: "ap-macro",
-        name: "AP® Macroeconomics",
-        slug: "ap-macroeconomics",
-        status: "STABLE" as const,
-        description: "AP Macroeconomics is a college-level course that introduces students to principles that apply to an economic system as a whole.",
-        bannerImage: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 6,
-        modulesCount: 47,
+        id: "ap-physics-c",
+        name: "AP® Physics C",
+        slug: "ap-physics-c",
+        logoImage: "/images/course-logos/ap-physics-c-logo.png",
+        description: "AP Physics C: Mechanics is a calculus-based physics course covering kinematics, Newton's laws of motion, work, energy, momentum, rotational dynamics, and oscillations.",
+        bannerImage: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 50,
         accentHex: "#3b82f6"
-      },
-      {
-        id: "ap-micro",
-        name: "AP® Microeconomics",
-        slug: "ap-microeconomics",
-        status: "STABLE" as const,
-        description: "AP Microeconomics is a college-level course that introduces students to principles of economics that apply to individual decision makers.",
-        bannerImage: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 6,
-        modulesCount: 36,
-        accentHex: "#60a5fa"
-      },
-      {
-        id: "ib-economics",
-        name: "IB® Economics",
-        slug: "ib-economics",
-        status: "BUILDING" as const,
-        description: "Covers microeconomics, macroeconomics, international trade theories, and global development economic frameworks.",
-        bannerImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 3,
-        modulesCount: 18,
-        accentHex: "#818cf8"
       }
     ]
   },
   {
-    id: "history",
-    name: "History",
-    subCategory: "Social Science",
+    id: "humanities",
+    name: "Humanities & Social Sciences",
+    subCategory: "History & Literature",
     icon: History,
     courses: [
       {
-        id: "ap-afam",
-        name: "AP® African American Studies",
-        slug: "ap-african-american",
-        status: "PREVIEW" as const,
-        description: "AP African American Studies examines the diversity of African American experiences through authentic resources, literature, and historical art.",
-        bannerImage: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 4,
-        modulesCount: 24,
-        accentHex: "#eab308"
-      },
-      {
-        id: "ap-euro",
-        name: "AP® European History",
-        slug: "ap-european-history",
-        status: "PREVIEW" as const,
-        description: "In AP European History, students investigate significant events, individuals, developments, and processes from 1450 to the present.",
-        bannerImage: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 9,
-        modulesCount: 90,
-        accentHex: "#f59e0b"
-      },
-      {
-        id: "ap-humangeo",
-        name: "AP® Human Geography",
-        slug: "ap-human-geography",
-        status: "PREVIEW" as const,
-        description: "AP Human Geography introduces students to the systematic study of patterns and processes shaping human understanding and alteration of Earth.",
-        bannerImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 7,
-        modulesCount: 63,
-        accentHex: "#10b981"
-      },
-      {
-        id: "ap-us-history",
+        id: "ap-ush",
         name: "AP® US History",
         slug: "ap-ush",
-        status: "PREVIEW" as const,
         logoImage: "/images/course-logos/ap-ushistory-logo.png",
-        description: "In AP U.S. History, students investigate significant events, individuals, developments, and processes across nine historical periods from 1491 to present.",
+        description: "In AP U.S. History, students investigate significant events, individuals, developments, and processes in nine historical periods from 1491 to the present.",
         bannerImage: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80",
         unitsCount: 9,
         modulesCount: 86,
         accentHex: "#ef4444"
       },
       {
-        id: "ap-world-history",
-        name: "AP® World History: Modern",
-        slug: "ap-world-history",
-        status: "STABLE" as const,
-        description: "In AP World History: Modern, students explore significant events, individuals, developments, and processes from 1200 to present across global civilizations.",
-        bannerImage: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=600&q=80",
+        id: "ap-psychology",
+        name: "AP® Psychology",
+        slug: "ap-psych",
+        description: "The AP Psychology course introduces students to the systematic and scientific study of human behavior, mental processes, cognitive models, and biological influences.",
+        bannerImage: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 5,
+        modulesCount: 35,
+        accentHex: "#a855f7"
+      },
+      {
+        id: "ap-eng-lang",
+        name: "AP® English Language",
+        slug: "ap-eng-lang",
+        description: "AP English Language and Composition cultivates essential reading and writing skills needed for rhetorical analysis, argument synthesis, and academic essay composition.",
+        bannerImage: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=600&q=80",
         unitsCount: 9,
-        modulesCount: 63,
-        accentHex: "#84cc16"
+        modulesCount: 45,
+        accentHex: "#14b8a6"
       }
     ]
   },
   {
-    id: "physics",
-    name: "Physics",
-    subCategory: "Natural Science",
-    icon: Atom,
+    id: "math",
+    name: "Mathematical Logic",
+    subCategory: "Mathematics & Computation",
+    icon: Calculator,
     courses: [
       {
-        id: "ap-physics-c",
-        name: "AP® Physics C: Mechanics",
-        slug: "ap-physics-c",
-        status: "STABLE" as const,
-        logoImage: "/images/course-logos/ap-physics-c-logo.png",
-        description: "AP Physics C: Mechanics is a calculus-based course covering kinematics, Newton's laws, work, energy, momentum, rotation, and harmonic oscillations.",
-        bannerImage: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 7,
-        modulesCount: 50,
-        accentHex: "#6366f1"
+        id: "ap-calc-bc",
+        name: "AP® Calculus BC",
+        slug: "ap-calc-bc",
+        description: "Conquer limits, derivatives, integration techniques, Taylor power series, and polar coordinate calculus through interactive coordinate models and rigorous proofs.",
+        bannerImage: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 10,
+        modulesCount: 80,
+        accentHex: "#8b5cf6"
+      },
+      {
+        id: "ap-stats",
+        name: "AP® Statistics",
+        slug: "ap-stats",
+        description: "AP Statistics introduces tools for collecting, analyzing, and drawing conclusions from data using probability models, sampling distributions, and hypothesis testing.",
+        bannerImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 54,
+        accentHex: "#ec4899"
+      },
+      {
+        id: "ap-csa",
+        name: "AP® Computer Science A",
+        slug: "ap-csa",
+        description: "AP Computer Science A emphasizes object-oriented programming in Java, algorithm design, data structures, recursion, and computational problem-solving.",
+        bannerImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 10,
+        modulesCount: 60,
+        accentHex: "#f59e0b"
+      }
+    ]
+  },
+  {
+    id: "upcoming",
+    name: "Coming Soon AP® Courses",
+    subCategory: "In Active Development",
+    icon: Clock,
+    courses: [
+      {
+        id: "ap-env-science",
+        name: "AP® Environmental Science",
+        slug: "ap-environmental-science",
+        isUpcoming: true,
+        description: "Examines ecological processes, human environmental impacts, renewable energy systems, biodiversity, and global climate mechanisms.",
+        bannerImage: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 99,
+        accentHex: "#10b981"
+      },
+      {
+        id: "ap-world-history",
+        name: "AP® World History",
+        slug: "ap-world-history",
+        isUpcoming: true,
+        description: "Explores global historical patterns, cultural exchanges, trans-regional trade networks, and empire developments from 1200 CE to present.",
+        bannerImage: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 63,
+        accentHex: "#f59e0b"
       },
       {
         id: "ap-physics-1",
         name: "AP® Physics 1",
         slug: "ap-physics-1",
-        status: "STABLE" as const,
-        description: "AP Physics 1 is an algebra-based introductory physics course exploring Newtonian mechanics, energy conservation, and mechanical waves.",
-        bannerImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        isUpcoming: true,
+        description: "Algebra-based physics course introducing Newtonian mechanics, work, energy, rotational dynamics, and mechanical waves.",
+        bannerImage: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80",
         unitsCount: 7,
         modulesCount: 45,
-        accentHex: "#38bdf8"
-      }
-    ]
-  },
-  {
-    id: "chemistry",
-    name: "Chemistry",
-    subCategory: "Natural Science",
-    icon: Beaker,
-    courses: [
+        accentHex: "#3b82f6"
+      },
       {
-        id: "ap-chemistry",
-        name: "AP® Chemistry",
-        slug: "ap-chemistry",
-        status: "STABLE" as const,
-        logoImage: "/images/course-logos/ap-chemistry-logo.png",
-        description: "AP Chemistry provides a college-level foundation to support advanced science study. Analyze atomic structures, kinetics, equilibrium, and thermodynamics.",
-        bannerImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80",
-        unitsCount: 9,
-        modulesCount: 72,
-        accentHex: "#60a5fa"
+        id: "ap-macro",
+        name: "AP® Macroeconomics",
+        slug: "ap-macroeconomics",
+        isUpcoming: true,
+        description: "Explores economic principles applying to an economic system as a whole, national income, fiscal policy, price determination, and monetary policy.",
+        bannerImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 6,
+        modulesCount: 47,
+        accentHex: "#8b5cf6"
       }
     ]
   }
@@ -961,24 +881,33 @@ export default function Dashboard() {
                     </div>
                   </div>
 
-                  {/* COURSES CARDS GRID (NO LIFT ON HOVER, SHINE HOVER EFFECT KEPT) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {/* COURSES CARDS GRID (NO STABLE/BUILDING BADGES, LOGO ON LEFT OF BANNER, PREVIEW PAGE NAVIGATION) */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {category.courses.map((course) => {
                       const progressPercent = Math.round(classProgressMap[course.slug] || 0);
 
                       return (
                         <div
                           key={course.id}
-                          onClick={() => router.push(`/dashboard/${course.slug}`)}
-                          className="group relative bg-[#13141c] border border-[#242636] hover:border-white/25 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-colors duration-300 flex flex-col justify-between"
+                          onClick={() => {
+                            if (!(course as any).isUpcoming) {
+                              router.push(`/dashboard/${course.slug}/preview`);
+                            }
+                          }}
+                          className={cn(
+                            "group relative bg-[#13141c] border border-[#242636] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 flex flex-col justify-between select-none",
+                            (course as any).isUpcoming ? "opacity-75 cursor-not-allowed" : "hover:border-white/25 cursor-pointer"
+                          )}
                         >
-                          {/* SHINE SWEEP HOVER EFFECT (NO LIFT ON HOVER) */}
-                          <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                            <div className="absolute -top-1/2 -left-full w-full h-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent transform -rotate-45 group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out" />
-                          </div>
+                          {/* SHINE SWEEP HOVER EFFECT (NO ELEVATION/LIFT ON HOVER) */}
+                          {!(course as any).isUpcoming && (
+                            <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                              <div className="absolute -top-1/2 -left-full w-full h-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent transform -rotate-45 group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out" />
+                            </div>
+                          )}
 
                           {/* TOP BANNER IMAGE CONTAINER */}
-                          <div className="h-28 w-full relative overflow-hidden bg-neutral-900 shrink-0">
+                          <div className="h-28 sm:h-32 w-full relative overflow-hidden bg-neutral-900 shrink-0">
                             <img
                               src={course.bannerImage}
                               alt={course.name}
@@ -986,43 +915,35 @@ export default function Dashboard() {
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#13141c] via-transparent to-black/40" />
 
-                            {/* TOP RIGHT STATUS BADGE */}
-                            <div className="absolute top-3 right-3 z-10">
-                              {course.status === "STABLE" && (
-                                <span className="px-2.5 py-0.5 rounded-full bg-[#162942]/90 border border-blue-400/40 text-blue-300 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
-                                  STABLE
-                                </span>
-                              )}
-                              {course.status === "PREVIEW" && (
-                                <span className="px-2.5 py-0.5 rounded-full bg-[#3d2c18]/90 border border-amber-400/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                            {/* COMING SOON BADGE ONLY FOR UPCOMING COURSES (NO STABLE OR BUILDING BADGES) */}
+                            {(course as any).isUpcoming && (
+                              <div className="absolute top-3 right-3 z-10">
+                                <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider uppercase flex items-center gap-1 shadow-md">
                                   <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                                  PREVIEW
+                                  COMING SOON
                                 </span>
-                              )}
-                              {course.status === "BUILDING" && (
-                                <span className="px-2.5 py-0.5 rounded-full bg-[#3b2118]/90 border border-amber-500/50 text-amber-400 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                                  BUILDING
-                                </span>
-                              )}
-                            </div>
+                              </div>
+                            )}
 
-                            {/* OVERLAID OFFICIAL COURSE LOGO */}
+                            {/* OVERLAID OFFICIAL COLLEGEBOARD AP LOGO (ON THE LEFT OF THE BANNER IMAGE WITHOUT CIRCLE) */}
                             {course.logoImage && (
-                              <div className="absolute top-2.5 left-3 z-10 w-10 h-10 rounded-full bg-black/65 border border-white/20 backdrop-blur-md flex items-center justify-center p-1.5 shadow-xl group-hover:border-white/40 transition-colors">
-                                <img src={course.logoImage} alt={`${course.name} logo`} className="w-full h-full object-contain filter drop-shadow-md" />
+                              <div className="absolute top-2.5 left-3 sm:top-3 sm:left-4 z-10 w-16 h-16 sm:w-20 sm:h-20 pointer-events-none flex items-center justify-center">
+                                <img 
+                                  src={course.logoImage} 
+                                  alt={`${course.name} logo`} 
+                                  className="w-full h-full object-contain filter drop-shadow-[0_2px_8px_rgba(0,0,0,0.8)] opacity-90" 
+                                />
                               </div>
                             )}
                           </div>
 
                           {/* CARD CONTENT BODY */}
-                          <div className="p-4 flex flex-col justify-between space-y-3 flex-1 min-h-[160px]">
+                          <div className="p-4 sm:p-5 flex flex-col justify-between space-y-3 flex-1 min-h-[160px]">
                             <div className="space-y-1.5">
                               {/* TITLE WITH MORTARBOARD ICON */}
                               <div className="flex items-center space-x-2">
                                 <GraduationCap className="w-4 h-4 text-white/80 shrink-0" />
-                                <h4 className="font-manrope font-extrabold text-sm sm:text-base text-white tracking-tight group-hover:text-purple-300 transition-colors">
+                                <h4 className="font-manrope font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:text-purple-300 transition-colors">
                                   {course.name}
                                 </h4>
                               </div>
@@ -1035,24 +956,16 @@ export default function Dashboard() {
 
                             {/* METRICS & PILLS */}
                             <div className="space-y-3 pt-1">
-                              {(course as any).isPracticeOnly ? (
-                                <div className="flex items-center">
-                                  <span className="px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[10px] font-manrope font-extrabold tracking-wider uppercase">
-                                    &bull; PRACTICE-ONLY COURSE
-                                  </span>
-                                </div>
-                              ) : (
-                                <div className="flex items-center gap-2 flex-wrap">
-                                  <span className="px-2.5 py-1 rounded-full bg-[#1b233a] border border-blue-500/30 text-[#818cf8] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
-                                    <BookOpen className="w-3 h-3 text-[#818cf8]" />
-                                    {course.unitsCount} UNITS
-                                  </span>
-                                  <span className="px-2.5 py-1 rounded-full bg-[#2a1b38] border border-purple-500/30 text-[#c084fc] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
-                                    <Pencil className="w-3 h-3 text-[#c084fc]" />
-                                    {course.modulesCount} MODULES
-                                  </span>
-                                </div>
-                              )}
+                              <div className="flex items-center gap-2 flex-wrap">
+                                <span className="px-2.5 py-1 rounded-full bg-[#1b233a] border border-blue-500/30 text-[#818cf8] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
+                                  <BookOpen className="w-3 h-3 text-[#818cf8]" />
+                                  {course.unitsCount} UNITS
+                                </span>
+                                <span className="px-2.5 py-1 rounded-full bg-[#2a1b38] border border-purple-500/30 text-[#c084fc] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
+                                  <Pencil className="w-3 h-3 text-[#c084fc]" />
+                                  {course.modulesCount} MODULES
+                                </span>
+                              </div>
 
                               {/* PROGRESS BAR ROW */}
                               <div className="flex items-center gap-2.5 pt-1 border-t border-white/5">
