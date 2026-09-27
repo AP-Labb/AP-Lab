@@ -133,26 +133,77 @@ export default function SettingsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    if (file.size > 5 * 1024 * 1024) {
-      alert("Image file size should be less than 5MB");
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image file size should be less than 10MB");
+      if (e.target) e.target.value = "";
       return;
     }
 
+    setSaving(true);
     const reader = new FileReader();
-    reader.onload = async () => {
-      const base64Data = reader.result as string;
-      try {
-        if (currentUser) {
-          await updateProfile(currentUser, { photoURL: base64Data });
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = async () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 256;
+          const MAX_HEIGHT = 256;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+
+            if (currentUser) {
+              try {
+                await updateProfile(currentUser, { photoURL: compressedDataUrl });
+              } catch (authErr) {
+                console.error("Error updating Auth photoURL:", authErr);
+              }
+            }
+
+            if (updatePreferences) {
+              await updatePreferences({ photoURL: compressedDataUrl });
+            }
+
+            setSavedSuccess(true);
+            setTimeout(() => setSavedSuccess(false), 2500);
+          }
+        } catch (err) {
+          console.error("Error uploading profile picture:", err);
+          alert("Could not process image. Please try another image file.");
+        } finally {
+          setSaving(false);
+          if (e.target) e.target.value = "";
         }
-        if (updatePreferences) {
-          await updatePreferences({ photoURL: base64Data });
-        }
-        setSavedSuccess(true);
-        setTimeout(() => setSavedSuccess(false), 2500);
-      } catch (err) {
-        console.error("Error uploading profile picture:", err);
-      }
+      };
+      img.onerror = () => {
+        setSaving(false);
+        if (e.target) e.target.value = "";
+        alert("Failed to load image file.");
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = () => {
+      setSaving(false);
+      if (e.target) e.target.value = "";
+      alert("Error reading file.");
     };
     reader.readAsDataURL(file);
   };

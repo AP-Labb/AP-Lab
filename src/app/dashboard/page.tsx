@@ -666,7 +666,7 @@ function HoldSignOutButton({ onConfirm }: { onConfirm: () => void }) {
 
 export default function Dashboard() {
   const { currentUser, loading: authLoading } = useAuth();
-  const { progress, loading: progressLoading } = useProgress();
+  const { progress, loading: progressLoading, updatePreferences } = useProgress();
   const router = useRouter();
   const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
   const [showAccountPopup, setShowAccountPopup] = useState(false);
@@ -727,10 +727,14 @@ export default function Dashboard() {
               console.error("Error updating avatar in Firestore:", err);
             }
 
-            // Update Auth profile
+            // Update Auth profile & global progress context
             try {
               await updateProfile(currentUser, { photoURL: compressedDataUrl });
             } catch (err) {}
+
+            if (updatePreferences) {
+              await updatePreferences({ photoURL: compressedDataUrl });
+            }
           }
         };
         img.src = event.target?.result as string;

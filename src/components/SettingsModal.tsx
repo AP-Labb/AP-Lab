@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Moon, Sun, User, Palette, Check, Settings, Info, Volume2 } from "lucide-react";
+import { X, Moon, Sun, User, Palette, Check, Settings, Info, Volume2, Camera } from "lucide-react";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
 import { updateProfile } from "firebase/auth";
+import { UserAvatar } from "./UserAvatar";
 
 interface SettingsModalProps {
   isOpen: boolean;
@@ -95,6 +96,7 @@ export const COURSE_BG_THEMES = [
 export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const { progress, updatePreferences } = useProgress();
   const { currentUser } = useAuth();
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const [selectedTheme, setSelectedTheme] = useState<"dark" | "light">("dark");
   const [selectedBg, setSelectedBg] = useState<string>("dark-matrix");
@@ -107,6 +109,85 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
   const [gradYearInput, setGradYearInput] = useState<string>("2028");
   const [countrySearch, setCountrySearch] = useState<string>("");
   const [showLocationDropdown, setShowLocationDropdown] = useState(false);
+
+  const handleFileSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      alert("Image file size should be less than 10MB");
+      if (e.target) e.target.value = "";
+      return;
+    }
+
+    setSavingName(true);
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = async () => {
+        try {
+          const canvas = document.createElement("canvas");
+          const MAX_WIDTH = 256;
+          const MAX_HEIGHT = 256;
+          let width = img.width;
+          let height = img.height;
+
+          if (width > height) {
+            if (width > MAX_WIDTH) {
+              height = Math.round((height * MAX_WIDTH) / width);
+              width = MAX_WIDTH;
+            }
+          } else {
+            if (height > MAX_HEIGHT) {
+              width = Math.round((width * MAX_HEIGHT) / height);
+              height = MAX_HEIGHT;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext("2d");
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.85);
+
+            if (currentUser) {
+              try {
+                await updateProfile(currentUser, { photoURL: compressedDataUrl });
+              } catch (authErr) {
+                console.error("Error updating Auth photoURL:", authErr);
+              }
+            }
+
+            if (updatePreferences) {
+              await updatePreferences({ photoURL: compressedDataUrl });
+            }
+
+            setSavedSuccess(true);
+            setTimeout(() => setSavedSuccess(false), 2500);
+          }
+        } catch (err) {
+          console.error("Error uploading profile picture:", err);
+          alert("Could not process image. Please try another image file.");
+        } finally {
+          setSavingName(false);
+          if (e.target) e.target.value = "";
+        }
+      };
+      img.onerror = () => {
+        setSavingName(false);
+        if (e.target) e.target.value = "";
+        alert("Failed to load image file.");
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.onerror = () => {
+      setSavingName(false);
+      if (e.target) e.target.value = "";
+      alert("Error reading file.");
+    };
+    reader.readAsDataURL(file);
+  };
 
   useEffect(() => {
     if (progress) {
@@ -295,6 +376,15 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
               </div>
             </div>
 
+            {/* Hidden File Input for Avatar Upload */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              accept="image/*"
+              className="hidden"
+            />
+
             {/* 2. Profile Information (Display Name, Bio, Location with Search, Graduation Year) */}
             <form onSubmit={handleSaveProfile} className="space-y-4 pt-2 border-t border-white/10">
               <div className="flex items-center justify-between">
@@ -308,6 +398,39 @@ export function SettingsModal({ isOpen, onClose }: SettingsModalProps) {
                   className="px-4 py-1.5 rounded-xl bg-white text-black font-manrope font-bold text-xs hover:bg-neutral-200 transition-colors disabled:opacity-50 shrink-0 cursor-pointer"
                 >
                   {savingName ? "Saving..." : savedSuccess ? "Saved!" : "Save Profile"}
+                </button>
+              </div>
+
+              {/* Avatar Upload Row */}
+              <div className="flex items-center gap-3.5 p-3 rounded-xl bg-white/[0.03] border border-white/10">
+                <div 
+                  className="relative group cursor-pointer shrink-0"
+                  onClick={() => fileInputRef.current?.click()}
+                  title="Click to change profile picture"
+                >
+                  <UserAvatar
+                    photoURL={progress?.photoURL || currentUser?.photoURL}
+                    name={nameInput || "Scholar"}
+                    activeFrame={progress?.activeAvatarFrame}
+                    size="md"
+                  />
+                  <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-[#1c1e2e] border-2 border-[#080910] text-white flex items-center justify-center shadow-lg group-hover:bg-white group-hover:text-black transition-all">
+                    <Camera className="w-3 h-3 stroke-[2.5]" />
+                  </div>
+                </div>
+
+                <div className="flex-1 space-y-1">
+                  <p className="text-xs font-manrope font-bold text-white">Profile Photo</p>
+                  <p className="text-[10px] text-white/40 font-inter">Click photo or button to upload a custom avatar</p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold font-manrope transition-all cursor-pointer flex items-center gap-1.5 shrink-0"
+                >
+                  <Camera className="w-3.5 h-3.5" />
+                  <span>Upload</span>
                 </button>
               </div>
 
