@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   LogOut, Microscope, Library, Calculator, 
   Search, Dna, Beaker, Atom, History, Brain, BookOpen, Sigma, BarChart3, Binary,
-  ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap,
+  ChevronRight, Activity, Star, User, Mail, X, BarChart2, Upload, GraduationCap, Pencil,
   Folder, Eye, Trophy, Video, FileText, Layers, Clock, ArrowUpRight, Leaf, Home, LayoutDashboard, Settings, Award, BookMarked, ShoppingBag,
   TreePine, Globe, Compass, TrendingUp, Map, Coins, Zap
 } from "lucide-react";
