@@ -59,7 +59,26 @@ const COURSE_DESCRIPTIONS: Record<string, string> = {
   "ap-microeconomics": "AP® Microeconomics introduces economic principles applying to functions of individual decision-makers, product markets, and factor markets...",
 };
 
-const DASHBOARD_CATEGORIES = [
+interface DashboardCourseCardData {
+  id: string;
+  name: string;
+  slug: string;
+  logoImage?: string;
+  description: string;
+  bannerImage: string;
+  unitsCount: number;
+  modulesCount: number;
+  accentHex: string;
+  isUpcoming?: boolean;
+}
+
+const DASHBOARD_CATEGORIES: Array<{
+  id: string;
+  name: string;
+  subCategory: string;
+  icon: any;
+  courses: DashboardCourseCardData[];
+}> = [
   {
     id: "stem",
     name: "STEM & Sciences",
