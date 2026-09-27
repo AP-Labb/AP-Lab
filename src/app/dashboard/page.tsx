@@ -873,11 +873,11 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* LOWER REGION: Folders Grid with Grid Background Pattern */}
+        {/* LOWER REGION: Folders Grid with Subtler Dark Grid Background Pattern */}
         <div 
-          className="w-full flex-1 relative z-20 flex flex-col items-center pt-8 pb-12 px-6 md:px-12 bg-[#060712]"
+          className="w-full flex-1 relative z-20 flex flex-col items-center pt-8 pb-12 px-6 md:px-12 bg-[#04050a]"
           style={{
-            backgroundImage: "linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+            backgroundImage: "linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px), linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px)",
             backgroundSize: "36px 36px"
           }}
         >
@@ -918,7 +918,7 @@ export default function Dashboard() {
                             }
                           }}
                           className={cn(
-                            "group relative bg-[#13141c] border border-[#242636] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 flex flex-col justify-between select-none",
+                            "group relative bg-[#080911] border border-white/[0.08] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 flex flex-col justify-between select-none",
                             (course as any).isUpcoming ? "opacity-75 cursor-not-allowed" : "hover:border-white/25 cursor-pointer"
                           )}
                         >
@@ -929,14 +929,14 @@ export default function Dashboard() {
                             </div>
                           )}
 
-                          {/* TOP BANNER IMAGE CONTAINER */}
-                          <div className="h-28 sm:h-32 w-full relative overflow-hidden bg-neutral-900 shrink-0">
+                          {/* TOP BANNER IMAGE CONTAINER (NO IMAGE SCALE ZOOM ON HOVER) */}
+                          <div className="h-28 sm:h-32 w-full relative overflow-hidden bg-neutral-950 shrink-0">
                             <img
                               src={course.bannerImage}
                               alt={course.name}
-                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                              className="w-full h-full object-cover opacity-70"
                             />
-                            <div className="absolute inset-0 bg-gradient-to-t from-[#13141c] via-transparent to-black/40" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-[#080911] via-transparent to-black/50" />
 
                             {/* COMING SOON BADGE ONLY FOR UPCOMING COURSES (NO STABLE OR BUILDING BADGES) */}
                             {(course as any).isUpcoming && (

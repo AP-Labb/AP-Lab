@@ -261,7 +261,7 @@ export function SubjectLabs() {
                         }
                       }}
                       className={cn(
-                        "group relative bg-[#13141c] border border-[#242636] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 flex flex-col justify-between select-none",
+                        "group relative bg-[#080911] border border-white/[0.08] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 flex flex-col justify-between select-none",
                         course.isUpcoming ? "opacity-75 cursor-not-allowed" : "hover:border-white/25 cursor-pointer"
                       )}
                     >
@@ -272,14 +272,14 @@ export function SubjectLabs() {
                         </div>
                       )}
 
-                      {/* TOP BANNER IMAGE CONTAINER */}
-                      <div className="h-28 sm:h-32 w-full relative overflow-hidden bg-neutral-900 shrink-0">
+                      {/* TOP BANNER IMAGE CONTAINER (NO IMAGE SCALE ZOOM ON HOVER) */}
+                      <div className="h-28 sm:h-32 w-full relative overflow-hidden bg-neutral-950 shrink-0">
                         <img
                           src={course.bannerImage}
                           alt={course.name}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                          className="w-full h-full object-cover opacity-70"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-[#13141c] via-transparent to-black/40" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#080911] via-transparent to-black/50" />
 
                         {/* COMING SOON BADGE ONLY FOR UPCOMING COURSES (NO STABLE OR BUILDING BADGES) */}
                         {course.isUpcoming && (
