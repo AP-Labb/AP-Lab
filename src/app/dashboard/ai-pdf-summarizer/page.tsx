@@ -262,23 +262,32 @@ export default function AiPdfSummarizerPage() {
     }
   };
 
-  // Real-time audio waveform amplitude bars (Matching Screenshot 2)
+  // Real-time audio waveform amplitude bars (Smooth, reactive, color-coded)
   const renderWaveformBars = () => {
     const totalBars = 45;
     return (
-      <div className="h-16 w-full flex items-center justify-center gap-[3px] px-6">
+      <div className="h-20 w-full flex items-center justify-center gap-[3px] px-6">
         {Array.from({ length: totalBars }).map((_, i) => {
-          let heightPercent = 4;
+          let heightPercent = 6;
+          let barColor = "bg-neutral-600/50";
           if (isRecording && !isPaused) {
             const centerDist = 1 - Math.abs(i - totalBars / 2) / (totalBars / 2);
-            const freqFactor = Math.sin((i + Date.now() / 120) * 0.5) * 0.4 + 0.6;
-            const normVol = Math.min(100, Math.max(8, audioVolume * 1.8));
-            heightPercent = Math.min(100, Math.max(6, normVol * centerDist * freqFactor));
+            const freqFactor = Math.sin((i + Date.now() / 80) * 0.4) * 0.45 + 0.55;
+            const normVol = Math.min(100, Math.max(10, audioVolume * 2.2));
+            heightPercent = Math.min(100, Math.max(8, normVol * centerDist * freqFactor));
+
+            if (heightPercent > 60) {
+              barColor = "bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]";
+            } else if (heightPercent > 25) {
+              barColor = "bg-amber-400 shadow-[0_0_6px_rgba(251,191,36,0.5)]";
+            } else {
+              barColor = "bg-red-500 shadow-[0_0_5px_rgba(239,68,68,0.5)]";
+            }
           }
           return (
             <div
               key={i}
-              className="w-[3px] bg-neutral-400/80 rounded-full transition-all duration-75"
+              className={cn("w-[3.5px] rounded-full transition-all duration-75 ease-out", barColor)}
               style={{ height: `${heightPercent}%` }}
             />
           );
@@ -362,7 +371,10 @@ export default function AiPdfSummarizerPage() {
                         className="px-4 py-2 rounded-full bg-[#20212b] hover:bg-[#2a2c39] border border-white/15 text-white font-manrope font-bold text-xs flex items-center gap-2 transition-all cursor-pointer shadow-md active:scale-95"
                       >
                         <div className="w-4 h-4 rounded-full bg-red-500 flex items-center justify-center">
-                          <Mic className="w-2.5 h-2.5 text-white" />
+                          <svg className="w-2.5 h-2.5 fill-white text-white" viewBox="0 0 24 24">
+                            <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+                            <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+                          </svg>
                         </div>
                         <span>Live Record Class</span>
                       </button>
@@ -673,7 +685,7 @@ export default function AiPdfSummarizerPage() {
                           : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
                       )}
                     >
-                      <img src={v.iconImg} alt={v.label} className="w-4 h-4 object-contain shrink-0 rounded-sm" />
+                      <img src={v.iconImg} alt={v.label} className="w-6 h-6 object-contain shrink-0 rounded-sm" />
                       <span>{v.label}</span>
                     </button>
                   );
@@ -1024,14 +1036,14 @@ export default function AiPdfSummarizerPage() {
               exit={{ opacity: 0, scale: 0.95 }}
               className="bg-[#1c1d25] border border-white/15 rounded-[32px] p-8 sm:p-10 max-w-4xl w-full shadow-2xl relative overflow-hidden text-white"
             >
-              {/* Close Button */}
+              {/* Close Button (Circle appears only on hover) */}
               <button
                 type="button"
                 onClick={() => {
                   if (isRecording) stopRecording();
                   setShowRecordingModal(false);
                 }}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-20 border border-white/10 cursor-pointer"
+                className="absolute top-6 right-6 p-2 rounded-full bg-transparent hover:bg-white/15 text-white/70 hover:text-white transition-all z-20 border border-transparent hover:border-white/10 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -1041,10 +1053,10 @@ export default function AiPdfSummarizerPage() {
                 {/* LEFT COLUMN: MODAL TITLE, BANNER, AUDIO WAVEFORM BOX & CONTROL BUTTONS */}
                 <div className="md:col-span-7 space-y-6 text-left">
                   
-                  {/* MODAL HEADER TITLE & SUBTITLE (MATCHING SCREENSHOT 1) */}
+                  {/* MODAL HEADER TITLE & SUBTITLE */}
                   <div className="space-y-1">
                     <h3 className="font-manrope font-black text-2xl sm:text-3xl text-white tracking-tight">
-                      Knowt AI Lecture Note Taker
+                      AP Lab Lecture Note Taker
                     </h3>
                     <p className="text-base font-manrope text-white/70">
                       {isRecording && !isPaused ? "Shh! AP Lab is listening to your lecture..." : "We can't hear you yet"}
@@ -1148,9 +1160,9 @@ export default function AiPdfSummarizerPage() {
 
                 </div>
 
-                {/* RIGHT COLUMN: PANDA WATCHING TV (SCREENSHOT 1) */}
+                {/* RIGHT COLUMN: PANDA WATCHING TV */}
                 <div className="md:col-span-5 flex flex-col items-center justify-center p-2">
-                  <div className="relative w-full max-w-[280px] aspect-[4/3] flex items-center justify-center">
+                  <div className="relative w-full max-w-[360px] aspect-[4/3] flex items-center justify-center">
                     <img
                       src="/images/panda-tv.png"
                       alt="Panda Mascot Watching TV"
