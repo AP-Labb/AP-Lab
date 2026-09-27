@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   ChevronRight, ArrowLeft, BookOpen, Layers, CheckCircle2, Play, FileText,
   Clock, GraduationCap, Target, Sparkles, X, Info, Calendar, Zap,
-  Check, Video, ShieldCheck, BarChart2, Infinity as InfinityIcon
+  Check, Video, ShieldCheck, BarChart2, Percent, HelpCircle
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -29,7 +29,7 @@ const OFFICIAL_COURSE_LOGOS: Record<string, string> = {
 };
 
 const OFFICIAL_EXAM_SCHEDULE: Record<string, { dateStr: string; targetDate: Date; mcqWeight: string; frqWeight: string }> = {
-  "ap-biology": { dateStr: "Mon, May 10, 2027", targetDate: new Date("2027-05-10T08:00:00"), mcqWeight: "50%", frqWeight: "50%" },
+  "ap-biology": { dateStr: "Thu, May 13, 2027", targetDate: new Date("2027-05-13T08:00:00"), mcqWeight: "60%", frqWeight: "40%" },
   "ap-chemistry": { dateStr: "Mon, May 3, 2027", targetDate: new Date("2027-05-03T12:00:00"), mcqWeight: "50%", frqWeight: "50%" },
   "ap-physics-c": { dateStr: "Tue, May 11, 2027", targetDate: new Date("2027-05-11T12:00:00"), mcqWeight: "50%", frqWeight: "50%" },
   "ap-calc-bc": { dateStr: "Mon, May 10, 2027", targetDate: new Date("2027-05-10T08:00:00"), mcqWeight: "50%", frqWeight: "50%" },
@@ -107,7 +107,7 @@ const OFFICIAL_SCORE_CUTOFFS: Record<string, Array<{ score: number; range: strin
 };
 
 const OFFICIAL_WEIGHTINGS: Record<string, Record<number, string>> = {
-  "ap-biology": { 1: "8–11%", 2: "10–13%", 3: "12–16%", 4: "10–15%", 5: "8–11%", 6: "12–16%", 7: "13–20%", 8: "10–15%" },
+  "ap-biology": { 1: "6–8%", 2: "6–8%", 3: "10–15%", 4: "10–15%", 5: "12–16%", 6: "12–16%", 7: "13–20%", 8: "10–15%" },
   "ap-chemistry": { 1: "7–9%", 2: "7–9%", 3: "18–22%", 4: "7–9%", 5: "7–9%", 6: "7–9%", 7: "7–9%", 8: "11–15%", 9: "7–9%" },
   "ap-physics-c": { 1: "14–20%", 2: "17–23%", 3: "14–17%", 4: "14–17%", 5: "14–20%", 6: "6–14%", 7: "6–14%" },
   "ap-calc-bc": { 1: "4–7%", 2: "4–7%", 3: "4–7%", 4: "6–9%", 5: "8–11%", 6: "17–20%", 7: "6–9%", 8: "6–9%", 9: "11–12%", 10: "17–18%" },
@@ -144,10 +144,10 @@ const COURSE_HERO_IMAGES: Record<string, string> = {
 
 const COURSE_FEATURES = [
   { id: "lessons", title: "Lessons", desc: "Structured curriculum, units, and lesson content.", status: "Available", icon: BookOpen },
-  { id: "practice", title: "Practice", desc: "Course practice sessions generated from lesson material.", status: "Available", icon: InfinityIcon },
+  { id: "practice", title: "Practice", desc: "Course practice sessions generated from lesson material.", status: "Available", icon: Zap },
   { id: "exams", title: "Exams", desc: "Full-length or exam-style assessment generation.", status: "Available", icon: FileText },
   { id: "metadata", title: "AP Metadata", desc: "College Board themes, skills, unit weighting, and AP lesson tags.", status: "Available", icon: Target },
-  { id: "frqs", title: "AP FRQs", desc: "AP-style free response practice and scoring.", status: "Available", icon: Zap },
+  { id: "frqs", title: "AP FRQs", desc: "AP-style free response practice and scoring.", status: "Available", icon: HelpCircle },
   { id: "calculator", title: "AP Score Calculator", desc: "Score projection tools for AP exam sections.", status: "Available", icon: BarChart2 },
 ];
 
@@ -163,8 +163,8 @@ export default function CoursePreviewPage({ params }: PageProps) {
   const examInfo = OFFICIAL_EXAM_SCHEDULE[slug] || {
     dateStr: "Thu, May 13, 2027",
     targetDate: new Date("2027-05-13T08:00:00"),
-    mcqWeight: "50%",
-    frqWeight: "50%",
+    mcqWeight: "60%",
+    frqWeight: "40%",
   };
 
   useEffect(() => {
@@ -205,6 +205,8 @@ export default function CoursePreviewPage({ params }: PageProps) {
   ];
   const heroBgImage = COURSE_HERO_IMAGES[slug] || "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&q=80";
 
+  const totalSubunits = course.units.reduce((acc, u) => acc + u.topics.length, 0);
+
   return (
     <div className="min-h-screen bg-[#04050a] text-white flex flex-row relative z-0 overflow-x-hidden font-manrope selection:bg-purple-600">
       <AppSidebar currentPath="/dashboard" />
@@ -214,7 +216,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
 
         <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 md:px-8 py-6 space-y-8 pb-20 text-left">
           
-          {/* TOP HERO BANNER (MATCHING IMAGE 1 SPECIFICATIONS) */}
+          {/* TOP HERO BANNER */}
           <div 
             className="relative w-full rounded-3xl border border-white/10 p-6 sm:p-8 overflow-hidden shadow-2xl bg-[#080912] flex flex-col justify-between min-h-[220px]"
             style={{
@@ -223,13 +225,13 @@ export default function CoursePreviewPage({ params }: PageProps) {
               backgroundPosition: "center"
             }}
           >
-            {/* OFFICIAL COLLEGE BOARD AP LOGO WATERMARK ON THE RIGHT OF BANNER IMAGE WITH REDUCED OPACITY */}
+            {/* OFFICIAL COLLEGE BOARD AP LOGO WATERMARK MOVED TO THE LEFT SO IT IS NOT COVERED BY COURSE PROGRESS */}
             {logoUrl && (
-              <div className="absolute right-4 sm:right-16 top-1/2 -translate-y-1/2 z-0 pointer-events-none select-none">
+              <div className="absolute right-[320px] sm:right-[360px] top-1/2 -translate-y-1/2 z-0 pointer-events-none select-none hidden md:block">
                 <img
                   src={logoUrl}
                   alt={`${course.name} emblem`}
-                  className="w-44 h-44 sm:w-64 sm:h-64 object-contain opacity-35 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
+                  className="w-44 h-44 sm:w-56 sm:h-56 object-contain opacity-35 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
                 />
               </div>
             )}
@@ -283,7 +285,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 <div className="flex items-center justify-between text-[11px] font-manrope font-extrabold tracking-wider text-white/50 uppercase">
                   <span>COURSE PROGRESS</span>
                   <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 font-mono font-bold text-[10px] border border-purple-500/30">
-                    0/11880 ⚡
+                    0/{totalSubunits}
                   </span>
                 </div>
 
@@ -297,178 +299,111 @@ export default function CoursePreviewPage({ params }: PageProps) {
               </div>
             </div>
 
-            {/* BOTTOM ROW: Action Button */}
+            {/* BOTTOM ROW: Black Practice Action Button */}
             <div className="relative z-10 pt-2">
               <Link
                 href={`/dashboard/${slug}`}
-                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-manrope font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg active:scale-95"
+                className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-black hover:bg-neutral-900 text-white border border-white/20 font-manrope font-extrabold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg active:scale-95"
               >
-                <InfinityIcon className="w-4 h-4 stroke-[2.5]" />
+                <Play className="w-3.5 h-3.5 fill-white text-white" />
                 <span>Practice</span>
               </Link>
             </div>
           </div>
 
-          {/* MAIN PAGE GRID CONTENT (LEFT: COURSE PATH / UNITS | RIGHT: COURSE PROGRESS MASTERY GRID) */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* FULL WIDTH UNITS COURSE PATH */}
+          <div className="w-full space-y-6">
             
-            {/* LEFT 2 COLUMNS: COURSE PATH & UNITS */}
-            <div className="lg:col-span-2 space-y-6">
-              
-              {/* Header row */}
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="text-[10px] font-manrope font-extrabold text-white/40 uppercase tracking-widest block">COURSE PATH</span>
-                  <h2 className="font-manrope font-black text-2xl text-white tracking-tight">Units</h2>
-                </div>
-
-                <div className="flex items-center gap-2">
-                  <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
-                    {course.units.length} units
-                  </span>
-                  <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
-                    0% complete
-                  </span>
-                </div>
+            {/* Header row */}
+            <div className="flex items-center justify-between">
+              <div>
+                <span className="text-[10px] font-manrope font-extrabold text-white/40 uppercase tracking-widest block">COURSE PATH</span>
+                <h2 className="font-manrope font-black text-2xl text-white tracking-tight">Units</h2>
               </div>
 
-              {/* Units List */}
-              <div className="space-y-5">
-                {course.units.map((unit) => {
-                  const weighting = weightings[unit.id] || "8–12%";
-                  const topicCount = unit.topics.length;
-                  const unitXp = topicCount * 120;
-
-                  return (
-                    <div 
-                      key={unit.id}
-                      className="bg-[#080911] border border-white/10 rounded-2xl p-5 shadow-xl space-y-4"
-                    >
-                      {/* Unit Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/70 shrink-0 mt-0.5">
-                            <BookOpen className="w-4 h-4 text-purple-400" />
-                          </div>
-                          <div>
-                            <span className="text-[10px] font-manrope font-bold text-white/40 uppercase tracking-wider block">
-                              UNIT {unit.id}
-                            </span>
-                            <h3 className="font-manrope font-bold text-base text-white">
-                              {unit.title}
-                            </h3>
-                            <span className="text-xs font-manrope text-white/40 block">
-                              {topicCount} lessons
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col items-start sm:items-end space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="font-manrope font-extrabold text-sm text-white">{weighting}</span>
-                            <span className="text-[9px] font-manrope font-bold text-white/40 uppercase">AP WEIGHTING</span>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-xs font-manrope">
-                            <span className="text-white/40">Progress</span>
-                            <div className="w-16 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-                              <div className="w-0 h-full bg-purple-500 rounded-full" />
-                            </div>
-                            <span className="text-white/60 font-bold">0%</span>
-                            <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold border border-purple-500/30">
-                              0/{unitXp} ⚡
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Subunits Grid */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                        {unit.topics.map((topic) => (
-                          <Link
-                            key={topic.id}
-                            href={`/dashboard/${slug}`}
-                            className="flex items-center space-x-2 p-2.5 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.06] text-white/80 transition-all cursor-pointer group"
-                          >
-                            <BookOpen className="w-3.5 h-3.5 shrink-0 text-white/40 group-hover:text-purple-400 transition-colors" />
-                            <span className="font-manrope font-semibold text-xs truncate">
-                              {topic.id} {topic.title}
-                            </span>
-                          </Link>
-                        ))}
-                      </div>
-
-                      {/* Unit Bottom Action Buttons */}
-                      <div className="pt-2 flex items-center justify-end gap-2 border-t border-white/[0.04]">
-                        <Link
-                          href={`/dashboard/${slug}`}
-                          className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-purple-300 text-xs font-bold font-manrope transition-all cursor-pointer flex items-center gap-1 border border-white/10"
-                        >
-                          <InfinityIcon className="w-3.5 h-3.5" />
-                        </Link>
-                        <Link
-                          href={`/dashboard/${slug}`}
-                          className="px-4 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold font-manrope transition-all cursor-pointer flex items-center gap-1 shadow-md"
-                        >
-                          <span>Continue</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </Link>
-                      </div>
-                    </div>
-                  );
-                })}
+              <div className="flex items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
+                  {course.units.length} units
+                </span>
+                <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
+                  0% complete
+                </span>
               </div>
             </div>
 
-            {/* RIGHT COLUMN: COURSE PROGRESS & MASTERY GRID */}
-            <div className="space-y-6">
-              <div className="bg-[#080911] border border-white/10 rounded-2xl p-5 shadow-xl space-y-4">
-                <div className="flex items-center space-x-2 text-white">
-                  <BarChart2 className="w-4 h-4 text-purple-400" />
-                  <div>
-                    <span className="text-[10px] font-manrope font-extrabold text-white/40 uppercase tracking-widest block">COURSE</span>
-                    <h3 className="font-manrope font-black text-lg text-white">Progress</h3>
-                  </div>
-                </div>
+            {/* Units List (Full Width) */}
+            <div className="space-y-5">
+              {course.units.map((unit) => {
+                const weighting = weightings[unit.id] || "8–12%";
+                const topicCount = unit.topics.length;
 
-                <div className="pt-2 border-t border-white/10 space-y-3">
-                  <div className="flex items-center justify-between text-xs font-manrope font-bold text-white/60">
-                    <span className="uppercase tracking-wider text-[10px]">MASTERY GRID</span>
-                    <div className="flex items-center gap-2 text-[10px] text-white/40">
-                      <span className="flex items-center gap-1"><BookOpen className="w-3 h-3" /> Lesson</span>
-                      <span className="flex items-center gap-1"><Video className="w-3 h-3" /> Video</span>
-                      <span className="flex items-center gap-1"><InfinityIcon className="w-3 h-3" /> Practice</span>
-                    </div>
-                  </div>
-
-                  {/* Matrix Grid matching Image 1 */}
-                  <div className="space-y-2 pt-1">
-                    {course.units.slice(0, 5).map((unit, idx) => (
-                      <div key={unit.id} className="flex items-center gap-2 text-xs font-manrope text-white/50">
-                        <span className="w-4 font-bold text-center">{idx + 1}</span>
-                        <div className="flex-1 grid grid-cols-7 gap-1">
-                          {Array.from({ length: 7 }).map((_, i) => (
-                            <div 
-                              key={i} 
-                              className="h-8 rounded-lg bg-white/[0.03] border border-white/10 flex items-center justify-center text-white/40 hover:bg-white/10 hover:text-white transition-all cursor-pointer"
-                              title={`Module ${idx + 1}.${i + 1}`}
-                            >
-                              <InfinityIcon className="w-3 h-3 opacity-50" />
-                            </div>
-                          ))}
+                return (
+                  <div 
+                    key={unit.id}
+                    className="bg-[#080911] border border-white/10 rounded-2xl p-5 sm:p-6 shadow-xl space-y-4"
+                  >
+                    {/* Unit Header */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
+                      <div className="flex items-start gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/70 shrink-0 mt-0.5">
+                          <BookOpen className="w-4 h-4 text-purple-400" />
+                        </div>
+                        <div>
+                          <span className="text-[10px] font-manrope font-bold text-white/40 uppercase tracking-wider block">
+                            UNIT {unit.id}
+                          </span>
+                          <h3 className="font-manrope font-bold text-base sm:text-lg text-white">
+                            {unit.title}
+                          </h3>
+                          <span className="text-xs font-manrope text-white/40 block">
+                            {topicCount} lessons
+                          </span>
                         </div>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
 
+                      <div className="flex flex-col items-start sm:items-end space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="font-manrope font-extrabold text-sm text-white">{weighting}</span>
+                          <span className="text-[9px] font-manrope font-bold text-white/40 uppercase">AP WEIGHTING</span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-xs font-manrope">
+                          <span className="text-white/40">Progress</span>
+                          <div className="w-20 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
+                            <div className="w-0 h-full bg-purple-500 rounded-full" />
+                          </div>
+                          <span className="text-white/60 font-bold">0%</span>
+                          <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold border border-purple-500/30">
+                            0/{topicCount}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Subunits Grid */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                      {unit.topics.map((topic) => (
+                        <Link
+                          key={topic.id}
+                          href={`/dashboard/${slug}?topic=${topic.id}`}
+                          className="flex items-center space-x-2 p-3 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20 text-white/80 transition-all cursor-pointer group"
+                        >
+                          <BookOpen className="w-3.5 h-3.5 shrink-0 text-white/40 group-hover:text-purple-400 transition-colors" />
+                          <span className="font-manrope font-semibold text-xs truncate">
+                            {topic.id} {topic.title}
+                          </span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </main>
       </div>
 
-      {/* POP-UP MENU: COURSE DETAILS MODAL (MATCHING IMAGE 2 AND IMAGE 3 EXACTLY) */}
+      {/* POP-UP MENU: COURSE DETAILS MODAL (MATCHING EXACT USER IMAGES) */}
       <AnimatePresence>
         {showDetailsModal && (
           <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
@@ -481,17 +416,17 @@ export default function CoursePreviewPage({ params }: PageProps) {
               className="fixed inset-0 bg-black/85 backdrop-blur-md"
             />
 
-            {/* Modal Box */}
+            {/* Single Clean Modal Box (No Double Outline/Border) */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-3xl bg-[#090b16] border border-white/15 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl flex flex-col max-h-[85vh] overflow-hidden"
+              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Header */}
-              <div className="flex items-start justify-between pb-4 border-b border-white/10 shrink-0">
+              {/* Modal Header inside content flow so title scrolls naturally */}
+              <div className="flex items-start justify-between pb-5 border-b border-white/10 mb-6">
                 <div>
                   <h2 className="font-manrope font-black text-2xl text-white tracking-tight">
                     Course details
@@ -501,21 +436,23 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   </p>
                 </div>
 
+                {/* Small simple X icon button without circle container */}
                 <button
                   onClick={() => setShowDetailsModal(false)}
-                  className="w-8 h-8 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center text-white/60 hover:text-white transition-all cursor-pointer"
+                  className="text-white/40 hover:text-white transition-colors cursor-pointer p-1 -mr-1"
+                  title="Close modal"
                 >
                   <X className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Scrollable Modal Content */}
-              <div className="space-y-6 py-5 overflow-y-auto custom-scrollbar flex-1 pr-1" onWheel={(e) => e.stopPropagation()}>
+              {/* Modal Scrollable Content Sections */}
+              <div className="space-y-6">
                 
                 {/* 1. Course Tags Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-3">
                   <div className="flex items-center space-x-2 text-white/70">
-                    <Target className="w-4 h-4 text-purple-400" />
+                    <Target className="w-4 h-4 text-white/40" />
                     <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Course tags</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -530,7 +467,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 {/* 2. Release Status Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-2">
                   <div className="flex items-center space-x-2 text-white/70">
-                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <CheckCircle2 className="w-4 h-4 text-white/40" />
                     <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Release status</span>
                   </div>
                   <h4 className="font-manrope font-black text-lg text-white">Stable</h4>
@@ -539,11 +476,11 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   </p>
                 </div>
 
-                {/* 3. Feature Availability Card */}
+                {/* 3. Feature Availability Card (Only Shows Available Features) */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-4">
                   <div>
                     <div className="flex items-center space-x-2 text-white/70">
-                      <Layers className="w-4 h-4 text-blue-400" />
+                      <Layers className="w-4 h-4 text-white/40" />
                       <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Feature Availability</span>
                     </div>
                     <p className="text-xs text-white/40 font-manrope mt-1">
@@ -556,12 +493,15 @@ export default function CoursePreviewPage({ params }: PageProps) {
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                       6 Available
                     </span>
-                    <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/50 font-manrope font-bold text-xs">
-                      0 Planned
-                    </span>
                   </div>
 
+                  {/* Green Available Features List */}
                   <div className="space-y-2.5 pt-1">
+                    <div className="flex items-center gap-1.5 text-xs font-manrope font-bold text-emerald-400 pb-1">
+                      <Check className="w-3.5 h-3.5 stroke-[3]" />
+                      <span>Available</span>
+                    </div>
+
                     {COURSE_FEATURES.map((feat) => {
                       const IconComp = feat.icon;
                       return (
@@ -588,7 +528,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 {/* 4. Upcoming Exam Dates Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-3">
                   <div className="flex items-center space-x-2 text-white/70">
-                    <Calendar className="w-4 h-4 text-amber-400" />
+                    <Calendar className="w-4 h-4 text-white/50" />
                     <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Upcoming Exam Dates</span>
                   </div>
 
@@ -604,39 +544,39 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   </div>
                 </div>
 
-                {/* 5. AP Course Details (Structure, Score Cutoffs & Unit Weightings) */}
+                {/* 5. AP Course Details Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-5">
                   <div className="flex items-center space-x-2 text-white/70 border-b border-white/10 pb-3">
-                    <FileText className="w-4 h-4 text-purple-400" />
+                    <FileText className="w-4 h-4 text-white/50" />
                     <div>
                       <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white block">AP Course Details</span>
                       <p className="text-[11px] text-white/40 font-manrope">Course skills, themes, and exam weighting data from the AP framework.</p>
                     </div>
                   </div>
 
-                  {/* Sub-section: Exam Structure */}
+                  {/* Exam Structure */}
                   <div className="space-y-2.5">
                     <h4 className="font-manrope font-bold text-xs text-white/80 uppercase tracking-wider flex items-center gap-1.5">
-                      <BookOpen className="w-3.5 h-3.5 text-purple-400" />
+                      <BookOpen className="w-3.5 h-3.5 text-white/50" />
                       <span>Exam Structure</span>
                     </h4>
 
                     <div className="rounded-xl border border-white/10 overflow-hidden text-xs">
                       <div className="flex items-center justify-between p-3 bg-white/[0.04] border-b border-white/10">
                         <span className="font-manrope font-bold text-white">Section I: Multiple Choice</span>
-                        <span className="font-manrope font-black text-purple-300">{examInfo.mcqWeight} WEIGHT</span>
+                        <span className="font-manrope font-black text-white">{examInfo.mcqWeight} <span className="text-[10px] font-normal text-white/40">WEIGHT</span></span>
                       </div>
                       <div className="flex items-center justify-between p-3 bg-white/[0.02]">
                         <span className="font-manrope font-bold text-white">Section II: Free Response</span>
-                        <span className="font-manrope font-black text-purple-300">{examInfo.frqWeight} WEIGHT</span>
+                        <span className="font-manrope font-black text-white">{examInfo.frqWeight} <span className="text-[10px] font-normal text-white/40">WEIGHT</span></span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Sub-section: Score Cutoffs */}
+                  {/* Score Cutoffs Table with Grey Percent Icon */}
                   <div className="space-y-2.5">
                     <h4 className="font-manrope font-bold text-xs text-white/80 uppercase tracking-wider flex items-center gap-1.5">
-                      <BarChart2 className="w-3.5 h-3.5 text-emerald-400" />
+                      <Percent className="w-3.5 h-3.5 text-white/50" />
                       <span>Score Cutoffs</span>
                     </h4>
 
@@ -648,16 +588,16 @@ export default function CoursePreviewPage({ params }: PageProps) {
                       {scoreCutoffs.map((item) => (
                         <div key={item.score} className="grid grid-cols-2 p-2.5 border-b border-white/5 last:border-0 bg-white/[0.02] font-manrope font-bold">
                           <span className="text-white">{item.score}</span>
-                          <span className="text-right text-emerald-400">{item.range}</span>
+                          <span className="text-right text-white">{item.range}</span>
                         </div>
                       ))}
                     </div>
                   </div>
 
-                  {/* Sub-section: Unit Weightings */}
+                  {/* Unit Weighting Table with Grey Percent Icon */}
                   <div className="space-y-2.5">
                     <h4 className="font-manrope font-bold text-xs text-white/80 uppercase tracking-wider flex items-center gap-1.5">
-                      <Target className="w-3.5 h-3.5 text-amber-400" />
+                      <Percent className="w-3.5 h-3.5 text-white/50" />
                       <span>Unit Weighting</span>
                     </h4>
 
@@ -671,7 +611,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                         <div key={u.id} className="grid grid-cols-3 p-2.5 border-b border-white/5 last:border-0 bg-white/[0.02] font-manrope font-semibold items-center">
                           <span className="font-bold text-white">Unit {u.id}</span>
                           <span className="text-white/70 truncate pr-2">{u.title}</span>
-                          <span className="text-right font-bold text-amber-300">{weightings[u.id] || "8–12%"}</span>
+                          <span className="text-right font-bold text-white">{weightings[u.id] || "8–12%"}</span>
                         </div>
                       ))}
                     </div>
@@ -679,16 +619,6 @@ export default function CoursePreviewPage({ params }: PageProps) {
 
                 </div>
 
-              </div>
-
-              {/* Modal Footer */}
-              <div className="pt-3 border-t border-white/10 flex justify-end shrink-0">
-                <button
-                  onClick={() => setShowDetailsModal(false)}
-                  className="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-manrope font-bold text-xs transition-colors cursor-pointer"
-                >
-                  Done
-                </button>
               </div>
             </motion.div>
           </div>
