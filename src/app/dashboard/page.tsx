@@ -1035,7 +1035,7 @@ export default function Dashboard() {
 
                             {/* METRICS & PILLS */}
                             <div className="space-y-3 pt-1">
-                              {course.isPracticeOnly ? (
+                              {(course as any).isPracticeOnly ? (
                                 <div className="flex items-center">
                                   <span className="px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[10px] font-manrope font-extrabold tracking-wider uppercase">
                                     &bull; PRACTICE-ONLY COURSE
