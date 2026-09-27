@@ -2,249 +2,372 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { SVGProps } from "react";
-import { ArrowRight, X, BookOpen, Video, Clock, Star } from "lucide-react";
+import {
+  ArrowRight, X, BookOpen, Video, Clock, Star, GraduationCap, Pencil,
+  Dna, FlaskConical, Atom, History as HistoryIcon, DollarSign, Brain, Globe, Compass, Activity, Rocket
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useProgress } from "@/context/ProgressContext";
-import { BiologyDNA3D } from "./BiologyDNA3D";
-import { ChemistryMolecule3D } from "./ChemistryMolecule3D";
-import { PhysicsOrbit3D } from "./PhysicsOrbit3D";
 import { courseRegistry } from "@/lib/courses/course-registry";
-import { Cursor } from "@/components/ui/cursor";
 import { cn } from "@/lib/utils";
 
-const MouseIcon = ({ color, ...props }: SVGProps<SVGSVGElement> & { color: string }) => {
-  return (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      width={26}
-      height={31}
-      fill="none"
-      {...props}
-    >
-      <g clipPath="url(#a)">
-        <path
-          fill={color}
-          fillRule="evenodd"
-          stroke={"#fff"}
-          strokeLinecap="square"
-          strokeWidth={2}
-          d="M21.993 14.425 2.549 2.935l4.444 23.108 4.653-10.002z"
-          clipRule="evenodd"
-        />
-      </g>
-      <defs>
-        <clipPath id="a">
-          <path fill={color} d="M0 0h26v31H0z" />
-        </clipPath>
-      </defs>
-    </svg>
-  );
-};
-
-interface CoursePreview {
+interface CourseCardData {
   id: string;
   name: string;
-  badge: string;
-  category: string;
+  slug: string;
+  status: "STABLE" | "PREVIEW" | "BUILDING";
   description: string;
+  bannerImage: string;
+  logoImage?: string;
+  unitsCount?: number;
+  modulesCount?: number;
+  isPracticeOnly?: boolean;
   accentHex: string;
   stats: { label: string; value: string }[];
   units: { number: string; title: string; desc: string }[];
   highlights: string[];
-  visualType: "dna" | "calculus" | "physics" | "chemistry";
-  slug: string;
 }
 
-const COURSE_PREVIEWS: CoursePreview[] = [
+interface CourseCategory {
+  id: string;
+  name: string;
+  subCategory: string;
+  icon: any;
+  courses: CourseCardData[];
+}
+
+const CATEGORIZED_COURSES: CourseCategory[] = [
   {
     id: "biology",
-    name: "AP® Biology",
-    badge: "25 Articles • 25 Videos",
-    category: "STEM & Sciences",
-    description: "Explore the fundamental principles of life. Decode the cellular matrix, delve into evolutionary models, and unravel gene replication mechanics with deep-dive visual modules, laboratory guides, and interactive simulations.",
-    accentHex: "#10b981",
-    slug: "ap-biology",
-    stats: [
-      { label: "Articles", value: "25" },
-      { label: "Videos", value: "25" },
-      { label: "Est. Study", value: "48h" },
-      { label: "Practice Qs", value: "250+" }
-    ],
-    units: [
-      { number: "Unit 1", title: "Chemistry of Life", desc: "Properties of water, macromolecule structures, biological polymers, and cellular chemical reactions." },
-      { number: "Unit 2", title: "Cell Structure & Function", desc: "Organelle specialization, membrane permeability, active/passive transport, and tonicity." },
-      { number: "Unit 3", title: "Cellular Energetics", desc: "Enzyme kinetics, metabolic pathways, photosynthesis light/dark reactions, and respiration." },
-      { number: "Unit 4", title: "Genetics & Gene Regulation", desc: "Meiotic division, Mendelian inheritance, chromatin remodeling, and transcription regulation." }
-    ],
-    highlights: [
-      "8 Mapped Curriculum Units: Mapped study structure covering the complete course syllabus.",
-      "25 Subtopic Video Lectures: Embedded video tutorials for every single subtopic.",
-      "Detailed Reading Articles: Comprehensive reading material to master complex concepts.",
-      "Interactive Vocabulary Definitions: Instant popover tooltips for highlighted terms in articles.",
-      "Multiple-Choice Quizzes: Practice questions for each subtopic with explanations."
-    ],
-    visualType: "dna"
+    name: "Biology",
+    subCategory: "Natural Science",
+    icon: Dna,
+    courses: [
+      {
+        id: "honors-biology",
+        name: "Honors Biology",
+        slug: "honors-biology",
+        status: "PREVIEW",
+        description: "Honors Biology is a rigorous course that examines the principles of life sciences through an in-depth study of cell biology, genetics, evolution, and ecology.",
+        bannerImage: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 1,
+        modulesCount: 6,
+        accentHex: "#3b82f6",
+        stats: [{ label: "Articles", value: "6" }, { label: "Videos", value: "6" }, { label: "Est. Study", value: "12h" }, { label: "Practice Qs", value: "60+" }],
+        units: [{ number: "Unit 1", title: "Foundations of Biological Life", desc: "Cell structure, biomolecules, and genetics." }],
+        highlights: ["In-depth study of cellular biology", "Genetic replication & evolution frameworks"]
+      },
+      {
+        id: "ap-biology",
+        name: "AP® Biology",
+        slug: "ap-biology",
+        status: "STABLE",
+        logoImage: "/images/course-logos/ap-biology-logo.png",
+        description: "AP Biology is an introductory college-level biology course. Students cultivate their understanding of biology through inquiry-based investigations as they explore evolution, cellular processes, and information transfer.",
+        bannerImage: "https://images.unsplash.com/photo-1448375240586-882707db888b?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 8,
+        modulesCount: 63,
+        accentHex: "#10b981",
+        stats: [{ label: "Articles", value: "25" }, { label: "Videos", value: "25" }, { label: "Est. Study", value: "48h" }, { label: "Practice Qs", value: "250+" }],
+        units: [
+          { number: "Unit 1", title: "Chemistry of Life", desc: "Macromolecules, water properties, and enzymes." },
+          { number: "Unit 2", title: "Cell Structure & Function", desc: "Organelles, membrane transport, and tonicity." },
+          { number: "Unit 3", title: "Cellular Energetics", desc: "Photosynthesis, respiration, and metabolic pathways." },
+          { number: "Unit 4", title: "Cell Communication & Cycle", desc: "Signal transduction and mitosis." }
+        ],
+        highlights: ["8 Mapped Curriculum Units with 63 Subtopic Modules", "Interactive Vocabulary Popovers & Video Tutorials", "Full AP Exam Question Bank & Diagnostic Rubrics"]
+      },
+      {
+        id: "ap-env-science",
+        name: "AP® Environmental Science",
+        slug: "ap-env-science",
+        status: "STABLE",
+        description: "The AP Environmental Science course is designed to engage students with the scientific principles, concepts, and methodologies required to understand environmental systems.",
+        bannerImage: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 99,
+        accentHex: "#22c55e",
+        stats: [{ label: "Articles", value: "30" }, { label: "Videos", value: "30" }, { label: "Est. Study", value: "50h" }, { label: "Practice Qs", value: "300+" }],
+        units: [{ number: "Unit 1", title: "The Living World: Ecosystems", desc: "Biomes, energy flow, and biogeochemical cycles." }],
+        highlights: ["Comprehensive ecosystem coverage", "Data-driven sustainability case studies"]
+      },
+      {
+        id: "ap-psychology",
+        name: "AP® Psychology",
+        slug: "ap-psychology",
+        status: "STABLE",
+        description: "The AP Psychology course introduces students to the systematic and scientific study of human behavior and mental processes. Explore cognitive models and biological influences.",
+        bannerImage: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 5,
+        modulesCount: 35,
+        accentHex: "#a855f7",
+        stats: [{ label: "Articles", value: "20" }, { label: "Videos", value: "20" }, { label: "Est. Study", value: "35h" }, { label: "Practice Qs", value: "200+" }],
+        units: [{ number: "Unit 1", title: "Biological Bases of Behavior", desc: "Brain structures, neurotransmitters, and perception." }],
+        highlights: ["Cognitive & behavioral psychology models", "High-yield neuroscience flashcards"]
+      },
+      {
+        id: "ib-biology",
+        name: "IB® Biology",
+        slug: "ib-biology",
+        status: "BUILDING",
+        description: "IB Biology covers key biological concepts with emphasis on international perspectives, experimental design, and molecular biochemistry.",
+        bannerImage: "https://images.unsplash.com/photo-1511497584788-876761c144ee?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 1,
+        modulesCount: 6,
+        accentHex: "#06b6d4",
+        stats: [{ label: "Articles", value: "6" }, { label: "Videos", value: "6" }, { label: "Est. Study", value: "10h" }, { label: "Practice Qs", value: "50+" }],
+        units: [{ number: "Unit 1", title: "Cell Biology & Genetics", desc: "Ultrastructure and membrane biology." }],
+        highlights: ["IB Higher Level syllabus alignment", "Experimental analysis modules"]
+      },
+      {
+        id: "ib-ess",
+        name: "IB® Environmental Systems and Societies",
+        slug: "ib-ess",
+        status: "BUILDING",
+        isPracticeOnly: true,
+        description: "Interdisciplinary course combining science and society to evaluate environmental systems, sustainability, and global human impacts.",
+        bannerImage: "https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?auto=format&fit=crop&w=600&q=80",
+        accentHex: "#14b8a6",
+        stats: [{ label: "Practice Qs", value: "150+" }],
+        units: [{ number: "Practice Suite", title: "System Question Banks", desc: "Interactive scenario practice questions." }],
+        highlights: ["Practice-only problem sets", "Real-world environmental case scenarios"]
+      },
+      {
+        id: "ib-psychology",
+        name: "IB® Psychology",
+        slug: "ib-psychology",
+        status: "BUILDING",
+        isPracticeOnly: true,
+        description: "Examines biological, cognitive, and sociocultural approaches to understanding human behavior in global contexts.",
+        bannerImage: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=600&q=80",
+        accentHex: "#c084fc",
+        stats: [{ label: "Practice Qs", value: "120+" }],
+        units: [{ number: "Practice Suite", title: "Essay Prompt Drills", desc: "Short & extended response practice." }],
+        highlights: ["Biological, cognitive & sociocultural essay drills"]
+      },
+      {
+        id: "ib-sports",
+        name: "IB® Sports, Exercise and Health Science",
+        slug: "ib-sports",
+        status: "BUILDING",
+        isPracticeOnly: true,
+        description: "Explores human anatomy, exercise physiology, biomechanics, movement analysis, and sports performance psychology.",
+        bannerImage: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?auto=format&fit=crop&w=600&q=80",
+        accentHex: "#f97316",
+        stats: [{ label: "Practice Qs", value: "100+" }],
+        units: [{ number: "Practice Suite", title: "Anatomy & Biomechanics", desc: "Targeted sports science question sets." }],
+        highlights: ["Anatomy & exercise science problem banks"]
+      }
+    ]
   },
   {
-    id: "calculus",
-    name: "AP® Calculus",
-    badge: "28 Articles • 14 Videos",
-    category: "Mathematical Logic",
-    description: "Conquer the foundations of limits, derivatives, and integrals. Build intuitive geometric understanding through interactive coordinate models, dynamic slope visualizations, and step-by-step calculus proofs.",
-    accentHex: "#c084fc",
-    slug: "ap-calc-bc",
-    stats: [
-      { label: "Articles", value: "28" },
-      { label: "Videos", value: "14" },
-      { label: "Est. Study", value: "42h" },
-      { label: "Practice Qs", value: "1,500+" }
-    ],
-    units: [
-      { number: "Unit 1", title: "Limits & Continuity", desc: "Definition of limit, algebraic evaluation, intermediate value theorem, and asymptote behaviors." },
-      { number: "Unit 2", title: "Differentiation Foundations", desc: "Derivative definition, derivative rules, rates of change, and implicit differentiation." },
-      { number: "Unit 3", title: "Analytical Applications", desc: "Extreme Value Theorem, Mean Value Theorem, optimization scenarios, and curve sketching." },
-      { number: "Unit 4", title: "Integration & Accumulation", desc: "Riemann sums, Fundamental Theorem of Calculus, accumulation functions, and area calculations." }
-    ],
-    highlights: [
-      "Structured Curriculum Units: Full syllabus coverage of limits, derivatives, and integrals.",
-      "28 Subtopic Video Lectures: Video tutorials mapping all sections of the course.",
-      "Interactive Reading Articles: Formatted articles for studying calculus proofs and concepts.",
-      "Multiple-Choice Quizzes: Practice question sets to test mathematical logic."
-    ],
-    visualType: "calculus"
+    id: "economics",
+    name: "Economics",
+    subCategory: "Social Science",
+    icon: DollarSign,
+    courses: [
+      {
+        id: "ap-macro",
+        name: "AP® Macroeconomics",
+        slug: "ap-macroeconomics",
+        status: "STABLE",
+        description: "AP Macroeconomics is a college-level course that introduces students to the principles that apply to an economic system as a whole.",
+        bannerImage: "https://images.unsplash.com/photo-1580519542036-c47de6196ba5?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 6,
+        modulesCount: 47,
+        accentHex: "#3b82f6",
+        stats: [{ label: "Articles", value: "22" }, { label: "Videos", value: "22" }, { label: "Est. Study", value: "36h" }, { label: "Practice Qs", value: "220+" }],
+        units: [{ number: "Unit 1", title: "Basic Economic Concepts", desc: "Scarcity, opportunity cost, and trade." }],
+        highlights: ["6 Mapped Units covering fiscal & monetary policy", "Interactive Phillips Curve & AD-AS graphs"]
+      },
+      {
+        id: "ap-micro",
+        name: "AP® Microeconomics",
+        slug: "ap-microeconomics",
+        status: "STABLE",
+        description: "AP Microeconomics is a college-level course that introduces students to the principles of economics that apply to the functions of individual decision makers.",
+        bannerImage: "https://images.unsplash.com/photo-1621416894569-0f39ed31d247?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 6,
+        modulesCount: 36,
+        accentHex: "#60a5fa",
+        stats: [{ label: "Articles", value: "18" }, { label: "Videos", value: "18" }, { label: "Est. Study", value: "30h" }, { label: "Practice Qs", value: "180+" }],
+        units: [{ number: "Unit 1", title: "Supply & Demand", desc: "Market equilibrium, elasticity, and consumer surplus." }],
+        highlights: ["Firm cost curves & market structure models", "Comprehensive elasticity calculation drills"]
+      },
+      {
+        id: "ib-economics",
+        name: "IB® Economics",
+        slug: "ib-economics",
+        status: "BUILDING",
+        description: "Covers microeconomics, macroeconomics, international trade theories, and global development economic frameworks.",
+        bannerImage: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 3,
+        modulesCount: 18,
+        accentHex: "#818cf8",
+        stats: [{ label: "Articles", value: "12" }, { label: "Videos", value: "12" }, { label: "Est. Study", value: "20h" }, { label: "Practice Qs", value: "100+" }],
+        units: [{ number: "Unit 1", title: "International Economics", desc: "Tariffs, trade barriers, and exchange rates." }],
+        highlights: ["Global trade & macro equilibrium analysis"]
+      }
+    ]
+  },
+  {
+    id: "history",
+    name: "History",
+    subCategory: "Social Science",
+    icon: HistoryIcon,
+    courses: [
+      {
+        id: "ap-afam",
+        name: "AP® African American Studies",
+        slug: "ap-african-american",
+        status: "PREVIEW",
+        description: "AP African American Studies is an interdisciplinary course that examines the diversity of African American experiences through direct encounters with authentic resources.",
+        bannerImage: "https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 4,
+        modulesCount: 24,
+        accentHex: "#eab308",
+        stats: [{ label: "Articles", value: "16" }, { label: "Videos", value: "16" }, { label: "Est. Study", value: "24h" }, { label: "Practice Qs", value: "140+" }],
+        units: [{ number: "Unit 1", title: "Origins of the African Diaspora", desc: "Early kingdoms, culture, and transatlantic trade." }],
+        highlights: ["Interdisciplinary primary source analyses", "Artistic & literary movement study guides"]
+      },
+      {
+        id: "ap-euro",
+        name: "AP® European History",
+        slug: "ap-european-history",
+        status: "PREVIEW",
+        description: "In AP European History, students investigate significant events, individuals, developments, and processes from approximately 1450 to the present.",
+        bannerImage: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 90,
+        accentHex: "#f59e0b",
+        stats: [{ label: "Articles", value: "30" }, { label: "Videos", value: "30" }, { label: "Est. Study", value: "45h" }, { label: "Practice Qs", value: "280+" }],
+        units: [{ number: "Unit 1", title: "Renaissance & Exploration", desc: "Humanism, artistic innovations, and global contact." }],
+        highlights: ["DBQ document analysis strategies", "9 Complete historical periods breakdown"]
+      },
+      {
+        id: "ap-humangeo",
+        name: "AP® Human Geography",
+        slug: "ap-human-geography",
+        status: "PREVIEW",
+        description: "AP Human Geography introduces students to the systematic study of patterns and processes that have shaped human understanding, use, and alteration of Earth's surface.",
+        bannerImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 63,
+        accentHex: "#10b981",
+        stats: [{ label: "Articles", value: "24" }, { label: "Videos", value: "24" }, { label: "Est. Study", value: "36h" }, { label: "Practice Qs", value: "210+" }],
+        units: [{ number: "Unit 1", title: "Thinking Geographically", desc: "Maps, spatial data, and GIS applications." }],
+        highlights: ["Spatial data & demographic models", "Urbanization & agricultural trend studies"]
+      },
+      {
+        id: "ap-us-history",
+        name: "AP® US History",
+        slug: "ap-ushistory",
+        status: "PREVIEW",
+        logoImage: "/images/course-logos/ap-ushistory-logo.png",
+        description: "In AP U.S. History, students investigate significant events, individuals, developments, and processes in nine historical periods from 1491 to the present.",
+        bannerImage: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 86,
+        accentHex: "#ef4444",
+        stats: [{ label: "Articles", value: "32" }, { label: "Videos", value: "32" }, { label: "Est. Study", value: "50h" }, { label: "Practice Qs", value: "300+" }],
+        units: [
+          { number: "Period 1", title: "1491 - 1607", desc: "Native American societies and European contact." },
+          { number: "Period 2", title: "1607 - 1754", desc: "Colonial settlement and transatlantic commerce." },
+          { number: "Period 3", title: "1754 - 1800", desc: "American Revolution and Constitution." }
+        ],
+        highlights: ["9 Historical Periods fully mapped with videos", "DBQ & LEQ essay writing rubrics & primary sources", "Custom AP US History official line art logo"]
+      },
+      {
+        id: "ap-world-history",
+        name: "AP® World History: Modern",
+        slug: "ap-world-history",
+        status: "STABLE",
+        description: "In AP World History: Modern, students explore significant events, individuals, developments, and processes from 1200 to the present across global civilizations.",
+        bannerImage: "https://images.unsplash.com/photo-1508804185872-d7badad00f7d?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 63,
+        accentHex: "#84cc16",
+        stats: [{ label: "Articles", value: "28" }, { label: "Videos", value: "28" }, { label: "Est. Study", value: "42h" }, { label: "Practice Qs", value: "260+" }],
+        units: [{ number: "Unit 1", title: "The Global Tapestry", desc: "State building in Asia, Dar al-Islam, and Europe." }],
+        highlights: ["Global historical process comparisons", "Cross-cultural trade & empire networks"]
+      }
+    ]
   },
   {
     id: "physics",
-    name: "AP® Physics",
-    badge: "36 Articles • 36 Videos",
-    category: "STEM & Sciences",
-    description: "Master the laws governing the universe. Investigate particle dynamics, electromagnetism, and energy conservation models with precision vector setups, force diagrams, and physical system sandboxes.",
-    accentHex: "#818cf8",
-    slug: "ap-physics-c",
-    stats: [
-      { label: "Articles", value: "36" },
-      { label: "Videos", value: "36" },
-      { label: "Est. Study", value: "38h" },
-      { label: "Practice Qs", value: "360+" }
-    ],
-    units: [
-      { number: "Unit 1", title: "Kinematics & Dynamics", desc: "Motion vector analysis, projectile paths, Newton's laws of motion, and friction coefficients." },
-      { number: "Unit 2", title: "Work, Energy & Power", desc: "Conservation of mechanical energy, work-energy theorem, and conservative forces." },
-      { number: "Unit 3", title: "Momentum & Rotation", desc: "Elastic and inelastic collisions, torque, center of mass, and rotational inertia." },
-      { number: "Unit 4", title: "Oscillations & Gravity", desc: "Simple harmonic oscillators, gravitational force fields, and Kepler's laws." }
-    ],
-    highlights: [
-      "12 Mapped Curriculum Units: Thorough coverage of Newtonian mechanics, kinematics, and rotation.",
-      "36 Subtopic Video Lectures: Embedded video explanations for every subtopic.",
-      "Detailed Mechanics Articles: Targeted reading guides covering core physics equations.",
-      "Interactive Vocabulary Definitions: Tap highlighted terms in articles to read quick definitions.",
-      "Multiple-Choice Quizzes: 10 practice questions per subtopic with explanations."
-    ],
-    visualType: "physics"
+    name: "Physics",
+    subCategory: "Natural Science",
+    icon: Rocket,
+    courses: [
+      {
+        id: "ap-physics-c",
+        name: "AP® Physics C: Mechanics",
+        slug: "ap-physics-c",
+        status: "STABLE",
+        logoImage: "/images/course-logos/ap-physics-c-logo.png",
+        description: "AP Physics C: Mechanics is a calculus-based physics course covering kinematics, Newton's laws of motion, work, energy, power, momentum, circular motion, rotation, and oscillations.",
+        bannerImage: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 50,
+        accentHex: "#6366f1",
+        stats: [{ label: "Articles", value: "36" }, { label: "Videos", value: "36" }, { label: "Est. Study", value: "38h" }, { label: "Practice Qs", value: "360+" }],
+        units: [
+          { number: "Unit 1", title: "Kinematics", desc: "Position vectors, velocity, and derivative acceleration." },
+          { number: "Unit 2", title: "Newton's Laws of Motion", desc: "Forces, friction, and differential equations." },
+          { number: "Unit 3", title: "Work, Energy & Power", desc: "Line integrals and potential energy functions." }
+        ],
+        highlights: ["Calculus-based derivations & vector proofs", "Rocket kinematics & rotational dynamics models", "Custom AP Physics C official rocket logo"]
+      },
+      {
+        id: "ap-physics-1",
+        name: "AP® Physics 1",
+        slug: "ap-physics-1",
+        status: "STABLE",
+        description: "AP Physics 1 is an algebra-based, introductory college-level physics course exploring Newtonian mechanics, work, energy, and mechanical waves.",
+        bannerImage: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 7,
+        modulesCount: 45,
+        accentHex: "#38bdf8",
+        stats: [{ label: "Articles", value: "25" }, { label: "Videos", value: "25" }, { label: "Est. Study", value: "32h" }, { label: "Practice Qs", value: "250+" }],
+        units: [{ number: "Unit 1", title: "Kinematics", desc: "1D and 2D projectile motion." }],
+        highlights: ["Algebra-based mechanics & wave models"]
+      }
+    ]
   },
   {
     id: "chemistry",
-    name: "AP® Chemistry",
-    badge: "27 Articles • 27 Videos",
-    category: "STEM & Sciences",
-    description: "Deconstruct the micro-world. Analyze thermodynamic systems, equilibrium math, kinetics, and molecular orbital structures using fully interactive chemical reaction simulations and molecular models.",
-    accentHex: "#60a5fa",
-    slug: "ap-chemistry",
-    stats: [
-      { label: "Articles", value: "27" },
-      { label: "Videos", value: "27" },
-      { label: "Est. Study", value: "45h" },
-      { label: "Practice Qs", value: "270+" }
-    ],
-    units: [
-      { number: "Unit 1", title: "Atomic Structure & Properties", desc: "Electron configuration, periodic trends (electronegativity, atomic radius), and bonding types." },
-      { number: "Unit 2", title: "Chemical Reactions", desc: "Stoichiometry, net ionic equations, precipitation, and redox reaction processes." },
-      { number: "Unit 3", title: "Kinetics & Equilibrium", desc: "Rate laws, activation energy, collision theory, and Le Chatelier's equilibrium principle." },
-      { number: "Unit 4", title: "Thermodynamics & pH", desc: "Enthalpy, entropy, Gibbs free energy, acid-base theories, and buffer system math." }
-    ],
-    highlights: [
-      "9 Mapped Curriculum Units: Mapped study structure for atomic structure, thermodynamics, and kinetics.",
-      "27 Subtopic Video Lectures: Video tutorials for every subtopic.",
-      "Comprehensive Chemistry Articles: Reading material covering reactions and equilibrium principles.",
-      "Interactive Vocabulary Definitions: Instant definition tooltips for key chemistry terms.",
-      "Multiple-Choice Quizzes: 10 practice questions per subtopic with explanations."
-    ],
-    visualType: "chemistry"
+    name: "Chemistry",
+    subCategory: "Natural Science",
+    icon: FlaskConical,
+    courses: [
+      {
+        id: "ap-chemistry",
+        name: "AP® Chemistry",
+        slug: "ap-chemistry",
+        status: "STABLE",
+        logoImage: "/images/course-logos/ap-chemistry-logo.png",
+        description: "AP Chemistry provides students with a college-level foundation to support future advanced coursework in chemistry. Analyze atomic structure, kinetics, equilibrium, and thermodynamics.",
+        bannerImage: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?auto=format&fit=crop&w=600&q=80",
+        unitsCount: 9,
+        modulesCount: 72,
+        accentHex: "#60a5fa",
+        stats: [{ label: "Articles", value: "27" }, { label: "Videos", value: "27" }, { label: "Est. Study", value: "45h" }, { label: "Practice Qs", value: "270+" }],
+        units: [
+          { number: "Unit 1", title: "Atomic Structure & Properties", desc: "Periodic trends and mass spectrometry." },
+          { number: "Unit 2", title: "Molecular & Ionic Compound Structure", desc: "Lewis diagrams, VSEPR, and hybridization." },
+          { number: "Unit 3", title: "Intermolecular Forces & Properties", desc: "Solutions, phase diagrams, and gas laws." }
+        ],
+        highlights: ["9 Mapped Units with reaction simulations", "Interactive Equilibrium & Thermodynamics math", "Custom AP Chemistry official flask logo"]
+      }
+    ]
   }
 ];
 
-function CalculusVisual() {
-  return (
-    <div className="w-full h-full flex items-center justify-center min-h-[200px] select-none cursor-pointer overflow-hidden rounded-2xl relative bg-white/[0.01]">
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-transparent pointer-events-none" />
-      <svg width="320" height="220" viewBox="0 0 320 220" className="w-full h-full max-w-[320px] z-10 p-4">
-        <defs>
-          <linearGradient id="calcGradModal" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#c084fc" />
-            <stop offset="100%" stopColor="#818cf8" />
-          </linearGradient>
-        </defs>
-        {/* Axes */}
-        <line x1="20" y1="110" x2="300" y2="110" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-        <line x1="160" y1="20" x2="160" y2="200" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" />
-        
-        {/* Grid lines */}
-        {[60, 110, 210, 260].map(x => (
-          <line key={`x-${x}`} x1={x} y1="20" x2={x} y2="200" stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
-        ))}
-        {[60, 160].map(y => (
-          <line key={`y-${y}`} x1="20" y1={y} x2="300" y2={y} stroke="rgba(255,255,255,0.02)" strokeWidth="1" />
-        ))}
-
-        {/* Function Curve */}
-        <motion.path
-          d="M 20 160 Q 90 20, 160 110 T 300 60"
-          fill="none"
-          stroke="url(#calcGradModal)"
-          strokeWidth="3.5"
-        />
-
-        {/* Tangent line */}
-        <motion.line
-          x1="60" y1="130" x2="120" y2="50"
-          stroke="#10b981"
-          strokeWidth="2"
-          animate={{
-            x1: [30, 130, 230, 130, 30],
-            y1: [150, 70, 70, 70, 150],
-            x2: [90, 190, 270, 190, 90],
-            y2: [110, 150, 50, 150, 110],
-          }}
-          transition={{
-            duration: 6, repeat: Infinity, ease: "easeInOut"
-          }}
-        />
-
-        {/* Tracing Point */}
-        <motion.circle
-          r="6"
-          fill="#ffffff"
-          animate={{
-            cx: [60, 160, 250, 160, 60],
-            cy: [130, 110, 60, 110, 130],
-          }}
-          transition={{
-            duration: 6, repeat: Infinity, ease: "easeInOut"
-          }}
-        />
-      </svg>
-    </div>
-  );
-}
-
 export function SubjectLabs() {
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
-  const [activeCourse, setActiveCourse] = useState<string | null>(null);
+  const [activeCourse, setActiveCourse] = useState<CourseCardData | null>(null);
   const router = useRouter();
   const { currentUser } = useAuth();
-  const { progress } = useProgress();
 
   useEffect(() => {
     if (activeCourse) {
@@ -257,360 +380,165 @@ export function SubjectLabs() {
     };
   }, [activeCourse]);
 
-  const activeCourseData = COURSE_PREVIEWS.find(c => c.id === activeCourse);
-
   return (
-    <section className={`relative w-full py-[160px] px-6 md:px-[120px] bg-deep-navy overflow-hidden ${activeCourse ? "z-[60]" : "z-10"}`}>
+    <section className="relative w-full py-20 px-4 sm:px-8 md:px-12 bg-[#090a0e] text-white selection:bg-purple-600 font-manrope overflow-hidden z-10">
       {/* Decorative ambient background glows */}
-      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none -z-10" />
-      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-blue-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-purple-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
 
-      <div className="max-w-7xl mx-auto">
-        {/* Section Header */}
-        <div className="text-center mb-20">
-          <motion.h2 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-inter font-extrabold text-white text-3xl md:text-5xl tracking-tight mb-4"
-          >
-            Class Previews
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="font-inter text-white/50 text-sm md:text-base max-w-lg mx-auto leading-relaxed"
-          >
-            Immerse yourself in specialized high-yield learning environments powered by interactive visuals and precision guides.
-          </motion.p>
+      <div className="max-w-7xl mx-auto space-y-16">
+        
+        {/* Section Title */}
+        <div className="text-center space-y-3">
+          <h2 className="font-manrope font-black text-3xl sm:text-5xl text-white tracking-tight">
+            Explore All Courses & Curriculum
+          </h2>
+          <p className="text-sm sm:text-base text-white/50 font-manrope max-w-2xl mx-auto">
+            High-yield AP & IB learning environments powered by interactive visuals, mapped syllabus units, and practice question suites.
+          </p>
         </div>
 
-        {/* Bento Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          
-          {/* Card 1: AP Biology (Large, Hero Card) */}
-          {(() => {
+        {/* CATEGORIZED COURSES SECTIONS */}
+        <div className="space-y-14">
+          {CATEGORIZED_COURSES.map((category) => {
+            const CategoryIcon = category.icon;
+
             return (
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7 }}
-                onMouseEnter={() => setHoveredCard("biology")}
-                onMouseLeave={() => setHoveredCard(null)}
-                onClick={() => setActiveCourse("biology")}
-                whileHover={{ y: -6 }}
-                className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
-              >
-            <Cursor
-              attachToParent
-              variants={{
-                initial: { scale: 0.3, opacity: 0 },
-                animate: { scale: 1, opacity: 1 },
-                exit: { scale: 0.3, opacity: 0 },
-              }}
-              transition={{
-                ease: "easeInOut",
-                duration: 0.15,
-              }}
-              className="left-4 top-4"
-            >
-              <div>
-                <MouseIcon color="#22c55e" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#22c55e] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
-                  More +
+              <div key={category.id} className="space-y-6">
+                
+                {/* CATEGORY HEADER ROW */}
+                <div className="flex items-center space-x-3 border-b border-white/10 pb-3">
+                  <div className="w-8 h-8 rounded-xl bg-white/[0.06] border border-white/10 flex items-center justify-center text-purple-400 shrink-0 shadow-md">
+                    <CategoryIcon className="w-4 h-4 text-purple-400" />
+                  </div>
+                  <div className="flex items-baseline space-x-2">
+                    <h3 className="font-manrope font-extrabold text-xl sm:text-2xl text-white tracking-tight">
+                      {category.name}
+                    </h3>
+                    <span className="text-xs font-manrope font-semibold text-white/40">
+                      &bull; {category.subCategory}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            </Cursor>
-            {/* Card Content (Left) */}
-            <div className="flex flex-col justify-between relative z-10 w-full md:w-1/2 min-h-[200px] md:min-h-0">
-              <div>
-                {/* Resource Density Badge */}
-                <div className="bg-white/[0.07] text-white/70 text-[11px] font-mono tracking-wider uppercase px-3.5 py-1.5 rounded-full w-fit mb-6 select-none">
-                  25 Articles &bull; 25 Videos
+
+                {/* COURSES CARDS GRID (NO LIFT ON HOVER, SHINE HOVER EFFECT KEPT) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                  {category.courses.map((course) => (
+                    <div
+                      key={course.id}
+                      onClick={() => setActiveCourse(course)}
+                      className="group relative bg-[#13141c] border border-[#242636] hover:border-white/25 rounded-2xl overflow-hidden cursor-pointer shadow-xl transition-colors duration-300 flex flex-col justify-between"
+                    >
+                      {/* SHINE SWEEP HOVER EFFECT (NO ELEVATION/LIFT ON HOVER) */}
+                      <div className="absolute inset-0 z-30 pointer-events-none overflow-hidden rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                        <div className="absolute -top-1/2 -left-full w-full h-[200%] bg-gradient-to-r from-transparent via-white/10 to-transparent transform -rotate-45 group-hover:translate-x-[250%] transition-transform duration-1000 ease-in-out" />
+                      </div>
+
+                      {/* TOP BANNER IMAGE CONTAINER */}
+                      <div className="h-28 w-full relative overflow-hidden bg-neutral-900 shrink-0">
+                        <img
+                          src={course.bannerImage}
+                          alt={course.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-80"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#13141c] via-transparent to-black/40" />
+
+                        {/* TOP RIGHT STATUS BADGE */}
+                        <div className="absolute top-3 right-3 z-10">
+                          {course.status === "STABLE" && (
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#162942]/90 border border-blue-400/40 text-blue-300 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                              <span className="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse" />
+                              STABLE
+                            </span>
+                          )}
+                          {course.status === "PREVIEW" && (
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#3d2c18]/90 border border-amber-400/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                              PREVIEW
+                            </span>
+                          )}
+                          {course.status === "BUILDING" && (
+                            <span className="px-2.5 py-0.5 rounded-full bg-[#3b2118]/90 border border-amber-500/50 text-amber-400 text-[10px] font-mono font-bold tracking-wider flex items-center gap-1 shadow-md">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                              BUILDING
+                            </span>
+                          )}
+                        </div>
+
+                        {/* OVERLAID OFFICIAL COURSE LOGO (FOR AP BIO, AP CHEM, AP PHYSICS C, AP US HISTORY) */}
+                        {course.logoImage && (
+                          <div className="absolute top-2.5 left-3 z-10 w-10 h-10 rounded-full bg-black/65 border border-white/20 backdrop-blur-md flex items-center justify-center p-1.5 shadow-xl group-hover:border-white/40 transition-colors">
+                            <img src={course.logoImage} alt={`${course.name} logo`} className="w-full h-full object-contain filter drop-shadow-md" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* CARD CONTENT BODY */}
+                      <div className="p-4 flex flex-col justify-between space-y-3 flex-1 min-h-[160px]">
+                        <div className="space-y-1.5">
+                          {/* TITLE WITH MORTARBOARD ICON */}
+                          <div className="flex items-center space-x-2">
+                            <GraduationCap className="w-4 h-4 text-white/80 shrink-0" />
+                            <h4 className="font-manrope font-extrabold text-sm sm:text-base text-white tracking-tight group-hover:text-purple-300 transition-colors">
+                              {course.name}
+                            </h4>
+                          </div>
+
+                          {/* DESCRIPTION */}
+                          <p className="text-xs text-white/50 font-manrope line-clamp-2 leading-relaxed">
+                            {course.description}
+                          </p>
+                        </div>
+
+                        {/* METRICS & PILLS */}
+                        <div className="space-y-3 pt-1">
+                          {course.isPracticeOnly ? (
+                            <div className="flex items-center">
+                              <span className="px-2.5 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-300 text-[10px] font-manrope font-extrabold tracking-wider uppercase">
+                                &bull; PRACTICE-ONLY COURSE
+                              </span>
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="px-2.5 py-1 rounded-full bg-[#1b233a] border border-blue-500/30 text-[#818cf8] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
+                                <BookOpen className="w-3 h-3 text-[#818cf8]" />
+                                {course.unitsCount} UNITS
+                              </span>
+                              <span className="px-2.5 py-1 rounded-full bg-[#2a1b38] border border-purple-500/30 text-[#c084fc] text-[10px] font-manrope font-extrabold flex items-center gap-1.5">
+                                <Pencil className="w-3 h-3 text-[#c084fc]" />
+                                {course.modulesCount} MODULES
+                              </span>
+                            </div>
+                          )}
+
+                          {/* PROGRESS BAR ROW */}
+                          <div className="flex items-center gap-2.5 pt-1 border-t border-white/5">
+                            <span className="text-[11px] font-manrope font-semibold text-white/50 shrink-0">
+                              ✧ 0% Progress
+                            </span>
+                            <div className="h-1.5 bg-neutral-800 rounded-full flex-1 overflow-hidden relative">
+                              <div className="h-full w-0 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                    </div>
+                  ))}
                 </div>
-                <h3 className="font-manrope font-bold text-3xl md:text-4xl text-white mb-4 tracking-tight">
-                  AP® Biology
-                </h3>
-                <p className="font-inter text-white/50 text-sm md:text-base leading-relaxed max-w-sm">
-                  Decode the cellular matrix, evolutionary models, and gene replication mechanics with deep-dive visual modules.
-                </p>
-              </div>
 
-              {/* Action Button */}
-              <div className="mt-6 md:mt-0">
-                <span className="font-manrope font-bold text-[13px] tracking-wide uppercase text-[#1db954] hover:text-[#1ed760] flex items-center gap-1.5 group/btn transition-colors duration-300">
-                  Learn more
-                  <ArrowRight className="w-4 h-4 text-[#1db954] group-hover:text-[#1ed760] group-hover/btn:translate-x-1 transition-all duration-300" />
-                </span>
               </div>
-            </div>
-
-            {/* 3D Visual Section (Right) */}
-            <div 
-              className="relative w-full md:w-1/2 flex items-center justify-center h-[200px] md:h-auto select-none"
-            >
-              <div className="absolute inset-0 bg-radial-gradient from-emerald-500/5 to-transparent pointer-events-none" />
-              <BiologyDNA3D isHovered={hoveredCard === "biology"} />
-            </div>
-          </motion.div>
             );
-          })()}
-
-          {/* Card 2: AP Calculus (Small Card) */}
-          {(() => {
-            return (
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.15 }}
-                onMouseEnter={() => setHoveredCard("calculus")}
-                onMouseLeave={() => setHoveredCard(null)}
-                onClick={() => setActiveCourse("calculus")}
-                whileHover={{ y: -6 }}
-                className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
-              >
-            <Cursor
-              attachToParent
-              variants={{
-                initial: { scale: 0.3, opacity: 0 },
-                animate: { scale: 1, opacity: 1 },
-                exit: { scale: 0.3, opacity: 0 },
-              }}
-              transition={{
-                ease: "easeInOut",
-                duration: 0.15,
-              }}
-              className="left-4 top-4"
-            >
-              <div>
-                <MouseIcon color="#ec4899" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#ec4899] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
-                  More +
-                </div>
-              </div>
-            </Cursor>
-            {/* Background SVG Curve Animation */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-30 group-hover:opacity-50 transition-opacity duration-150 pointer-events-none mt-28">
-              <svg width="280" height="180" viewBox="0 0 280 180" className="w-full h-full max-w-[280px]">
-                <defs>
-                  <linearGradient id="calcGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#818cf8" />
-                    <stop offset="100%" stopColor="#c084fc" />
-                  </linearGradient>
-                </defs>
-                {/* Grid Lines */}
-                <line x1="10" y1="90" x2="270" y2="90" stroke={hoveredCard === "calculus" ? "rgba(255,255,255,0.08)" : "#050505"} strokeWidth="1.5" style={{ transition: "stroke 0.4s ease" }} />
-                <line x1="140" y1="10" x2="140" y2="170" stroke={hoveredCard === "calculus" ? "rgba(255,255,255,0.08)" : "#050505"} strokeWidth="1.5" style={{ transition: "stroke 0.4s ease" }} />
-                {/* Curve */}
-                <motion.path
-                  d="M 10 130 Q 75 10, 140 90 T 270 50"
-                  fill="none"
-                  stroke={hoveredCard === "calculus" ? "url(#calcGrad)" : "#050505"}
-                  strokeWidth="3"
-                  initial={{ pathLength: 0.9 }}
-                  animate={hoveredCard === "calculus" ? {
-                    strokeWidth: 4,
-                  } : {
-                    strokeWidth: 3,
-                  }}
-                  transition={{ duration: 0.5 }}
-                  style={{ transition: "stroke 0.4s ease" }}
-                />
-                {/* Scanning point */}
-                <motion.circle
-                  r="5"
-                  fill={hoveredCard === "calculus" ? "#ffffff" : "#050505"}
-                  className="shadow-lg"
-                  animate={{
-                    cx: [20, 260, 20],
-                    cy: [122, 53, 122],
-                  }}
-                  transition={{
-                    duration: hoveredCard === "calculus" ? 2.5 : 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
-                  style={{ transition: "fill 0.4s ease" }}
-                />
-              </svg>
-            </div>
-
-            <div className="relative z-10">
-              {/* Resource Density Badge */}
-              <div className="bg-white/[0.07] text-white/70 text-[11px] font-mono tracking-wider uppercase px-3.5 py-1.5 rounded-full w-fit mb-6 select-none">
-                28 Articles &bull; 14 Videos
-              </div>
-              <h3 className="font-manrope font-bold text-3xl text-white mb-4 tracking-tight">
-                AP® Calculus
-              </h3>
-              <p className="font-inter text-white/50 text-sm leading-relaxed max-w-[260px]">
-                Conquer limit proofs, derivatives, and integral calculus structures through interactive coordinate models.
-              </p>
-            </div>
-
-            {/* Action Button */}
-            <div className="relative z-10 mt-6">
-              <span className="font-manrope font-bold text-[13px] tracking-wide uppercase text-[#1db954] hover:text-[#1ed760] flex items-center gap-1.5 group/btn transition-colors duration-300">
-                Learn more
-                <ArrowRight className="w-4 h-4 text-[#1db954] group-hover:text-[#1ed760] group-hover/btn:translate-x-1 transition-all duration-300" />
-              </span>
-            </div>
-          </motion.div>
-            );
-          })()}
-
-          {/* Card 3: AP Physics (Small Card) */}
-          {(() => {
-            return (
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7, delay: 0.15 }}
-                onMouseEnter={() => setHoveredCard("physics")}
-                onMouseLeave={() => setHoveredCard(null)}
-                onClick={() => setActiveCourse("physics")}
-                whileHover={{ y: -6 }}
-                className="lg:col-span-1 md:col-span-1 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col justify-between overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
-              >
-            <Cursor
-              attachToParent
-              variants={{
-                initial: { scale: 0.3, opacity: 0 },
-                animate: { scale: 1, opacity: 1 },
-                exit: { scale: 0.3, opacity: 0 },
-              }}
-              transition={{
-                ease: "easeInOut",
-                duration: 0.15,
-              }}
-              className="left-4 top-4"
-            >
-              <div>
-                <MouseIcon color="#0ea5e9" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#0ea5e9] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
-                  More +
-                </div>
-              </div>
-            </Cursor>
-            {/* 3D Visual Section */}
-            <div className="absolute inset-x-0 bottom-12 flex items-center justify-center h-[200px] pointer-events-none z-0">
-              <div className="absolute inset-0 bg-radial-gradient from-purple-500/5 to-transparent pointer-events-none" />
-              <PhysicsOrbit3D isHovered={hoveredCard === "physics"} />
-            </div>
-
-            <div className="relative z-10">
-              {/* Resource Density Badge */}
-              <div className="bg-white/[0.07] text-white/70 text-[11px] font-mono tracking-wider uppercase px-3.5 py-1.5 rounded-full w-fit mb-6 select-none">
-                36 Articles &bull; 36 Videos
-              </div>
-              <h3 className="font-manrope font-bold text-3xl text-white mb-4 tracking-tight">
-                AP® Physics
-              </h3>
-              <p className="font-inter text-white/50 text-sm leading-relaxed max-w-[260px]">
-                Master particle dynamics, electromagnetism, and energy conservation models with precision vector setups.
-              </p>
-            </div>
-
-            {/* Action Button */}
-            <div className="relative z-10 mt-6">
-              <span className="font-manrope font-bold text-[13px] tracking-wide uppercase text-[#1db954] hover:text-[#1ed760] flex items-center gap-1.5 group/btn transition-colors duration-300">
-                Learn more
-                <ArrowRight className="w-4 h-4 text-[#1db954] group-hover:text-[#1ed760] group-hover/btn:translate-x-1 transition-all duration-300" />
-              </span>
-            </div>
-          </motion.div>
-            );
-          })()}
-
-          {/* Card 4: AP Chemistry (Large, Hero Card) */}
-          {(() => {
-            return (
-              <motion.div 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.7 }}
-                onMouseEnter={() => setHoveredCard("chemistry")}
-                onMouseLeave={() => setHoveredCard(null)}
-                onClick={() => setActiveCourse("chemistry")}
-                whileHover={{ y: -6 }}
-                className="lg:col-span-2 md:col-span-2 h-auto md:h-[440px] relative bg-[#121212] rounded-[28px] p-8 md:p-10 flex flex-col md:flex-row-reverse justify-between items-stretch overflow-visible group cursor-pointer transition-all duration-150 shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/[0.03] hover:bg-[#1a1a1a] hover:border-white/[0.08]"
-              >
-                {/* Peeking Panda Mascot sitting above top-left edge */}
-                <div className="absolute top-0 -translate-y-[calc(100%-2px)] left-8 sm:left-10 md:left-12 z-50 pointer-events-none filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.4)] opacity-80 group-hover:opacity-100 transition-opacity duration-300">
-                  <img 
-                    src="/images/pandas/panda-peeking.png"
-                    alt="Peeking Panda Mascot"
-                    className="w-auto h-16 sm:h-20 md:h-22 object-contain"
-                  />
-                </div>
-            <Cursor
-              attachToParent
-              variants={{
-                initial: { scale: 0.3, opacity: 0 },
-                animate: { scale: 1, opacity: 1 },
-                exit: { scale: 0.3, opacity: 0 },
-              }}
-              transition={{
-                ease: "easeInOut",
-                duration: 0.15,
-              }}
-              className="left-4 top-4"
-            >
-              <div>
-                <MouseIcon color="#14b8a6" className="h-6 w-6" />
-                <div className="ml-4 mt-1 rounded-[4px] bg-[#14b8a6] px-2 py-0.5 text-xs text-white font-manrope font-bold whitespace-nowrap shadow-md">
-                  More +
-                </div>
-              </div>
-            </Cursor>
-            {/* Card Content (Right/Left depending on orientation, here it is md:flex-row-reverse) */}
-            <div className="flex flex-col justify-between relative z-10 w-full md:w-1/2 min-h-[200px] md:min-h-0">
-              <div>
-                {/* Resource Density Badge */}
-                <div className="bg-white/[0.07] text-white/70 text-[11px] font-mono tracking-wider uppercase px-3.5 py-1.5 rounded-full w-fit mb-6 select-none">
-                  27 Articles &bull; 27 Videos
-                </div>
-                <h3 className="font-manrope font-bold text-3xl md:text-4xl text-white mb-4 tracking-tight">
-                  AP® Chemistry
-                </h3>
-                <p className="font-inter text-white/50 text-sm md:text-base leading-relaxed max-w-sm">
-                  Deconstruct thermodynamic systems, equilibrium math, and molecular orbital structures.
-                </p>
-              </div>
-
-              {/* Action Button */}
-              <div className="mt-6 md:mt-0">
-                <span className="font-manrope font-bold text-[13px] tracking-wide uppercase text-[#1db954] hover:text-[#1ed760] flex items-center gap-1.5 group/btn transition-colors duration-300">
-                  Learn more
-                  <ArrowRight className="w-4 h-4 text-[#1db954] group-hover:text-[#1ed760] group-hover/btn:translate-x-1 transition-all duration-300" />
-                </span>
-              </div>
-            </div>
-
-            {/* 3D Visual Section (Left/Right) */}
-            <div className="relative w-full md:w-1/2 flex items-center justify-center h-[200px] md:h-auto select-none">
-              <div className="absolute inset-0 bg-radial-gradient from-indigo-500/5 to-transparent pointer-events-none" />
-              <ChemistryMolecule3D isHovered={hoveredCard === "chemistry"} />
-            </div>
-          </motion.div>
-            );
-          })()}
-
+          })}
         </div>
+
       </div>
 
-      {/* Aesthetic detailed course preview modal */}
+      {/* AESTHETIC COURSE PREVIEW MODAL */}
       <AnimatePresence>
-        {activeCourseData && (
+        {activeCourse && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:p-6 overflow-hidden">
-            {/* Backdrop with strong blur */}
+            {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -625,189 +553,114 @@ export function SubjectLabs() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               transition={{ type: "spring", damping: 25, stiffness: 250 }}
-              className="relative w-full max-w-5xl bg-[#0a0a0c] border border-white/10 rounded-[32px] shadow-[0_30px_70px_rgba(0,0,0,0.9)] overflow-hidden max-h-[88vh] flex flex-col z-10"
+              className="relative w-full max-w-4xl bg-[#12131a] border border-white/15 rounded-[32px] shadow-2xl overflow-hidden max-h-[88vh] flex flex-col z-10 text-white"
             >
-              {/* Colored accent line at the top */}
+              {/* Top Accent Bar */}
               <div 
                 className="absolute top-0 inset-x-0 h-1 pointer-events-none"
                 style={{
-                  background: `linear-gradient(to right, transparent, ${activeCourseData.accentHex}, transparent)`
+                  background: `linear-gradient(to right, transparent, ${activeCourse.accentHex}, transparent)`
                 }}
               />
               
               {/* Close Button */}
               <button
                 onClick={() => setActiveCourse(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-30 border border-white/10"
+                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white/70 hover:text-white transition-all z-30 border border-white/10 cursor-pointer"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              {/* Scrollable Container */}
-              <div 
-                data-lenis-prevent="true" 
-                className="p-6 md:p-10 overflow-y-auto w-full max-h-[85vh] space-y-6 flex-1 min-h-0 custom-scrollbar"
-              >
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-10 items-stretch">
-                  
-                  {/* Left Column: General Info, Badges, Stats & Highlights */}
-                  <div className="lg:col-span-7 flex flex-col justify-between">
-                    <div>
-                      {/* Tags */}
-                      <div className="flex items-center gap-3 mb-4">
-                        <span className="text-[10px] font-mono uppercase tracking-wider px-3 py-1 rounded-full bg-white/5 border border-white/5 text-white/60">
-                          {activeCourseData.category}
-                        </span>
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#1db954] font-semibold">
-                          {activeCourseData.badge}
-                        </span>
-                      </div>
-                      
-                      {/* Name */}
-                      <h2 className="text-4xl md:text-5xl font-manrope font-extrabold text-white tracking-tight leading-none mb-4">
-                        {activeCourseData.name}
-                      </h2>
-                      
-                      {/* Description */}
-                      <p className="text-white/60 text-sm md:text-base leading-relaxed mb-8">
-                        {activeCourseData.description}
-                      </p>
-                      
-                      {/* Stats Grid */}
-                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
-                        {activeCourseData.stats.map((stat, i) => {
-                          let StatIcon = BookOpen;
-                          if (stat.label.includes("Video")) StatIcon = Video;
-                          if (stat.label.includes("Study")) StatIcon = Clock;
-                          if (stat.label.includes("Rate")) StatIcon = Star;
-                          
-                          return (
-                            <div 
-                              key={i}
-                              className="bg-white/[0.02] border border-white/[0.05] rounded-2xl p-4 flex flex-col justify-between h-[100px] hover:border-white/10 transition-all"
-                            >
-                              <StatIcon className="w-4 h-4 text-white/40" />
-                              <div>
-                                <div className="text-xl font-bold text-white tracking-tight leading-none mb-1">
-                                  {stat.value}
-                                </div>
-                                <div className="text-[10px] uppercase tracking-widest font-mono text-white/40">
-                                  {stat.label}
-                                </div>
-                              </div>
-                            </div>
-                          );
-                        })}
-                      </div>
-                      
-                      {/* Highlights */}
-                      <div className="space-y-3.5 mb-8">
-                        <h4 className="text-xs font-mono uppercase tracking-wider text-white/40 mb-3.5">
-                          Course Highlights & Features
-                        </h4>
-                        {activeCourseData.highlights.map((highlight, index) => (
-                          <div key={index} className="flex items-start gap-3">
-                            <span 
-                              className="w-1.5 h-1.5 rounded-full mt-2 shrink-0 animate-pulse" 
-                              style={{ backgroundColor: activeCourseData.accentHex }}
-                            />
-                            <span className="text-sm text-white/80">{highlight}</span>
-                          </div>
-                        ))}
-                      </div>
+              {/* Scrollable Modal Content */}
+              <div className="p-6 md:p-8 overflow-y-auto w-full max-h-[85vh] space-y-6 flex-1 min-h-0 custom-scrollbar">
+                
+                {/* Header Section */}
+                <div className="flex items-center space-x-4">
+                  {activeCourse.logoImage ? (
+                    <div className="w-14 h-14 rounded-2xl bg-black/60 border border-white/20 flex items-center justify-center p-2 shrink-0">
+                      <img src={activeCourse.logoImage} alt={activeCourse.name} className="w-full h-full object-contain" />
                     </div>
+                  ) : (
+                    <div className="w-14 h-14 rounded-2xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center text-purple-400 shrink-0">
+                      <GraduationCap className="w-7 h-7 text-purple-400" />
+                    </div>
+                  )}
 
-                    {/* Actions */}
-                    <div className="flex flex-col sm:flex-row gap-4 pt-4 border-t border-white/5">
-                      <button
-                        onClick={() => {
-                          if (currentUser) {
-                            router.push(`/dashboard/${activeCourseData.slug}`);
-                          } else {
-                            router.push("/login?view=signin");
-                          }
-                          setActiveCourse(null);
-                        }}
-                        className="flex-1 py-3.5 px-6 rounded-2xl bg-white hover:bg-white/90 text-black font-semibold text-center active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer transition-all duration-300"
-                        style={{
-                          boxShadow: `0 4px 25px ${activeCourseData.accentHex}40`
-                        }}
-                      >
-                        <span>Start Course</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => setActiveCourse(null)}
-                        className="flex-1 py-3.5 px-6 rounded-2xl bg-white/5 hover:bg-white/10 text-white font-semibold text-center border border-white/5 active:scale-[0.98] transition-all cursor-pointer"
-                      >
-                        Close Preview
-                      </button>
-                    </div>
+                  <div>
+                    <h2 className="text-2xl sm:text-3xl font-manrope font-extrabold text-white tracking-tight">
+                      {activeCourse.name}
+                    </h2>
+                    <p className="text-xs text-white/50 font-manrope">
+                      AP Lab Curriculum Suite &bull; {activeCourse.status}
+                    </p>
                   </div>
-                  
-                  {/* Right Column: Concept Preview Visual & Syllabus Units */}
-                  <div className="lg:col-span-5 flex flex-col justify-between border-t lg:border-t-0 lg:border-l border-white/5 pt-8 lg:pt-0 lg:pl-8">
-                    <div>
-                      {/* Visual */}
-                      <h4 className="text-xs font-mono uppercase tracking-wider text-white/40 mb-3">
-                        Interactive Concept Preview
-                      </h4>
-                      <div 
-                        className="h-[200px] w-full rounded-2xl border border-white/5 bg-white/[0.01] relative overflow-hidden flex items-center justify-center select-none"
-                      >
-                        {activeCourseData.visualType === "dna" && (
-                          <BiologyDNA3D isHovered={true} />
-                        )}
-                        {activeCourseData.visualType === "chemistry" && (
-                          <ChemistryMolecule3D isHovered={true} />
-                        )}
-                        {activeCourseData.visualType === "physics" && (
-                          <PhysicsOrbit3D isHovered={true} />
-                        )}
-                        {activeCourseData.visualType === "calculus" && (
-                          <CalculusVisual />
-                        )}
-                      </div>
-                      
-                      {/* Syllabus */}
-                      <h4 className="text-xs font-mono uppercase tracking-wider text-white/40 mt-8 mb-4">
-                        {courseRegistry[activeCourseData.slug] ? "Full Curriculum Syllabus" : "Curriculum Syllabus (4 Main Units)"}
-                      </h4>
-                      <div className="flex flex-col gap-2">
-                        {(() => {
-                          const registryCourse = courseRegistry[activeCourseData.slug];
-                          const displayUnits = registryCourse
-                            ? registryCourse.units.map(u => ({
-                                number: `Unit ${u.id}`,
-                                title: u.title,
-                              }))
-                            : activeCourseData.units.map(u => ({
-                                number: u.number,
-                                title: u.title,
-                              }));
-
-                          return displayUnits.map((unit, index) => (
-                            <div 
-                              key={index}
-                              className="bg-white/[0.02] border border-white/[0.05] rounded-xl px-3 py-2.5 hover:bg-white/[0.04] transition-all duration-300 flex items-center gap-3"
-                            >
-                              <span 
-                                className="text-[9px] font-extrabold uppercase tracking-wider px-2 py-0.5 rounded bg-white/5 shrink-0"
-                                style={{ color: activeCourseData.accentHex }}
-                              >
-                                {unit.number}
-                              </span>
-                              <h5 className="text-xs font-semibold text-white/90">
-                                {unit.title}
-                              </h5>
-                            </div>
-                          ));
-                        })()}
-                      </div>
-                    </div>
-                  </div>
-                  
                 </div>
+
+                {/* Description */}
+                <p className="text-sm text-white/80 font-manrope leading-relaxed bg-white/[0.03] p-4 rounded-2xl border border-white/5">
+                  {activeCourse.description}
+                </p>
+
+                {/* Stats Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  {activeCourse.stats.map((stat, i) => (
+                    <div key={i} className="bg-white/[0.02] border border-white/10 rounded-2xl p-3.5 text-center">
+                      <div className="text-lg font-bold text-white tracking-tight">{stat.value}</div>
+                      <div className="text-[10px] font-mono text-white/40 uppercase tracking-wider">{stat.label}</div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Highlights */}
+                <div className="space-y-2">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-white/40">Course Highlights</h4>
+                  <div className="space-y-2">
+                    {activeCourse.highlights.map((h, idx) => (
+                      <div key={idx} className="flex items-center space-x-2.5 text-xs text-white/80">
+                        <span className="w-1.5 h-1.5 rounded-full bg-purple-400 shrink-0" />
+                        <span>{h}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Syllabus Preview */}
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-xs font-mono uppercase tracking-wider text-white/40">Curriculum Units</h4>
+                  <div className="space-y-2">
+                    {activeCourse.units.map((u, idx) => (
+                      <div key={idx} className="p-3 rounded-xl bg-white/[0.03] border border-white/5 flex items-center justify-between text-xs">
+                        <span className="font-bold text-purple-300 font-mono">{u.number}: {u.title}</span>
+                        <span className="text-white/50 text-[11px] truncate max-w-xs">{u.desc}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="pt-4 flex items-center space-x-3 border-t border-white/10">
+                  <button
+                    onClick={() => {
+                      if (currentUser) {
+                        router.push(`/dashboard/${activeCourse.slug}`);
+                      } else {
+                        router.push("/login?view=signin");
+                      }
+                      setActiveCourse(null);
+                    }}
+                    className="flex-1 py-3.5 px-6 rounded-2xl bg-white hover:bg-neutral-200 text-black font-manrope font-bold text-xs text-center transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xl active:scale-95"
+                  >
+                    <span>Start Course</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => setActiveCourse(null)}
+                    className="py-3.5 px-6 rounded-2xl bg-white/10 hover:bg-white/20 text-white font-manrope font-semibold text-xs transition-colors cursor-pointer border border-white/10"
+                  >
+                    Close Preview
+                  </button>
+                </div>
+
               </div>
             </motion.div>
           </div>
@@ -817,4 +670,3 @@ export function SubjectLabs() {
     </section>
   );
 }
-

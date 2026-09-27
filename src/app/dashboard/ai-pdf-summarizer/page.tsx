@@ -67,6 +67,7 @@ export default function AiPdfSummarizerPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    document.title = "AI Summarizer | AP Lab";
     return () => {
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
