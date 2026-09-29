@@ -141,6 +141,7 @@ const DASHBOARD_CATEGORIES: Array<{
         id: "ap-psychology",
         name: "AP® Psychology",
         slug: "ap-psych",
+        logoImage: "/images/course-logos/ap-psychology-logo.png",
         description: "The AP Psychology course introduces students to the systematic and scientific study of human behavior, mental processes, cognitive models, and biological influences.",
         bannerImage: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?auto=format&fit=crop&w=600&q=80",
         unitsCount: 5,
@@ -170,6 +171,7 @@ const DASHBOARD_CATEGORIES: Array<{
         id: "ap-calc-bc",
         name: "AP® Calculus BC",
         slug: "ap-calc-bc",
+        logoImage: "/images/course-logos/ap-calc-bc-logo.png",
         description: "Conquer limits, derivatives, integration techniques, Taylor power series, and polar coordinate calculus through interactive coordinate models and rigorous proofs.",
         bannerImage: "https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=600&q=80",
         unitsCount: 10,
@@ -180,6 +182,7 @@ const DASHBOARD_CATEGORIES: Array<{
         id: "ap-stats",
         name: "AP® Statistics",
         slug: "ap-stats",
+        logoImage: "/images/course-logos/ap-stats-logo.png",
         description: "AP Statistics introduces tools for collecting, analyzing, and drawing conclusions from data using probability models, sampling distributions, and hypothesis testing.",
         bannerImage: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80",
         unitsCount: 9,
@@ -192,7 +195,7 @@ const DASHBOARD_CATEGORIES: Array<{
         slug: "ap-csa",
         logoImage: "/images/course-logos/ap-csa-logo.png",
         description: "AP Computer Science A emphasizes object-oriented programming in Java, algorithm design, data structures, recursion, and computational problem-solving.",
-        bannerImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
+        bannerImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?auto=format&fit=crop&w=600&q=80",
         unitsCount: 10,
         modulesCount: 60,
         accentHex: "#f59e0b"
@@ -212,7 +215,7 @@ const DASHBOARD_CATEGORIES: Array<{
         logoImage: "/images/course-logos/ap-environmental-science-logo.png",
         isUpcoming: true,
         description: "Examines ecological processes, human environmental impacts, renewable energy systems, biodiversity, and global climate mechanisms.",
-        bannerImage: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80",
+        bannerImage: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=600&q=80",
         unitsCount: 9,
         modulesCount: 99,
         accentHex: "#10b981"
@@ -236,7 +239,7 @@ const DASHBOARD_CATEGORIES: Array<{
         logoImage: "/images/course-logos/ap-physics-1-logo.png",
         isUpcoming: true,
         description: "Algebra-based physics course introducing Newtonian mechanics, work, energy, rotational dynamics, and mechanical waves.",
-        bannerImage: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80",
+        bannerImage: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?auto=format&fit=crop&w=600&q=80",
         unitsCount: 7,
         modulesCount: 45,
         accentHex: "#3b82f6"
@@ -924,7 +927,7 @@ export default function Dashboard() {
                           }}
                           className={cn(
                             "group relative bg-[#080911] border border-white/[0.08] rounded-2xl overflow-hidden shadow-xl transition-colors duration-300 flex flex-col justify-between select-none",
-                            (course as any).isUpcoming ? "opacity-75 cursor-not-allowed" : "hover:border-white/25 cursor-pointer"
+                            (course as any).isUpcoming ? "opacity-50 brightness-75 bg-[#04050a] cursor-not-allowed" : "hover:border-white/25 cursor-pointer"
                           )}
                         >
                           {/* SHINE SWEEP HOVER EFFECT (NO ELEVATION/LIFT ON HOVER) */}
@@ -942,16 +945,6 @@ export default function Dashboard() {
                               className="w-full h-full object-cover opacity-70"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-[#080911] via-transparent to-black/50" />
-
-                            {/* COMING SOON BADGE ONLY FOR UPCOMING COURSES (NO STABLE OR BUILDING BADGES) */}
-                            {(course as any).isUpcoming && (
-                              <div className="absolute top-3 right-3 z-10">
-                                <span className="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-[10px] font-mono font-bold tracking-wider uppercase flex items-center gap-1 shadow-md">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
-                                  COMING SOON
-                                </span>
-                              </div>
-                            )}
 
                             {/* OVERLAID OFFICIAL COLLEGEBOARD AP LOGO (ON THE LEFT OF THE BANNER IMAGE WITHOUT CIRCLE) */}
                             {course.logoImage && (

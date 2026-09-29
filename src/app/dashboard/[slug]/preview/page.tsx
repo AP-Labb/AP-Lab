@@ -27,10 +27,16 @@ const OFFICIAL_COURSE_LOGOS: Record<string, string> = {
   "ap-physics-c": "/images/course-logos/ap-physics-c-logo.png",
   "ap-ush": "/images/course-logos/ap-ushistory-logo.png",
   "ap-apes": "/images/course-logos/ap-environmental-science-logo.png",
+  "ap-environmental-science": "/images/course-logos/ap-environmental-science-logo.png",
   "ap-physics-1": "/images/course-logos/ap-physics-1-logo.png",
   "ap-csa": "/images/course-logos/ap-csa-logo.png",
   "ap-world": "/images/course-logos/ap-world-history-logo.png",
+  "ap-world-history": "/images/course-logos/ap-world-history-logo.png",
   "ap-eng-lang": "/images/course-logos/ap-eng-lang-logo.png",
+  "ap-psych": "/images/course-logos/ap-psychology-logo.png",
+  "ap-psychology": "/images/course-logos/ap-psychology-logo.png",
+  "ap-stats": "/images/course-logos/ap-stats-logo.png",
+  "ap-calc-bc": "/images/course-logos/ap-calc-bc-logo.png",
 };
 
 const OFFICIAL_EXAM_SCHEDULE: Record<string, { dateStr: string; targetDate: Date; mcqWeight: string; frqWeight: string }> = {
@@ -141,10 +147,14 @@ const COURSE_HERO_IMAGES: Record<string, string> = {
   "ap-physics-c": "https://images.unsplash.com/photo-1517976487492-5750f3195933?w=1400&q=80",
   "ap-calc-bc": "https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1400&q=80",
   "ap-stats": "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1400&q=80",
-  "ap-csa": "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1400&q=80",
+  "ap-csa": "https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=1400&q=80",
   "ap-ush": "https://images.unsplash.com/photo-1541872703-74c5e44368f9?w=1400&q=80",
   "ap-psych": "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1400&q=80",
   "ap-eng-lang": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=1400&q=80",
+  "ap-environmental-science": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1400&q=80",
+  "ap-apes": "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=1400&q=80",
+  "ap-physics-1": "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1400&q=80",
+  "ap-world-history": "https://images.unsplash.com/photo-1461360370896-922624d12aa1?w=1400&q=80",
 };
 
 const COURSE_FEATURES = [
@@ -210,7 +220,24 @@ export default function CoursePreviewPage({ params }: PageProps) {
   ];
   const heroBgImage = COURSE_HERO_IMAGES[slug] || "https://images.unsplash.com/photo-1448375240586-882707db888b?w=1400&q=80";
 
+  // Calculate actual course progress from ProgressContext
+  const completedTopicIds = progress?.completedTopics || [];
+
+  const isTopicCompleted = (topicId: string) => {
+    if (!course) return false;
+    const fullId = `${course.masteryPrefix}-${topicId}`;
+    return completedTopicIds.includes(fullId) || completedTopicIds.includes(topicId);
+  };
+
   const totalSubunits = course.units.reduce((acc, u) => acc + u.topics.length, 0);
+
+  const completedSubunitsCount = course.units.reduce((acc, u) => {
+    return acc + u.topics.filter((t) => isTopicCompleted(t.id)).length;
+  }, 0);
+
+  const courseProgressPercent = totalSubunits > 0 
+    ? Math.round((completedSubunitsCount / totalSubunits) * 100) 
+    : 0;
 
   return (
     <div className="min-h-screen bg-[#04050a] text-white flex flex-row relative z-0 overflow-x-hidden font-manrope selection:bg-purple-600">
@@ -289,16 +316,16 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 <div className="flex items-center justify-between text-[11px] font-manrope font-extrabold tracking-wider text-white/50 uppercase">
                   <span>COURSE PROGRESS</span>
                   <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 font-mono font-bold text-[10px] border border-purple-500/30">
-                    0/{totalSubunits}
+                    {completedSubunitsCount}/{totalSubunits}
                   </span>
                 </div>
 
                 <div className="flex items-baseline justify-between">
-                  <span className="font-manrope font-black text-2xl text-white">0%</span>
+                  <span className="font-manrope font-black text-2xl text-white">{courseProgressPercent}%</span>
                 </div>
 
                 <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
-                  <div className="w-0 h-full bg-purple-500 rounded-full" />
+                  <div className="h-full bg-purple-500 rounded-full transition-all duration-500" style={{ width: `${courseProgressPercent}%` }} />
                 </div>
               </div>
             </div>
@@ -330,7 +357,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   {course.units.length} units
                 </span>
                 <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
-                  0% complete
+                  {courseProgressPercent}% complete
                 </span>
               </div>
             </div>
@@ -340,6 +367,10 @@ export default function CoursePreviewPage({ params }: PageProps) {
               {course.units.map((unit) => {
                 const weighting = weightings[unit.id] || "8–12%";
                 const topicCount = unit.topics.length;
+                const unitCompletedTopics = unit.topics.filter(t => isTopicCompleted(t.id)).length;
+                const unitProgressPercent = topicCount > 0 
+                  ? Math.round((unitCompletedTopics / topicCount) * 100) 
+                  : 0;
 
                 return (
                   <div 
@@ -374,11 +405,11 @@ export default function CoursePreviewPage({ params }: PageProps) {
                         <div className="flex items-center gap-2 text-xs font-manrope">
                           <span className="text-white/40">Progress</span>
                           <div className="w-20 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-                            <div className="w-0 h-full bg-purple-500 rounded-full" />
+                            <div className="h-full bg-purple-500 rounded-full transition-all duration-500" style={{ width: `${unitProgressPercent}%` }} />
                           </div>
-                          <span className="text-white/60 font-bold">0%</span>
+                          <span className="text-white/60 font-bold">{unitProgressPercent}%</span>
                           <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold border border-purple-500/30">
-                            0/{topicCount}
+                            {unitCompletedTopics}/{topicCount}
                           </span>
                         </div>
                       </div>
@@ -386,18 +417,38 @@ export default function CoursePreviewPage({ params }: PageProps) {
 
                     {/* Subunits Grid */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-                      {unit.topics.map((topic) => (
-                        <Link
-                          key={topic.id}
-                          href={`/dashboard/${slug}?topic=${topic.id}`}
-                          className="flex items-center space-x-2 p-3 rounded-xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20 text-white/80 transition-all cursor-pointer group"
-                        >
-                          <BookOpen className="w-3.5 h-3.5 shrink-0 text-white/40 group-hover:text-purple-400 transition-colors" />
-                          <span className="font-manrope font-semibold text-xs truncate">
-                            {topic.id} {topic.title}
-                          </span>
-                        </Link>
-                      ))}
+                      {unit.topics.map((topic) => {
+                        const isDone = isTopicCompleted(topic.id);
+
+                        return (
+                          <Link
+                            key={topic.id}
+                            href={`/dashboard/${slug}?topic=${topic.id}`}
+                            className={cn(
+                              "flex items-center justify-between p-3 rounded-xl border transition-all cursor-pointer group",
+                              isDone 
+                                ? "border-emerald-500/30 bg-emerald-950/20 text-emerald-200 hover:bg-emerald-950/30" 
+                                : "border-white/10 bg-white/[0.02] hover:bg-white/[0.06] hover:border-white/20 text-white/80"
+                            )}
+                          >
+                            <div className="flex items-center space-x-2 truncate">
+                              {isDone ? (
+                                <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
+                              ) : (
+                                <BookOpen className="w-3.5 h-3.5 shrink-0 text-white/40 group-hover:text-purple-400 transition-colors" />
+                              )}
+                              <span className="font-manrope font-semibold text-xs truncate">
+                                {topic.id} {topic.title}
+                              </span>
+                            </div>
+                            {isDone && (
+                              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-manrope font-bold text-[9px] uppercase border border-emerald-500/30 shrink-0">
+                                Done
+                              </span>
+                            )}
+                          </Link>
+                        );
+                      })}
                     </div>
                   </div>
                 );
