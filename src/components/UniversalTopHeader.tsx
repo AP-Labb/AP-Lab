@@ -36,6 +36,8 @@ const ALL_COURSES = [
 // All AP Lab Platform & Core Pages
 const PLATFORM_PAGES = [
   { name: "Dashboard", category: "Core", icon: LayoutDashboard, url: "/dashboard" },
+  { name: "AI Summarizer", category: "Core", icon: FileText, url: "/dashboard/ai-summarizer" },
+  { name: "AI PDF Summarizer", category: "Core", icon: FileText, url: "/dashboard/ai-pdf-summarizer" },
   { name: "Progress Analytics", category: "Core", icon: BarChart2, url: "/dashboard/progress" },
   { name: "Quests & Rewards", category: "Core", icon: Award, url: "/dashboard/quests" },
   { name: "Global Leaderboard", category: "Core", icon: Trophy, url: "/dashboard/leaderboard" },
@@ -69,14 +71,6 @@ export const COURSE_TROPHY_CONFIG: Record<string, { image: string; circleBg: str
   "ap-psychology": { image: "/images/trophies/ap-psych.png", circleBg: "#f3e8ff" },
 };
 
-// Fallback AI Study Sessions with dates & times if user doesn't have local chat history yet
-const DEFAULT_AI_CHATS: ChatSessionItem[] = [
-  { id: "ap-bio-ai-tutor", title: "AP Biology Gene Expression & Transcription Tutor", timestamp: "Aug 8, 2026 at 3:12 PM" },
-  { id: "ap-calc-bc-ai-coach", title: "AP Calculus BC Taylor Series & Power Series Coach", timestamp: "Aug 7, 2026 at 4:45 PM" },
-  { id: "ap-physics-c-solver", title: "AP Physics C Torque & Rotational Dynamics Solver", timestamp: "Aug 6, 2026 at 2:15 PM" },
-  { id: "apush-dbq-reviewer", title: "APUSH DBQ Essay Critique & Document Analysis", timestamp: "Aug 5, 2026 at 11:30 AM" },
-];
-
 export function UniversalTopHeader() {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -92,23 +86,21 @@ export function UniversalTopHeader() {
     return () => window.removeEventListener("ap-lab-open-search-modal", handleOpenModal);
   }, []);
 
-  // Load real user chats from localStorage when modal opens
+  // Load real user chats ONLY from localStorage when modal opens
   useEffect(() => {
     if (isModalOpen && typeof window !== "undefined") {
       try {
-        const saved = localStorage.getItem("ap-lab-ai-chats");
+        const saved = localStorage.getItem("ap-lab-ai-chats") || localStorage.getItem("ap-lab-chats");
         if (saved) {
           const parsed: ChatSessionItem[] = JSON.parse(saved);
-          if (parsed && parsed.length > 0) {
+          if (Array.isArray(parsed)) {
             setUserChats(parsed);
-          } else {
-            setUserChats(DEFAULT_AI_CHATS);
+            return;
           }
-        } else {
-          setUserChats(DEFAULT_AI_CHATS);
         }
+        setUserChats([]);
       } catch (e) {
-        setUserChats(DEFAULT_AI_CHATS);
+        setUserChats([]);
       }
     }
   }, [isModalOpen]);
@@ -354,26 +346,32 @@ export function UniversalTopHeader() {
                         </button>
                       </div>
 
-                      {filteredChats.map((chat) => (
-                        <div
-                          key={chat.id}
-                          onClick={() => handleNavigate(`/dashboard/assistant?chatId=${chat.id}`)}
-                          className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-2.5 sm:p-3 transition-all cursor-pointer flex items-center justify-between group"
-                        >
-                          <div className="flex items-center space-x-3 min-w-0">
-                            <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0" />
-                            <div className="min-w-0 text-left">
-                              <h4 className="font-manrope font-bold text-xs sm:text-sm text-white truncate group-hover:text-white transition-colors">
-                                {chat.title}
-                              </h4>
-                              <span className="text-[11px] font-mono text-white/50 block mt-0.5">
-                                {chat.timestamp || "Aug 8, 2026 at 3:12 PM"}
-                              </span>
+                      {filteredChats.length > 0 ? (
+                        filteredChats.map((chat) => (
+                          <div
+                            key={chat.id}
+                            onClick={() => handleNavigate(`/dashboard/assistant?chatId=${chat.id}`)}
+                            className="bg-[#12141f] hover:bg-[#181a29] border border-white/10 rounded-2xl p-2.5 sm:p-3 transition-all cursor-pointer flex items-center justify-between group"
+                          >
+                            <div className="flex items-center space-x-3 min-w-0">
+                              <img src="/images/chat_bubble_icon.png" alt="Chat" className="w-10 h-10 sm:w-11 sm:h-11 object-contain shrink-0" />
+                              <div className="min-w-0 text-left">
+                                <h4 className="font-manrope font-bold text-xs sm:text-sm text-white truncate group-hover:text-white transition-colors">
+                                  {chat.title}
+                                </h4>
+                                <span className="text-[11px] font-mono text-white/50 block mt-0.5">
+                                  {chat.timestamp || "Recent Conversation"}
+                                </span>
+                              </div>
                             </div>
+                            <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white transition-colors shrink-0 ml-2" />
                           </div>
-                          <ChevronRight className="w-4 h-4 text-white/30 group-hover:text-white transition-colors shrink-0 ml-2" />
+                        ))
+                      ) : (
+                        <div className="py-12 text-center text-white/40 text-xs font-manrope">
+                          No recent AI conversations found.
                         </div>
-                      ))}
+                      )}
                     </div>
                   )}
 

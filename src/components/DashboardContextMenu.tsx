@@ -14,7 +14,7 @@ import { SettingsModal } from "@/components/SettingsModal";
 import { cn } from "@/lib/utils";
 
 interface ContextMenuProps {
-  onOpenProfile: () => void;
+  onOpenProfile?: () => void;
 }
 
 const SEARCHABLE_PAGES = [
@@ -44,6 +44,15 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
   
   const menuRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
+
+  const handleProfileClick = () => {
+    setVisible(false);
+    if (onOpenProfile) {
+      onOpenProfile();
+    } else {
+      router.push("/dashboard/progress");
+    }
+  };
 
   // Context menu trigger
   useEffect(() => {
@@ -91,8 +100,7 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
           setVisible(false);
         } else if (key === "p") {
           e.preventDefault();
-          onOpenProfile();
-          setVisible(false);
+          handleProfileClick();
         } else if (key === "g") {
           e.preventDefault();
           router.push("/dashboard/progress");
@@ -113,8 +121,7 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
           setVisible(false);
         } else if (key === "p") {
           e.preventDefault();
-          onOpenProfile();
-          setVisible(false);
+          handleProfileClick();
         } else if (key === "g" || key === "v") {
           e.preventDefault();
           router.push("/dashboard/progress");
@@ -190,21 +197,19 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
 
   return (
     <>
-      {/* Context Menu Dropdown */}
+      {/* Context Menu Dropdown - SOLID BLACK BACKGROUND & SOLID WHITE TEXT */}
       <AnimatePresence>
         {visible && (
           <motion.div
             ref={menuRef}
-            initial={{ opacity: 0, filter: "blur(12px)", scale: 0.94 }}
-            animate={{ opacity: 1, filter: "blur(0px)", scale: 1 }}
-            exit={{ opacity: 0, filter: "blur(12px)", scale: 0.94 }}
-            transition={{ duration: 0.25, ease: [0.23, 1, 0.32, 1] }}
-            className="fixed z-[999999] w-52 rounded-xl bg-[#060608]/85 backdrop-blur-xl border border-white/10 p-1.5 shadow-[0_16px_50px_rgba(0,0,0,0.85),inset_0_1px_1px_rgba(255,255,255,0.07)] text-white/90"
+            initial={{ opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.94 }}
+            transition={{ duration: 0.15, ease: "easeOut" }}
+            className="fixed z-[999999] w-52 rounded-xl bg-black border border-white/20 p-2 shadow-2xl text-white font-manrope select-none"
             style={{
-              top: `${Math.min(position.y, window.innerHeight - 200)}px`,
+              top: `${Math.min(position.y, window.innerHeight - 220)}px`,
               left: `${Math.min(position.x, window.innerWidth - 220)}px`,
-              backgroundImage: "radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 100%), url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI2IiBoZWlnaHQ9IjYiPjxyZWN0IHdpZHRoPSI2IiBoZWlnaHQ9IjYiIGZpbGw9InRyYW5zcGFyZW50Ii8+PGNpcmNsZSBjeD0iMSIgY3k9IjEiIHI9IjAuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjA4Ii8+PGNpcmNsZSBjeD0iNCIgY3k9IjQiIHI9IjAuNSIgZmlsbD0iI2ZmZiIgZmlsbC1vcGFjaXR5PSIwLjA0Ii8+PC9zdmc+')",
-              backgroundSize: "auto, 6px 6px",
             }}
           >
             <button
@@ -214,29 +219,24 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
                   window.dispatchEvent(new CustomEvent("ap-lab-open-search-modal"));
                 }
               }}
-              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-extrabold text-white hover:bg-white/15 transition-all text-left cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
-                <Search className="w-3.5 h-3.5 text-white/40" />
-                <span>Search</span>
+                <Search className="w-4 h-4 text-white shrink-0" />
+                <span className="text-white font-extrabold text-xs">Search</span>
               </div>
-              <div className="flex items-center space-x-1">
-                <span className="text-[9px] font-mono text-white/35 bg-white/5 border border-white/10 px-1 py-0.5 rounded">⌘S</span>
-              </div>
+              <span className="text-sm font-manrope font-extrabold text-white/80">⌘S</span>
             </button>
 
             <button
-              onClick={() => {
-                setVisible(false);
-                onOpenProfile();
-              }}
-              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+              onClick={handleProfileClick}
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-extrabold text-white hover:bg-white/15 transition-all text-left cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
-                <User className="w-3.5 h-3.5 text-white/40" />
-                <span>Profile</span>
+                <User className="w-4 h-4 text-white shrink-0" />
+                <span className="text-white font-extrabold text-xs">Profile</span>
               </div>
-              <span className="text-[9px] font-mono text-white/35 bg-white/5 border border-white/10 px-1 py-0.5 rounded">⌘P</span>
+              <span className="text-sm font-manrope font-extrabold text-white/80">⌘P</span>
             </button>
 
             <button
@@ -244,13 +244,13 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
                 setVisible(false);
                 router.push("/dashboard/progress");
               }}
-              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-extrabold text-white hover:bg-white/15 transition-all text-left cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
-                <Calendar className="w-3.5 h-3.5 text-white/40" />
-                <span>Progress</span>
+                <Calendar className="w-4 h-4 text-white shrink-0" />
+                <span className="text-white font-extrabold text-xs">Progress</span>
               </div>
-              <span className="text-[9px] font-mono text-white/35 bg-white/5 border border-white/10 px-1 py-0.5 rounded">⌘G</span>
+              <span className="text-sm font-manrope font-extrabold text-white/80">⌘G</span>
             </button>
 
             <button
@@ -258,13 +258,13 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
                 setVisible(false);
                 setShowMinecraftInventory(true);
               }}
-              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-extrabold text-white hover:bg-white/15 transition-all text-left cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
-                <Package className="w-3.5 h-3.5 text-white/40" />
-                <span>Inventory</span>
+                <Package className="w-4 h-4 text-white shrink-0" />
+                <span className="text-white font-extrabold text-xs">Inventory</span>
               </div>
-              <span className="text-[9px] font-mono text-white/35 bg-white/5 border border-white/10 px-1 py-0.5 rounded">⌘I</span>
+              <span className="text-sm font-manrope font-extrabold text-white/80">⌘I</span>
             </button>
 
             <button
@@ -272,28 +272,28 @@ export function DashboardContextMenu({ onOpenProfile }: ContextMenuProps) {
                 setVisible(false);
                 router.push("/dashboard/settings");
               }}
-              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-white/70 hover:text-white hover:bg-white/5 transition-all text-left"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-extrabold text-white hover:bg-white/15 transition-all text-left cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
-                <Settings className="w-3.5 h-3.5 text-white/40" />
-                <span>Settings</span>
+                <Settings className="w-4 h-4 text-white shrink-0" />
+                <span className="text-white font-extrabold text-xs">Settings</span>
               </div>
             </button>
 
-            <div className="h-[1px] bg-white/5 my-1" />
+            <div className="h-[1px] bg-white/20 my-1.5" />
 
             <button
               onClick={() => {
                 setVisible(false);
                 handleSignOut();
               }}
-              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-400 hover:bg-red-950/20 hover:text-red-300 transition-all text-left"
+              className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-extrabold text-red-400 hover:bg-red-950/30 hover:text-red-300 transition-all text-left cursor-pointer"
             >
               <div className="flex items-center space-x-2.5">
-                <LogOut className="w-3.5 h-3.5 opacity-60" />
-                <span>Sign Out</span>
+                <LogOut className="w-4 h-4 text-red-400 shrink-0" />
+                <span className="font-extrabold text-xs">Sign Out</span>
               </div>
-              <span className="text-[9px] font-mono text-red-400/40 bg-red-950/20 border border-red-500/10 px-1 py-0.5 rounded">⌘E</span>
+              <span className="text-sm font-manrope font-extrabold text-red-400/80">⌘E</span>
             </button>
           </motion.div>
         )}

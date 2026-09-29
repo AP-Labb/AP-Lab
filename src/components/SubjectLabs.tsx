@@ -293,7 +293,9 @@ export function SubjectLabs() {
                         {course.logoImage && (
                           <div className={cn(
                             "absolute top-2.5 left-3 sm:top-3 sm:left-4 z-10 pointer-events-none flex items-center justify-center",
-                            course.id === "ap-ush" ? "w-20 h-20 sm:w-24 sm:h-24 -top-1 -left-1" : "w-16 h-16 sm:w-20 sm:h-20"
+                            ["ap-ush", "ap-psychology", "ap-psych", "ap-eng-lang", "ap-calc-bc"].includes(course.id) || ["ap-ush", "ap-psych", "ap-eng-lang", "ap-calc-bc"].includes(course.slug)
+                              ? "w-20 h-20 sm:w-24 sm:h-24 -top-1 -left-1" 
+                              : "w-16 h-16 sm:w-20 sm:h-20"
                           )}>
                             <img 
                               src={course.logoImage} 

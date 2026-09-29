@@ -17,6 +17,7 @@ import { UserAvatar } from "@/components/UserAvatar";
 import { UserDisplayName } from "@/components/UserDisplayName";
 import { LevelBadge } from "@/components/LevelBadge";
 import { SettingsModal } from "@/components/SettingsModal";
+import { DashboardContextMenu } from "@/components/DashboardContextMenu";
 import { cn } from "@/lib/utils";
 
 interface AppSidebarProps {
@@ -469,7 +470,7 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
                         {/* SOFT LIGHTER PLAIN YELLOW CIRCLE BEHIND BELL (SINGLE COLOR, NO BORDER) */}
                         <div 
                           className="w-20 h-20 rounded-full flex items-center justify-center mx-auto shadow-sm"
-                          style={{ backgroundColor: "#fef9c3" }}
+                          style={{ backgroundColor: "#fefce8" }}
                         >
                           <img
                             src="/images/notification-bell.png"
@@ -622,6 +623,8 @@ export function AppSidebar({ currentPath }: AppSidebarProps) {
       {showSettingsModal && (
         <SettingsModal isOpen={showSettingsModal} onClose={() => setShowSettingsModal(false)} />
       )}
+
+      <DashboardContextMenu />
     </>
   );
 }

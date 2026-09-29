@@ -267,7 +267,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   alt={`${course.name} emblem`}
                   className={cn(
                     "w-44 h-44 sm:w-56 sm:h-56 object-contain opacity-35 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]",
-                    slug === "ap-ush" && "scale-135 sm:scale-150"
+                    ["ap-ush", "ap-psych", "ap-psychology", "ap-eng-lang", "ap-calc-bc"].includes(slug) && "scale-135 sm:scale-150"
                   )}
                 />
               </div>
