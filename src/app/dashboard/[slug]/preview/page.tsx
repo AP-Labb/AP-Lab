@@ -239,6 +239,8 @@ export default function CoursePreviewPage({ params }: PageProps) {
     ? Math.round((completedSubunitsCount / totalSubunits) * 100) 
     : 0;
 
+  const courseAccentHex = course?.accentColor || "#a855f7";
+
   return (
     <div className="min-h-screen bg-[#04050a] text-white flex flex-row relative z-0 overflow-x-hidden font-manrope selection:bg-purple-600">
       <AppSidebar currentPath="/dashboard" />
@@ -299,23 +301,30 @@ export default function CoursePreviewPage({ params }: PageProps) {
                     <span>In {countdown.days} Days {String(countdown.hours).padStart(2, '0')} Hours</span>
                   </span>
 
-                  {/* Course Details Button (Triggers Pop-up Menu) */}
+                  {/* Course Details Button (Triggers Pop-up Menu, White Info Icon) */}
                   <button
                     type="button"
                     onClick={() => setShowDetailsModal(true)}
                     className="px-3 py-1.5 rounded-full bg-white/15 hover:bg-white/25 border border-white/20 text-white text-xs font-manrope font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-md"
                   >
-                    <Info className="w-3.5 h-3.5 text-purple-300" />
+                    <Info className="w-3.5 h-3.5 text-white" />
                     <span>Course details</span>
                   </button>
                 </div>
               </div>
 
-              {/* Course Progress Box on Top Right (Squished slightly more to the right) */}
+              {/* Course Progress Box on Top Right (Course Accent Styled) */}
               <div className="bg-[#0b0c18]/90 border border-white/10 rounded-2xl p-3.5 w-full lg:w-56 shadow-xl backdrop-blur-md space-y-2 shrink-0">
                 <div className="flex items-center justify-between text-[11px] font-manrope font-extrabold tracking-wider text-white/50 uppercase">
                   <span>COURSE PROGRESS</span>
-                  <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 font-mono font-bold text-[10px] border border-purple-500/30">
+                  <span 
+                    className="px-2 py-0.5 rounded-md font-mono font-bold text-[10px] border shadow-sm"
+                    style={{
+                      backgroundColor: `${courseAccentHex}25`,
+                      borderColor: `${courseAccentHex}45`,
+                      color: courseAccentHex,
+                    }}
+                  >
                     {completedSubunitsCount}/{totalSubunits}
                   </span>
                 </div>
@@ -325,7 +334,10 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 </div>
 
                 <div className="w-full h-2 bg-neutral-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-purple-500 rounded-full transition-all duration-500" style={{ width: `${courseProgressPercent}%` }} />
+                  <div 
+                    className="h-full rounded-full transition-all duration-500" 
+                    style={{ width: `${courseProgressPercent}%`, backgroundColor: courseAccentHex }} 
+                  />
                 </div>
               </div>
             </div>
@@ -356,7 +368,14 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
                   {course.units.length} units
                 </span>
-                <span className="px-3 py-1 rounded-full bg-white/[0.04] border border-white/10 text-white/60 text-xs font-manrope font-bold">
+                <span 
+                  className="px-3 py-1 rounded-full border text-xs font-manrope font-bold shadow-sm"
+                  style={{
+                    backgroundColor: `${courseAccentHex}18`,
+                    borderColor: `${courseAccentHex}35`,
+                    color: courseAccentHex,
+                  }}
+                >
                   {courseProgressPercent}% complete
                 </span>
               </div>
@@ -380,8 +399,11 @@ export default function CoursePreviewPage({ params }: PageProps) {
                     {/* Unit Header */}
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-white/[0.06] pb-3">
                       <div className="flex items-start gap-3">
-                        <div className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center text-white/70 shrink-0 mt-0.5">
-                          <BookOpen className="w-4 h-4 text-purple-400" />
+                        <div 
+                          className="w-8 h-8 rounded-lg bg-white/[0.05] border border-white/10 flex items-center justify-center shrink-0 mt-0.5"
+                          style={{ color: courseAccentHex }}
+                        >
+                          <BookOpen className="w-4 h-4" />
                         </div>
                         <div>
                           <span className="text-[10px] font-manrope font-bold text-white/40 uppercase tracking-wider block">
@@ -405,10 +427,20 @@ export default function CoursePreviewPage({ params }: PageProps) {
                         <div className="flex items-center gap-2 text-xs font-manrope">
                           <span className="text-white/40">Progress</span>
                           <div className="w-20 h-1.5 bg-neutral-800 rounded-full overflow-hidden">
-                            <div className="h-full bg-purple-500 rounded-full transition-all duration-500" style={{ width: `${unitProgressPercent}%` }} />
+                            <div 
+                              className="h-full rounded-full transition-all duration-500" 
+                              style={{ width: `${unitProgressPercent}%`, backgroundColor: courseAccentHex }} 
+                            />
                           </div>
-                          <span className="text-white/60 font-bold">{unitProgressPercent}%</span>
-                          <span className="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono text-[10px] font-bold border border-purple-500/30">
+                          <span className="font-bold" style={{ color: courseAccentHex }}>{unitProgressPercent}%</span>
+                          <span 
+                            className="px-2 py-0.5 rounded font-mono text-[10px] font-bold border"
+                            style={{
+                              backgroundColor: `${courseAccentHex}25`,
+                              borderColor: `${courseAccentHex}45`,
+                              color: courseAccentHex,
+                            }}
+                          >
                             {unitCompletedTopics}/{topicCount}
                           </span>
                         </div>
@@ -435,17 +467,12 @@ export default function CoursePreviewPage({ params }: PageProps) {
                               {isDone ? (
                                 <CheckCircle2 className="w-3.5 h-3.5 shrink-0 text-emerald-400" />
                               ) : (
-                                <BookOpen className="w-3.5 h-3.5 shrink-0 text-white/40 group-hover:text-purple-400 transition-colors" />
+                                <BookOpen className="w-3.5 h-3.5 shrink-0 text-white/40 group-hover:text-white transition-colors" />
                               )}
                               <span className="font-manrope font-semibold text-xs truncate">
                                 {topic.id} {topic.title}
                               </span>
                             </div>
-                            {isDone && (
-                              <span className="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-manrope font-bold text-[9px] uppercase border border-emerald-500/30 shrink-0">
-                                Done
-                              </span>
-                            )}
                           </Link>
                         );
                       })}

@@ -1629,9 +1629,25 @@ export default function APDynamicCoursePage() {
   const [viewMode, setViewMode] = useState<"overview" | "workspace">("workspace");
   const [showExamOutlineModal, setShowExamOutlineModal] = useState(false);
 
-  // Safely initialize active topic on course load
+  // Safely initialize active topic on course load, prioritizing URL query parameter
   useEffect(() => {
     if (course && course.units.length > 0) {
+      if (typeof window !== "undefined") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const topicParam = urlParams.get("topic");
+        if (topicParam) {
+          for (const u of course.units) {
+            const found = u.topics.find((t) => t.id === topicParam || t.id === `${u.id}.${topicParam}`);
+            if (found) {
+              setActiveTopic(found);
+              setActiveUnit(u.id);
+              setExpandedUnits((prev) => (prev.includes(u.id) ? prev : [...prev, u.id]));
+              return;
+            }
+          }
+        }
+      }
+
       if (!activeTopic) {
         const firstTopic = course.units[0].topics[0];
         if (firstTopic) {
@@ -1640,7 +1656,7 @@ export default function APDynamicCoursePage() {
         }
       }
     }
-  }, [course, activeTopic]);
+  }, [course]);
 
   // Initialize and Sync Tab from URL query parameters
   useEffect(() => {
@@ -2959,34 +2975,21 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
     return (
       <div className="liquid-glass-strong rounded-[32px] p-8 md:p-12 border border-white/10 space-y-8 text-center flex flex-col items-center justify-center min-h-[400px]">
         <div className="space-y-4 max-w-md">
-          {/* Animated/Glowing Icon */}
-          <div className="relative w-24 h-24 mx-auto mb-6 flex items-center justify-center rounded-full border border-white/10 bg-white/5">
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 15 }}
-              className="absolute inset-0 rounded-full blur-md opacity-15"
-              style={{
-                backgroundColor: passed ? "#22c55e" : "#ef4444"
-              }}
+          {/* Panda Pass / Fail Result Image */}
+          <div className="relative w-36 h-36 mx-auto mb-3 flex items-center justify-center">
+            <img
+              src={passed ? "/images/panda-pass.png" : "/images/panda-fail.png"}
+              alt={passed ? "Panda checkmark" : "Panda red X"}
+              className="w-full h-full object-contain filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.5)]"
             />
-            {passed ? (
-              <Check className="w-10 h-10 text-green-400" />
-            ) : (
-              <X className="w-10 h-10 text-red-400 animate-pulse" />
-            )}
           </div>
-
-          <span className="text-[10px] font-manrope font-black text-white/40 uppercase tracking-[0.25em]">
-            Topic Practice Complete
-          </span>
 
           <h3 className="font-instrument text-4xl text-white font-medium">
             {passed ? "Topic Mastered!" : "Keep Practicing"}
           </h3>
 
-          <div className="py-4">
-            <span className="text-6xl font-instrument italic font-bold animate-pulse" style={{ color: passed ? "#22c55e" : "#ef4444" }}>
+          <div className="py-2">
+            <span className="text-6xl font-instrument italic font-bold" style={{ color: passed ? "#22c55e" : "#ef4444" }}>
               {percentage}%
             </span>
             <p className="text-white/40 font-inter text-xs mt-2 uppercase tracking-widest">
@@ -3000,14 +3003,14 @@ function PracticeSystem({ topicId, masteryKey, questions, accentColor, courseSlu
               : "You need at least 60% to count this section as completed. Review the article and video tabs, and try again!"}
           </p>
 
-          <div className="pt-8">
-            <MagneticButton
+          <div className="pt-6">
+            <button
+              type="button"
               onClick={handleRetake}
-              accentColor={accentColor}
-              className="px-12 py-4 rounded-2xl text-black bg-white hover:bg-neutral-200 transition-all font-manrope font-black uppercase tracking-widest text-xs shadow-lg"
+              className="px-10 py-3.5 rounded-2xl bg-black hover:bg-neutral-900 border border-white text-white font-manrope font-black uppercase tracking-widest text-xs transition-all shadow-lg active:scale-95 cursor-pointer inline-flex items-center justify-center"
             >
-              <span className="relative z-10 text-black">Retake Quiz</span>
-            </MagneticButton>
+              Retake Quiz
+            </button>
           </div>
         </div>
       </div>
