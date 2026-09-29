@@ -106,6 +106,7 @@ const CATEGORIZED_COURSES: CourseCategory[] = [
         id: "ap-eng-lang",
         name: "AP® English Language",
         slug: "ap-eng-lang",
+        logoImage: "/images/course-logos/ap-eng-lang-logo.png",
         description: "AP English Language and Composition cultivates essential reading and writing skills needed for rhetorical analysis, argument synthesis, and academic essay composition.",
         bannerImage: "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=600&q=80",
         unitsCount: 9,
@@ -144,6 +145,7 @@ const CATEGORIZED_COURSES: CourseCategory[] = [
         id: "ap-csa",
         name: "AP® Computer Science A",
         slug: "ap-csa",
+        logoImage: "/images/course-logos/ap-csa-logo.png",
         description: "AP Computer Science A emphasizes object-oriented programming in Java, algorithm design, data structures, recursion, and computational problem-solving.",
         bannerImage: "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?auto=format&fit=crop&w=600&q=80",
         unitsCount: 10,
@@ -162,6 +164,7 @@ const CATEGORIZED_COURSES: CourseCategory[] = [
         id: "ap-env-science",
         name: "AP® Environmental Science",
         slug: "ap-environmental-science",
+        logoImage: "/images/course-logos/ap-environmental-science-logo.png",
         isUpcoming: true,
         description: "Examines ecological processes, human environmental impacts, renewable energy systems, biodiversity, and global climate mechanisms.",
         bannerImage: "https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?auto=format&fit=crop&w=600&q=80",
@@ -173,6 +176,7 @@ const CATEGORIZED_COURSES: CourseCategory[] = [
         id: "ap-world-history",
         name: "AP® World History",
         slug: "ap-world-history",
+        logoImage: "/images/course-logos/ap-world-history-logo.png",
         isUpcoming: true,
         description: "Explores global historical patterns, cultural exchanges, trans-regional trade networks, and empire developments from 1200 CE to present.",
         bannerImage: "https://images.unsplash.com/photo-1461360370896-922624d12aa1?auto=format&fit=crop&w=600&q=80",
@@ -184,6 +188,7 @@ const CATEGORIZED_COURSES: CourseCategory[] = [
         id: "ap-physics-1",
         name: "AP® Physics 1",
         slug: "ap-physics-1",
+        logoImage: "/images/course-logos/ap-physics-1-logo.png",
         isUpcoming: true,
         description: "Algebra-based physics course introducing Newtonian mechanics, work, energy, rotational dynamics, and mechanical waves.",
         bannerImage: "https://images.unsplash.com/photo-1507668077129-56e32842fceb?auto=format&fit=crop&w=600&q=80",
@@ -293,7 +298,10 @@ export function SubjectLabs() {
 
                         {/* OVERLAID OFFICIAL COLLEGEBOARD AP LOGO (ON THE LEFT OF THE BANNER IMAGE WITHOUT CIRCLE) */}
                         {course.logoImage && (
-                          <div className="absolute top-2.5 left-3 sm:top-3 sm:left-4 z-10 w-16 h-16 sm:w-20 sm:h-20 pointer-events-none flex items-center justify-center">
+                          <div className={cn(
+                            "absolute top-2.5 left-3 sm:top-3 sm:left-4 z-10 pointer-events-none flex items-center justify-center",
+                            course.id === "ap-ush" ? "w-20 h-20 sm:w-24 sm:h-24 -top-1 -left-1" : "w-16 h-16 sm:w-20 sm:h-20"
+                          )}>
                             <img 
                               src={course.logoImage} 
                               alt={`${course.name} logo`} 

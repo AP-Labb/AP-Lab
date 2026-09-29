@@ -26,6 +26,11 @@ const OFFICIAL_COURSE_LOGOS: Record<string, string> = {
   "ap-chemistry": "/images/course-logos/ap-chemistry-logo.png",
   "ap-physics-c": "/images/course-logos/ap-physics-c-logo.png",
   "ap-ush": "/images/course-logos/ap-ushistory-logo.png",
+  "ap-apes": "/images/course-logos/ap-environmental-science-logo.png",
+  "ap-physics-1": "/images/course-logos/ap-physics-1-logo.png",
+  "ap-csa": "/images/course-logos/ap-csa-logo.png",
+  "ap-world": "/images/course-logos/ap-world-history-logo.png",
+  "ap-eng-lang": "/images/course-logos/ap-eng-lang-logo.png",
 };
 
 const OFFICIAL_EXAM_SCHEDULE: Record<string, { dateStr: string; targetDate: Date; mcqWeight: string; frqWeight: string }> = {
@@ -225,23 +230,22 @@ export default function CoursePreviewPage({ params }: PageProps) {
               backgroundPosition: "center"
             }}
           >
-            {/* OFFICIAL COLLEGE BOARD AP LOGO WATERMARK MOVED TO THE LEFT SO IT IS NOT COVERED BY COURSE PROGRESS */}
+            {/* OFFICIAL COLLEGE BOARD AP LOGO WATERMARK MOVED RIGHT TO TOUCH & OVERLAP COURSE PROGRESS JUST A LITTLE BIT */}
             {logoUrl && (
-              <div className="absolute right-[320px] sm:right-[360px] top-1/2 -translate-y-1/2 z-0 pointer-events-none select-none hidden md:block">
+              <div className="absolute right-[170px] sm:right-[195px] lg:right-[205px] top-1/2 -translate-y-1/2 z-0 pointer-events-none select-none hidden md:block">
                 <img
                   src={logoUrl}
                   alt={`${course.name} emblem`}
-                  className="w-44 h-44 sm:w-56 sm:h-56 object-contain opacity-35 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]"
+                  className={cn(
+                    "w-44 h-44 sm:w-56 sm:h-56 object-contain opacity-35 filter drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)]",
+                    slug === "ap-ush" && "scale-135 sm:scale-150"
+                  )}
                 />
               </div>
             )}
 
             {/* TOP ROW: Pill Tags */}
             <div className="relative z-10 flex items-center gap-2 flex-wrap">
-              <span className="px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/10 text-white text-[11px] font-manrope font-extrabold flex items-center gap-1 shadow-sm">
-                <Check className="w-3 h-3 text-emerald-400 stroke-[3]" />
-                Stable
-              </span>
               {tags.map((t) => (
                 <span key={t} className="px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-white/80 text-[11px] font-manrope font-semibold">
                   {t}
@@ -280,8 +284,8 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 </div>
               </div>
 
-              {/* Course Progress Box on Top Right */}
-              <div className="bg-[#0b0c18]/90 border border-white/10 rounded-2xl p-4 w-full lg:w-72 shadow-xl backdrop-blur-md space-y-2 shrink-0">
+              {/* Course Progress Box on Top Right (Squished slightly more to the right) */}
+              <div className="bg-[#0b0c18]/90 border border-white/10 rounded-2xl p-3.5 w-full lg:w-56 shadow-xl backdrop-blur-md space-y-2 shrink-0">
                 <div className="flex items-center justify-between text-[11px] font-manrope font-extrabold tracking-wider text-white/50 uppercase">
                   <span>COURSE PROGRESS</span>
                   <span className="px-2 py-0.5 rounded-md bg-purple-500/20 text-purple-300 font-mono font-bold text-[10px] border border-purple-500/30">
