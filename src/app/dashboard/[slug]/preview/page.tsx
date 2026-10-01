@@ -37,6 +37,8 @@ const OFFICIAL_COURSE_LOGOS: Record<string, string> = {
   "ap-psychology": "/images/course-logos/ap-psychology-logo.png",
   "ap-stats": "/images/course-logos/ap-stats-logo.png",
   "ap-calc-bc": "/images/course-logos/ap-calc-bc-logo.png",
+  "ap-macro": "/images/course-logos/ap-macro-logo.png",
+  "ap-macroeconomics": "/images/course-logos/ap-macro-logo.png",
 };
 
 const OFFICIAL_EXAM_SCHEDULE: Record<string, { dateStr: string; targetDate: Date; mcqWeight: string; frqWeight: string }> = {
@@ -504,7 +506,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar"
+              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar my-auto overscroll-contain"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Modal Header inside content flow so title scrolls naturally */}

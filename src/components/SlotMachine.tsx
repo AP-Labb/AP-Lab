@@ -245,7 +245,7 @@ export function SlotMachine() {
           <img
             src="/images/jackpot-arrow.png"
             alt="Jackpot Arrow"
-            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute top-[120px] -right-[75px] sm:top-[160px] sm:-right-[95px] pointer-events-none z-50 transition-opacity duration-500 transform -rotate-[15deg]"
+            className="w-28 h-28 sm:w-36 sm:h-36 object-contain absolute top-[45px] -right-[60px] sm:top-[65px] sm:-right-[80px] pointer-events-none z-50 transition-opacity duration-500 transform rotate-[10deg]"
             style={{ opacity: hasSpun ? 0 : 1 }}
           />
 
@@ -400,7 +400,7 @@ export function SlotMachine() {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: 15 }}
               onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-sm bg-[#08080c] border border-white/20 rounded-3xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.95)] text-white relative"
+              className="w-full max-w-sm bg-[#08080c] border border-white/20 rounded-3xl p-6 shadow-[0_25px_60px_rgba(0,0,0,0.95)] text-white relative flex flex-col max-h-[85vh] my-auto overscroll-contain"
             >
               <button
                 onClick={() => setShowOddsModal(false)}
@@ -417,7 +417,7 @@ export function SlotMachine() {
               </p>
 
               {/* Scrollable Probabilities List with working custom scrollable container */}
-              <div className="odds-modal-scroll space-y-2.5 max-h-[350px] overflow-y-auto pr-1">
+              <div className="odds-modal-scroll space-y-2.5 flex-1 min-h-0 overflow-y-auto pr-1 custom-scrollbar">
                 {sortedSegments.map((seg) => (
                   <div
                     key={seg.id}

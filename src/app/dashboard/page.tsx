@@ -248,6 +248,7 @@ const DASHBOARD_CATEGORIES: Array<{
         id: "ap-macro",
         name: "AP® Macroeconomics",
         slug: "ap-macroeconomics",
+        logoImage: "/images/course-logos/ap-macro-logo.png",
         isUpcoming: true,
         description: "Explores economic principles applying to an economic system as a whole, national income, fiscal policy, price determination, and monetary policy.",
         bannerImage: "https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&w=600&q=80",
@@ -969,7 +970,7 @@ export default function Dashboard() {
                               {/* TITLE WITH MORTARBOARD ICON */}
                               <div className="flex items-center space-x-2">
                                 <GraduationCap className="w-4 h-4 text-white/80 shrink-0" />
-                                <h4 className="font-manrope font-extrabold text-base sm:text-lg text-white tracking-tight group-hover:text-purple-300 transition-colors">
+                                <h4 className="font-manrope font-extrabold text-base sm:text-lg text-white tracking-tight">
                                   {course.name}
                                 </h4>
                               </div>
