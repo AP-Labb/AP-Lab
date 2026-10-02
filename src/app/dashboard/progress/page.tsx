@@ -852,12 +852,6 @@ export default function ProgressPage() {
                 coinVal = Math.max(coinVal, dayLog.coinsEarned || dayLog.coins || 0);
               } 
               
-              if (i === daysCount - 1) {
-                // Today's actual current live balance so coins/XP are never zero if user has credits
-                xpVal = Math.max(xpVal, xp || 0);
-                coinVal = Math.max(coinVal, progress?.credits || progress?.totalCreditsEarned || 0);
-              }
-
               const xpY = 140 - Math.min(120, (xpVal / Math.max(200, xpVal + 50)) * 120);
               const coinY = 145 - Math.min(125, (coinVal / Math.max(150, coinVal + 50)) * 125);
 
@@ -1044,42 +1038,51 @@ export default function ProgressPage() {
           {/* Clean SVG Pie / Donut Chart & Legend */}
           {(() => {
             const uidKey = currentUser?.uid || progress?.uid || "guest";
-            let openedSlugs: string[] = [];
+            let courseTimeMap: Record<string, number> = {};
             try {
-              openedSlugs = JSON.parse(localStorage.getItem(`ap_lab_user_accessed_${uidKey}`) || localStorage.getItem("ap_accessed_courses") || "[]");
+              courseTimeMap = JSON.parse(localStorage.getItem(`ap_lab_course_time_spent_${uidKey}`) || "{}");
             } catch (e) {}
 
-            const completed = progress?.completedTopics || [];
+            if (progress?.studyTimeLogs) {
+              Object.entries(progress.studyTimeLogs).forEach(([k, v]) => {
+                if (typeof v === "number" && k.startsWith("ap-")) {
+                  courseTimeMap[k] = Math.max(courseTimeMap[k] || 0, v);
+                }
+              });
+            }
+
             const COURSE_MAP: Record<string, { name: string; color: string }> = {
-              "ap-biology": { name: "AP® Biology", color: "#0088ff" },
-              "ap-chemistry": { name: "AP® Chemistry", color: "#a484d7" },
-              "ap-physics-c": { name: "AP® Physics C", color: "#38bdf8" },
-              "ap-us-history": { name: "AP® US History", color: "#f59e0b" },
-              "ap-psychology": { name: "AP® Psychology", color: "#ec4899" },
-              "ap-english": { name: "AP® English", color: "#8b5cf6" },
-              "ap-calculus-bc": { name: "AP® Calculus BC", color: "#10b981" },
-              "ap-statistics": { name: "AP® Statistics", color: "#34d399" },
-              "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#06b6d4" },
+              "ap-biology": { name: "AP® Biology", color: "#10b981" },
+              "ap-chemistry": { name: "AP® Chemistry", color: "#06b6d4" },
+              "ap-physics-c": { name: "AP® Physics C", color: "#3b82f6" },
+              "ap-ush": { name: "AP® US History", color: "#ef4444" },
+              "ap-us-history": { name: "AP® US History", color: "#ef4444" },
+              "ap-psych": { name: "AP® Psychology", color: "#a855f7" },
+              "ap-psychology": { name: "AP® Psychology", color: "#a855f7" },
+              "ap-eng-lang": { name: "AP® English Language", color: "#14b8a6" },
+              "ap-english": { name: "AP® English Language", color: "#14b8a6" },
+              "ap-calc-bc": { name: "AP® Calculus BC", color: "#8b5cf6" },
+              "ap-calculus-bc": { name: "AP® Calculus BC", color: "#8b5cf6" },
+              "ap-stats": { name: "AP® Statistics", color: "#ec4899" },
+              "ap-statistics": { name: "AP® Statistics", color: "#ec4899" },
+              "ap-csa": { name: "AP® Comp Sci A", color: "#f59e0b" },
+              "ap-computer-science-a": { name: "AP® Comp Sci A", color: "#f59e0b" },
+              "ap-environmental-science": { name: "AP® Environmental Science", color: "#10b981" },
+              "ap-world-history": { name: "AP® World History", color: "#f59e0b" },
+              "ap-physics-1": { name: "AP® Physics 1", color: "#3b82f6" },
+              "ap-macroeconomics": { name: "AP® Macroeconomics", color: "#8b5cf6" },
             };
 
             const counts: Record<string, { name: string; color: string; count: number }> = {};
 
-            openedSlugs.forEach(slug => {
-              const info = COURSE_MAP[slug] || { 
-                name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
-                color: "#6366f1" 
-              };
-              counts[slug] = { name: info.name, color: info.color, count: 25 };
-            });
-
-            completed.forEach(topicId => {
-              const prefix = topicId.startsWith("ap-") ? topicId.split("-").slice(0, 2).join("-") : topicId;
-              const key = Object.keys(COURSE_MAP).find(k => k.includes(prefix)) || "ap-biology";
-              const info = COURSE_MAP[key] || { name: "AP® Subject", color: "#3b82f6" };
-              if (!counts[key]) {
-                counts[key] = { name: info.name, color: info.color, count: 0 };
+            Object.entries(courseTimeMap).forEach(([slug, secs]) => {
+              if (secs > 0) {
+                const info = COURSE_MAP[slug] || { 
+                  name: slug.split("-").map(w => w.toUpperCase()).join(" "), 
+                  color: "#6366f1" 
+                };
+                counts[slug] = { name: info.name, color: info.color, count: secs };
               }
-              counts[key].count += 15;
             });
 
             const items = Object.values(counts);

@@ -1602,8 +1602,18 @@ export default function APDynamicCoursePage() {
 
   const course = courseRegistry[slug];
   
-  const { progress, completeTopic } = useProgress();
+  const { progress, completeTopic, recordCourseTime } = useProgress();
   const { currentUser } = useAuth();
+
+  useEffect(() => {
+    if (!slug) return;
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.hasFocus()) {
+        recordCourseTime?.(slug, 5);
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [slug, recordCourseTime]);
   
   const [activeUnit, setActiveUnit] = useState<number>(1);
   const [activeTopic, setActiveTopic] = useState<CourseTopic | null>(null);

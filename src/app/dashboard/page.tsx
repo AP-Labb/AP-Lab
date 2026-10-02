@@ -967,9 +967,29 @@ export default function Dashboard() {
                           {/* CARD CONTENT BODY */}
                           <div className="p-4 sm:p-5 flex flex-col justify-between space-y-3 flex-1 min-h-[160px]">
                             <div className="space-y-1.5">
-                              {/* TITLE WITH MORTARBOARD ICON */}
+                              {/* TITLE WITH COURSE SPECIFIC ICON */}
                               <div className="flex items-center space-x-2">
-                                <GraduationCap className="w-4 h-4 text-white/80 shrink-0" />
+                                {(() => {
+                                  const COURSE_SPECIFIC_ICONS: Record<string, any> = {
+                                    "ap-biology": Dna,
+                                    "ap-chemistry": Beaker,
+                                    "ap-physics-c": Atom,
+                                    "ap-ush": History,
+                                    "ap-psych": Brain,
+                                    "ap-psychology": Brain,
+                                    "ap-eng-lang": BookOpen,
+                                    "ap-calc-bc": Sigma,
+                                    "ap-stats": BarChart3,
+                                    "ap-csa": Binary,
+                                    "ap-environmental-science": Leaf,
+                                    "ap-world-history": Globe,
+                                    "ap-physics-1": Zap,
+                                    "ap-macroeconomics": TrendingUp,
+                                    "ap-macro": TrendingUp,
+                                  };
+                                  const CourseIcon = COURSE_SPECIFIC_ICONS[course.slug] || COURSE_SPECIFIC_ICONS[course.id] || BookOpen;
+                                  return <CourseIcon className="w-4 h-4 text-white/80 shrink-0" />;
+                                })()}
                                 <h4 className="font-manrope font-extrabold text-base sm:text-lg text-white tracking-tight">
                                   {course.name}
                                 </h4>

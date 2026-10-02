@@ -15,7 +15,7 @@ export default function SingleBlogPostPage({ params }: { params: { slug: string 
   const slug = resolvedParams?.slug;
   const post = BLOG_POSTS.find((p) => p.slug === slug);
 
-  const [viewsCount, setViewsCount] = useState<number>(2680);
+  const [viewsCount, setViewsCount] = useState<number>(543);
 
   useEffect(() => {
     if (post) {

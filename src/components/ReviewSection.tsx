@@ -83,7 +83,7 @@ export function ReviewSection() {
             4.8 Stars
           </h2>
           <p className="font-inter font-bold text-neutral-800 text-lg sm:text-xl md:text-2xl tracking-wide">
-            1,000+ Reviews
+            200+ Reviews
           </p>
         </motion.div>
 

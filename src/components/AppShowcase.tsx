@@ -31,13 +31,13 @@ export function AppShowcase() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white/[0.015] blur-[150px] rounded-full pointer-events-none" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="sticky top-[80px] z-40 mb-10 text-center pointer-events-none py-2 bg-gradient-to-b from-[#0c0d12]/90 via-[#0c0d12]/60 to-transparent backdrop-blur-xs">
+        <div className="mb-16 text-center">
           <motion.h2 
             initial={{ opacity: 0, y: 15 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="font-inter font-extrabold text-white text-3xl md:text-5xl tracking-tight mb-3"
+            className="font-inter font-extrabold text-white text-3xl md:text-5xl tracking-tight mb-4"
           >
             Included Workspace
           </motion.h2>
@@ -56,7 +56,7 @@ export function AppShowcase() {
         <div className="relative w-full max-w-6xl mx-auto space-y-28 md:space-y-36 pb-32">
           
           {/* ROW 1 STICKY STACK (Gamification & Interactive Lessons) */}
-          <div className="sticky top-[230px] z-10">
+          <div className="sticky top-[100px] z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
               {/* Box 1 (Top Left) - GAMIFICATION (Pitch Black Card -> Light Monochrome Gradient Glow) */}
               <BorderGlow colors={['#ffffff', '#cbd5e1', '#64748b']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">
@@ -134,7 +134,7 @@ export function AppShowcase() {
           </div>
 
           {/* ROW 2 STICKY STACK (Embedded Desmos Calculator & Mock Exams) */}
-          <div className="sticky top-[255px] z-20">
+          <div className="sticky top-[125px] z-20">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
               {/* Box 3 (Bottom Left) - EMBEDDED GRAPHING CALCULATOR (White Card -> Dark Monochrome Gradient Glow) */}
               <BorderGlow colors={['#000000', '#334155', '#1e293b']} glowColor="0 0% 0%" borderRadius={32} backgroundColor="#ffffff" className="h-[460px]">
@@ -220,7 +220,7 @@ export function AppShowcase() {
           </div>
 
           {/* ROW 3 STICKY STACK (Progress Tracking & Video Lessons) */}
-          <div className="sticky top-[280px] z-30">
+          <div className="sticky top-[150px] z-30">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
               {/* Box 5 (Bottom Left) - PROGRESS TRACKING (Pitch Black Card -> Light Monochrome Gradient Glow) */}
               <BorderGlow colors={['#ffffff', '#cbd5e1', '#64748b']} glowColor="0 0% 100%" borderRadius={32} backgroundColor="#000000" className="h-[450px]">

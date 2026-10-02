@@ -171,11 +171,21 @@ const COURSE_FEATURES = [
 export default function CoursePreviewPage({ params }: PageProps) {
   const { slug } = params;
   const router = useRouter();
-  const { progress } = useProgress();
+  const { progress, recordCourseTime } = useProgress();
   const course = courseRegistry[slug];
 
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [countdown, setCountdown] = useState({ days: 228, hours: 7 });
+
+  useEffect(() => {
+    if (!slug) return;
+    const interval = setInterval(() => {
+      if (typeof document !== "undefined" && document.hasFocus()) {
+        recordCourseTime?.(slug, 5);
+      }
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [slug, recordCourseTime]);
 
   const examInfo = OFFICIAL_EXAM_SCHEDULE[slug] || {
     dateStr: "Thu, May 13, 2027",

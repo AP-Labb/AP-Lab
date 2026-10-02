@@ -1,7 +1,7 @@
 import { db } from "@/lib/firebase";
 import { doc, getDoc, setDoc, updateDoc, increment } from "firebase/firestore";
 
-const BASE_VIEW_OFFSET = 2679;
+const BASE_VIEW_OFFSET = 542;
 
 export async function incrementAndGetBlogViews(slug: string): Promise<number> {
   const localKey = `aplab_blog_views_${slug}`;

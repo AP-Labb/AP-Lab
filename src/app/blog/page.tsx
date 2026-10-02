@@ -87,7 +87,7 @@ export default function BlogIndexPage() {
                         <span>•</span>
                         <div className="flex items-center space-x-1 text-purple-400">
                           <Eye className="w-3 h-3" />
-                          <span>2.6k views</span>
+                          <span>543 views</span>
                         </div>
                       </div>
 

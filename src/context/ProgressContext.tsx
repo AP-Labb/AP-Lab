@@ -69,6 +69,7 @@ interface ProgressContextType {
   equipItem?: (itemType: string, itemId: string) => Promise<void>;
   buyItem?: (itemId: string, cost: number, itemType: string, customColorHex?: string) => Promise<boolean>;
   useBoostItem?: (boostId: string) => Promise<boolean>;
+  recordCourseTime?: (slug: string, seconds: number) => void;
 }
 
 const defaultProgress: UserProgress = {
@@ -1308,10 +1309,35 @@ export const ProgressProvider = ({ children }: { children: React.ReactNode }) =>
     return !isFollowing;
   };
 
+  const recordCourseTime = (slug: string, seconds: number) => {
+    if (!slug || seconds <= 0) return;
+    const uidKey = currentUser?.uid || progress?.uid || "guest";
+    const storageKey = `ap_lab_course_time_spent_${uidKey}`;
+    let currentLogs: Record<string, number> = {};
+    try {
+      currentLogs = JSON.parse(localStorage.getItem(storageKey) || "{}");
+    } catch (e) {}
+
+    currentLogs[slug] = (currentLogs[slug] || 0) + seconds;
+    try {
+      localStorage.setItem(storageKey, JSON.stringify(currentLogs));
+    } catch (e) {}
+
+    const updatedLogs = { ...(progress.studyTimeLogs || {}), ...currentLogs };
+    setProgress(prev => ({
+      ...prev,
+      studyTimeLogs: updatedLogs
+    }));
+
+    if (currentUser?.uid) {
+      setDoc(doc(db, "userProgress", currentUser.uid), { studyTimeLogs: updatedLogs }, { merge: true }).catch(() => {});
+    }
+  };
+
   return (
     <ProgressContext.Provider value={{
       progress, loading, completeTopic, recordQuestionAttempt, recordTutorMessage,
-      recordMockExamAttempt, claimSocialXp, toggleFollow, updatePreferences, spendCredits, addCredits, buyItem, equipItem, useBoostItem
+      recordMockExamAttempt, claimSocialXp, toggleFollow, updatePreferences, spendCredits, addCredits, buyItem, equipItem, useBoostItem, recordCourseTime
     }}>
       {children}
       
