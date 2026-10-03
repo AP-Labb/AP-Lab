@@ -7,7 +7,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { 
   ChevronRight, ArrowLeft, BookOpen, Layers, CheckCircle2, Play, FileText,
   Clock, GraduationCap, Target, Sparkles, X, Info, Calendar, Zap,
-  Check, Video, ShieldCheck, BarChart2, Percent, HelpCircle
+  Check, Video, ShieldCheck, BarChart2, Percent, HelpCircle,
+  Tag, CheckSquare, ListChecks, ClipboardCheck
 } from "lucide-react";
 import { AppSidebar } from "@/components/AppSidebar";
 import { UniversalTopHeader } from "@/components/UniversalTopHeader";
@@ -160,12 +161,10 @@ const COURSE_HERO_IMAGES: Record<string, string> = {
 };
 
 const COURSE_FEATURES = [
-  { id: "lessons", title: "Lessons", desc: "Structured curriculum, units, and lesson content.", status: "Available", icon: BookOpen },
-  { id: "practice", title: "Practice", desc: "Course practice sessions generated from lesson material.", status: "Available", icon: Zap },
-  { id: "exams", title: "Exams", desc: "Full-length or exam-style assessment generation.", status: "Available", icon: FileText },
-  { id: "metadata", title: "AP Metadata", desc: "College Board themes, skills, unit weighting, and AP lesson tags.", status: "Available", icon: Target },
-  { id: "frqs", title: "AP FRQs", desc: "AP-style free response practice and scoring.", status: "Available", icon: HelpCircle },
-  { id: "calculator", title: "AP Score Calculator", desc: "Score projection tools for AP exam sections.", status: "Available", icon: BarChart2 },
+  { id: "videos", title: "Videos", desc: "Comprehensive video lessons and concept explanations.", status: "Available", icon: Video },
+  { id: "articles", title: "Articles", desc: "In-depth study articles and reference notes.", status: "Available", icon: FileText },
+  { id: "mcq-quizzes", title: "MCQ Quizzes", desc: "Targeted multiple-choice practice quizzes.", status: "Available", icon: HelpCircle },
+  { id: "mcq-mock-exam", title: "MCQ Mock Exam", desc: "Full-length AP multiple-choice mock examinations.", status: "Available", icon: Zap },
 ];
 
 export default function CoursePreviewPage({ params }: PageProps) {
@@ -498,9 +497,10 @@ export default function CoursePreviewPage({ params }: PageProps) {
       </div>
 
       {/* POP-UP MENU: COURSE DETAILS MODAL (MATCHING EXACT USER IMAGES) */}
+      {/* POP-UP MENU: COURSE DETAILS MODAL */}
       <AnimatePresence>
         {showDetailsModal && (
-          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+          <div className="fixed inset-0 z-[999999] flex items-center justify-center p-4 sm:p-6 overflow-hidden">
             {/* Backdrop */}
             <motion.div
               initial={{ opacity: 0 }}
@@ -510,43 +510,31 @@ export default function CoursePreviewPage({ params }: PageProps) {
               className="fixed inset-0 bg-black/85 backdrop-blur-md"
             />
 
-            {/* Single Clean Modal Box (No Double Outline/Border) */}
+            {/* Single Clean Modal Box */}
             <motion.div
               initial={{ opacity: 0, scale: 0.96, y: 12 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl max-h-[85vh] overflow-y-auto custom-scrollbar my-auto overscroll-contain"
+              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl max-h-[85vh] flex flex-col my-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Modal Header inside content flow so title scrolls naturally */}
-              <div className="flex items-start justify-between pb-5 border-b border-white/10 mb-6">
-                <div>
-                  <h2 className="font-manrope font-black text-2xl text-white tracking-tight">
-                    Course details
-                  </h2>
-                  <p className="text-white/40 text-xs font-manrope mt-0.5">
-                    Release status, course metadata, and feature availability.
-                  </p>
-                </div>
-
-                {/* Small simple X icon button without circle container */}
-                <button
-                  onClick={() => setShowDetailsModal(false)}
-                  className="text-white/40 hover:text-white transition-colors cursor-pointer p-1 -mr-1"
-                  title="Close modal"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
+              {/* Close Button (No Tacky Header Title) */}
+              <button
+                onClick={() => setShowDetailsModal(false)}
+                className="absolute top-5 right-5 text-white/40 hover:text-white transition-colors cursor-pointer p-1 z-20"
+                title="Close modal"
+              >
+                <X className="w-5 h-5" />
+              </button>
 
               {/* Modal Scrollable Content Sections */}
-              <div className="space-y-6">
+              <div className="overflow-y-auto custom-scrollbar flex-1 pr-1.5 space-y-6 pt-2 overscroll-contain">
                 
                 {/* 1. Course Tags Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-3">
                   <div className="flex items-center space-x-2 text-white/70">
-                    <Target className="w-4 h-4 text-white/40" />
+                    <Tag className="w-4 h-4 text-white/50" />
                     <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Course tags</span>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -561,7 +549,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 {/* 2. Release Status Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-2">
                   <div className="flex items-center space-x-2 text-white/70">
-                    <CheckCircle2 className="w-4 h-4 text-white/40" />
+                    <CheckSquare className="w-4 h-4 text-white/50" />
                     <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Release status</span>
                   </div>
                   <h4 className="font-manrope font-black text-lg text-white">Stable</h4>
@@ -570,11 +558,11 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   </p>
                 </div>
 
-                {/* 3. Feature Availability Card (Only Shows Available Features) */}
+                {/* 3. Feature Availability Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-4">
                   <div>
                     <div className="flex items-center space-x-2 text-white/70">
-                      <Layers className="w-4 h-4 text-white/40" />
+                      <ListChecks className="w-4 h-4 text-white/50" />
                       <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white">Feature Availability</span>
                     </div>
                     <p className="text-xs text-white/40 font-manrope mt-1">
@@ -585,7 +573,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                   <div className="flex items-center gap-2">
                     <span className="px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 font-manrope font-bold text-xs flex items-center gap-1.5">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
-                      6 Available
+                      4 Available
                     </span>
                   </div>
 
@@ -641,7 +629,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
                 {/* 5. AP Course Details Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-5">
                   <div className="flex items-center space-x-2 text-white/70 border-b border-white/10 pb-3">
-                    <FileText className="w-4 h-4 text-white/50" />
+                    <ClipboardCheck className="w-4 h-4 text-white/50" />
                     <div>
                       <span className="font-manrope font-bold text-xs uppercase tracking-wider text-white block">AP Course Details</span>
                       <p className="text-[11px] text-white/40 font-manrope">Course skills, themes, and exam weighting data from the AP framework.</p>
