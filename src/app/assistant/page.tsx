@@ -407,8 +407,8 @@ export default function AssistantPage() {
 
               {/* Card with Anatomical Reaching Panda Paws Holding onto Top Edge */}
               <div className="relative z-10 w-full bg-[#14161f] border border-white/10 rounded-2xl p-4 flex flex-col justify-between min-h-[120px] shadow-[0_20px_50px_rgba(0,0,0,0.8)] focus-within:border-white/25 transition-all">
-                {/* Left Reaching Panda Paw */}
-                <div className="absolute -left-3.5 -top-3.5 w-10 h-8 rounded-[40%_60%_70%_30%] bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg transform -rotate-[35deg] pointer-events-none select-none z-20">
+                {/* Left Panda Paw Circle */}
+                <div className="absolute -left-3 -top-3 w-9 h-9 rounded-full bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg pointer-events-none select-none z-20">
                   <div className="w-3.5 h-2.5 bg-black rounded-full mb-0.5" />
                   <div className="flex space-x-0.5">
                     <div className="w-1.5 h-1.5 bg-black rounded-full" />
@@ -417,8 +417,8 @@ export default function AssistantPage() {
                   </div>
                 </div>
 
-                {/* Right Reaching Panda Paw */}
-                <div className="absolute -right-3.5 -top-3.5 w-10 h-8 rounded-[60%_40%_30%_70%] bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg transform rotate-[35deg] pointer-events-none select-none z-20">
+                {/* Right Panda Paw Circle */}
+                <div className="absolute -right-3 -top-3 w-9 h-9 rounded-full bg-white border-2 border-neutral-300 flex flex-col items-center justify-center p-1 shadow-lg pointer-events-none select-none z-20">
                   <div className="w-3.5 h-2.5 bg-black rounded-full mb-0.5" />
                   <div className="flex space-x-0.5">
                     <div className="w-1.5 h-1.5 bg-black rounded-full" />

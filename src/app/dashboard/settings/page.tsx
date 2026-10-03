@@ -14,7 +14,9 @@ import { ALL_COUNTRIES, COURSE_BG_THEMES } from "@/components/SettingsModal";
 import { MinecraftInventoryModal } from "@/components/MinecraftInventoryModal";
 import { useProgress } from "@/context/ProgressContext";
 import { useAuth } from "@/context/AuthContext";
-import { updateProfile } from "firebase/auth";
+import { deleteUser, signOut, updateProfile } from "firebase/auth";
+import { deleteDoc, doc } from "firebase/firestore";
+import { auth, db } from "@/lib/firebase";
 import { cn } from "@/lib/utils";
 
 import { CustomColorPicker } from "@/components/CustomColorPicker";
@@ -229,6 +231,38 @@ export default function SettingsPage() {
       console.error("Error saving account info:", err);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteAccount = async () => {
+    setIsDeleting(true);
+    try {
+      if (currentUser) {
+        if (db) {
+          await deleteDoc(doc(db, "userProgress", currentUser.uid)).catch(() => {});
+          await deleteDoc(doc(db, "users", currentUser.uid)).catch(() => {});
+        }
+        await deleteUser(currentUser).catch((err) => {
+          console.warn("Firebase deleteUser notice:", err);
+        });
+      }
+    } catch (err) {
+      console.error("Account deletion error:", err);
+    } finally {
+      try {
+        localStorage.clear();
+        sessionStorage.clear();
+      } catch (e) {}
+
+      if (auth) {
+        await signOut(auth).catch(() => {});
+      }
+
+      setIsDeleting(false);
+      setShowDeleteConfirm(false);
+      router.push("/");
     }
   };
 
@@ -717,20 +751,19 @@ export default function SettingsPage() {
             <div className="flex gap-3 pt-2">
               <button
                 type="button"
+                disabled={isDeleting}
                 onClick={() => setShowDeleteConfirm(false)}
-                className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs"
+                className="flex-1 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs disabled:opacity-50"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={() => {
-                  alert("Account deletion request submitted.");
-                  setShowDeleteConfirm(false);
-                }}
-                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs"
+                disabled={isDeleting}
+                onClick={handleDeleteAccount}
+                className="flex-1 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-bold text-xs disabled:opacity-50 flex items-center justify-center gap-2"
               >
-                Confirm Delete
+                {isDeleting ? "Deleting..." : "Confirm Delete"}
               </button>
             </div>
           </div>
