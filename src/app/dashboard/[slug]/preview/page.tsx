@@ -516,7 +516,7 @@ export default function CoursePreviewPage({ params }: PageProps) {
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.2 }}
-              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl max-h-[85vh] flex flex-col my-auto"
+              className="relative w-full max-w-2xl bg-[#0a0c16] border border-white/10 rounded-2xl p-6 sm:p-8 text-white z-10 shadow-2xl flex flex-col max-h-[85vh] min-h-0 my-auto overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Close Button (No Tacky Header Title) */}
@@ -529,7 +529,10 @@ export default function CoursePreviewPage({ params }: PageProps) {
               </button>
 
               {/* Modal Scrollable Content Sections */}
-              <div className="overflow-y-auto custom-scrollbar flex-1 pr-1.5 space-y-6 pt-2 overscroll-contain">
+              <div 
+                className="flex-1 min-h-0 overflow-y-auto custom-scrollbar pr-2 space-y-6 pt-2 overscroll-contain touch-pan-y"
+                onWheel={(e) => e.stopPropagation()}
+              >
                 
                 {/* 1. Course Tags Card */}
                 <div className="bg-[#05060d] border border-white/10 rounded-2xl p-5 space-y-3">
